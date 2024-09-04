@@ -10,15 +10,33 @@ import UIKit
 import SwiftUI
 
 class MypageViewModel: ObservableObject {
+    
+    enum ViewStatus {
+        case error
+        case loading
+        case loaded
+    }
+    
+    @Published var viewStatus: ViewStatus = .loading
     @Published var userData: User?
     @Published var challengeList: [Challenge]?
     @Published var questXp: [XPContent]?
     @Published var challengeDelete = false
+    @Published var currentIdx: Int = 0
     
     private let userNetwork: UserNetwork
     private let challengeNetwork: ChallengeNetwork
     private let imageNetwork: ImageNetwork
     private let xpNetwork: XPNetwork
+    
+    private lazy var paginationManager = PaginationManager<Challenge>(
+        size: 10,
+        threshold: 3,
+        loadPage: { [weak self] page in
+            guard let self = self else { return ([], 0) }
+            return await self.getQuest(page: page)
+        }
+    )
     
     init(userData: User? = nil, userNetwork: UserNetwork, xpNetwork: XPNetwork, challengeNetwork: ChallengeNetwork, imageNetwork: ImageNetwork) {
         self.userData = userData
@@ -26,6 +44,24 @@ class MypageViewModel: ObservableObject {
         self.xpNetwork = xpNetwork
         self.challengeNetwork = challengeNetwork
         self.imageNetwork = imageNetwork
+    }
+    
+    @MainActor
+    func getData() async {
+        viewStatus = .loading
+
+        await paginationManager.loadData(isRefreshing: true)
+        await loadQuestXpData(isRefreshing: true)
+
+        if let firstChallenge = challengeList?.first {
+            await getQuest(challengeId: firstChallenge.challengeId)
+        }
+        
+        if let firstXp = questXp?.first {
+            await loadQuestXpData(xpId: firstXp.id)
+        }
+
+        viewStatus = .loaded
     }
     
     @MainActor
@@ -59,16 +95,27 @@ class MypageViewModel: ObservableObject {
     }
     
     @MainActor
-    func getQuest(page: Int) async {
-        let Data = await challengeNetwork.getChallenges(page: page)
-        
-        switch Data {
-        case .success(let model):
-            self.challengeList = model.data
-            Log(self.challengeList)
+    func getQuest(page: Int) async -> ([Challenge], Int) {
+        let getChallengeResult = await challengeNetwork.getChallenges(page: page)
 
-        case .failure:
-            self.challengeList = nil
+        switch getChallengeResult {
+        case .success(let response):
+            var challenges = response.data
+
+            if page == 0 {
+                challengeList = challenges
+            } else {
+                if challengeList == nil {
+                    challengeList = []
+                }
+                challengeList! += challenges
+            }
+
+            return (challengeList ?? [], response.total)
+
+        case .failure(let error):
+            Log("Error: \(error)")
+            return ([], 0)
         }
     }
     
@@ -109,7 +156,7 @@ class MypageViewModel: ObservableObject {
         return (XP - totalXP, nextLevelXP)
     }
     
-    //다음 레벨까지 남은 값 
+    //다음 레벨까지 남은 값
     func xpForNextLv(XP: Int) -> Int {
         let currentLevel = convertXPtoLv(XP: XP)
         let nextLevel = currentLevel + 1
