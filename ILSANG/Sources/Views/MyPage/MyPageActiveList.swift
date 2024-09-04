@@ -32,7 +32,7 @@ struct MyPageActiveList: View {
                 }
             }
             .refreshable {
-                await vm.getxpLog(page: 0, size: 10)
+                await vm.getData()
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)

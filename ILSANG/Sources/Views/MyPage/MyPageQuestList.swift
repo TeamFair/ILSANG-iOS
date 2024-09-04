@@ -35,7 +35,7 @@ struct MyPageQuestList: View {
                 }
             }
             .refreshable {
-                await vm.getQuest(page: 0)
+                await vm.getData()
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)

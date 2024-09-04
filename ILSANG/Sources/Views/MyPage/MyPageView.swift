@@ -72,8 +72,7 @@ struct MyPageView: View {
             .background(Color.background)
         }
         .task {
-            await vm.getQuest(page: 0)
-            await vm.getxpLog(page: 0, size: 10)
+            await vm.getData()
         }
     }
 }

@@ -29,12 +29,21 @@ class MypageViewModel: ObservableObject {
     private let imageNetwork: ImageNetwork
     private let xpNetwork: XPNetwork
     
-    private lazy var paginationManager = PaginationManager<Challenge>(
+    private lazy var paginationChallengeManager = PaginationManager<Challenge>(
         size: 10,
         threshold: 3,
         loadPage: { [weak self] page in
             guard let self = self else { return ([], 0) }
             return await self.getQuest(page: page)
+        }
+    )
+   
+    private lazy var paginationXPManager = PaginationManager<XPContent>(
+        size: 10,
+        threshold: 3,
+        loadPage: { [weak self] page in
+            guard let self = self else { return ([], 0) }
+            return await self.getxpLog(page: page)
         }
     )
     
@@ -50,17 +59,9 @@ class MypageViewModel: ObservableObject {
     func getData() async {
         viewStatus = .loading
 
-        await paginationManager.loadData(isRefreshing: true)
-        await loadQuestXpData(isRefreshing: true)
-
-        if let firstChallenge = challengeList?.first {
-            await getQuest(challengeId: firstChallenge.challengeId)
-        }
+        await self.paginationChallengeManager.loadData(isRefreshing: true)
+        await self.paginationXPManager.loadData(isRefreshing: true)
         
-        if let firstXp = questXp?.first {
-            await loadQuestXpData(xpId: firstXp.id)
-        }
-
         viewStatus = .loaded
     }
     
@@ -80,17 +81,27 @@ class MypageViewModel: ObservableObject {
     }
     
     @MainActor
-    func getxpLog(page: Int, size: Int) async {
-        let res = await xpNetwork.getXP(page: page, size: 10)
-        
-        switch res {
-        case .success(let model):
-            self.questXp = model.data
-            Log(questXp)
-            
-        case .failure:
-            self.questXp = nil
-            Log(res)
+    func getxpLog(page: Int) async -> ([XPContent], Int) {
+        let getXpResult = await xpNetwork.getXP(page: page, size: paginationXPManager.size)
+
+        switch getXpResult {
+        case .success(let response):
+            var xpLogs = response.data
+
+            if page == 0 {
+                questXp = xpLogs
+            } else {
+                if questXp == nil {
+                    questXp = []
+                }
+                questXp! += xpLogs
+            }
+
+            return (questXp ?? [], response.total)
+
+        case .failure(let error):
+            Log("Error: \(error)")
+            return ([], 0)
         }
     }
     
