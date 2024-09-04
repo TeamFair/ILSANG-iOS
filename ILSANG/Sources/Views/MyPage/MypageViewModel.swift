@@ -60,8 +60,19 @@ class MypageViewModel: ObservableObject {
         viewStatus = .loading
 
         await self.paginationChallengeManager.loadData(isRefreshing: true)
+        
+        if Task.isCancelled {
+            viewStatus = .error
+            return
+        }
+        
         await self.paginationXPManager.loadData(isRefreshing: true)
         
+        if Task.isCancelled {
+            viewStatus = .error
+            return
+        }
+
         viewStatus = .loaded
     }
     
@@ -86,7 +97,7 @@ class MypageViewModel: ObservableObject {
 
         switch getXpResult {
         case .success(let response):
-            var xpLogs = response.data
+            let xpLogs = response.data
 
             if page == 0 {
                 questXp = xpLogs
@@ -111,7 +122,7 @@ class MypageViewModel: ObservableObject {
 
         switch getChallengeResult {
         case .success(let response):
-            var challenges = response.data
+            let challenges = response.data
 
             if page == 0 {
                 challengeList = challenges
