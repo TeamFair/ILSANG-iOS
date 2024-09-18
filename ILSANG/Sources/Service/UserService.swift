@@ -93,6 +93,18 @@ final class UserService: ObservableObject {
     }
     
     @MainActor
+    func logout() {
+        // TODO: 로그아웃 로직 추가 확인 필요
+        updateLoginStatus(false, authToken: "")
+    }
+    
+    @MainActor
+    func withdraw() {
+        // TODO: 회원탈퇴 로직 추가 확인 필요
+        updateLoginStatus(false, authToken: "")
+    }
+    
+    @MainActor
     private func updateLoginStatus(_ isLogin: Bool, authToken: String) {
         if self.isLogin != isLogin {
             self.isLogin = isLogin

@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SwiftUI
 
 class QuestViewModel: ObservableObject {
     // TODO: API 요청 실패 시 에러상태로 변경하기
@@ -155,5 +156,14 @@ class QuestViewModel: ObservableObject {
     func tappedQuestApprovalBtn() {
         showSubmitRouterView.toggle()
         showQuestSheet.toggle()
+    }
+}
+
+struct VLine: Shape {
+    func path(in rect: CGRect) -> Path {
+        var path = Path()
+        path.move(to: CGPoint(x: 0, y: 0))
+        path.addLine(to: CGPoint(x: 0, y: rect.height))
+        return path
     }
 }

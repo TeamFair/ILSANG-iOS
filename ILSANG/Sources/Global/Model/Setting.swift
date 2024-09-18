@@ -231,3 +231,10 @@ let contract = """
 회사는 정보통신윤리위원회 심의규정 및 청소년유해매체물 기준에 따라 19세 미만의 청소년에게 유해할 수 있는 상품의 주문 및 판매를 제한하고 있습니다.
 """
 
+let openSource = """
+Alamofire
+Alamofire is an HTTP networking library written in Swift.
+https://github.com/Alamofire/Alamofire
+Copyright © 2014-2023 Alamofire Software Foundation (AFSF)
+MIT License
+"""

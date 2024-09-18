@@ -15,6 +15,7 @@ struct SettingView: View {
     private let settingList: [Setting] = [
         Setting(title: "고객센터", type: .navigate),
         Setting(title: "약관 및 정책", type: .navigate),
+        Setting(title: "오픈소스 정보", type: .navigate),
         Setting(title: "현재 버전", type: .info("v.0.0.1")),
         Setting(title: "로그아웃", type: .alert),
         Setting(title: "회원 탈퇴", titleColor: .subRed, type: .navigate)
@@ -53,15 +54,7 @@ struct SettingView: View {
                 SettingAlertView(
                     alertType: .Logout,
                     onCancel: { logoutAlert = false },
-                    onConfirm: {
-                        Task {
-                            // 로그아웃 함수 호출
-                            let result = await LogoutNetwork().getLogout()
-                            print(result)
-                            // TODO: 로그아웃 로직 추가 확인 필요
-                            UserService.shared.isLogin = false
-                        }
-                    }
+                    onConfirm: { logout() }
                 )
             }
         }
@@ -88,10 +81,25 @@ struct SettingView: View {
             CustomerServiceView()
         case "약관 및 정책":
             TermsAndPolicyView()
+        case "오픈소스 정보" :
+            OpenSourceInfoView()
         case "회원 탈퇴":
             DeleteAccountView()
         default:
             Text("")
+        }
+    }
+    
+    private func logout() {
+        Task {
+            let result = await LogoutNetwork().getLogout()
+            switch result {
+            case .success:
+                await UserService.shared.logout()
+            case .failure(let err):
+                Log("로그아웃 실패 \(err.localizedDescription)")
+                logoutAlert = false
+            }
         }
     }
 }

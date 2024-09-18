@@ -99,14 +99,29 @@ struct DeleteAccountView: View {
             }
             
             if delAlert {
-                SettingAlertView(alertType: .Withdrawal,onCancel: {delAlert = false}, onConfirm: { Task {
-                    let result = await WithdrawNetwork().getWithdraw()
-                    print(result)
-                }})
+                SettingAlertView(
+                    alertType: .Withdrawal,
+                    onCancel: { delAlert = false },
+                    onConfirm: { withdraw() }
+                )
             }
         }
         .frame(maxWidth: .infinity)
         .navigationBarBackButtonHidden()
+    }
+    
+    private func withdraw() {
+        Task {
+            let result = await WithdrawNetwork().getWithdraw()
+            switch result {
+            case .success:
+                await UserService.shared.withdraw()
+                delAlert = false
+            case .failure:
+                delAlert = false
+                showErrorAlert = true
+            }
+        }
     }
 }
 
