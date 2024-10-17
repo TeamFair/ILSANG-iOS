@@ -102,7 +102,7 @@ final class ApprovalViewModel: ObservableObject {
         await withTaskGroup(of: (Int, UIImage?).self) { group in
             for (index, challenge) in challenges.enumerated() {
                 group.addTask {
-                    let image = await self.getImage(imageId: challenge.imageId)
+                    let image = await ImageCacheService.shared.loadImageAsync(imageId: challenge.imageId)
                     return (index, image)
                 }
             }
@@ -128,16 +128,6 @@ final class ApprovalViewModel: ObservableObject {
             return (response.data.map { ApprovalViewModelItem.init(challenge: $0) }, response.total)
         case .failure:
             return ([], 0)
-        }
-    }
-    
-    private func getImage(imageId: String) async -> UIImage? {
-        let res = await imageNetwork.getImage(imageId: imageId)
-        switch res {
-        case .success(let uiImage):
-            return uiImage
-        case .failure:
-            return nil
         }
     }
     

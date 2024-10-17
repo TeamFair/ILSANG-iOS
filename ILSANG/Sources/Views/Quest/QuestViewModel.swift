@@ -107,7 +107,7 @@ class QuestViewModel: ObservableObject {
                     guard let imageId = quest.imageId else {
                         return (index, nil)
                     }
-                    let image = await self.getImage(imageId: imageId)
+                    let image = await ImageCacheService.shared.loadImageAsync(imageId: imageId)
                     return (index, image)
                 }
             }
@@ -166,16 +166,6 @@ class QuestViewModel: ObservableObject {
             return uncompletedPaginationManager.canLoadMoreData()
         case .completed:
             return completedPaginationManager.canLoadMoreData()
-        }
-    }
-    
-    private func getImage(imageId: String) async -> UIImage? {
-        let res = await imageNetwork.getImage(imageId: imageId)
-        switch res {
-        case .success(let uiImage):
-            return uiImage
-        case .failure:
-            return nil
         }
     }
     

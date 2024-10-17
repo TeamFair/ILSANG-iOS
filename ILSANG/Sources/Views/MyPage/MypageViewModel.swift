@@ -163,16 +163,9 @@ class MypageViewModel: ObservableObject {
         return totalXP - sanitizedXP
     }
     
-    @MainActor
     func getImage(imageId: String) async -> UIImage? {
-    let res = await imageNetwork.getImage(imageId: imageId)
-    switch res {
-    case .success(let uiImage):
-        return uiImage
-    case .failure:
-        return nil
+        await ImageCacheService.shared.loadImageAsync(imageId: imageId)
     }
-}
     
     func ProgressBar(userXP: Int) -> some View {
         let levelData = xpGapBtwLevels(XP: userXP)
