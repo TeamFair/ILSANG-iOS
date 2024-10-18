@@ -9,7 +9,6 @@ import SwiftUI
 
 struct ApprovalView: View {
     @StateObject var vm = ApprovalViewModel(
-        imageNetwork: ImageNetwork(),
         emojiNetwork: EmojiNetwork(),
         challengeNetwork: ChallengeNetwork()
     )

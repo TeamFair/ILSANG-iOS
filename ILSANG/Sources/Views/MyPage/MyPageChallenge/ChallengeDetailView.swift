@@ -10,7 +10,7 @@ import SwiftUI
 struct ChallengeDetailView: View {
     
     @Environment(\.dismiss) var dismiss
-    @StateObject var vm: MypageViewModel = MypageViewModel(userNetwork: UserNetwork(), challengeNetwork: ChallengeNetwork(), imageNetwork: ImageNetwork(), xpNetwork: XPNetwork())
+    @ObservedObject var vm: MypageViewModel
     
     @State private var missionImage: UIImage?
     @State private var questImage: UIImage?

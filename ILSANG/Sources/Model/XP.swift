@@ -25,4 +25,10 @@ struct XPContent: Decodable {
     let title: String
     let xpPoint: Int
     let createDate: String
+    
+    static let mockDataList = [
+        XPContent(recordId: 1, title: "Mission Accomplished", xpPoint: 100, createDate: "2024-06-21"),
+        XPContent(recordId: 2, title: "Daily Login", xpPoint: 50, createDate: "2024-06-22"),
+        XPContent(recordId: 3, title: "Quest Completed", xpPoint: 150, createDate: "2024-06-23")
+    ]
 }

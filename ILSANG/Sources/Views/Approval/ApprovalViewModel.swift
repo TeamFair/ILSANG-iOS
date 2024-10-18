@@ -37,12 +37,10 @@ final class ApprovalViewModel: ObservableObject {
         }
     )
     
-    private let imageNetwork: ImageNetwork
     private let emojiNetwork: EmojiNetwork
     private let challengeNetwork: ChallengeNetwork
     
-    init(imageNetwork: ImageNetwork, emojiNetwork: EmojiNetwork, challengeNetwork: ChallengeNetwork) {
-        self.imageNetwork = imageNetwork
+    init(emojiNetwork: EmojiNetwork, challengeNetwork: ChallengeNetwork) {
         self.emojiNetwork = emojiNetwork
         self.challengeNetwork = challengeNetwork
     }

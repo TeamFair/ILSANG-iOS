@@ -9,11 +9,9 @@ import Alamofire
 import Foundation
 
 final class ChallengeNetwork {
-    private let network: Network
     private let url: String
 
-    init(network: Network = Network(), url: String =  APIManager.makeURL(CustomerTarget(path: ""))) {
-        self.network = network
+    init(url: String =  APIManager.makeURL(CustomerTarget(path: ""))) {
         self.url = url
     }
     

@@ -8,50 +8,45 @@
 import SwiftUI
 
 struct MyPageSegment: View {
-    
     @Binding var selectedIndex: Int
     
-    let items = ["퀘스트", "활동", "뱃지"]
-    let icons = ["📜", "⛳️", "🎖️"]
+    private let items = ["퀘스트", "활동", "뱃지"]
+    private let icons = ["📜", "⛳️", "🎖️"]
     
     var body: some View {
-        HStack (spacing: 10) {
+        HStack(spacing: 10) {
             ForEach(0..<items.count, id: \.self) { index in
-                SegmenetStruct(sgmIcon: icons[index], sgmTitle: items[index], index: index, selectedIndex: $selectedIndex)
+                Button {
+                    selectedIndex = index
+                }  label: {
+                    SegmentStruct(sgmIcon: icons[index], sgmTitle: items[index], index: index, selectedIndex: selectedIndex)
+                }
             }
         }
         .padding(.vertical, 16)
     }
 }
 
-struct SegmenetStruct: View {
-    
+struct SegmentStruct: View {
     let sgmIcon: String
     let sgmTitle: String
     let index: Int
-    @Binding var selectedIndex: Int
+    let selectedIndex: Int
     
     var body: some View {
-        ZStack {
-            Rectangle()
-                .foregroundColor(.clear)
-                .frame(height: 38)
-                .frame(maxWidth: .infinity)
-                .background(selectedIndex == index ? Color.accentColor : Color.white)
-                .cornerRadius(12)
-            
-            HStack(alignment: .center, spacing: 4) {
-                Text(sgmIcon)
-                    .font(.system(size: 11))
-                
-                Text(sgmTitle)
-                    .font(.system(size: 14))
-                    .fontWeight(.semibold)
-                    .foregroundColor(selectedIndex == index ? Color.white : Color.gray500)
-            }
+        HStack(alignment: .center, spacing: 4) {
+            Text(sgmIcon)
+                .font(.system(size: 11))
+            Text(sgmTitle)
+                .font(.system(size: 14))
+                .fontWeight(.semibold)
+                .foregroundColor(selectedIndex == index ? Color.white : Color.gray500)
         }
-        .onTapGesture {
-            selectedIndex = index
-        }
+        .frame(height: 38)
+        .frame(maxWidth: .infinity)
+        .background(
+            RoundedRectangle(cornerRadius: 12)
+                .foregroundColor(selectedIndex == index ? Color.accentColor : Color.white)
+        )
     }
 }

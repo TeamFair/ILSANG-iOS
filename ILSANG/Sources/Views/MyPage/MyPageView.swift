@@ -9,17 +9,7 @@ import SwiftUI
 
 struct MyPageView: View {
     
-    @State var activeTestData: [XPContent] = [
-            XPContent(recordId: 1, title: "Mission Accomplished", xpPoint: 100, createDate: "2024-06-21"),
-            XPContent(recordId: 2, title: "Daily Login", xpPoint: 50, createDate: "2024-06-22"),
-            XPContent(recordId: 3, title: "Quest Completed", xpPoint: 150, createDate: "2024-06-23")
-        ]
-    
     @StateObject var vm: MypageViewModel = MypageViewModel(userNetwork: UserNetwork(), challengeNetwork: ChallengeNetwork(), imageNetwork: ImageNetwork(), xpNetwork: XPNetwork())
-    
-    @State var segmentSelect = 0
-    @State private var isSettingsViewActive = false
-    
     
     var body: some View {
         NavigationView {
@@ -40,56 +30,50 @@ struct MyPageView: View {
                 .padding(.bottom, 5)
                 
                 // 개인 프로필
-                MyPageProfile()
+                MyPageProfile(vm: vm)
                 
                 // 퀘스트/활동/뱃지 세그먼트
-                MyPageSegment(selectedIndex: $segmentSelect)
+                MyPageSegment(selectedIndex: $vm.segmentSelect)
                 
                 // 퀘스트/활동/뱃지 리스트
-                switch segmentSelect {
+                switch vm.segmentSelect {
                 case 0:
-                    if let questData = vm.challengeList, !questData.isEmpty {
-                        MyPageChallengeList(challengeList: .constant(questData))
-                    } else {
-                        emptyView()
-                    }
+                    MyPageChallengeList(vm: vm)
                 case 1:
-                    if let activeData = vm.questXp, !activeData.isEmpty {
-                        MyPageActiveList(activeData: .constant(activeData))
-                    } else {
-                        emptyView()
-                    }
+                    MyPageActiveList(vm: vm)
                 case 2:
-                    emptyView()
-                    
                     // 뱃지 구현후 적용
-                    //MyPageBadgeList(badgeData: .constant([]))
+                    // MyPageBadgeList(vm: vm)
+                    EmptyView(title: "Coming Soon!")
+                    
                 default:
-                    emptyView()
+                    EmptyView()
                 }
             }
             .padding(.horizontal, 20)
             .background(Color.background)
         }
         .task {
-            await vm.getQuest(page: 0)
+            await vm.getUser()
+            await vm.getXpStat()
+            await vm.getChallenges(page: 0)
             await vm.getxpLog(page: 0, size: 10)
         }
     }
 }
 
-struct emptyView: View {
+struct EmptyView: View {
+    var title: String = ""
+    
     var body: some View {
-        VStack {
-            Text("Coming Soon!")
-                .font(.system(size: 17))
-                .fontWeight(.medium)
-                .foregroundColor(.gray400)
-                .multilineTextAlignment(.center)
-                .refreshable {
-                    // 데이터 리프레시
-                }
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-        }
+        Text(title)
+            .font(.system(size: 17))
+            .fontWeight(.medium)
+            .foregroundColor(.gray400)
+            .multilineTextAlignment(.center)
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .refreshable {
+                // 데이터 리프레시
+            }
     }
 }

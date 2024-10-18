@@ -9,11 +9,10 @@ import SwiftUI
 
 struct MyPageProfile: View {
     
-    @StateObject var vm = MypageViewModel(userNetwork: UserNetwork(), challengeNetwork: ChallengeNetwork(), imageNetwork: ImageNetwork(), xpNetwork: XPNetwork())
+    @ObservedObject var vm: MypageViewModel
     
     var body: some View {
         NavigationLink(destination: ChangeNickNameView()) {
-            
             VStack {
                 //기본 프로필
                 HStack {
@@ -48,17 +47,9 @@ struct MyPageProfile: View {
                 }
                 .padding(18)
                 .background(Color.white)
-                .cornerRadius(12, corners: [.topLeft, .topRight])
-                .task {
-                    await vm.getUser()
-                    Log(vm.userData)
-                }
                 
                 StatView(dic: vm.xpStats)
                     .frame(height: 70)
-                    .task {
-                        await vm.getXpStat()
-                    }
             }
             .background(Color.primary100)
             .cornerRadius(12)
@@ -97,7 +88,6 @@ struct ProfileImageView: View {
             }
             
             VStack {
-                
                 Spacer()
                 
                 Text("Lv. \(Level)")
@@ -137,5 +127,5 @@ struct ProfileStatView: View {
 }
 
 #Preview {
-    MyPageProfile()
+    MyPageProfile(vm: MypageViewModel(userNetwork: UserNetwork(), challengeNetwork: ChallengeNetwork(), imageNetwork: ImageNetwork(), xpNetwork: XPNetwork()))
 }

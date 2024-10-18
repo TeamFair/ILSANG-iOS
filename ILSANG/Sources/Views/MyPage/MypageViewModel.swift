@@ -5,24 +5,17 @@
 //  Created by Kim Andrew on 6/25/24.
 //
 
-import Foundation
-import UIKit
 import SwiftUI
 
-struct MypageViewModelItem: Identifiable {
-    var id: UUID
-    var status: String
-    var nickname: String
-    var couponCount: Int
-    var completeChallengeCount: Int
-    var xpPoint: Int
-}
-
-class MypageViewModel: ObservableObject {
+final class MypageViewModel: ObservableObject {
+    
+    @Published var segmentSelect = 0
+    
     @Published var userData: User?
-    @Published var challengeList: [Challenge]?
-    @Published var xpStats: [XpStat: Int]
-    @Published var questXp: [XPContent]?
+    @Published var xpStats: [XpStat: Int] = [:]
+    @Published var xpLogList: [XPContent] = []
+    @Published var challengeList: [Challenge] = []
+    
     @Published var challengeDelete = false
     
     private let userNetwork: UserNetwork
@@ -30,12 +23,8 @@ class MypageViewModel: ObservableObject {
     private let imageNetwork: ImageNetwork
     private let xpNetwork: XPNetwork
     
-    init(userData: User? = nil, challengeList: [Challenge]? = nil, xpStats: [XpStat: Int] = [:], questXp: [XPContent]? = nil, challengeDelete: Bool = false, userNetwork: UserNetwork, challengeNetwork: ChallengeNetwork, imageNetwork: ImageNetwork, xpNetwork: XPNetwork) {
+    init(userData: User? = nil, userNetwork: UserNetwork, challengeNetwork: ChallengeNetwork, imageNetwork: ImageNetwork, xpNetwork: XPNetwork) {
         self.userData = userData
-        self.challengeList = challengeList
-        self.xpStats = xpStats
-        self.questXp = questXp
-        self.challengeDelete = challengeDelete
         self.userNetwork = userNetwork
         self.challengeNetwork = challengeNetwork
         self.imageNetwork = imageNetwork
@@ -63,11 +52,10 @@ class MypageViewModel: ObservableObject {
         
         switch res {
         case .success(let model):
-            self.questXp = model.data
-            Log(questXp)
+            self.xpLogList = model.data
             
         case .failure:
-            self.questXp = nil
+            self.xpLogList = []
             Log(res)
         }
     }
@@ -94,7 +82,7 @@ class MypageViewModel: ObservableObject {
     }
     
     @MainActor
-    func getQuest(page: Int) async {
+    func getChallenges(page: Int) async {
         let Data = await challengeNetwork.getChallenges(page: page)
         
         switch Data {
@@ -103,7 +91,7 @@ class MypageViewModel: ObservableObject {
             Log(self.challengeList)
 
         case .failure:
-            self.challengeList = nil
+            self.challengeList = []
         }
     }
     

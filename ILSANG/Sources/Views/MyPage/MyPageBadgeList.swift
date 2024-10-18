@@ -9,10 +9,9 @@ import SwiftUI
 
 struct MyPageBadgeList: View {
     
-    @Binding var badgeData: [XPContent]
-    
+    @ObservedObject var vm: MypageViewModel
+
     var body: some View {
-        
         VStack(alignment: .leading) {
             Text("최근 활동 순")
                 .font(.system(size: 14))
@@ -22,7 +21,7 @@ struct MyPageBadgeList: View {
             // Data List
             ScrollView {
                 VStack(spacing: 12) {
-                    ForEach(badgeData, id: \.recordId) { Data in
+                    ForEach(vm.xpLogList, id: \.recordId) { Data in
                         ListStruct(title: Data.title, detail: Data.createDate.timeAgoCreatedAt(), point: Data.xpPoint)
                     }
                 }

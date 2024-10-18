@@ -8,11 +8,9 @@
 import Alamofire
 
 final class EmojiNetwork {
-    private let network: Network
     private let url: String
     
-    init(network: Network = Network(), url: String = APIManager.makeURL(CustomerTarget(path: "emoji"))) {
-        self.network = network
+    init(url: String = APIManager.makeURL(CustomerTarget(path: "emoji"))) {
         self.url = url
     }
         
