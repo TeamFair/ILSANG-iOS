@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct QuestView: View {
-    @StateObject var vm: QuestViewModel = QuestViewModel(imageNetwork: ImageNetwork(), questNetwork: QuestNetwork())
+    @StateObject var vm: QuestViewModel = QuestViewModel(questNetwork: QuestNetwork())
     @Namespace private var namespace
 
     var body: some View {
@@ -30,9 +30,6 @@ struct QuestView: View {
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Color.background)
-        .task {
-            await vm.loadInitialData()
-        }
         .sheet(isPresented: $vm.showQuestSheet) {
             questSheetView
                 .presentationDetents([.height(558)])
@@ -128,12 +125,7 @@ extension QuestView {
         }
         .frame(maxWidth: .infinity)
         .refreshable {
-            switch vm.selectedHeader {
-            case .uncompleted:
-                await vm.uncompletedPaginationManager.loadData(isRefreshing: true)
-            case .completed:
-                await vm.completedPaginationManager.loadData(isRefreshing: true)
-            }
+            await vm.refreshData()
         }
         .overlay {
             if vm.isCurrentListEmpty {
@@ -209,7 +201,7 @@ extension QuestView {
 }
 
 #Preview {
-    QuestView(vm: QuestViewModel(imageNetwork: ImageNetwork(), questNetwork: QuestNetwork()))
+    QuestView(vm: QuestViewModel(questNetwork: QuestNetwork()))
 }
 
 struct StatView: View {

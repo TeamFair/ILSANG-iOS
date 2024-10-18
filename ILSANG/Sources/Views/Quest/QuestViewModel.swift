@@ -65,12 +65,17 @@ class QuestViewModel: ObservableObject {
         }
     )
     
-    private let imageNetwork: ImageNetwork
+    // MARK: throttle 관련
+    let throttleInterval: TimeInterval = 2.0
+    var lastRefreshTime: Date? = nil
+    
     private let questNetwork: QuestNetwork
     
-    init(imageNetwork: ImageNetwork, questNetwork: QuestNetwork) {
-        self.imageNetwork = imageNetwork
+    init(questNetwork: QuestNetwork) {
         self.questNetwork = questNetwork
+        Task {
+            await loadInitialData()
+        }
     }
     
     func loadInitialData() async {
@@ -78,6 +83,25 @@ class QuestViewModel: ObservableObject {
         await uncompletedPaginationManager.loadData(isRefreshing: true)
         await completedPaginationManager.loadData(isRefreshing: true)
         await changeViewStatus(.loaded)
+    }
+    
+    func refreshData() async {
+        // 마지막 새로고침으로부터 throttleInterval 이내에 새로 고침 시도를 방지
+        let now = Date()
+
+        if let lastRefreshTime = lastRefreshTime, now.timeIntervalSince(lastRefreshTime) < throttleInterval {
+            return
+        }
+        lastRefreshTime = now
+
+        switch selectedHeader {
+        case .uncompleted:
+            await uncompletedPaginationManager.loadData(isRefreshing: true)
+        case .completed:
+            await completedPaginationManager.loadData(isRefreshing: true)
+        }
+        
+        lastRefreshTime = Date()
     }
     
     @MainActor
