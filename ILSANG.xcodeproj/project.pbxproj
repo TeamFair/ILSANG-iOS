@@ -34,6 +34,7 @@
 		6060B2EA2C08947B0083944D /* Image++.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6060B2E92C08947B0083944D /* Image++.swift */; };
 		606292D82C19E70A0098B6D2 /* Network.swift in Sources */ = {isa = PBXBuildFile; fileRef = 606292D72C19E70A0098B6D2 /* Network.swift */; };
 		606292DD2C19EAB00098B6D2 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 606292DC2C19EAB00098B6D2 /* Alamofire */; };
+		606C21CC2CC6B4FC00803947 /* SubmitStatusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 606C21CB2CC6B4FC00803947 /* SubmitStatusView.swift */; };
 		606C87AF2C0B9B8C002D5C3E /* ApprovalImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 606C87AE2C0B9B8C002D5C3E /* ApprovalImageView.swift */; };
 		606C87B12C0CC89B002D5C3E /* 2406_TERMS_OF_USE.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 606C87B02C0CC89B002D5C3E /* 2406_TERMS_OF_USE.pdf */; };
 		607FCBD42BFA648000BB2D04 /* Tab.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FCBD32BFA648000BB2D04 /* Tab.swift */; };
@@ -146,6 +147,7 @@
 		605DA0D52C07123400CC9450 /* View++.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View++.swift"; sourceTree = "<group>"; };
 		6060B2E92C08947B0083944D /* Image++.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Image++.swift"; sourceTree = "<group>"; };
 		606292D72C19E70A0098B6D2 /* Network.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Network.swift; sourceTree = "<group>"; };
+		606C21CB2CC6B4FC00803947 /* SubmitStatusView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubmitStatusView.swift; sourceTree = "<group>"; };
 		606C87AE2C0B9B8C002D5C3E /* ApprovalImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApprovalImageView.swift; sourceTree = "<group>"; };
 		606C87B02C0CC89B002D5C3E /* 2406_TERMS_OF_USE.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = 2406_TERMS_OF_USE.pdf; sourceTree = "<group>"; };
 		607FCBD32BFA648000BB2D04 /* Tab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tab.swift; sourceTree = "<group>"; };
@@ -514,6 +516,7 @@
 				60C6B4DE2C2D053600926C0E /* SubmitRouterViewModel.swift */,
 				607FCC322C01AA7300BB2D04 /* SubmitAlertView.swift */,
 				60C6B4E02C2D1C0100926C0E /* SubmitAlertViewModel.swift */,
+				606C21CB2CC6B4FC00803947 /* SubmitStatusView.swift */,
 			);
 			path = Submit;
 			sourceTree = "<group>";
@@ -745,6 +748,7 @@
 				A1BB602E2C022A9900AAADD4 /* UserData.swift in Sources */,
 				A19628752C08648C0037C53A /* NavigationTitleView.swift in Sources */,
 				A1AB3D5D2C113A70001EB9D8 /* LoginView.swift in Sources */,
+				606C21CC2CC6B4FC00803947 /* SubmitStatusView.swift in Sources */,
 				A196286F2C0859910037C53A /* DeleteAccountView.swift in Sources */,
 				6044B7352C3442E6002C13A0 /* NetworkError.swift in Sources */,
 				601189232C3E95D40070F2AD /* AuthNetwork.swift in Sources */,

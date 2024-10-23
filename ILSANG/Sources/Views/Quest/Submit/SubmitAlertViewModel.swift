@@ -11,15 +11,14 @@ class SubmitAlertViewModel: ObservableObject {
     @Published var selectedImage: UIImage?
     @Published var submitStatus: SubmitStatus = .submit
     @Published var showSubmitAlertView: Bool
+    let selectedQuest: QuestViewModelItem
     
     private let imageNetwork: ImageNetwork
     private let challengeNetwork: ChallengeNetwork
 
-    let selectedQuestId: String
-    
-    init(selectedImage: UIImage? = nil, selectedQuestId: String, imageNetwork: ImageNetwork, challengeNetwork: ChallengeNetwork, showSubmitAlertView: Bool) {
+    init(selectedImage: UIImage? = nil, selectedQuest: QuestViewModelItem, imageNetwork: ImageNetwork, challengeNetwork: ChallengeNetwork, showSubmitAlertView: Bool) {
         self.selectedImage = selectedImage
-        self.selectedQuestId = selectedQuestId
+        self.selectedQuest = selectedQuest
         self.imageNetwork = imageNetwork
         self.challengeNetwork = challengeNetwork
         self.showSubmitAlertView = showSubmitAlertView
@@ -38,7 +37,7 @@ class SubmitAlertViewModel: ObservableObject {
         print(imageId)
         
         // 도전내역 POST
-        let isPostChallengeSuccessful = await postChallenge(imageId: imageId)
+        let isPostChallengeSuccessful = await postChallenge(questId: selectedQuest.id, imageId: imageId)
         if isPostChallengeSuccessful {
             submitStatus = .complete
         } else {
@@ -57,8 +56,8 @@ class SubmitAlertViewModel: ObservableObject {
         }
     }
     
-    private func postChallenge(imageId: String) async -> Bool {
-        let res = await challengeNetwork.postChallenge(questId: selectedQuestId, imageId: imageId)
+    private func postChallenge(questId: String, imageId: String) async -> Bool {
+        let res = await challengeNetwork.postChallenge(questId: questId, imageId: imageId)
         switch res {
         case .success:
             return true

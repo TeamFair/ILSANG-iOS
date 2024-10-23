@@ -11,12 +11,12 @@ import SwiftUI
 class SubmitRouterViewModel: ObservableObject {
     @Published var selectedImage: UIImage?
     @Published var showSubmitAlertView: Bool = false
-
-    let selectedQuestId: String
     
-    init(selectedImage: UIImage? = nil, selectedQuestId: String) {
+    let selectedQuest: QuestViewModelItem
+    
+    init(selectedImage: UIImage? = nil, selectedQuest: QuestViewModelItem) {
         self.selectedImage = selectedImage
-        self.selectedQuestId = selectedQuestId
+        self.selectedQuest = selectedQuest
     }
     
     func clearSelectedImage() {

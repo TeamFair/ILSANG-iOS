@@ -119,5 +119,5 @@ struct CameraPreviewView: UIViewRepresentable {
 }
 
 #Preview {
-    CameraView(submitViewModel: SubmitRouterViewModel(selectedQuestId: ""))
+    CameraView(submitViewModel: SubmitRouterViewModel(selectedQuest: .mockData))
 }

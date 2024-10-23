@@ -75,6 +75,21 @@ enum XpStat: String, CaseIterable {
             "SOCIABILITY"
         }
     }
+    
+    var image: ImageResource {
+        switch self {
+        case .strength:
+            return .strength
+        case .intellect:
+            return .intellect
+        case .fun:
+            return .fun
+        case .charm:
+            return .charm
+        case .sociability:
+            return .sociability
+        }
+    }
 }
 
 struct QuestViewModelItem {
@@ -120,7 +135,7 @@ struct QuestViewModelItem {
         imageId: mockImageId,
         missionTitle: "아메리카노 15잔 마시기",
         writer: "이디야커피",
-        rewardDic: [:]
+        rewardDic: [.charm: 30, .intellect: 100, .fun: 5]
     )
     
     static let mockQuestList: [QuestViewModelItem] = [
