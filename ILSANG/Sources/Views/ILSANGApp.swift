@@ -31,10 +31,10 @@ struct ILSANGApp: App {
                     LoginView(vm: LoginViewModel())
                 } else {
                     MainTabView()
-                        .fullScreenCover(isPresented: $isTutorialVisible, content: {
+                        .fullScreenCover(isPresented: $isTutorialVisible) {
                             TutorialView()
-                        })
-                    }
+                        }
+                }
             }
             .alert("업데이트 알림", isPresented: $needUpdate, actions: {
                 Button("업데이트") { AppVersionManager.shared.openAppStore() }
@@ -88,8 +88,10 @@ struct ILSANGApp: App {
         appearance.backgroundColor = UIColor(.white)
         appearance.shadowColor = UIColor(.grayDD)
         appearance.stackedItemPositioning = .centered
-        UITabBar.appearance().standardAppearance = appearance
-        UITabBar.appearance().scrollEdgeAppearance = appearance
+        
+        let tabBar = UITabBar.appearance()
+        tabBar.standardAppearance = appearance
+        tabBar.scrollEdgeAppearance = appearance
         
         // 틴트 컬러 적용
         UIView.appearance().tintColor = UIColor(named: "AccentColor") // 파란색으로 버튼이 보여지는 문제 방지 (Alert에서 문제 발생)
