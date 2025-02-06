@@ -14,8 +14,12 @@ struct ILSANGApp: App {
     @State private var isTutorialVisible = Bool()
     @State private var isSplashScreenVisible = true
     
+    // 강제 업데이트 관련
+    @State private var needUpdate = false
+    @Environment(\.scenePhase) var scenePhase
+    
     init() {
-        setTabBarAppearance()
+        setAppearance()
     }
     
     var body: some Scene {
@@ -32,6 +36,16 @@ struct ILSANGApp: App {
                         })
                     }
             }
+            .alert("업데이트 알림", isPresented: $needUpdate, actions: {
+                Button("업데이트") { AppVersionManager.shared.openAppStore() }
+            }, message: {
+                Text("일상이 새롭게 업데이트되었습니다!\n변화된 일상을 만나보세요.")
+            })
+            .onChange(of: scenePhase, { _, newValue in
+                if newValue == .active {
+                    Task { await checkAndUpdateVersionIfNeeded() }
+                }
+            })
             .onChange(of: isLogin, { _, newValue in // 로그인 후 튜토리얼 UI 표시
                 if newValue {
                     isTutorialVisible = true
@@ -53,17 +67,32 @@ struct ILSANGApp: App {
             let _ = await UserService.shared.login()
         }
         
-        // 3. 스플래시 화면 종료
+        // 3. 업데이트 확인
+        await checkAndUpdateVersionIfNeeded()
+        
+        // 4. 스플래시 화면 종료
         isSplashScreenVisible = false
     }
     
-    func setTabBarAppearance() {
+    private func checkAndUpdateVersionIfNeeded() async {
+        do {
+            needUpdate = try await AppVersionManager.shared.isUpdateAvailable()
+        } catch {
+            Log("버전 확인 중 오류 발생: \(error)")
+        }
+    }
+    
+    func setAppearance() {
+        // 탭바
         let appearance = UITabBarAppearance()
         appearance.backgroundColor = UIColor(.white)
         appearance.shadowColor = UIColor(.grayDD)
         appearance.stackedItemPositioning = .centered
         UITabBar.appearance().standardAppearance = appearance
         UITabBar.appearance().scrollEdgeAppearance = appearance
+        
+        // 틴트 컬러 적용
+        UIView.appearance().tintColor = UIColor(named: "AccentColor") // 파란색으로 버튼이 보여지는 문제 방지 (Alert에서 문제 발생)
     }
 }
 
