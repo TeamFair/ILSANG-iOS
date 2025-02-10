@@ -47,6 +47,12 @@ struct QuestView: View {
             }
             .presentationDetents([.height(464)])
             .presentationDragIndicator(.hidden)
+            .onAppear {
+                // 풀시트(.large)로 화면이 표시되면 customDetent 사이즈로 재설정
+                guard let sheetPresentationController = UIApplication.shared.topController?.sheetPresentationController,
+                      sheetPresentationController.detents == [.large()] else { return }
+                sheetPresentationController.detents = [UISheetPresentationController.Detent.customDetent]
+            }
         }
         .fullScreenCover(isPresented: $vm.showSubmitRouterView) {
             SubmitRouterView(selectedQuest: vm.selectedQuest)
