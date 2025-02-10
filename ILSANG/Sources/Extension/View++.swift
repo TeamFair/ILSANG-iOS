@@ -66,4 +66,26 @@ extension View {
         }
         return result
     }
+    
+    func fontWithLineHeight(_ fontWeight: UIFont.Weight, size: CGFloat, lineHeight: CGFloat, tracking: CGFloat = 0) -> some View {
+        return ModifiedContent(
+            content: self,
+            modifier: FontWithLineHeight(
+                font: Font.uiFont(fontWeight, size),
+                lineHeight: lineHeight,
+                tracking: tracking
+            )
+        )
+    }
+    
+    func fontWithLineHeight(_ fontStyle: FontStyle) -> some View {
+        return ModifiedContent(
+            content: self,
+            modifier: FontWithLineHeight(
+                font: Font.uiFont(fontStyle.weight, fontStyle.size),
+                lineHeight: fontStyle.lineHeight,
+                tracking: fontStyle.tracking
+            )
+        )
+    }
 }
