@@ -190,11 +190,19 @@ final class ApprovalViewModel {
                 self.itemList[idx].emoji?.isLike.toggle()
                 if let emoji = self.itemList[idx].emoji, !emoji.isLike {
                     self.itemList[idx].emoji?.likeId = nil
+                    self.itemList[idx].likeCnt -= 1
+                    self.itemList[idx].likeCnt = max(self.itemList[idx].likeCnt, 0)
+                } else {
+                    self.itemList[idx].likeCnt += 1
                 }
             case .hate:
                 self.itemList[idx].emoji?.isHate.toggle()
                 if let emoji = self.itemList[idx].emoji, !emoji.isHate {
                     self.itemList[idx].emoji?.hateId = nil
+                    self.itemList[idx].hateCnt -= 1
+                    self.itemList[idx].hateCnt = max(self.itemList[idx].hateCnt, 0)
+                } else {
+                    self.itemList[idx].hateCnt += 1
                 }
             }
         }
