@@ -47,13 +47,10 @@ struct HomeView: View {
             QuestDetailView(quest: vm.selectedQuest) {
                 vm.onQuestApprovalTapped()
             }
-            .presentationDetents([.height(464)])
+            .presentationDetents([.height(UISheetPresentationController.Detent.questDetailDetentHeight)])
             .presentationDragIndicator(.hidden)
             .onAppear {
-                // 풀시트(.large)로 화면이 표시되면 customDetent 사이즈로 재설정
-                guard let sheetPresentationController = UIApplication.shared.topController?.sheetPresentationController,
-                      sheetPresentationController.detents == [.large()] else { return }
-                sheetPresentationController.detents = [UISheetPresentationController.Detent.customDetent]
+                UIApplication.shared.updateSheetDetents(to: [.questDetailDetent], whenCurrentDetentsAre: [.large()])
             }
         }
         .fullScreenCover(isPresented: $vm.showSubmitRouterView) {

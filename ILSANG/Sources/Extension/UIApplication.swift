@@ -19,4 +19,10 @@ extension UIApplication {
         }
         return topVC
     }
+    
+    func updateSheetDetents(to detents: [UISheetPresentationController.Detent], whenCurrentDetentsAre currentDetents: [UISheetPresentationController.Detent]) {
+        guard let sheetPresentationController = topController?.sheetPresentationController,
+              sheetPresentationController.detents == currentDetents else { return }
+        sheetPresentationController.detents = detents
+    }
 }
