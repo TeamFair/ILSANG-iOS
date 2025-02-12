@@ -123,6 +123,7 @@ struct ApprovalItemContentView: View {
                 .foregroundStyle(.gray200)
                 .frame(width: 24, height: 24, alignment: alignment)
             Text(String(count))
+                .monospacedDigit()
                 .font(.system(size: 15, weight: .bold))
                 .foregroundStyle(.gray300)
         }
