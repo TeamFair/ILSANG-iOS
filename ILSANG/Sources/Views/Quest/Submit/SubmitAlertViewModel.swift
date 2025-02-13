@@ -9,7 +9,7 @@ import UIKit
 
 class SubmitAlertViewModel: ObservableObject {
     @Published var selectedImage: UIImage?
-    @Published var submitStatus: SubmitStatus = .submit
+    @Published var submitStatus: SubmitStatus = .inProgress
     @Published var showSubmitAlertView: Bool
     let selectedQuest: QuestViewModelItem
     
@@ -26,7 +26,7 @@ class SubmitAlertViewModel: ObservableObject {
     
     @MainActor
     func postChallengeWithImage() async {
-        submitStatus = .submit
+        submitStatus = .inProgress
 
         // 이미지 POST
         guard let imageId = await postImage() else {

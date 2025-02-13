@@ -91,15 +91,17 @@ struct SubmitCompleteView: View {
     }
 }
 
-// 제출 진행 중 & 제출 실패 상태 화면
+// 제출 진행 중 & 재시도 & 제출 실패 상태 화면
 struct SubmitStatusView: View {
     let status: SubmitStatus
     var onConfirm: () -> ()
     
     var body: some View {
-        
         VStack(spacing: 0) {
-            IconView(iconWidth: status.iconWidth, size: .medium, icon: status.icon, color: status.color)
+            Image(status.icon)
+                .resizable()
+                .scaledToFit()
+                .frame(width: status.iconWidth)
                 .padding(.bottom, 15)
             
             Text(status.title)
@@ -107,22 +109,19 @@ struct SubmitStatusView: View {
                 .font(.system(size: 17, weight: .bold))
                 .padding(.bottom, 9)
             
-            HStack(spacing: 0) {
-                Text(status.subtitle)
-                    .foregroundColor(.gray400)
-                    .font(.system(size: 15, weight: .regular))
-                Text(status.emoticon)
-                    .font(.system(size: 12))
-            }
-            .padding(.bottom, 4)
+            Text(status.subtitle)
+                .foregroundColor(.gray400)
+                .font(.system(size: 15, weight: .regular))
+                .padding(.bottom, 4)
             
-            PrimaryButton(title: "확인") {
-                onConfirm()
+            if status != .inProgress {
+                PrimaryButton(title: "확인") {
+                    onConfirm()
+                }
+                .padding(16)
             }
-            .padding(16)
-            .opacity(status == .submit ? 0 : 1)
         }
-        .padding(.top, status == .submit ? 90 : 30)
+        .padding(.top, 30)
         .frame(width: 260, height: 240)
         .background(
             RoundedRectangle(cornerRadius: 16)
@@ -132,76 +131,44 @@ struct SubmitStatusView: View {
 }
 
 enum SubmitStatus {
-    case submit
+    case inProgress
     case complete
     case fail
+    case retry
     
     var title: String {
         switch self {
-        case .submit:
-            "제출 중이에요"
-        case .complete:
-            "제출이 완료됐어요"
-        case .fail:
-            "제출에 실패했어요"
+        case .inProgress: "제출중이에요"
+        case .complete: "제출이 완료됐어요"
+        case .fail: "제출에 실패했어요"
+        case .retry: "다시 한번 생각해 보세요!"
         }
     }
     
     var subtitle: String {
         switch self {
-        case .submit, .complete:
-            ""
-        case .fail:
-            "다시 시도해보세요"
-        }
-    }
-    
-    var emoticon: String {
-        switch self {
-        case .submit, .complete:
-            ""
-        case .fail:
-            "🥲"
+        case .inProgress, .complete: ""
+        case .fail: "다시 시도해보세요🥲"
+        case .retry: "정답을 맞힐 때까지 도전할 수 있어요!"
         }
     }
     
     var icon: ImageResource {
         switch self {
-        case .submit:
-            return .ellipsis
-        case .complete:
-            return .check
-        case .fail:
-            return .xmark
+        case .inProgress: .ellipsisCircle
+        case .complete: .check
+        case .retry: .exclamationCircle
+        case .fail: .xmarkCircle
         }
     }
     
-    var iconWidth: CGFloat {
-        switch self {
-        case .submit:
-            return 35
-        case .complete:
-            return 31
-        case .fail:
-            return 24
-        }
-    }
-    
-    var color: IconColor {
-        switch self {
-        case .submit:
-            return .blue
-        case .complete:
-            return .green
-        case .fail:
-            return .red
-        }
-    }
+    var iconWidth: CGFloat { 60.0 }
 }
 
 #Preview {
-    VStack {
-        SubmitStatusView(status: .submit, onConfirm: {})
+    ScrollView {
+        SubmitStatusView(status: .inProgress, onConfirm: {})
+        SubmitStatusView(status: .retry, onConfirm: {})
         SubmitStatusView(status: .fail, onConfirm: {})
         SubmitCompleteView(quest: .mockData, action: {})
     }
