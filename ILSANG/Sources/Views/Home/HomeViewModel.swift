@@ -38,6 +38,7 @@ final class HomeViewModel: ObservableObject {
     var paginatedPopularQuests: [[QuestViewModelItem]] {
         popularQuestList.chunks(of: popularChunkSize)
     }
+    @Published var showQuestEngageView: Bool = false
     @Published var showSubmitRouterView: Bool = false {
         didSet {
             // TODO: 해당 섹션 데이터만 다시 불러오도록 수정
@@ -331,7 +332,11 @@ final class HomeViewModel: ObservableObject {
     
     func onQuestApprovalTapped() {
         showQuestSheet = false
-        showSubmitRouterView = true
+        if selectedQuest.approvalType == .image { // TODO: 사진/ox 구분
+            showSubmitRouterView = true
+        } else {
+            showQuestEngageView = true
+        }
     }
 }
 

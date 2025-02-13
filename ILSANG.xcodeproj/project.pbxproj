@@ -92,6 +92,8 @@
 		60943FE62C0A38FB00C8A714 /* ApprovalViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60943FE52C0A38FB00C8A714 /* ApprovalViewModel.swift */; };
 		609A76D92CFC50C7009F4567 /* QuestImageWithTagView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 609A76D82CFC50C7009F4567 /* QuestImageWithTagView.swift */; };
 		609A76DB2CFC5E90009F4567 /* StatGridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 609A76DA2CFC5E90009F4567 /* StatGridView.swift */; };
+		60ADF8872D57B49B00556958 /* QuestEngageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60ADF8862D57B49B00556958 /* QuestEngageView.swift */; };
+		60ADF8892D57B53100556958 /* QuestEngageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60ADF8882D57B53100556958 /* QuestEngageViewModel.swift */; };
 		60ADF9BD2D59D3FD00556958 /* FontStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60ADF9BC2D59D3FD00556958 /* FontStyle.swift */; };
 		60ADF9BF2D59D41E00556958 /* Font++.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60ADF9BE2D59D41E00556958 /* Font++.swift */; };
 		60ADF9C22D59D47100556958 /* FontWithLineHeight.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60ADF9C12D59D47100556958 /* FontWithLineHeight.swift */; };
@@ -100,6 +102,10 @@
 		60ADF9C92D5A019B00556958 /* UIApplication.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60ADF9C82D5A019A00556958 /* UIApplication.swift */; };
 		60ADF9CB2D5A01BA00556958 /* UISheetPresentationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60ADF9CA2D5A01BA00556958 /* UISheetPresentationController.swift */; };
 		60ADF9D82D60927900556958 /* ChallengeViewModelItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60ADF9D72D60927900556958 /* ChallengeViewModelItem.swift */; };
+		60ADF9CD2D5DD3D000556958 /* RoundedBackground.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60ADF9CC2D5DD3D000556958 /* RoundedBackground.swift */; };
+		60ADF9D22D5DDC5B00556958 /* QuizView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60ADF9D12D5DDC5B00556958 /* QuizView.swift */; };
+		60ADF9D42D5DDD2000556958 /* QuestInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60ADF9D32D5DDD2000556958 /* QuestInfoView.swift */; };
+		60ADF9D62D5DDD4400556958 /* EngageSubscriptionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60ADF9D52D5DDD4400556958 /* EngageSubscriptionView.swift */; };
 		60B8B9E72BF9EEF1005F6DE3 /* ILSANGApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60B8B9E62BF9EEF1005F6DE3 /* ILSANGApp.swift */; };
 		60B8B9E92BF9EEF1005F6DE3 /* QuestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60B8B9E82BF9EEF1005F6DE3 /* QuestView.swift */; };
 		60B8B9EB2BF9EEF3005F6DE3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 60B8B9EA2BF9EEF3005F6DE3 /* Assets.xcassets */; };
@@ -260,12 +266,18 @@
 		60943FE52C0A38FB00C8A714 /* ApprovalViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApprovalViewModel.swift; sourceTree = "<group>"; };
 		609A76D82CFC50C7009F4567 /* QuestImageWithTagView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestImageWithTagView.swift; sourceTree = "<group>"; };
 		609A76DA2CFC5E90009F4567 /* StatGridView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatGridView.swift; sourceTree = "<group>"; };
+		60ADF8862D57B49B00556958 /* QuestEngageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestEngageView.swift; sourceTree = "<group>"; };
+		60ADF8882D57B53100556958 /* QuestEngageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestEngageViewModel.swift; sourceTree = "<group>"; };
 		60ADF9BC2D59D3FD00556958 /* FontStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FontStyle.swift; sourceTree = "<group>"; };
 		60ADF9BE2D59D41E00556958 /* Font++.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Font++.swift"; sourceTree = "<group>"; };
 		60ADF9C12D59D47100556958 /* FontWithLineHeight.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FontWithLineHeight.swift; sourceTree = "<group>"; };
 		60ADF9C82D5A019A00556958 /* UIApplication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIApplication.swift; sourceTree = "<group>"; };
 		60ADF9CA2D5A01BA00556958 /* UISheetPresentationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UISheetPresentationController.swift; sourceTree = "<group>"; };
 		60ADF9D72D60927900556958 /* ChallengeViewModelItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChallengeViewModelItem.swift; sourceTree = "<group>"; };
+		60ADF9CC2D5DD3D000556958 /* RoundedBackground.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedBackground.swift; sourceTree = "<group>"; };
+		60ADF9D12D5DDC5B00556958 /* QuizView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuizView.swift; sourceTree = "<group>"; };
+		60ADF9D32D5DDD2000556958 /* QuestInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestInfoView.swift; sourceTree = "<group>"; };
+		60ADF9D52D5DDD4400556958 /* EngageSubscriptionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EngageSubscriptionView.swift; sourceTree = "<group>"; };
 		60B8B9E32BF9EEF1005F6DE3 /* ILSANG.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ILSANG.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		60B8B9E62BF9EEF1005F6DE3 /* ILSANGApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ILSANGApp.swift; sourceTree = "<group>"; };
 		60B8B9E82BF9EEF1005F6DE3 /* QuestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestView.swift; sourceTree = "<group>"; };
@@ -543,6 +555,7 @@
 				605F28512CF1B2C5007EA739 /* QuestDetailView.swift */,
 				607FCBE82BFE418600BB2D04 /* QuestViewModel.swift */,
 				607FCBE62BFD12B100BB2D04 /* QuestViewModelItem.swift */,
+				60ADF9D02D5DDC4000556958 /* QuestEngage */,
 				607FCBE32BFD124900BB2D04 /* QuestItemView.swift */,
 				604687AD2D216EAC0056E394 /* QuestStyle.swift */,
 				60C6B4DD2C2D046000926C0E /* Submit */,
@@ -635,8 +648,21 @@
 			isa = PBXGroup;
 			children = (
 				60ADF9C12D59D47100556958 /* FontWithLineHeight.swift */,
+				60ADF9CC2D5DD3D000556958 /* RoundedBackground.swift */,
 			);
 			path = ViewModifier;
+			sourceTree = "<group>";
+		};
+		60ADF9D02D5DDC4000556958 /* QuestEngage */ = {
+			isa = PBXGroup;
+			children = (
+				60ADF8862D57B49B00556958 /* QuestEngageView.swift */,
+				60ADF8882D57B53100556958 /* QuestEngageViewModel.swift */,
+				60ADF9D32D5DDD2000556958 /* QuestInfoView.swift */,
+				60ADF9D52D5DDD4400556958 /* EngageSubscriptionView.swift */,
+				60ADF9D12D5DDC5B00556958 /* QuizView.swift */,
+			);
+			path = QuestEngage;
 			sourceTree = "<group>";
 		};
 		60B8B9DA2BF9EEF1005F6DE3 = {
@@ -1035,7 +1061,9 @@
 				A1AB3D6E2C117569001EB9D8 /* Color.swift in Sources */,
 				A1501B082C48C3C6001410E1 /* MyPageActiveList.swift in Sources */,
 				A13BD3932CA182A0003FF9BE /* XpStats.swift in Sources */,
+				60ADF9CD2D5DD3D000556958 /* RoundedBackground.swift in Sources */,
 				A1AB3D682C1141B3001EB9D8 /* GoogleLoginButtonView.swift in Sources */,
+				60ADF9D62D5DDD4400556958 /* EngageSubscriptionView.swift in Sources */,
 				601189292C3F022D0070F2AD /* LoginViewModel.swift in Sources */,
 				604687A52D1FC36A0056E394 /* TitleWithContentView.swift in Sources */,
 				A19628622C0763F90037C53A /* ProfileEditView.swift in Sources */,
@@ -1067,7 +1095,9 @@
 				60ADF9BD2D59D3FD00556958 /* FontStyle.swift in Sources */,
 				60299E312CBFFF160039663F /* TransferableUIImage.swift in Sources */,
 				601BCF3B2D7F13E900138387 /* ProfileEditViewModel.swift in Sources */,
+				60ADF9D42D5DDD2000556958 /* QuestInfoView.swift in Sources */,
 				A1FF91722C257E9A00F03E4B /* User.swift in Sources */,
+				60ADF9D22D5DDC5B00556958 /* QuizView.swift in Sources */,
 				60B8B9E92BF9EEF1005F6DE3 /* QuestView.swift in Sources */,
 				60C6B4D72C2C569800926C0E /* Challenge.swift in Sources */,
 				60B8B9E72BF9EEF1005F6DE3 /* ILSANGApp.swift in Sources */,
@@ -1080,6 +1110,7 @@
 				60ADF9BF2D59D41E00556958 /* Font++.swift in Sources */,
 				60004AD92D42373300CD2254 /* Banner.swift in Sources */,
 				601BCF102D7B43F000138387 /* OtherUserProfileView.swift in Sources */,
+				60ADF8892D57B53100556958 /* QuestEngageViewModel.swift in Sources */,
 				60C6B4D52C2C565700926C0E /* ChallengeNetwork.swift in Sources */,
 				A11D88F72C916DE500846122 /* Icon.swift in Sources */,
 				602988222D041DDC00903806 /* RepeatType.swift in Sources */,
@@ -1098,6 +1129,7 @@
 				606132782CD68FE300830948 /* TagView.swift in Sources */,
 				6029881E2D041D3900903806 /* QuestStatus.swift in Sources */,
 				609A76DB2CFC5E90009F4567 /* StatGridView.swift in Sources */,
+				60ADF8872D57B49B00556958 /* QuestEngageView.swift in Sources */,
 				605DA0CD2C070A0300CC9450 /* Camera.swift in Sources */,
 				600211EE2C1EEF91000CC02E /* EmojiNetwork.swift in Sources */,
 				601189212C3E94A60070F2AD /* AuthService.swift in Sources */,

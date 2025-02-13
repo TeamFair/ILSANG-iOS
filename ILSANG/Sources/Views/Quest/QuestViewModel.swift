@@ -38,6 +38,7 @@ class QuestViewModel: ObservableObject {
             }
         }
     }
+    @Published var showQuestEngageView: Bool = false
     @Published var itemListByStatus: [QuestStatus: [QuestViewModelItem]] = [
         .default: [],
         .repeat: [],
@@ -281,14 +282,18 @@ class QuestViewModel: ObservableObject {
         }
     }
     
-    func tappedQuestBtn(quest: QuestViewModelItem) {
+    func onQuestTapped(quest: QuestViewModelItem) {
         selectedQuest = quest
         showQuestSheet = true
     }
     
-    func tappedQuestApprovalBtn() {
+    func onQuestApprovalTapped() {
         showQuestSheet = false
-        showSubmitRouterView = true
+        if selectedQuest.approvalType == .image { // TODO: 사진/ox 구분
+            showSubmitRouterView = true
+        } else {
+            showQuestEngageView = true
+        }
     }
     
     func closeFilterPicker() {

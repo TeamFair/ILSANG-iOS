@@ -48,6 +48,21 @@ struct QuestViewModelItem: Hashable, Identifiable {
         }
     }
     
+    var isRepeatQuest: Bool { self.type == "REPEAT" }
+    var repeatType: RepeatType? { RepeatType(rawValue: self.target.lowercased()) ?? nil }
+    var approvalType: ApprovalType { self.type == "REPEAT" ? .quiz : .image } // TODO: 수정
+    var quizType: QuizType { self.target == "DAILY" ? .text : .ox } // TODO: 수정
+    var question: String { "문제입니다" } // TODO: 수정
+    var hint: String? { "힌트입니다." } // TODO: 수정
+    
+    enum QuizType {
+        case text, ox
+    }
+    
+    enum ApprovalType {
+        case quiz, image
+    }
+    
     func totalRewardXP() -> Int {
         self.rewardDic.values.reduce(0, +)
     }

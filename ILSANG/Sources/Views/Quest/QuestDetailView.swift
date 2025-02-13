@@ -11,9 +11,6 @@ struct QuestDetailView: View {
     let quest: QuestViewModelItem
     let action: () -> Void
     
-    private var isRepeatQuest: Bool { quest.type == "REPEAT" }
-    private var repeatType: RepeatType? { RepeatType(rawValue: quest.target.lowercased()) ?? nil }
-    
     var body: some View {
         VStack(spacing: 0) {
             RoundedRectangle(cornerRadius: 2)
@@ -31,9 +28,9 @@ struct QuestDetailView: View {
             Divider()
                 .foregroundStyle(.gray100)
                 .padding(.top, 16)
-                .padding(.bottom, isRepeatQuest ? 16 : 32)
+                .padding(.bottom, quest.isRepeatQuest ? 16 : 32)
             
-            if isRepeatQuest {
+            if quest.isRepeatQuest {
                 Text("획득 가능 스탯")
                     .font(.system(size: 11, weight: .semibold))
                     .foregroundStyle(.white)
@@ -75,7 +72,7 @@ struct QuestDetailView: View {
             
             VStack(alignment: .leading, spacing: 0) {
                 Group {
-                    if isRepeatQuest, let repeatType = repeatType {
+                    if quest.isRepeatQuest, let repeatType = quest.repeatType {
                         HStack(spacing: 4) {
                             Text("반복 퀘스트")
                             TagView(title: repeatType.description, tagStyle: .repeat(repeatType))
