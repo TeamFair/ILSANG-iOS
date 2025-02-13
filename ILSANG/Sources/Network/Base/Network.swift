@@ -61,7 +61,6 @@ final class Network {
         } else {
             request = AF.request(fullPath, method: method, encoding: parameters != nil ? URLEncoding.queryString : JSONEncoding.default, headers: headers)
         }
-        Log(fullPath)
         
         let response = await request.validate(statusCode: 200..<300)
             .serializingDecodable(T.self, emptyResponseCodes: [200])
@@ -69,9 +68,10 @@ final class Network {
         
         switch response.result {
         case .success(let res):
+            Log("네트워크 요청 성공: \(fullPath), \(request.request?.httpMethod ?? "")")
             return .success(res)
         case .failure(let error):
-            Log(error.localizedDescription)
+            Log("네트워크 요청 실패: \(fullPath), \(error.localizedDescription)")
             return .failure(error)
         }
     }

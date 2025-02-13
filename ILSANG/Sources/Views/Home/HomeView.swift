@@ -35,7 +35,9 @@ struct HomeView: View {
                     }
                 }
                 .refreshable {
-                    await vm.loadInitialData()
+                    Task {
+                        await vm.loadInitialData()
+                    }
                 }
                 .disabled(vm.viewStatus == .loading)
             case .error:
@@ -47,8 +49,11 @@ struct HomeView: View {
             QuestDetailView(quest: vm.selectedQuest) {
                 vm.onQuestApprovalTapped()
             }
-            .presentationDetents([.height(464)])
+            .presentationDetents([.height(UISheetPresentationController.Detent.questDetailDetentHeight)])
             .presentationDragIndicator(.hidden)
+            .onAppear {
+                UIApplication.shared.updateSheetDetents(to: [.questDetailDetent], whenCurrentDetentsAre: [.large()])
+            }
         }
         .fullScreenCover(isPresented: $vm.showSubmitRouterView) {
             SubmitRouterView(selectedQuest: vm.selectedQuest)

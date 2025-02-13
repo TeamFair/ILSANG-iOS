@@ -7,32 +7,64 @@
 
 import UIKit
 
+actor ImageRequestManager {
+    private var imageRequestInProgress: [String: Task<UIImage?, Never>] = [:]
+    
+    func getTask(for imageId: String) -> Task<UIImage?, Never>? {
+        return imageRequestInProgress[imageId]
+    }
+    
+    func setTask(_ task: Task<UIImage?, Never>, for imageId: String) {
+        imageRequestInProgress[imageId] = task
+    }
+    
+    func removeTask(for imageId: String) {
+        imageRequestInProgress.removeValue(forKey: imageId)
+    }
+}
+
 final class ImageCacheService {
     public static let shared = ImageCacheService(imageNetwork: ImageNetwork())
     
     private let imageNetwork: ImageNetwork
     private let cachedImages = NSCache<NSString, UIImage>()
+    private let requestManager = ImageRequestManager()
     
     private init(imageNetwork: ImageNetwork) {
         self.imageNetwork = imageNetwork
     }
     
-    /// 이미지를 불러오는 함수
     func loadImageAsync(imageId: String) async -> UIImage? {
         // Cache에 저장된 이미지가 있는 경우 바로 반환
         if let cachedImage = image(imageId: imageId) {
             return cachedImage
         }
         
-        // Cache에 저장된 이미지가 없는 경우 서버에서 이미지 불러오기
-        let res = await imageNetwork.getImage(imageId: imageId)
-        switch res {
-        case .success(let uiImage):
-            setCachedImage(imageId: imageId, image: uiImage)
-            return uiImage
-        case .failure:
-            return nil
+        if let ongoingTask = await requestManager.getTask(for: imageId) {
+            return await ongoingTask.value
         }
+        
+        let task = Task { [weak self] () -> UIImage? in
+            defer {
+                Task {
+                    await self?.requestManager.removeTask(for: imageId)
+                }
+            }
+            
+            let result = await self?.imageNetwork.getImage(imageId: imageId)
+            switch result {
+            case .success(let uiImage):
+                self?.setCachedImage(imageId: imageId, image: uiImage)
+                return uiImage
+            case .failure:
+                return nil
+            case .none:
+                return nil
+            }
+        }
+        
+        await requestManager.setTask(task, for: imageId)
+        return await task.value
     }
     
     /// Cache에 저장된 이미지가 있는지 확인

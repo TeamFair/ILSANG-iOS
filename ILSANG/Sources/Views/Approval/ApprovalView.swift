@@ -8,182 +8,105 @@
 import SwiftUI
 
 struct ApprovalView: View {
-    @StateObject var vm = ApprovalViewModel(
+    @State var vm = ApprovalViewModel(
         emojiNetwork: EmojiNetwork(),
         challengeNetwork: ChallengeNetwork()
     )
-        
-    private let viewWidth = UIScreen.main.bounds.width - 40
-    private let viewHeight = UIScreen.main.bounds.height
     
     var body: some View {
-        ZStack {
-            VStack(spacing: 0) {
-                switch vm.viewStatus {
-                case .error:
-                    networkErrorView
-                case .loading:
-                    ProgressView()
-                case .loaded:
-                    itemView
-                    recommendButtons
-                }
-            }
-            .padding(.horizontal, 20)
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .background(
-                Group {
-                    switch vm.viewStatus {
-                    case .error, .loading:
-                        Color.background
-                    case .loaded:
-                        if !vm.itemList.isEmpty {
-                            Image(uiImage: vm.itemList[vm.currentIdx].image ?? .logo)
-                                .resizable()
-                                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                                .ignoresSafeArea()
-                                .scaledToFill()
-                                .scaleEffect(1.4)
-                                .blur(radius: 30, opaque: true)
-                                .background(Color.black.opacity(0.2))
-                        }
-                    }
-                }
-            )
-            .ignoresSafeArea()
-            
-            if vm.showReportAlert {
-                SettingAlertView(
-                    alertType: .Report,
-                    onCancel: {
-                        vm.showReportAlert = false
-                    }, onConfirm: {
-                        Task {
-                            await vm.reportChallenge()
-                            vm.showReportAlert = false
-                        }
-                    }
-                )
+        VStack(spacing: 0) {
+            switch vm.viewStatus {
+            case .error:
+                networkErrorView
+            case .loading:
+                ProgressView()
+            case .loaded:
+                itemView
             }
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(Color.background)
         .task {
-            await vm.getData()
+            await vm.loadInitialData()
         }
+        .overlay { reportAlertView }
     }
     
     /// 퀘스트 타이틀  + 퀘스트 인증 이미지
+    @ViewBuilder
     private var itemView: some View {
-        Group {
-            if !vm.itemList.isEmpty {
-                VStack(spacing: 14) {
-                    itemTitleView
-                    imageListView
-                }
-                .shadow(color: .shadowFF.opacity(0.25), radius: 20, x: 0, y: 12)
-            }
+        if vm.itemList.isEmpty {
+            emptyView
+        } else {
+            imageListView
         }
-    }
-    
-    private var itemTitleView: some View {
-        Text(vm.itemList[vm.currentIdx].title)
-            .font(.system(size: 16, weight: .bold))
-            .foregroundStyle(.gray500)
-            .frame(height: 45)
-            .frame(width: viewWidth - 20, alignment: .leading)
-            .padding(.leading, 16)
-            .background(
-                RoundedRectangle(cornerRadius: 12)
-                    .foregroundStyle(.white)
-            )
-            .zIndex(1)
     }
     
     private var imageListView: some View {
-        ZStack(alignment: .bottom) {
-            ForEach(vm.itemList.reversed(), id: \.id) { item in
-                let idx = vm.itemList.firstIndex { $0.id == item.id }
-                let diff: Int = abs(idx! - vm.currentIdx)
-                imageView(for: item, diff: diff)
+        ScrollView {
+            LazyVStack(spacing: 16) {
+                ForEach(Array(vm.itemList.enumerated()), id: \.element.id) { idx, item in
+                    ApprovalItemView(
+                        item: item,
+                        width: .screenWidth - 40,
+                        height: ((.screenWidth-40) / 5) * 4,
+                        padding: 20,
+                        onLike: { vm.onLike(for: idx) },
+                        onHate: { vm.onHate(for: idx) }
+                    )
+                    .overlay(alignment: .topTrailing) {
+                        trailingButton(for: item)
+                    }
+                }
+                
+                if let manager = vm.paginationManager, manager.canLoadMoreData() {
+                    ProgressView()
+                        .task { await vm.loadMoreData() }
+                }
             }
-            .gesture(dragGesture)
+            .padding(.top, 47)
+            .padding(.bottom, 72)
         }
-        .mask(alignment: .top) {
-            maskArea
+        .refreshable {
+            await vm.loadInitialData()
         }
-        .overlay(alignment: .topTrailing) {
+    }
+    
+    private func trailingButton(for item: ApprovalViewModelItem) -> some View {
+        Menu {
+            ShareLink(item: photo, preview: SharePreview(photo.caption, image: photo.image)) {
+                Label("공유하기", image: "share")
+            }
+            .onAppear {
+                vm.selectedChallenge = item
+            }
+            
             Button {
+                vm.selectedChallenge = item
                 vm.showReportAlert = true
             } label: {
-                Image(systemName: "ellipsis")
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 24)
-                    .frame(width: 44, height: 44)
-                    .foregroundStyle(.gray100)
+                Label("신고하기", image: "syren")
             }
-            .padding(.trailing, 10)
+            .foregroundStyle(.gray500)
+        } label: {
+            Image(.moreVertical)
+                .resizable()
+                .frame(width: 30, height: 30)
+                .foregroundStyle(.gray500)
+                .frame(height: 35)
         }
+        .padding(20)
     }
     
-    private func imageView(for item: ApprovalViewModelItem, diff: Int) -> some View {
-        ApprovalImageView(
-            image: item.image ?? .logo,
-            width: abs(viewWidth - 40 * CGFloat(diff)),
-            height: (viewHeight / 2) - CGFloat(diff) * 26,
-            nickname: item.nickname,
-            time: item.time,
-            showProfile: diff <= 1
-        )
-        .opacity(vm.calculateOpacity(itemIndex: vm.itemList.firstIndex { $0.id == item.id }!))
-        .offset(y: diff <= 2 ? CGFloat(diff) * 26 : 50)
-        .offset(y: item.offset)
-    }
-        
-    /// 이미지 스크롤 시 상단 마스크
-    private var maskArea: some View {
-        VStack(spacing: 0) {
-            LinearGradient(
-                stops: [
-                    Gradient.Stop(color: .clear, location: .zero),
-                    Gradient.Stop(color: .black, location: 1.0)
-                ],
-                startPoint: .top,
-                endPoint: .bottom
+    @ViewBuilder
+    private var reportAlertView: some View {
+        if vm.showReportAlert {
+            SettingAlertView(
+                alertType: .Report,
+                onCancel: { vm.dismissReportAlert() },
+                onConfirm: { Task { await vm.confirmReport() } }
             )
-            .frame(height: 16)
-            Color.black
         }
-        .padding(.top, -20)
-        .padding(.bottom, -60)
-    }
-    
-    private var recommendButtons: some View {
-        HStack(spacing: 78) {
-            Button {
-                Task { await vm.updateEmojiWithPrev(emojiType: .hate) }
-            } label: {
-                emojiButton(imageName: "hand.thumbsdown.fill", active: vm.emoji?.isHate ?? false)
-            }
-            Button {
-                Task { await vm.updateEmojiWithPrev(emojiType: .like) }
-            } label: {
-                emojiButton(imageName: "hand.thumbsup.fill", active: vm.emoji?.isLike ?? false)
-            }
-        }
-        .padding(.top, 72)
-    }
-    
-    private func emojiButton(imageName: String, active: Bool) -> some View {
-        Image(systemName: imageName)
-            .resizable()
-            .frame(width: 24, height: 24)
-            .foregroundStyle(.white)
-            .opacity(active ? 1 : 0.3)
-            .frame(width: 69, height: 69)
-            .background(
-                Circle()
-                    .foregroundStyle(.white.opacity(active ? 0.3 : 0.1))
-            )
     }
     
     private var networkErrorView: some View {
@@ -193,22 +116,40 @@ struct ApprovalView: View {
             subTitle: "네트워크 연결 상태가 좋지 않아\n퀘스트를 불러올 수 없어요 ",
             emoticon: "🥲"
         ) {
-            Task { await vm.getData() }
+            Task { await vm.loadInitialData() }
         }
     }
     
-    private var dragGesture: some Gesture {
-        DragGesture()
-            .onChanged { value in
-                withAnimation {
-                    vm.handleDragChange(value)
-                }
-            }
-            .onEnded { value in
-                withAnimation {
-                    vm.handleDragEnd(value, viewHeight)
-                }
-            }
+    private var emptyView: some View {
+        ErrorView(
+            title: "인증할 이미지를 불러오지 못했어요",
+            subTitle: "다음에 다시 시도해주세요"
+        ) {
+            Task { await vm.loadInitialData() }
+        }
+    }
+    
+    // MARK: - 챌린지 이미지 공유하기
+    private var photo: TransferableUIImage {
+        return .init(uiimage: shareChallengeImage, caption: "일상 챌린지 공유하기")
+    }
+    
+    private var shareChallengeImage: UIImage {
+        let renderer = ImageRenderer(
+            content: ApprovalItemContentView(
+                item: vm.selectedChallenge ?? .failedData,
+                width: .screenWidth-40,
+                height: ((.screenWidth-40) / 5) * 4
+            )
+            .padding(20)
+            .background(
+                RoundedRectangle(cornerRadius: 12)
+                    .fill(.white)
+            )
+        )
+        
+        renderer.scale = 3.0
+        return renderer.uiImage ?? .init()
     }
 }
 
