@@ -25,7 +25,7 @@ struct HomeView: View {
     }
     
     var body: some View {
-        Group {
+        NavigationStack {
             switch vm.viewStatus {
             case .loading, .loaded:
                 ScrollView {
@@ -56,6 +56,9 @@ struct HomeView: View {
         .fullScreenCover(isPresented: $vm.showSubmitRouterView) {
             SubmitRouterView(selectedQuest: vm.selectedQuest)
                 .interactiveDismissDisabled()
+        }
+        .navigationDestination(isPresented: $vm.showQuestEngageView) {
+            QuestEngageView(vm: QuestEngageViewModel(quest: vm.selectedQuest, questNetwork: QuestNetwork()))
         }
     }
     

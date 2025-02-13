@@ -43,7 +43,7 @@ struct QuestView: View {
         }
         .sheet(isPresented: $vm.showQuestSheet) {
             QuestDetailView(quest: vm.selectedQuest) {
-                vm.tappedQuestApprovalBtn()
+                vm.onQuestApprovalTapped()
             }
             .presentationDetents([.height(UISheetPresentationController.Detent.questDetailDetentHeight)])
             .presentationDragIndicator(.hidden)
@@ -54,6 +54,9 @@ struct QuestView: View {
         .fullScreenCover(isPresented: $vm.showSubmitRouterView) {
             SubmitRouterView(selectedQuest: vm.selectedQuest)
                 .interactiveDismissDisabled()
+        }
+        .navigationDestination(isPresented: $vm.showQuestEngageView) {
+            QuestEngageView(vm: QuestEngageViewModel(quest: vm.selectedQuest, questNetwork: QuestNetwork()))
         }
     }
 }
@@ -99,7 +102,7 @@ extension QuestView {
                             style: UncompletedStyle(),
                             tagTitle: String(quest.totalRewardXP())+"XP"
                         ) {
-                            vm.tappedQuestBtn(quest: quest)
+                            vm.onQuestTapped(quest: quest)
                         }
                     }
                 case .repeat: // 미완료 반복 퀘스트
@@ -109,7 +112,7 @@ extension QuestView {
                             style: RepeatStyle(repeatType: vm.repeatFilterState.selectedValue),
                             tagTitle: vm.repeatFilterState.selectedValue.description
                         ) {
-                            vm.tappedQuestBtn(quest: quest)
+                            vm.onQuestTapped(quest: quest)
                         }
                     }
                 case .completed: // 완료 퀘스트

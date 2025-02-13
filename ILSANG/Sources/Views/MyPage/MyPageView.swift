@@ -12,7 +12,7 @@ struct MyPageView: View {
     @StateObject var vm: MyPageViewModel = MyPageViewModel(userNetwork: UserNetwork(), challengeNetwork: ChallengeNetwork(), imageNetwork: ImageNetwork(), xpNetwork: XPNetwork())
     
     var body: some View {
-        NavigationView {
+        NavigationView { // TODO: 변경
             VStack(spacing: 0) {
                 header  // 타이틀 & 설정버튼
                 content // 프로필 & 퀘스트/활동/내정보 컨텐츠
