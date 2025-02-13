@@ -43,7 +43,7 @@
 		603CF4E52D732DD800A2D19E /* ImageFullScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 603CF4E42D732DD800A2D19E /* ImageFullScreenView.swift */; };
 		603CF4EF2D79A83600A2D19E /* SubmitStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 603CF4EE2D79A83600A2D19E /* SubmitStatus.swift */; };
 		603CF4F12D79A85500A2D19E /* SubmitFailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 603CF4F02D79A85500A2D19E /* SubmitFailView.swift */; };
-		603CF4F32D79A8CE00A2D19E /* SubmitView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 603CF4F22D79A8CE00A2D19E /* SubmitView.swift */; };
+		603CF4F32D79A8CE00A2D19E /* SubmitInprogressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 603CF4F22D79A8CE00A2D19E /* SubmitInprogressView.swift */; };
 		603CF4F52D79A90100A2D19E /* SubmitCompleteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 603CF4F42D79A90100A2D19E /* SubmitCompleteView.swift */; };
 		603F040B2C2416D2008A2332 /* ImageNetwork.swift in Sources */ = {isa = PBXBuildFile; fileRef = 603F040A2C2416D2008A2332 /* ImageNetwork.swift */; };
 		603F04132C26ADC6008A2332 /* CommonResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 603F04122C26ADC6008A2332 /* CommonResponse.swift */; };
@@ -209,7 +209,7 @@
 		603CF4E42D732DD800A2D19E /* ImageFullScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageFullScreenView.swift; sourceTree = "<group>"; };
 		603CF4EE2D79A83600A2D19E /* SubmitStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubmitStatus.swift; sourceTree = "<group>"; };
 		603CF4F02D79A85500A2D19E /* SubmitFailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubmitFailView.swift; sourceTree = "<group>"; };
-		603CF4F22D79A8CE00A2D19E /* SubmitView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubmitView.swift; sourceTree = "<group>"; };
+		603CF4F22D79A8CE00A2D19E /* SubmitInprogressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubmitInprogressView.swift; sourceTree = "<group>"; };
 		603CF4F42D79A90100A2D19E /* SubmitCompleteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubmitCompleteView.swift; sourceTree = "<group>"; };
 		603F040A2C2416D2008A2332 /* ImageNetwork.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageNetwork.swift; sourceTree = "<group>"; };
 		603F04122C26ADC6008A2332 /* CommonResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonResponse.swift; sourceTree = "<group>"; };
@@ -440,7 +440,7 @@
 			children = (
 				606C21CB2CC6B4FC00803947 /* SubmitStatusView.swift */,
 				603CF4F42D79A90100A2D19E /* SubmitCompleteView.swift */,
-				603CF4F22D79A8CE00A2D19E /* SubmitView.swift */,
+				603CF4F22D79A8CE00A2D19E /* SubmitInprogressView.swift */,
 				603CF4F02D79A85500A2D19E /* SubmitFailView.swift */,
 				603CF4EE2D79A83600A2D19E /* SubmitStatus.swift */,
 			);
@@ -998,7 +998,7 @@
 				A1AB3D692C1141B3001EB9D8 /* KakaoLoginButtonView.swift in Sources */,
 				A142E0312C2D9F37004395F8 /* SettingAlertView.swift in Sources */,
 				601BCF392D7EE63100138387 /* CustomImagePicker.swift in Sources */,
-				603CF4F32D79A8CE00A2D19E /* SubmitView.swift in Sources */,
+				603CF4F32D79A8CE00A2D19E /* SubmitInprogressView.swift in Sources */,
 				601189272C3F00FB0070F2AD /* AuthChannel.swift in Sources */,
 				604687AE2D216EAC0056E394 /* QuestStyle.swift in Sources */,
 				A1BB60262BFE05B000AAADD4 /* MyPageTabView.swift in Sources */,
@@ -1235,6 +1235,7 @@
 				DEVELOPMENT_ASSET_PATHS = "\"ILSANG/Resources/Preview Content\"";
 				DEVELOPMENT_TEAM = V589568L2Q;
 				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ILSANG/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "$(APP_NAME)";
@@ -1442,6 +1443,7 @@
 				DEVELOPMENT_ASSET_PATHS = "\"ILSANG/Resources/Preview Content\"";
 				DEVELOPMENT_TEAM = V589568L2Q;
 				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ILSANG/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "$(APP_NAME)";
@@ -1486,6 +1488,7 @@
 				DEVELOPMENT_ASSET_PATHS = "\"ILSANG/Resources/Preview Content\"";
 				DEVELOPMENT_TEAM = V589568L2Q;
 				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ILSANG/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "$(APP_NAME)";

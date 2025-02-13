@@ -11,7 +11,7 @@ import SwiftUI
 class SubmitRouterViewModel: ObservableObject {
     @Published var selectedImage: UIImage?
     @Published var showSubmitAlertView: Bool = false
-    @Published var submitStatus: SubmitStatus = .submit
+    @Published var submitStatus: SubmitStatus = .inProgress
     
     private let submitService: ImageChallengeSubmitService
     
@@ -60,7 +60,7 @@ class SubmitRouterViewModel: ObservableObject {
     
     @MainActor
     func postChallengeWithImage() async {
-        submitStatus = .submit
+        submitStatus = .inProgress
         
         let isSuccess = await submitService.execute(questId: selectedQuest.id, image: selectedImage)
         
