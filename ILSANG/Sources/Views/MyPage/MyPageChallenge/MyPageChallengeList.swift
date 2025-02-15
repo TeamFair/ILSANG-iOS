@@ -25,7 +25,7 @@ struct MyPageChallengeList: View {
                         }
                     }
                     
-                    if vm.hasMorePage() {
+                    if vm.hasMorePage(for: .challenge) {
                         ProgressView()
                             .padding(.top, 12)
                             .task {

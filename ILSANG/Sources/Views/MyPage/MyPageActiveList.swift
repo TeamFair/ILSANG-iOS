@@ -20,15 +20,23 @@ struct MyPageActiveList: View {
             
             // Data List
             ScrollView {
-                VStack(spacing: 12) {
+                LazyVStack(spacing: 12) {
                     ForEach(vm.xpLogList, id: \.recordId) { xpLog in
                         MyPageListItemView(title: xpLog.title, detail: xpLog.createDate.timeAgoSinceCreation(), point: xpLog.xpPoint)
+                    }
+                    
+                    if vm.hasMorePage(for: .xpLog) {
+                        ProgressView()
+                            .padding(.top, 12)
+                            .task {
+                                await vm.xpLogPaginationManager.loadData(isRefreshing: false)
+                            }
                     }
                 }
                 .padding(.bottom, 60)
             }
             .refreshable {
-                await vm.fetchXpLog(page: 0, size: 10)
+                await vm.xpLogPaginationManager.loadData(isRefreshing: true)
             }
         }
         .overlay {
