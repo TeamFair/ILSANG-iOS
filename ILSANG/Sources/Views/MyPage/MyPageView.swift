@@ -24,10 +24,10 @@ struct MyPageView: View {
             // TODO:
             // 1) 초기화시 데이터 로딩하도록 수정
             // 2) 도전내역 등록했을 때, 리프레시했을 때 재호출하도록 수정
-            await vm.getUser()
-            await vm.getXpStat()
-            await vm.fetchChallengesWithImages(page: 0)
-            await vm.getXpLog(page: 0, size: 10)
+            await vm.fetchUser()
+            await vm.fetchXpStats()
+            await vm.challengePaginationManager.loadData(isRefreshing: true)
+            await vm.fetchXpLog(page: 0, size: 10)
         }
     }
     
