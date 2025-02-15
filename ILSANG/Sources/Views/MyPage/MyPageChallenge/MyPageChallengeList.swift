@@ -18,18 +18,26 @@ struct MyPageChallengeList: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
             
             ScrollView {
-                VStack(spacing: 9) {
-                    ForEach(vm.challengeList, id: \.challenge) { challenge in
-                        NavigationLink(destination: ChallengeDetailView(vm: vm, missionImage: challenge.image, challengeData: challenge.challenge)) {
-                            challengeListItemView(challenge: challenge.challenge, image: challenge.image)
+                LazyVStack(spacing: 9) {
+                    ForEach(Array(vm.challengeList.enumerated()), id: \.offset) { idx, challenge in
+                        NavigationLink(destination: ChallengeDetailView(vm: vm, idx: idx)) {
+                            challengeListItemView(challenge: challenge)
                         }
+                    }
+                    
+                    if vm.hasMorePage() {
+                        ProgressView()
+                            .padding(.top, 12)
+                            .task {
+                                await vm.challengePaginationManager.loadData(isRefreshing: false)
+                            }
                     }
                 }
                 .padding(.top, 12)
                 .padding(.bottom, 72)
             }
             .refreshable {
-                await vm.fetchChallengesWithImages(page: 0)
+                await vm.challengePaginationManager.loadData(isRefreshing: true)
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -40,10 +48,10 @@ struct MyPageChallengeList: View {
         }
     }
     
-    private func challengeListItemView(challenge: Challenge, image: UIImage?) -> some View {
+    private func challengeListItemView(challenge: ChallengeViewModelItem) -> some View {
         ZStack {
             Group {
-                if let image = image {
+                if let image = challenge.challengeImage {
                     Image(uiImage: image)
                         .resizable()
                         .scaledToFill()
@@ -67,7 +75,7 @@ struct MyPageChallengeList: View {
                             endPoint: .bottom
                         )
                     )
-                    .opacity(image == nil ? 0.3 : 1)
+                    .opacity(challenge.challengeImage == nil ? 0.3 : 1)
             }
             .clipShape(RoundedRectangle(cornerRadius: 12))
             

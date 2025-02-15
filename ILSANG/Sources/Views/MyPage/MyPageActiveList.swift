@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct MyPageActiveList: View {
-    
     @ObservedObject var vm: MyPageViewModel
     
     var body: some View {
@@ -29,7 +28,7 @@ struct MyPageActiveList: View {
                 .padding(.bottom, 60)
             }
             .refreshable {
-                await vm.getXpLog(page: 0, size: 10)
+                await vm.fetchXpLog(page: 0, size: 10)
             }
         }
         .overlay {
