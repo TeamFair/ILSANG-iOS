@@ -92,6 +92,10 @@ struct ChallengeDetailView: View {
     }
     
     private var dailyShareUIImage: UIImage {
+        guard vm.challengeList.indices.contains(idx) else {
+            return UIImage()
+        }
+        
         let renderer = ImageRenderer(
             content: ChallengeImageView(missionImage: vm.challengeList[idx].challengeImage ?? .logo, challengeData: vm.challengeList[idx]).frame(width: 440)
         )

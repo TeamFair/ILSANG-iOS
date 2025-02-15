@@ -39,6 +39,16 @@ final class MyPageViewModel: ObservableObject {
         self.xpNetwork = xpNetwork
         
         self.userData = UserService.shared.currentUser
+        
+        Task {
+            await loadInitialData()
+        }
+    }
+    
+    func loadInitialData() async {
+        // TODO: 도전내역 등록했을 때 재호출하도록 수정
+        await challengePaginationManager.loadData(isRefreshing: true)
+        await fetchXpLog(page: 0, size: 10)
     }
     
     @discardableResult @MainActor

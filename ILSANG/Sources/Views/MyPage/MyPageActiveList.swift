@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct MyPageActiveList: View {
-    
     @ObservedObject var vm: MyPageViewModel
     
     var body: some View {
