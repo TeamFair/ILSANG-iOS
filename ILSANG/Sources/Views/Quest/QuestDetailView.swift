@@ -11,6 +11,15 @@ struct QuestDetailView: View {
     let quest: QuestViewModelItem
     let action: () -> Void
     
+    var approvalDescription: String {
+        switch quest.approvalType {
+        case .quiz:
+            "퀘스트를 지금 인증하고,\n보상을 적립받으세요!"
+        case .image:
+            "퀘스트를 수행하셨나요?\n인증 후 포인트를 적립받으세요"
+        }
+    }
+    
     var body: some View {
         VStack(spacing: 0) {
             RoundedRectangle(cornerRadius: 2)
@@ -21,35 +30,24 @@ struct QuestDetailView: View {
 
             Text("퀘스트 정보")
                 .font(.system(size: 17, weight: .bold))
-                .padding(.bottom, 32)
+                .padding(.bottom, 15)
             
-            questInfoView
+            QuestInfoView(quest: quest)
+                .padding(.horizontal, -16)
+                .padding(.vertical, -20)
+                .background(Color.blue)
             
             Divider()
                 .foregroundStyle(.gray100)
-                .padding(.top, 16)
-                .padding(.bottom, quest.isRepeatQuest ? 16 : 32)
-            
-            if quest.isRepeatQuest {
-                Text("획득 가능 스탯")
-                    .font(.system(size: 11, weight: .semibold))
-                    .foregroundStyle(.white)
-                    .padding(.vertical, 4)
-                    .padding(.horizontal, 8)
-                    .background(
-                        RoundedRectangle(cornerRadius: 12)
-                            .fill(Color.primaryPurple)
-                    )
-                    .padding(.bottom, 16)
-            }
+                .padding(.vertical, 16)
             
             statTagViewList
+                .padding(.top, 6)
             
-            Text("퀘스트를 수행하셨나요?\n인증 후 포인트를 적립받으세요")
+            Text(approvalDescription)
                 .font(.system(size: 14, weight: .regular))
                 .multilineTextAlignment(.center)
                 .lineSpacing(4)
-                .padding(.vertical, 10)
             
             Spacer(minLength: 0)
             
@@ -61,49 +59,6 @@ struct QuestDetailView: View {
         .padding(.horizontal, 20)
     }
     
-    private var questInfoView: some View {
-        HStack(spacing: 0) {
-            Image(uiImage: quest.image ?? .logo)
-                .resizable()
-                .scaledToFill()
-                .frame(width: 80, height: 80)
-                .clipShape(Circle())
-                .padding(.trailing, 8)
-            
-            VStack(alignment: .leading, spacing: 0) {
-                Group {
-                    if quest.isRepeatQuest, let repeatType = quest.repeatType {
-                        HStack(spacing: 4) {
-                            Text("반복 퀘스트")
-                            TagView(title: repeatType.description, tagStyle: .repeat(repeatType))
-                        }
-                    } else {
-                        Text(quest.writer)
-                    }
-                }
-                .font(.system(size: 15, weight: .regular))
-                .frame(height: quest.missionTitle.count >= 12 ? 22 : 30)
-                
-                Text(quest.missionTitle.forceCharWrapping)
-                    .font(.system(size: 17, weight: .bold))
-                    .kerning(-0.3)
-                    .lineLimit(2)
-            }
-            
-            Spacer(minLength: 0)
-            
-            Text(String(quest.totalRewardXP()) + "XP")
-                .font(.system(size: 17, weight: .bold))
-                .foregroundStyle(.primaryPurple)
-                .padding(.vertical, 12)
-                .padding(.horizontal, 8)
-                .background(
-                    RoundedRectangle(cornerRadius: 12)
-                        .foregroundStyle(Color.primary100)
-                )
-        }
-    }
-    
     private var statTagViewList: some View {
         HStack(spacing: 12) {
             ForEach(Array(XpStat.sortedStat), id: \.rawValue) { stat in
@@ -113,7 +68,7 @@ struct QuestDetailView: View {
                 }
             }
         }
-        .padding(.bottom, 7)
+        .padding(.bottom, 27)
     }
     
     private func statTagView(stat: XpStat, point: Int) -> some View {
@@ -135,24 +90,28 @@ struct QuestDetailView: View {
                     .frame(width: 32, height: 32)
                     .frame(width: 48, height: 48)
                 
-                HStack(spacing: 0) {
+                HStack(spacing: 2) {
                     Text("\(point)P")
                         .font(.system(size: 15, weight: .bold))
                         .foregroundStyle(.primaryPurple)
-                    Spacer(minLength: 0)
                     Image(.arrowUp)
                         .resizable()
                         .scaledToFit()
                         .frame(width: 12)
                 }
-                .frame(width: 56, height: 20)
+                .frame(width: 56, height: 18)
             }
-            .padding(.vertical, 6)
         }
     }
 }
 
 #Preview {
     QuestDetailView(quest: .mockRepeatData, action: { })
+        .frame(height: 464)
+}
+
+
+#Preview {
+    QuestDetailView(quest: .mockData, action: { })
         .frame(height: 464)
 }

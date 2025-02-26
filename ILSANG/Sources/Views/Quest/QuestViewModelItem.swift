@@ -50,17 +50,34 @@ struct QuestViewModelItem: Hashable, Identifiable {
     
     var isRepeatQuest: Bool { self.type == "REPEAT" }
     var repeatType: RepeatType? { RepeatType(rawValue: self.target.lowercased()) ?? nil }
-    var approvalType: ApprovalType { self.type == "REPEAT" ? .quiz : .image } // TODO: 수정
-    var quizType: QuizType { self.target == "DAILY" ? .text : .ox } // TODO: 수정
+    var approvalType: ApprovalType { self.type == "REPEAT" ? .quiz(self.target == "DAILY" ? .text : .ox ) : .image } // TODO: 수정
     var question: String { "문제입니다" } // TODO: 수정
     var hint: String? { "힌트입니다." } // TODO: 수정
     
     enum QuizType {
         case text, ox
+        
+        var description: String {
+            switch self {
+            case .text:
+                "서술형"
+            case .ox:
+                "OX"
+            }
+        }
     }
     
-    enum ApprovalType {
-        case quiz, image
+    enum ApprovalType: Equatable {
+        case quiz(QuizType), image
+        
+        var description: String {
+            switch self {
+            case .quiz(let quizType):
+                quizType.description
+            case .image:
+                "사진인증"
+            }
+        }
     }
     
     func totalRewardXP() -> Int {
