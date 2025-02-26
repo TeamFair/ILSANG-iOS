@@ -30,7 +30,7 @@ struct TagView: View {
 
 extension TagView {
     enum TagStyle {
-        case level, levelStroke, xp, xpWithIcon, `repeat`(RepeatType)
+        case level, levelStroke, xp, xpWithIcon, `repeat`(RepeatType), approvalType
         
         var font: Font {
             switch self {
@@ -39,6 +39,7 @@ extension TagView {
             case .xp: return .system(size: 10, weight: .semibold)
             case .xpWithIcon: return .system(size: 12, weight: .regular)
             case .repeat: return .system(size: 10, weight: .semibold)
+            case .approvalType: return .system(size: 10, weight: .semibold)
             }
         }
         
@@ -49,6 +50,7 @@ extension TagView {
             case .xp: return .white
             case .xpWithIcon: return .primaryPurple
             case .repeat(let type): return type.fgColor
+            case .approvalType: return .white
             }
         }
         
@@ -59,22 +61,21 @@ extension TagView {
             case .xp: return .primaryPurple
             case .xpWithIcon: return .clear
             case .repeat: return .white
+            case .approvalType: return .gray500
             }
         }
         
         var gradient: Gradient? {
             switch self {
-            case .repeat(let type):
-                return type.bgGradient
-            case .level, .levelStroke, .xp, .xpWithIcon:
-                return nil
+            case .repeat(let type): return type.bgGradient
+            default: return nil
             }
         }
         
         var strokeColor: Color? {
             switch self {
             case .xpWithIcon, .levelStroke: return .primaryPurple
-            case .level, .xp, .repeat: return nil
+            default: return nil
             }
         }
         
@@ -85,12 +86,13 @@ extension TagView {
             case .xp: return EdgeInsets(top: 0, leading: 7, bottom: 0, trailing: 7)
             case .xpWithIcon: return EdgeInsets(top: 0, leading: 4, bottom: 0, trailing: 4)
             case .repeat: return EdgeInsets(top: 0, leading: 11, bottom: 0, trailing: 11)
+            case .approvalType: return EdgeInsets(top: 0, leading: 11, bottom: 0, trailing: 11)
             }
         }
         
         var height: CGFloat {
             switch self {
-            case .level, .levelStroke, .xp, .repeat:
+            case .level, .levelStroke, .xp, .repeat, .approvalType:
                 20
             case .xpWithIcon:
                 25

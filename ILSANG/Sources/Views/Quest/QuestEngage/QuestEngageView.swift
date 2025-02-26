@@ -29,7 +29,9 @@ struct QuestEngageView: View {
                     QuestInfoView(quest: vm.quest)
                     
                     // 인증 참여 방법 설명
-                    EngageSubscriptionView(type: vm.quest.quizType)
+                    if case let .quiz(quizType) = vm.quest.approvalType {
+                        EngageSubscriptionView(type: quizType)
+                    }
                     
                     // 퀴즈 영역
                     QuizView(quest: vm.quest, selectedAnswer: $vm.selectedAnswer, isKeyboardVisible: $vm.isKeyboardVisible)

@@ -7,18 +7,19 @@
 
 import SwiftUI
 
-
 struct QuizView: View, KeyboardReadable {
     let quest: QuestViewModelItem
     @Binding var selectedAnswer: String
     @Binding var isKeyboardVisible: Bool
     
     var body: some View {
-        switch quest.quizType {
-        case .text:
-            textQuizView(question: quest.question, hint: quest.hint ?? "", userAnswer: selectedAnswer)
-        case .ox:
-            oxQuizView(question: quest.question, selection: selectedAnswer)
+        if case let .quiz(quizType) = quest.approvalType {
+            switch quizType {
+            case .text:
+                textQuizView(question: quest.question, hint: quest.hint ?? "", userAnswer: selectedAnswer)
+            case .ox:
+                oxQuizView(question: quest.question, selection: selectedAnswer)
+            }
         }
     }
     

@@ -149,7 +149,7 @@ enum SubmitStatus {
         switch self {
         case .inProgress, .complete: ""
         case .fail: "다시 시도해보세요🥲"
-        case .retry: "정답을 맞힐 때까지 도전할 수 있어요!"
+        case .retry: "계속해서 도전할 수 있어요!"
         }
     }
     

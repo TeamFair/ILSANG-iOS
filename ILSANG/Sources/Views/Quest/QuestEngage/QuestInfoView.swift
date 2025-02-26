@@ -28,21 +28,29 @@ struct QuestInfoView: View {
                     .kerning(-0.2)
                     .lineLimit(2)
                 
-                if quest.isRepeatQuest, let repeatType = quest.repeatType {
+                HStack(spacing: 2) {
+                    // 반복 퀘스트 태그
+                    if quest.isRepeatQuest, let repeatType = quest.repeatType {
+                        TagView(
+                            title: repeatType.description,
+                            tagStyle: .repeat(repeatType)
+                        )
+                    }
+                    
+                    // 인증방법 태그 (사진, 서술형, OX)
                     TagView(
-                        title: repeatType.description,
-                        tagStyle: .repeat(repeatType)
+                        title:  quest.approvalType.description,
+                        tagStyle: .approvalType
                     )
                 }
             }
             
-            Spacer(minLength: 4)
+            Spacer(minLength: 8)
             
             Text(String(quest.totalRewardXP()) + "XP")
-                .font(.system(size: 17, weight: .bold))
+                .styledFont(.heading1)
                 .foregroundStyle(.primaryPurple)
-                .padding(.vertical, 12)
-                .padding(.horizontal, 8)
+                .padding(10)
                 .background(
                     RoundedRectangle(cornerRadius: 12)
                         .foregroundStyle(Color.primary100)
