@@ -35,7 +35,9 @@ struct HomeView: View {
                     }
                 }
                 .refreshable {
-                    await vm.loadInitialData()
+                    Task {
+                        await vm.loadInitialData()
+                    }
                 }
                 .disabled(vm.viewStatus == .loading)
             case .error:
