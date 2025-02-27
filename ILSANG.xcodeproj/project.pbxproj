@@ -28,6 +28,7 @@
 		602988222D041DDC00903806 /* RepeatType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 602988212D041DDC00903806 /* RepeatType.swift */; };
 		60299E312CBFFF160039663F /* TransferableUIImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60299E302CBFFF160039663F /* TransferableUIImage.swift */; };
 		60299E392CC13DEC0039663F /* ImageCacheService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60299E382CC13DEC0039663F /* ImageCacheService.swift */; };
+		603CF4CB2D7057BF00A2D19E /* ImageChallengeSubmitService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 603CF4CA2D7057BF00A2D19E /* ImageChallengeSubmitService.swift */; };
 		603F040B2C2416D2008A2332 /* ImageNetwork.swift in Sources */ = {isa = PBXBuildFile; fileRef = 603F040A2C2416D2008A2332 /* ImageNetwork.swift */; };
 		603F04132C26ADC6008A2332 /* CommonResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 603F04122C26ADC6008A2332 /* CommonResponse.swift */; };
 		6044B71D2C32B6A4002C13A0 /* UIImage++.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6044B71C2C32B6A4002C13A0 /* UIImage++.swift */; };
@@ -96,7 +97,6 @@
 		60C6B4D72C2C569800926C0E /* Challenge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60C6B4D62C2C569800926C0E /* Challenge.swift */; };
 		60C6B4DC2C2D042700926C0E /* Image.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60C6B4DB2C2D042700926C0E /* Image.swift */; };
 		60C6B4DF2C2D053600926C0E /* SubmitRouterViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60C6B4DE2C2D053600926C0E /* SubmitRouterViewModel.swift */; };
-		60C6B4E12C2D1C0100926C0E /* SubmitAlertViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60C6B4E02C2D1C0100926C0E /* SubmitAlertViewModel.swift */; };
 		60DADF552C6B4EC7001A0B3A /* Data++.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60DADF542C6B4EC7001A0B3A /* Data++.swift */; };
 		60E258052D09CE1B0052C048 /* StatRank.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60E258042D09CE1B0052C048 /* StatRank.swift */; };
 		60FB50CD2D15CEAE00C55E82 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60FB50CC2D15CEAE00C55E82 /* HomeView.swift */; };
@@ -178,6 +178,7 @@
 		602988212D041DDC00903806 /* RepeatType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepeatType.swift; sourceTree = "<group>"; };
 		60299E302CBFFF160039663F /* TransferableUIImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferableUIImage.swift; sourceTree = "<group>"; };
 		60299E382CC13DEC0039663F /* ImageCacheService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCacheService.swift; sourceTree = "<group>"; };
+		603CF4CA2D7057BF00A2D19E /* ImageChallengeSubmitService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageChallengeSubmitService.swift; sourceTree = "<group>"; };
 		603F040A2C2416D2008A2332 /* ImageNetwork.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageNetwork.swift; sourceTree = "<group>"; };
 		603F04122C26ADC6008A2332 /* CommonResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonResponse.swift; sourceTree = "<group>"; };
 		6044B71C2C32B6A4002C13A0 /* UIImage++.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage++.swift"; sourceTree = "<group>"; };
@@ -250,7 +251,6 @@
 		60C6B4D62C2C569800926C0E /* Challenge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Challenge.swift; sourceTree = "<group>"; };
 		60C6B4DB2C2D042700926C0E /* Image.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Image.swift; sourceTree = "<group>"; };
 		60C6B4DE2C2D053600926C0E /* SubmitRouterViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubmitRouterViewModel.swift; sourceTree = "<group>"; };
-		60C6B4E02C2D1C0100926C0E /* SubmitAlertViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubmitAlertViewModel.swift; sourceTree = "<group>"; };
 		60DADF542C6B4EC7001A0B3A /* Data++.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Data++.swift"; sourceTree = "<group>"; };
 		60E258042D09CE1B0052C048 /* StatRank.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatRank.swift; sourceTree = "<group>"; };
 		60FB50CC2D15CEAE00C55E82 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
@@ -366,6 +366,7 @@
 				6011891C2C3E8B3B0070F2AD /* UserService.swift */,
 				601189202C3E94A60070F2AD /* AuthService.swift */,
 				60299E382CC13DEC0039663F /* ImageCacheService.swift */,
+				603CF4CA2D7057BF00A2D19E /* ImageChallengeSubmitService.swift */,
 			);
 			path = Service;
 			sourceTree = "<group>";
@@ -667,7 +668,6 @@
 				605DA0CE2C07118900CC9450 /* SubmitRouterView.swift */,
 				60C6B4DE2C2D053600926C0E /* SubmitRouterViewModel.swift */,
 				607FCC322C01AA7300BB2D04 /* SubmitAlertView.swift */,
-				60C6B4E02C2D1C0100926C0E /* SubmitAlertViewModel.swift */,
 				606C21CB2CC6B4FC00803947 /* SubmitStatusView.swift */,
 			);
 			path = Submit;
@@ -986,6 +986,7 @@
 				A1868C442C09B6C50020BF16 /* ChallengeDetailView.swift in Sources */,
 				6044B71D2C32B6A4002C13A0 /* UIImage++.swift in Sources */,
 				607FCBD42BFA648000BB2D04 /* Tab.swift in Sources */,
+				603CF4CB2D7057BF00A2D19E /* ImageChallengeSubmitService.swift in Sources */,
 				6090A5F52D53AC3300A01429 /* AppVersionManager.swift in Sources */,
 				6011891F2C3E94380070F2AD /* AuthUser.swift in Sources */,
 				60ADF9BD2D59D3FD00556958 /* FontStyle.swift in Sources */,
@@ -1031,7 +1032,6 @@
 				A1FF91702C25119200F03E4B /* XPNetwork.swift in Sources */,
 				A1BB602C2BFF145100AAADD4 /* MyPageProfile.swift in Sources */,
 				607FCBE92BFE418600BB2D04 /* QuestViewModel.swift in Sources */,
-				60C6B4E12C2D1C0100926C0E /* SubmitAlertViewModel.swift in Sources */,
 				607FCBE72BFD12B100BB2D04 /* QuestViewModelItem.swift in Sources */,
 				605334552D298A1400599159 /* TutorialView.swift in Sources */,
 				A19628692C0775A70037C53A /* Setting.swift in Sources */,

@@ -28,8 +28,9 @@ struct ChallengeDetailView: View {
                 trailingButton /// 공유 & 삭제 버튼
             }
             .padding(.bottom, 8) // 세로로 긴 이미지 대응 (NavigationTitleView의 bottom 패딩과 겹침)
-            
-            if let missionImage = vm.challengeList[idx].challengeImage {
+           
+            if vm.challengeList.indices.contains(idx),
+                let missionImage = vm.challengeList[idx].challengeImage {
                 ChallengeImageView(missionImage: missionImage, challengeData: vm.challengeList[idx])
             } else {
                 ErrorView(title: "챌린지 정보를 불러오지 못했어요", subTitle: "챌린지 정보를 불러오는 데 실패했어요.\n인터넷 연결 상태 확인 후 다시 시도해주세요.") {
