@@ -34,8 +34,9 @@ struct QuestView: View {
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Color.background)
-        .onReceive(vm.$selectedHeader
-            .combineLatest(vm.$selectedXpStat, vm.repeatFilterState.$selectedValue, vm.repeatFilterState.$selectedValue)) { _ in
+        .onReceive(
+            vm.$selectedHeader.combineLatest(vm.$selectedXpStat, vm.questFilterState.$selectedValue, vm.repeatFilterState.$selectedValue)
+        ) { _ in
             vm.closeFilterPicker()
         }
         .onReceive(sharedState.$selectedXpStat) { newValue in
@@ -89,76 +90,89 @@ extension QuestView {
     }
     
     private var questListView: some View {
-        ScrollView {
-            LazyVStack(spacing: 12) {
-                switch vm.selectedHeader {
-                case .default: // 미완료 퀘스트
-                    ForEach(vm.filteredDefaultQuestListByXpStat, id: \.id) { quest in
-                        QuestItemView(
-                            quest: quest,
-                            style: UncompletedStyle(),
-                            tagTitle: String(quest.totalRewardXP())+"XP"
-                        ) {
-                            vm.tappedQuestBtn(quest: quest)
-                        }
-                    }
-                case .repeat: // 미완료 반복 퀘스트
-                    ForEach(vm.filteredRepeatQuestListByXpStat, id: \.id) { quest in
-                        QuestItemView(
-                            quest: quest,
-                            style: RepeatStyle(repeatType: vm.repeatFilterState.selectedValue),
-                            tagTitle: vm.repeatFilterState.selectedValue.description
-                        ) {
-                            vm.tappedQuestBtn(quest: quest)
-                        }
-                    }
-                case .completed: // 완료 퀘스트
-                    ForEach(vm.itemListByStatus[.completed, default: []], id: \.id) { quest in
-                        QuestItemView(
-                            quest: quest,
-                            style: CompletedStyle(),
-                            tagTitle: String(quest.totalRewardXP())+"XP"
-                        ) { }
-                    }
-                    
-                    if vm.hasMorePage(status: .completed) {
-                        ProgressView()
-                            .onAppear {
-                                Task {
-                                    await vm.completedPaginationManager.loadData(isRefreshing: false)
-                                }
-                            }
-                    }
+        ScrollViewReader { proxy in
+            ScrollView {
+                Spacer().frame(height: 0).id("top")
+                
+                questListContent
+            }
+            .refreshable {
+                await vm.refreshData()
+            }
+            .frame(maxWidth: .infinity)
+            .overlay {
+                if vm.isCurrentListEmpty {
+                    questListEmptyView
                 }
             }
-            .padding(.top, vm.selectedHeader == .default || vm.selectedHeader == .repeat ? 70 : 0)
-            .overlay(alignment: .top) {
-                Group {
-                    if (vm.selectedHeader == .default) {
+            .onReceive(vm.$selectedHeader
+                .combineLatest(vm.$selectedXpStat, vm.questFilterState.$selectedValue, vm.repeatFilterState.$selectedValue)) { _ in
+                    vm.closeFilterPicker()
+                    withAnimation {
+                        proxy.scrollTo("top", anchor: .top)
+                    }
+                }
+        }
+    }
+    
+    private var questListContent: some View {
+        LazyVStack(spacing: 12) {
+            switch vm.selectedHeader {
+            case .default: // 미완료 퀘스트
+                ForEach(vm.filteredDefaultQuestListByXpStat, id: \.id) { quest in
+                    QuestItemView(
+                        quest: quest,
+                        style: UncompletedStyle(),
+                        tagTitle: String(quest.totalRewardXP())+"XP"
+                    ) {
+                        vm.tappedQuestBtn(quest: quest)
+                    }
+                }
+            case .repeat: // 미완료 반복 퀘스트
+                ForEach(vm.filteredRepeatQuestListByXpStat, id: \.id) { quest in
+                    QuestItemView(
+                        quest: quest,
+                        style: RepeatStyle(repeatType: vm.repeatFilterState.selectedValue),
+                        tagTitle: vm.repeatFilterState.selectedValue.description
+                    ) {
+                        vm.tappedQuestBtn(quest: quest)
+                    }
+                }
+            case .completed: // 완료 퀘스트
+                ForEach(vm.itemListByStatus[.completed, default: []], id: \.id) { quest in
+                    QuestItemView(
+                        quest: quest,
+                        style: CompletedStyle(),
+                        tagTitle: String(quest.totalRewardXP())+"XP"
+                    ) { }
+                }
+                
+                if vm.hasMorePage(status: .completed) {
+                    ProgressView()
+                        .task {
+                            await vm.completedPaginationManager.loadData(isRefreshing: false)
+                        }
+                }
+            }
+        }
+        .padding(.top, vm.selectedHeader == .default || vm.selectedHeader == .repeat ? 70 : 0)
+        .overlay(alignment: .top) {
+            Group {
+                if (vm.selectedHeader == .default) {
+                    filterPickerDefaultView
+                } else if (vm.selectedHeader == .repeat) {
+                    HStack(alignment: .top, spacing: 8) {
+                        filterPickerRepeatView
                         filterPickerDefaultView
-                    } else if (vm.selectedHeader == .repeat) {
-                        HStack(alignment: .top, spacing: 8) {
-                            filterPickerRepeatView
-                            filterPickerDefaultView
-                        }
                     }
                 }
-                .padding(.top, 13)
-                .padding(.bottom, 16)
-                .padding(.trailing, 20)
-                .frame(maxWidth: .infinity, alignment: .trailing)
             }
-            .padding(.bottom, 72)
+            .padding(.top, 13)
+            .padding(.bottom, 16)
+            .padding(.trailing, 20)
+            .frame(maxWidth: .infinity, alignment: .trailing)
         }
-        .refreshable {
-            await vm.refreshData()
-        }
-        .frame(maxWidth: .infinity)
-        .overlay {
-            if vm.isCurrentListEmpty {
-                questListEmptyView
-            }
-        }
+        .padding(.bottom, 72)
     }
     
     private var filterPickerDefaultView: some View {
