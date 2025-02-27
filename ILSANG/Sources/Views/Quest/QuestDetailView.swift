@@ -30,16 +30,15 @@ struct QuestDetailView: View {
 
             Text("퀘스트 정보")
                 .font(.system(size: 17, weight: .bold))
-                .padding(.bottom, 15)
+                .padding(.bottom, 18)
             
             QuestInfoView(quest: quest)
                 .padding(.horizontal, -16)
                 .padding(.vertical, -20)
-                .background(Color.blue)
             
             Divider()
                 .foregroundStyle(.gray100)
-                .padding(.vertical, 16)
+                .padding(.vertical, 18)
             
             statTagViewList
                 .padding(.top, 6)
