@@ -11,19 +11,21 @@ struct MainTabView: View {
     @StateObject var sharedState = SharedState()
 
     var body: some View {
-        TabView(selection: $sharedState.selectedTab) {
-            ForEach(Tab.allCases, id: \.self) { tab in
-                createTabView(for: tab)
-                    .tabItem {
-                        Image(tab == sharedState.selectedTab ? tab.selectedIcon: tab.icon)
-                        Text(tab.title)
-                    }
-                    .tag(tab)
+        NavigationStack {
+            TabView(selection: $sharedState.selectedTab) {
+                ForEach(Tab.allCases, id: \.self) { tab in
+                    createTabView(for: tab)
+                        .tabItem {
+                            Image(tab == sharedState.selectedTab ? tab.selectedIcon: tab.icon)
+                            Text(tab.title)
+                        }
+                        .tag(tab)
+                }
             }
+            .environmentObject(sharedState) // 뷰 모델 전달
+            .navigationBarTitleDisplayMode(.inline)
+            .navigationBarBackButtonHidden(true)
         }
-        .environmentObject(sharedState) // 뷰 모델 전달
-        .navigationBarTitleDisplayMode(.inline)
-        .navigationBarBackButtonHidden(true)
     }
     
     @ViewBuilder
