@@ -13,7 +13,7 @@ struct SubmitRouterView: View {
     @Environment(\.dismiss) var dismiss
 
     init(selectedQuest: QuestViewModelItem) {
-        _vm = StateObject(wrappedValue: SubmitRouterViewModel(selectedQuest: selectedQuest))
+        _vm = StateObject(wrappedValue: SubmitRouterViewModel(selectedQuest: selectedQuest, submitService: ImageChallengeSubmitService(imageNetwork: ImageNetwork(), challengeNetwork: ChallengeNetwork())))
     }
 
     var body: some View {
@@ -41,7 +41,7 @@ struct SubmitRouterView: View {
         }
         .background(Color.white)
         .overlay {
-            SubmitAlertView(selectedImage: vm.selectedImage, selectedQuest: vm.selectedQuest, showSubmitAlertView: vm.showSubmitAlertView)
+            SubmitAlertView(vm: vm)
         }
     }
 }

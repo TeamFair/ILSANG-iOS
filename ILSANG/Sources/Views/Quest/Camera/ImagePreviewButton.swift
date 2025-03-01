@@ -89,5 +89,13 @@ struct ImageDataTransferable: Transferable {
 }
 
 #Preview {
-    ImagePreviewButton(submitViewModel: SubmitRouterViewModel(selectedQuest: .mockData))
+    ImagePreviewButton(
+        submitViewModel: SubmitRouterViewModel(
+            selectedQuest: .mockData,
+            submitService: ImageChallengeSubmitService(
+                imageNetwork: ImageNetwork(),
+                challengeNetwork: ChallengeNetwork()
+            )
+        )
+    )
 }
