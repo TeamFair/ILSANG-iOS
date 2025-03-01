@@ -136,7 +136,7 @@ struct ApprovalView: View {
     
     private var shareChallengeImage: UIImage {
         let renderer = ImageRenderer(
-            content: ApprovalItemContentView(
+            content: ApprovalItemContentShareView(
                 item: vm.selectedChallenge ?? .failedData,
                 width: .screenWidth-40,
                 height: ((.screenWidth-40) / 5) * 4
