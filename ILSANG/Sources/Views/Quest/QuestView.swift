@@ -34,6 +34,9 @@ struct QuestView: View {
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Color.background)
+        .task {
+            await vm.loadDataIfNeeded()
+        }
         .onReceive(
             vm.$selectedHeader.combineLatest(vm.$selectedXpStat, vm.questFilterState.$selectedValue, vm.repeatFilterState.$selectedValue)
         ) { _ in

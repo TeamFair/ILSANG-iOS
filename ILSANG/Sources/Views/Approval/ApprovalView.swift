@@ -27,7 +27,7 @@ struct ApprovalView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Color.background)
         .task {
-            await vm.loadInitialData()
+            await vm.loadDataIfNeeded()
         }
         .overlay { reportAlertView }
     }

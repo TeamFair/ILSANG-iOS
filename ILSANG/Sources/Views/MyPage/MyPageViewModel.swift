@@ -48,8 +48,11 @@ final class MyPageViewModel: ObservableObject {
         self.xpNetwork = xpNetwork
         
         self.userData = UserService.shared.currentUser
-        
-        Task {
+    }
+    
+    @MainActor
+    func loadDataIfNeeded() async {
+        if challengeList.isEmpty || xpLogList.isEmpty {
             await loadInitialData()
         }
     }

@@ -28,6 +28,9 @@ struct RankingView: View {
             }
         }
         .background(Color.background)
+        .task {
+            await vm.loadRankIfNeeded(xpStat: vm.selectedXpStat)
+        }
         .onChange(of: vm.selectedXpStat) { _, newValue in
             Task {
                 await vm.loadRankIfNeeded(xpStat: newValue)

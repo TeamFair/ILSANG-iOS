@@ -26,6 +26,9 @@ struct MyPageView: View {
             // 2) 도전내역 등록했을 때, 리프레시했을 때 재호출하도록 수정
             await vm.fetchUser()
             await vm.fetchXpStats()
+            
+            // 도전내역, 활동로그 불러오기
+            await vm.loadDataIfNeeded()
         }
     }
     
