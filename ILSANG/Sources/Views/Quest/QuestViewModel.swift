@@ -126,8 +126,10 @@ class QuestViewModel: ObservableObject {
             guard let self = self else { return }
             Task { await self.repeatPaginationManager.loadData(isRefreshing: true) }
         }
-        
-        Task {
+    }
+    
+    func loadDataIfNeeded() async {
+        if isCurrentListEmpty {
             await loadInitialData()
         }
     }

@@ -25,9 +25,6 @@ class RankingViewModel: ObservableObject {
     
     init(rankNetwork: RankNetwork)  {
         self.rankNetwork = rankNetwork
-        Task {
-            await loadRankIfNeeded(xpStat: selectedXpStat)
-        }
     }
     
     func loadRankIfNeeded(xpStat: XpStat) async {
