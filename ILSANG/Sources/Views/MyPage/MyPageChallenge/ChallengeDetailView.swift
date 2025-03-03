@@ -12,15 +12,11 @@ struct ChallengeDetailView: View {
     @Environment(\.dismiss) var dismiss
     @ObservedObject var vm: MyPageViewModel
     
-    @State private var missionImage: UIImage?
-    @State private var questImage: UIImage?
+    let idx: Int
     
-    let challengeData : Challenge
-    
-    init(vm: MyPageViewModel, missionImage: UIImage?, challengeData: Challenge) {
+    init(vm: MyPageViewModel, idx: Int) {
         self.vm = vm
-        self._missionImage = State(initialValue: missionImage)
-        self.challengeData = challengeData
+        self.idx = idx
     }
     
     var body: some View {
@@ -32,13 +28,14 @@ struct ChallengeDetailView: View {
                 trailingButton /// 공유 & 삭제 버튼
             }
             .padding(.bottom, 8) // 세로로 긴 이미지 대응 (NavigationTitleView의 bottom 패딩과 겹침)
-            
-            if let missionImage = missionImage {
-                ChallengeImageView(missionImage: missionImage, questImage: questImage, challengeData: challengeData)
+           
+            if vm.challengeList.indices.contains(idx),
+                let missionImage = vm.challengeList[idx].challengeImage {
+                ChallengeImageView(missionImage: missionImage, challengeData: vm.challengeList[idx])
             } else {
                 ErrorView(title: "챌린지 정보를 불러오지 못했어요", subTitle: "챌린지 정보를 불러오는 데 실패했어요.\n인터넷 연결 상태 확인 후 다시 시도해주세요.") {
                     Task {
-                        missionImage = await vm.getImage(imageId: challengeData.receiptImageId)
+                        vm.challengeList[idx].challengeImage = await vm.getImage(imageId: vm.challengeList[idx].challengeImageId)
                     }
                 }
             }
@@ -46,8 +43,8 @@ struct ChallengeDetailView: View {
         .background(Color.background)
         .navigationBarBackButtonHidden()
         .task {
-            if let questImageId = challengeData.questImageId {
-                self.questImage = await vm.getImage(imageId: questImageId)
+            if let questImageId = vm.challengeList[idx].writerImageId {
+                self.vm.challengeList[idx].writerImage = await vm.getImage(imageId: questImageId)
             }
         }
         .overlay {
@@ -57,7 +54,7 @@ struct ChallengeDetailView: View {
                     onCancel: { vm.challengeDelete = false },
                     onConfirm: {
                         Task {
-                            if await vm.updateChallengeStatus(challengeId: challengeData.challengeId,ImageId: challengeData.receiptImageId) {
+                            if await vm.updateChallengeStatus(challengeId: vm.challengeList[idx].challengeId, imageId: vm.challengeList[idx].challengeImageId) {
                                 vm.challengeDelete = false
                                 dismiss()
                             } else {
@@ -96,8 +93,12 @@ struct ChallengeDetailView: View {
     }
     
     private var dailyShareUIImage: UIImage {
+        guard vm.challengeList.indices.contains(idx) else {
+            return UIImage()
+        }
+        
         let renderer = ImageRenderer(
-            content: ChallengeImageView(missionImage: missionImage ?? .logo, questImage: questImage ?? .logo, challengeData: challengeData).frame(width: 440)
+            content: ChallengeImageView(missionImage: vm.challengeList[idx].challengeImage ?? .logo, challengeData: vm.challengeList[idx]).frame(width: 440)
         )
         renderer.scale = 3.0
         return renderer.uiImage ?? .init()
@@ -106,8 +107,7 @@ struct ChallengeDetailView: View {
 
 struct ChallengeImageView: View {
     let missionImage: UIImage
-    let questImage: UIImage?
-    let challengeData : Challenge
+    let challengeData : ChallengeViewModelItem
 
     var body: some View {
         Image(uiImage: missionImage)
@@ -121,8 +121,8 @@ struct ChallengeImageView: View {
     
     private var challengeInfoView: some View {
         HStack(spacing: 0) {
-            if let questImage = questImage {
-                Image(uiImage: questImage)
+            if let writerImage = challengeData.writerImage {
+                Image(uiImage: writerImage)
                     .resizable()
                     .frame(width: 48, height: 48)
                     .background(.primary100)
@@ -179,8 +179,7 @@ struct ChallengeImageView: View {
                     imageNetwork: ImageNetwork(),
                     xpNetwork: XPNetwork()
                 ),
-                missionImage: .logo,
-                challengeData: .challengeMockData
+                idx: 0
             )
         }
         .tabItem {

@@ -13,10 +13,28 @@ final class MyPageViewModel: ObservableObject {
     @Published var selectedTab: MyPageTab = .quest
     
     @Published var xpStats: [XpStat: Int] = [:]
+    @Published var challengeList: [ChallengeViewModelItem] = []
     @Published var xpLogList: [XpLog] = []
-    @Published var challengeList: [(challenge: Challenge, image: UIImage?)] = [] // [(Challenge.challengeMockData, nil)]
     
     @Published var challengeDelete = false
+    
+    lazy var challengePaginationManager = PaginationManager<ChallengeViewModelItem>(
+        size: 10,
+        threshold: 7,
+        loadPage: { [weak self] page in
+            guard let self = self else { return ([], 0) }
+            return await loadChallengeListWithImage(page: page, size: 10)
+        }
+    )
+    
+    lazy var xpLogPaginationManager = PaginationManager<XpLog>(
+        size: 10,
+        threshold: 7,
+        loadPage: { [weak self] page in
+            guard let self = self else { return ([], 0) }
+            return await loadXpLogList(page: page, size: 10)
+        }
+    )
     
     private let userNetwork: UserNetwork
     private let challengeNetwork: ChallengeNetwork
@@ -33,7 +51,92 @@ final class MyPageViewModel: ObservableObject {
     }
     
     @MainActor
-    func getUser() async {
+    func loadDataIfNeeded() async {
+        if challengeList.isEmpty || xpLogList.isEmpty {
+            await loadInitialData()
+        }
+    }
+    
+    func loadInitialData() async {
+        // TODO: 도전내역 등록했을 때 재호출하도록 수정
+        await challengePaginationManager.loadData(isRefreshing: true)
+        await xpLogPaginationManager.loadData(isRefreshing: true)
+    }
+    
+    @discardableResult @MainActor
+    func loadChallengeListWithImage(page: Int, size: Int) async -> ([ChallengeViewModelItem], Int) {
+        let getChallengeList = await fetchChallenges(page: page, size: size)
+        let newChallengeList = getChallengeList.data
+        
+        if page == 0 {
+            self.challengeList = newChallengeList
+        } else {
+            self.challengeList += newChallengeList
+        }
+        
+        await withTaskGroup(of: (Int, UIImage?).self) { group in
+            for (index, challenge) in newChallengeList.enumerated() {
+                group.addTask {
+                    let imageId = challenge.challengeImageId
+                    let image = await ImageCacheService.shared.loadImageAsync(imageId: imageId)
+                    return (index, image)
+                }
+            }
+            
+            for await (index, image) in group {
+                if let image = image {
+                    if page == 0 {
+                        self.challengeList[index].challengeImage = image
+                    } else {
+                        self.challengeList[challengeList.count - newChallengeList.count + index].challengeImage = image
+                    }
+                }
+            }
+        }
+        
+        return (challengeList, getChallengeList.total)
+    }
+    
+    @discardableResult @MainActor
+    func loadXpLogList(page: Int, size: Int) async -> ([XpLog], Int) {
+        let getXpLogList = await fetchXpLog(page: page, size: size)
+        
+        if page == 0 {
+            self.xpLogList = getXpLogList.data
+        } else {
+            self.xpLogList += getXpLogList.data
+        }
+        
+        return (xpLogList, getXpLogList.total)
+    }
+    
+    private func fetchChallenges(page: Int, size: Int) async -> (data: [ChallengeViewModelItem], total: Int) {
+        let response = await challengeNetwork.getChallenges(page: page, size: size)
+        
+        switch response {
+        case .success(let res):
+            // 데이터 초기화: 이미지가 없는 상태로 미리 표시
+            return (res.data.map {ChallengeViewModelItem.init(challenge: $0)}, res.total)
+        case .failure(let error):
+            Log("챌린지 조회 실패: \(error)")
+            return ([], 0)
+        }
+    }
+    
+    private func fetchXpLog(page: Int, size: Int) async -> (data: [XpLog], total: Int) {
+        let res = await xpNetwork.getXpHistory(page: page, size: size)
+        
+        switch res {
+        case .success(let model):
+            return (model.data, model.total)
+        case .failure(let error):
+            Log("XP 로그 조회 실패: \(error)")
+            return ([], 0)
+        }
+    }
+    
+    @MainActor
+    func fetchUser() async {
         let res = await userNetwork.getUser()
         
         switch res {
@@ -46,21 +149,7 @@ final class MyPageViewModel: ObservableObject {
     }
     
     @MainActor
-    func getXpLog(page: Int, size: Int) async {
-        let res = await xpNetwork.getXpHistory(page: page, size: 10)
-        
-        switch res {
-        case .success(let model):
-            self.xpLogList = model.data
-            
-        case .failure(let err):
-            self.xpLogList = []
-            Log(err)
-        }
-    }
-    
-    @MainActor
-    func getXpStat() async {
+    func fetchXpStats() async {
         let res = await xpNetwork.getXpStats()
         
         switch res {
@@ -75,50 +164,31 @@ final class MyPageViewModel: ObservableObject {
             ]
         case .failure(let error):
             Log("XP 스탯 조회 실패: \(error)")
-            self.xpStats = [:]
         }
     }
     
-    @MainActor
-    func fetchChallengesWithImages(page: Int) async {
-        let response = await challengeNetwork.getChallenges(page: page)
-        
-        switch response {
-        case .success(let model):
-            // 데이터 초기화: 이미지가 없는 상태로 미리 표시
-            self.challengeList = model.data.map { ($0, nil as UIImage?) }
-            
-            await withTaskGroup(of: Void.self) { group in
-                for (index, challenge) in model.data.enumerated() {
-                    group.addTask {
-                        let image = await self.getImage(imageId: challenge.receiptImageId)
-                        await self.updateChallengeImage(at: index, with: image)
-                    }
-                }
-            }
-            
-        case .failure(let error):
-            Log("챌린지 조회 실패: \(error)")
-            self.challengeList = []
-        }
-    }
-    
-    @MainActor
-    private func updateChallengeImage(at index: Int, with image: UIImage?) {
-        if index < self.challengeList.count {
-            self.challengeList[index].1 = image
-        }
-    }
-    
-    @MainActor
-    func updateChallengeStatus(challengeId: String, ImageId: String) async -> Bool {
+    func updateChallengeStatus(challengeId: String, imageId: String) async -> Bool {
         let deleteChallengeRes = await challengeNetwork.deleteChallenge(challengeId: challengeId)
-        let deleteImageRes = await imageNetwork.deleteImage(imageId: ImageId)
+        let deleteImageRes = await imageNetwork.deleteImage(imageId: imageId)
         
         return deleteChallengeRes && deleteImageRes
     }
     
     func getImage(imageId: String) async -> UIImage? {
         await ImageCacheService.shared.loadImageAsync(imageId: imageId)
+    }
+    
+    func hasMorePage(for type: PaginationDataType) -> Bool {
+        switch type {
+        case .challenge:
+            return challengePaginationManager.canLoadMoreData()
+        case .xpLog:
+            return xpLogPaginationManager.canLoadMoreData()
+        }
+    }
+    
+    enum PaginationDataType {
+        case challenge
+        case xpLog
     }
 }

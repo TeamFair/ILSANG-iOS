@@ -152,6 +152,7 @@ final class Network {
         switch response.result {
         case .success(let res):
             if let statusCode = response.response?.statusCode {
+                Log("네트워크 요청 성공: \(fullPath), \(urlRequest.urlRequest?.httpMethod ?? "")")
                 return handleStatusCode(statusCode, data: res.data)
             } else {
                 return .failure(NetworkError.unknownError)

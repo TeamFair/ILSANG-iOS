@@ -27,7 +27,7 @@ struct ApprovalView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Color.background)
         .task {
-            await vm.loadInitialData()
+            await vm.loadDataIfNeeded()
         }
         .overlay { reportAlertView }
     }
@@ -136,7 +136,7 @@ struct ApprovalView: View {
     
     private var shareChallengeImage: UIImage {
         let renderer = ImageRenderer(
-            content: ApprovalItemContentView(
+            content: ApprovalItemContentShareView(
                 item: vm.selectedChallenge ?? .failedData,
                 width: .screenWidth-40,
                 height: ((.screenWidth-40) / 5) * 4

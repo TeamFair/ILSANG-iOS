@@ -51,6 +51,13 @@ final class ApprovalViewModel {
     }
     
     @MainActor
+    func loadDataIfNeeded() async {
+        if itemList.isEmpty {
+            await loadInitialData()
+        }
+    }
+    
+    @MainActor
     func loadInitialData() async {
         changeViewStatus(.loading)
         await self.paginationManager?.loadData(isRefreshing: true)
