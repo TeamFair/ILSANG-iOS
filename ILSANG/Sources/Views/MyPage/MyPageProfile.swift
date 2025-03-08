@@ -15,7 +15,7 @@ struct MyPageProfile: View {
         NavigationLink(destination: ChangeNickNameView()) {
             HStack {
                 // 프로필 이미지
-                ProfileImageView(profileImage: nil)
+                ProfileImageView(profileImage: nil, isEditMode: true)
                 
                 // 프로필 상세 - 닉네임, 레벨
                 VStack (alignment: .leading, spacing: 4) {
@@ -35,10 +35,7 @@ struct MyPageProfile: View {
 
 struct ProfileImageView: View {
     var profileImage: UIImage?
-    
-    init(profileImage: UIImage? = nil) {
-        self.profileImage = profileImage
-    }
+    var isEditMode: Bool = false
     
     var body: some View {
         Group {
@@ -55,12 +52,14 @@ struct ProfileImageView: View {
         .frame(width: 57, height: 57)
         .clipShape(Circle())
         .overlay(alignment: .bottomTrailing) {
-            Image("profileEdit")
-                .padding(3)
-                .frame(width: 18, height: 18)
-                .background(.black)
-                .clipShape(.circle)
-                .offset(x: 0, y: 4)
+            if isEditMode {
+                Image("profileEdit")
+                    .padding(3)
+                    .frame(width: 18, height: 18)
+                    .background(.black)
+                    .clipShape(.circle)
+                    .offset(x: 0, y: 4)
+            }
         }
         .frame(height: 61)
     }

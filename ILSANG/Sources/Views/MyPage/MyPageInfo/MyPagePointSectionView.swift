@@ -59,22 +59,6 @@ struct MyPagePointSectionView: View {
         .background(.white)
         .cornerRadius(12)
     }
-    
-    private func ProgressBar(progress: Double) -> some View {
-        GeometryReader { geometry in
-            ZStack(alignment: .leading) {
-                Rectangle()
-                    .frame(width: geometry.size.width, height: 8)
-                    .cornerRadius(6)
-                    .foregroundColor(.gray100)
-                
-                Rectangle()
-                    .frame(width: CGFloat(progress) * geometry.size.width, height: 8)
-                    .cornerRadius(6)
-                    .foregroundColor(.accent)
-            }
-        }
-    }
 }
 
 #Preview {

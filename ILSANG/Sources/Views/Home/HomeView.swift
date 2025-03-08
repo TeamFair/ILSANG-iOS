@@ -258,7 +258,11 @@ struct HomeView: View {
                 ScrollView(.horizontal) {
                     HStack(spacing: 8) {
                         ForEach(Array(vm.userRankList.enumerated()), id: \.offset) { idx, rank in
-                            RankingItemView(topRank: rank, style: .vertical)
+                            NavigationLink {
+                                OtherUserProfileView(customerId: rank.customerId)
+                            } label: {
+                                RankingItemView(topRank: rank, style: .vertical)
+                            }
                         }
                     }
                     .padding(.horizontal, LayoutConstants.horizontalPadding)
