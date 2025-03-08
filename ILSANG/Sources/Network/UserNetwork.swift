@@ -15,6 +15,10 @@ final class UserNetwork {
         return await Network.requestData(url: url, method: .get, parameters: nil, withToken: true)
     }
     
+    func getUser(customerId: String) async -> Result<Response<User>, Error> {
+        return await Network.requestData(url: url, method: .get, parameters: ["customerId": customerId], withToken: true)
+    }
+    
     func putUser(nickname: String) async -> Bool {
         let body = ["nickname": nickname]
         let bodyData = body.convertToJsonData()

@@ -8,6 +8,7 @@
 import Foundation
 
 struct TopRank: Decodable {
+    let customerId: String
     let lank: Int
     let xpSum: Int
     let nickname: String

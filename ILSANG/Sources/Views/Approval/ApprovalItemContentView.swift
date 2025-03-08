@@ -22,7 +22,11 @@ struct ApprovalItemContentView: View {
     var body: some View {
         NavigationStack {
             VStack(alignment: .leading, spacing: 16) {
-                profileView(nickname: item.nickname, time: item.time)
+                NavigationLink {
+                    OtherUserProfileView(customerId: item.customerId)
+                } label: {
+                    profileView(nickname: item.nickname, time: item.time)
+                }
                 
                 Text(item.title)
                     .font(.system(size: 23, weight: .bold))
