@@ -21,6 +21,7 @@
 		601189232C3E95D40070F2AD /* AuthNetwork.swift in Sources */ = {isa = PBXBuildFile; fileRef = 601189222C3E95D40070F2AD /* AuthNetwork.swift */; };
 		601189272C3F00FB0070F2AD /* AuthChannel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 601189262C3F00FB0070F2AD /* AuthChannel.swift */; };
 		601189292C3F022D0070F2AD /* LoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 601189282C3F022D0070F2AD /* LoginViewModel.swift */; };
+		601BCF202D7C2DC100138387 /* UINavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 601BCF1F2D7C2DC100138387 /* UINavigationController.swift */; };
 		6028A94A2D39721F003FBC8C /* RankNetwork.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6028A9492D39721F003FBC8C /* RankNetwork.swift */; };
 		6028A94C2D397730003FBC8C /* TopRank.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6028A94B2D39772F003FBC8C /* TopRank.swift */; };
 		6029881E2D041D3900903806 /* QuestStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6029881D2D041D3900903806 /* QuestStatus.swift */; };
@@ -177,6 +178,7 @@
 		601189222C3E95D40070F2AD /* AuthNetwork.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthNetwork.swift; sourceTree = "<group>"; };
 		601189262C3F00FB0070F2AD /* AuthChannel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthChannel.swift; sourceTree = "<group>"; };
 		601189282C3F022D0070F2AD /* LoginViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewModel.swift; sourceTree = "<group>"; };
+		601BCF1F2D7C2DC100138387 /* UINavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UINavigationController.swift; sourceTree = "<group>"; };
 		6028A9492D39721F003FBC8C /* RankNetwork.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RankNetwork.swift; sourceTree = "<group>"; };
 		6028A94B2D39772F003FBC8C /* TopRank.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopRank.swift; sourceTree = "<group>"; };
 		6029881D2D041D3900903806 /* QuestStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestStatus.swift; sourceTree = "<group>"; };
@@ -447,6 +449,7 @@
 				60C0F4232CCE9B2F00DB19AB /* UIDevice++.swift */,
 				604687A72D1FD9E70056E394 /* CGFloat++.swift */,
 				60ADF9C82D5A019A00556958 /* UIApplication.swift */,
+				601BCF1F2D7C2DC100138387 /* UINavigationController.swift */,
 				60ADF9CA2D5A01BA00556958 /* UISheetPresentationController.swift */,
 			);
 			path = Extension;
@@ -986,6 +989,7 @@
 				A1AB3D6A2C1141B3001EB9D8 /* AppleLoginButtonView.swift in Sources */,
 				600211EC2C1EEED7000CC02E /* APIManager.swift in Sources */,
 				60FB50CD2D15CEAE00C55E82 /* HomeView.swift in Sources */,
+				601BCF202D7C2DC100138387 /* UINavigationController.swift in Sources */,
 				A1FF916E2C250C3B00F03E4B /* UserNetwork.swift in Sources */,
 				60004AD52D3B799700CD2254 /* Constants.swift in Sources */,
 				A1AB3D6E2C117569001EB9D8 /* Color.swift in Sources */,
