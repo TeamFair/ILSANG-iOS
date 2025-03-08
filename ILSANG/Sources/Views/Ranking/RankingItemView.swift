@@ -72,6 +72,7 @@ fileprivate struct RankingHorizontalItemView: View {
             VStack (alignment: .leading, spacing: 4) {
                 Text(rank.nickname)
                     .font(.system(size: 15, weight: .bold))
+                    .foregroundStyle(.black)
                 
                 if let xpType = rank.xpType {
                     Text("\(convertStat(xpType)) : \(rank.score)p")

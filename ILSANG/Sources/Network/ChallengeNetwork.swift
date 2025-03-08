@@ -25,6 +25,11 @@ final class ChallengeNetwork {
         return await Network.requestData(url: url+"challenge", method: .get, parameters: parameters, withToken: true)
     }
     
+    func getChallenges(page: Int, size: Int, userId: String) async -> Result<ResponseWithPage<[Challenge]>, Error> {
+        let parameters: Parameters = ["userDataOnly": true, "status": "APPROVED", "userId": userId, "page": page, "size": size]
+        return await Network.requestData(url: url+"challenge", method: .get, parameters: parameters, withToken: true)
+    }
+    
     func postChallenge(questId: String, imageId: String) async -> Result<ResponseWithEmpty, Error> {
         let bodyData: [String: Any] = [
             "questId": questId,

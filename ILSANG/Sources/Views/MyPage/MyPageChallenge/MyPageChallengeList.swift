@@ -21,7 +21,7 @@ struct MyPageChallengeList: View {
                 LazyVStack(spacing: 9) {
                     ForEach(Array(vm.challengeList.enumerated()), id: \.offset) { idx, challenge in
                         NavigationLink(destination: ChallengeDetailView(vm: vm, idx: idx)) {
-                            challengeListItemView(challenge: challenge)
+                            ChallengeListItemView(challenge: challenge)
                         }
                     }
                     
@@ -45,52 +45,6 @@ struct MyPageChallengeList: View {
             if vm.challengeList.isEmpty {
                 EmptyView(title: "수행한 퀘스트가 없어요!")
             }
-        }
-    }
-    
-    private func challengeListItemView(challenge: ChallengeViewModelItem) -> some View {
-        ZStack {
-            Group {
-                if let image = challenge.challengeImage {
-                    Image(uiImage: image)
-                        .resizable()
-                        .scaledToFill()
-                } else {
-                    Image(uiImage: .logoWithAlpha)
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 100)
-                }
-            }
-            .scaledToFill()
-            .frame(height: 172)
-            .frame(maxWidth: .infinity)
-            .overlay(alignment: .bottom) {
-                Rectangle()
-                    .frame(height: 85)
-                    .foregroundStyle(
-                        .linearGradient(
-                            colors: [.clear, .black.opacity(0.8)],
-                            startPoint: .top,
-                            endPoint: .bottom
-                        )
-                    )
-                    .opacity(challenge.challengeImage == nil ? 0.3 : 1)
-            }
-            .clipShape(RoundedRectangle(cornerRadius: 12))
-            
-            VStack(alignment: .leading, spacing: 6) {
-                Spacer()
-                Text(challenge.missionTitle ?? "")
-                    .font(.system(size: 23, weight: .bold))
-                    .foregroundColor(.white)
-                
-                Text(challenge.createdAt.timeAgoCreatedAt())
-                    .font(.system(size: 13, weight: .regular))
-                    .foregroundColor(.gray200)
-            }
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .padding(20)
         }
     }
 }
