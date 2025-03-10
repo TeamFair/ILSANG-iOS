@@ -9,13 +9,15 @@ import SwiftUI
 
 struct MyPageProfile: View {
     let nickName: String?
+    let profileImage: UIImage?
+    let profileImageId: String?
     let level: Int
     
     var body: some View {
-        NavigationLink(destination: ChangeNickNameView()) {
+        NavigationLink(destination: ProfileEditView(name: nickName ?? "", image: profileImage, imageId: profileImageId)) {
             HStack {
                 // 프로필 이미지
-                ProfileImageView(profileImage: nil, isEditMode: true)
+                ProfileImageView(profileImage: profileImage, isEditMode: true)
                 
                 // 프로필 상세 - 닉네임, 레벨
                 VStack (alignment: .leading, spacing: 4) {
@@ -66,5 +68,5 @@ struct ProfileImageView: View {
 }
 
 #Preview {
-    MyPageProfile(nickName: "닉네임", level: 2)
+    MyPageProfile(nickName: "닉네임", profileImage: .img0, profileImageId: "", level: 2)
 }

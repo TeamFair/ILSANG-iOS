@@ -12,6 +12,22 @@ extension View {
     func cornerRadius(_ radius: CGFloat, corners: UIRectCorner) -> some View {
         clipShape( RoundedCorner(radius: radius, corners: corners) )
     }
+    
+    @ViewBuilder
+    func frame(_ size: CGSize) -> some View {
+        self.frame(width: size.width, height: size.height)
+    }
+    
+    @ViewBuilder
+    func cropImagePicker(show: Binding<Bool>, croppedImage: Binding<UIImage?>) -> some View {
+        CustomImagePicker(show: show, croppedImage: croppedImage) {
+            self
+        }
+    }
+    
+    func haptics(_ style: UIImpactFeedbackGenerator.FeedbackStyle) {
+        UIImpactFeedbackGenerator(style: style).impactOccurred()
+    }
 }
 
 struct RoundedCorner: Shape {

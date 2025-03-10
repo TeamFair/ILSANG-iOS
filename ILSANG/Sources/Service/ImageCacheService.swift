@@ -76,4 +76,8 @@ final class ImageCacheService {
     private func setCachedImage(imageId: String, image: UIImage) {
         cachedImages.setObject(image, forKey: imageId as NSString)
     }
+    
+    func removeCachedImage(imageId: String) {
+        cachedImages.removeObject(forKey: imageId as NSString)
+    }
 }

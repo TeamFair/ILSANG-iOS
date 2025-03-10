@@ -10,6 +10,7 @@ import UIKit
 @MainActor
 final class MyPageViewModel: ObservableObject {
     @Published var userData: User?
+    @Published var userProfileImage: UIImage?
     @Published var selectedTab: MyPageTab = .quest
     
     @Published var xpStats: [XpStat: Int] = [:]
@@ -142,6 +143,11 @@ final class MyPageViewModel: ObservableObject {
         switch res {
         case .success(let model):
             self.userData = model.data
+            if let profileImage = userData?.profileImage {
+                self.userProfileImage = await getImage(imageId: profileImage) /// 프로필 이미지 불러오기
+            } else {
+                self.userProfileImage = nil
+            }
         case .failure(let err):
             self.userData = nil
             Log(err)

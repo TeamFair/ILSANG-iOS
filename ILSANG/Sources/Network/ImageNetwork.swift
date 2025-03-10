@@ -16,8 +16,8 @@ final class ImageNetwork {
         return await Network.requestImage(url: url, withToken: true)
     }
     
-    func postImage(image: UIImage) async -> Result<ImageEntity, Error> {
-        let parameters: Parameters = ["type": "RECEIPT"]
+    func postImage(image: UIImage, type: PostImageType) async -> Result<ImageEntity, Error> {
+        let parameters: Parameters = ["type": type.parameter]
         return await Network.postImage(url: url, image: image, withToken: true, parameters: parameters)
     }
     
@@ -32,6 +32,20 @@ final class ImageNetwork {
         case .failure:
             Log(res)
             return false
+        }
+    }
+}
+
+enum PostImageType {
+    case receipt
+    case userProfileImage
+    
+    var parameter: String {
+        switch self {
+        case .receipt:
+            return "RECEIPT"
+        case .userProfileImage:
+            return "USER_PROFILE_IMAGE"
         }
     }
 }
