@@ -30,7 +30,7 @@ final class ImageChallengeSubmitService {
     
     /// 이미지 업로드
     private func postImage(_ image: UIImage) async -> String? {
-        let result = await imageNetwork.postImage(image: image)
+        let result = await imageNetwork.postImage(image: image, type: .receipt)
         if case .success(let response) = result {
             self.images.append(response.imageId)
             return response.imageId

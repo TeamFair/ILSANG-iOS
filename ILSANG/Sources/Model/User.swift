@@ -10,4 +10,5 @@ struct User: Decodable {
     let nickname: String
     let completeChallengeCount: Int
     let xpPoint: Int
+    let profileImage: String?
 }

@@ -31,4 +31,29 @@ final class UserNetwork {
             return false
         }
     }
+    
+    func putUserImage(imageId: String) async -> Bool {
+        let body = ["imageId": imageId]
+        let bodyData = body.convertToJsonData()
+        let res: Result<ResponseWithoutData, Error> = await Network.requestData(url: url+"/image", method: .put, parameters: nil, body: bodyData, withToken: true)
+        
+        switch res {
+        case.success:
+            return true
+        case.failure:
+            return false
+        }
+    }
+    
+    /// 서버에서 프로필 이미지 연결 해제 & 이미지 삭제 처리
+    func deleteUserImage() async -> Bool {
+        let res: Result<ResponseWithoutData, Error> = await Network.requestData(url: url+"/image", method: .delete, parameters: nil, withToken: true)
+        
+        switch res {
+        case.success:
+            return true
+        case.failure:
+            return false
+        }
+    }
 }
