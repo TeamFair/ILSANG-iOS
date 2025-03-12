@@ -113,19 +113,27 @@ final class ApprovalViewModel {
     private func enrichChallengesWithImageAndEmoji(
         _ challenges: [ApprovalViewModelItem]
     ) async -> [ApprovalViewModelItem] {
-        await withTaskGroup(of: (Int, UIImage?, Emoji?).self) { group in
+        return await withTaskGroup(of: (Int, UIImage?, UIImage?, Emoji?).self) { group in
             for (index, challenge) in challenges.enumerated() {
                 group.addTask {
-                    let image = await ImageCacheService.shared.loadImageAsync(imageId: challenge.imageId)
-                    let emoji = await self.getEmoji(challengeId: challenge.id)
-                    return (index, image, emoji)
+                    async let challengeImage = ImageCacheService.shared.loadImageAsync(imageId: challenge.imageId)
+                    async let profileImage: UIImage? = {
+                        guard let profileImageId = challenge.profileImageId else { return nil }
+                        return await ImageCacheService.shared.loadImageAsync(imageId: profileImageId)
+                    }()
+                    async let emoji = self.getEmoji(challengeId: challenge.id)
+                    
+                    return (index, await challengeImage, await profileImage, await emoji)
                 }
             }
             
             var enrichedChallenges = challenges
-            for await (index, image, emoji) in group {
-                if let image = image {
-                    enrichedChallenges[index].image = image
+            for await (index, challengeImage, profileImage, emoji) in group {
+                if let challengeImage = challengeImage {
+                    enrichedChallenges[index].image = challengeImage
+                }
+                if let profileImage = profileImage {
+                    enrichedChallenges[index].profileImage = profileImage
                 }
                 if let emoji = emoji {
                     enrichedChallenges[index].emoji = emoji
@@ -311,6 +319,8 @@ struct ApprovalViewModelItem: Identifiable {
     let id: String
     let customerId: String
     let title: String
+    var profileImageId: String?
+    var profileImage: UIImage?
     var image: UIImage?
     var imageId: String
     var nickname: String
@@ -323,6 +333,8 @@ struct ApprovalViewModelItem: Identifiable {
         id: String = UUID().uuidString,
         customerId: String,
         title: String,
+        profileImageId:String?,
+        profileImage: UIImage?,
         image: UIImage? = nil,
         imageId: String,
         nickname: String,
@@ -334,6 +346,8 @@ struct ApprovalViewModelItem: Identifiable {
         self.id = id
         self.customerId = customerId
         self.title = title
+        self.profileImageId = profileImageId
+        self.profileImage = profileImage
         self.image = image
         self.imageId = imageId
         self.nickname = nickname
@@ -347,6 +361,8 @@ struct ApprovalViewModelItem: Identifiable {
         self.id = challenge.challengeId
         self.customerId = challenge.customerId ?? ""
         self.title = challenge.missionTitle ?? ""
+        self.profileImage = nil
+        self.profileImageId = challenge.userProfileImageId
         self.image = nil
         self.imageId = challenge.receiptImageId
         // TODO: nickname 옵셔널 해제
@@ -360,6 +376,9 @@ struct ApprovalViewModelItem: Identifiable {
     static var failedData = ApprovalViewModelItem(
         customerId: "",
         title: "불러올 수 없습니다",
+        profileImageId: nil,
+        profileImage: nil,
+        image: nil,
         imageId: "",
         nickname: "",
         time: "",
@@ -369,9 +388,9 @@ struct ApprovalViewModelItem: Identifiable {
     )
     
     static var mockDataList = [
-        ApprovalViewModelItem(customerId: "0000000", title: "바닐라라떼마시기", imageId: "IMRE2024061314275774", nickname: "일상1", time: "3시간 전", likeCnt: 0, hateCnt: 0, emoji: Emoji(isLike: false, isHate: false)),
-        ApprovalViewModelItem(customerId: "0000000", title: "바닐라라떼마시기", imageId: "IMRE2024061314275774", nickname: "일상2", time: "1시간 전", likeCnt: 0, hateCnt: 0, emoji: Emoji(isLike: false, isHate: false)),
-        ApprovalViewModelItem(customerId: "0000000", title: "바닐라라떼마시기", imageId: "IMRE2024061314275774", nickname: "일상3", time: "2시간 전", likeCnt: 0, hateCnt: 0, emoji: Emoji(isLike: false, isHate: false)),
-        ApprovalViewModelItem(customerId: "0000000", title: "바닐라라떼마시기", imageId: "IMRE2024061314275774", nickname: "일상4", time: "2시간 전", likeCnt: 0, hateCnt: 0, emoji: Emoji(isLike: false, isHate: false))
+        ApprovalViewModelItem(customerId: "0000000", title: "바닐라라떼마시기", profileImageId: nil, profileImage: nil, imageId: "IMRE2024061314275774", nickname: "일상1", time: "3시간 전", likeCnt: 0, hateCnt: 0, emoji: Emoji(isLike: false, isHate: false)),
+        ApprovalViewModelItem(customerId: "0000000", title: "바닐라라떼마시기", profileImageId: nil, profileImage: nil, imageId: "IMRE2024061314275774", nickname: "일상2", time: "1시간 전", likeCnt: 0, hateCnt: 0, emoji: Emoji(isLike: false, isHate: false)),
+        ApprovalViewModelItem(customerId: "0000000", title: "바닐라라떼마시기", profileImageId: nil, profileImage: nil, imageId: "IMRE2024061314275774", nickname: "일상3", time: "2시간 전", likeCnt: 0, hateCnt: 0, emoji: Emoji(isLike: false, isHate: false)),
+        ApprovalViewModelItem(customerId: "0000000", title: "바닐라라떼마시기", profileImageId: nil, profileImage: nil, imageId: "IMRE2024061314275774", nickname: "일상4", time: "2시간 전", likeCnt: 0, hateCnt: 0, emoji: Emoji(isLike: false, isHate: false))
     ]
 }

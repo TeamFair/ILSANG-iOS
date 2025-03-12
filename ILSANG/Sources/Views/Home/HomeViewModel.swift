@@ -15,6 +15,7 @@ enum ViewStatus {
 
 final class HomeViewModel: ObservableObject {
     @Published var viewStatus: ViewStatus = .loading
+    @Published var userProfileImage: UIImage?
     var recommendQuestTitle: String {
         if let nickname = UserService.shared.currentUser?.nickname {
             return nickname + "님을 위한 추천 퀘스트"
@@ -23,7 +24,7 @@ final class HomeViewModel: ObservableObject {
         }
     }
     @Published var mainBanners: [Banner] = []
-    @Published var userRankList: [TopRank] = [] // 10개
+    @Published var userRankList: [TopRankViewModelItem] = [] // 10개
     @Published var largestRewardQuestList: [XpStat: [QuestViewModelItem]] = [:] // 3*5개
     @Published var recommendQuestList: [QuestViewModelItem] = [] //QuestViewModelItem.mockQuestList // 10개
     @Published var popularQuestList: [QuestViewModelItem] = QuestViewModelItem.mockQuestList // 4n개
@@ -132,8 +133,12 @@ final class HomeViewModel: ObservableObject {
             try? await loadUncompleteQuestList()
             self.showRecommendRewardQuest = true
             self.showPopularRewardQuest = true
-
         }
+
+        if let userProfileImage = UserService.shared.currentUser?.profileImage {
+            self.userProfileImage = await ImageCacheService.shared.loadImageAsync(imageId: userProfileImage)
+        }
+
         changeViewStatus(.loaded)
     }
     
@@ -215,7 +220,25 @@ final class HomeViewModel: ObservableObject {
         
         switch res {
         case .success(let rank):
-            self.userRankList = rank.data
+            self.userRankList = rank.data.map({ TopRankViewModelItem(rank: $0) })
+            // TODO: 유틸 함수로 만들기
+            await withTaskGroup(of: (Int, UIImage?).self) { group in
+                for (index, rank) in userRankList.enumerated() {
+                    group.addTask {
+                        guard let imageId = rank.profileImageId else { return (index, nil) }
+                        let image = await ImageCacheService.shared.loadImageAsync(imageId: imageId)
+                        return (index, image)
+                    }
+                }
+                
+                /// UI 업데이트
+                for await (index, image) in group {
+                    await MainActor.run {
+                        self.userRankList[index].profileImage = image
+                    }
+                }
+            }
+            
         case .failure(let error):
             throw error
         }
@@ -309,5 +332,32 @@ final class HomeViewModel: ObservableObject {
     func onQuestApprovalTapped() {
         showQuestSheet = false
         showSubmitRouterView = true
+    }
+}
+
+struct TopRankViewModelItem {
+    let customerId: String
+    let lank: Int
+    let xpSum: Int
+    let nickname: String
+    let profileImageId: String?
+    var profileImage: UIImage?
+    
+    init(customerId: String, lank: Int, xpSum: Int, nickname: String, profileImageId: String?, profileImage: UIImage?) {
+        self.customerId = customerId
+        self.lank = lank
+        self.xpSum = xpSum
+        self.nickname = nickname
+        self.profileImageId = profileImageId
+        self.profileImage = profileImage
+    }
+    
+    init(rank: TopRank) {
+        self.customerId = rank.customerId
+        self.lank = rank.lank
+        self.xpSum = rank.xpSum
+        self.nickname = rank.nickname
+        self.profileImageId = rank.profileImageId
+        self.profileImage = nil
     }
 }

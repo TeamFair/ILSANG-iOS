@@ -49,7 +49,7 @@ struct OtherUserProfileView: View {
     private var userProfileSection: some View {
         HStack(spacing: 16) {
             // 프로필 이미지
-            ProfileImageView(profileImage: nil)
+            ProfileImageView(profileImage: vm.userProfileIamge)
             
             // 프로필 상세 - 닉네임, 레벨
             VStack(alignment: .leading, spacing: 4) {
