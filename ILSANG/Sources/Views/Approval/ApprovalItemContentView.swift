@@ -85,9 +85,10 @@ struct ApprovalItemContentView: View {
     
     private func profileView(nickname: String, time: String) -> some View {
         HStack(spacing: 10) {
-            Image(.profileCircle)
+            Image(uiImage: item.profileImage ?? .profileCircle)
                 .resizable()
                 .frame(width: 35, height: 35)
+                .clipShape(Circle())
             VStack(alignment: .leading, spacing: 3) {
                 Text(nickname)
                     .font(.system(size: 14, weight: .semibold))

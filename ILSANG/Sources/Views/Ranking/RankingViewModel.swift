@@ -19,7 +19,7 @@ class RankingViewModel: ObservableObject {
     
     @Published var viewStatus: ViewStatus = .loading
     @Published var selectedXpStat: XpStat = .strength
-    @Published var userRank: [XpStat: [StatRank]] = Dictionary(uniqueKeysWithValues: XpStat.allCases.map { ($0, []) })
+    @Published var userRank: [XpStat: [StatRankViewModelItem]] = Dictionary(uniqueKeysWithValues: XpStat.allCases.map { ($0, []) })
     
     private let rankNetwork: RankNetwork
     
@@ -41,7 +41,22 @@ class RankingViewModel: ObservableObject {
         
         switch res {
         case .success(let response):
-            self.userRank[xpStat] = response.data
+            let items = await withTaskGroup(of: (Int, StatRankViewModelItem).self) { group in
+                for (index, rank) in response.data.enumerated() {
+                    group.addTask {
+                        let item = await StatRankViewModelItem(rank: rank)
+                        return (index, item)
+                    }
+                }
+                
+                var results = Array<StatRankViewModelItem?>(repeating: nil, count: response.data.count)
+                for await (index, item) in group {
+                    results[index] = item
+                }
+                
+                return results.compactMap { $0 } // nil 제거
+            }
+            self.userRank[xpStat] = items
             changeViewStatus(.loaded)
         case .failure:
             changeViewStatus(.error)
@@ -55,3 +70,31 @@ class RankingViewModel: ObservableObject {
     }
 }
 
+import UIKit
+
+struct StatRankViewModelItem {
+    let xpType: String
+    let xpPoint: Int
+    let customerId: String
+    let nickname: String
+    let profileImageId: String?
+    let profileImage: UIImage?
+    
+    init(xpType: String, xpPoint: Int, customerId: String, nickname: String, profileImageId: String?, profileImage: UIImage?) {
+        self.xpType = xpType
+        self.xpPoint = xpPoint
+        self.customerId = customerId
+        self.nickname = nickname
+        self.profileImageId = profileImageId
+        self.profileImage = profileImage
+    }
+    
+    init(rank: StatRank) async {
+        self.xpType = rank.xpType
+        self.xpPoint = rank.xpPoint
+        self.customerId = rank.customerId
+        self.nickname = rank.nickname
+        self.profileImageId = rank.profileImageId
+        self.profileImage = await ImageCacheService.shared.loadImageAsync(imageId: rank.profileImageId ?? "")
+    }
+}

@@ -11,6 +11,7 @@ import UIKit
 @MainActor
 final class OtherUserProfileViewModel: ObservableObject {
     @Published var userData: User?
+    @Published var userProfileIamge: UIImage?
     
     @Published var xpStats: [XpStat: Int] = [:]
     @Published var challengeList: [ChallengeViewModelItem] = []
@@ -107,6 +108,7 @@ final class OtherUserProfileViewModel: ObservableObject {
         switch res {
         case .success(let model):
             self.userData = model.data
+            self.userProfileIamge = await ImageCacheService.shared.loadImageAsync(imageId: model.data.profileImage ?? "")
         case .failure(let error):
             self.userData = nil
             Log("사용자 정보 조회 실패: \(error)")
