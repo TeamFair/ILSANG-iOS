@@ -49,13 +49,13 @@ struct MyPageTabItemView: View {
 
 enum MyPageTab: CaseIterable {
     case quest
-    case activity
+    // case activity
     case info
     
     var title: String {
         switch self {
-        case .quest: return "퀘스트"
-        case .activity: return "활동"
+        case .quest: return "챌린지"
+            // case .activity: return "활동"
         case .info: return "내 정보"
         }
     }
@@ -63,7 +63,7 @@ enum MyPageTab: CaseIterable {
     var icon: String {
         switch self {
         case .quest: return "📜"
-        case .activity: return "⛳️"
+            // case .activity: return "⛳️"
         case .info: return "🎖️"
         }
     }

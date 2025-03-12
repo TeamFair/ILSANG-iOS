@@ -65,8 +65,8 @@ struct MyPageView: View {
         switch vm.selectedTab {
         case .quest:
             MyPageChallengeList(vm: vm)
-        case .activity:
-            MyPageActiveList(vm: vm)
+//        case .activity:
+//            MyPageActiveList(vm: vm)
         case .info:
             MyPageInfoView(xpPoint: vm.userData?.xpPoint, xpStats: vm.xpStats)
         }
