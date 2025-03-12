@@ -25,19 +25,19 @@ struct MyPageActiveList: View {
                         MyPageListItemView(title: xpLog.title, detail: xpLog.createDate.timeAgoSinceCreation(), point: xpLog.xpPoint)
                     }
                     
-                    if vm.hasMorePage(for: .xpLog) {
-                        ProgressView()
-                            .padding(.top, 12)
-                            .task {
-                                await vm.xpLogPaginationManager.loadData(isRefreshing: false)
-                            }
-                    }
+//                    if vm.hasMorePage(for: .xpLog) {
+//                        ProgressView()
+//                            .padding(.top, 12)
+//                            .task {
+//                                await vm.xpLogPaginationManager.loadData(isRefreshing: false)
+//                            }
+//                    }
                 }
                 .padding(.bottom, 60)
             }
-            .refreshable {
-                await vm.xpLogPaginationManager.loadData(isRefreshing: true)
-            }
+//            .refreshable {
+//                await vm.xpLogPaginationManager.loadData(isRefreshing: true)
+//            }
         }
         .overlay {
             if vm.xpLogList.isEmpty {

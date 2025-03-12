@@ -28,14 +28,14 @@ final class MyPageViewModel: ObservableObject {
         }
     )
     
-    lazy var xpLogPaginationManager = PaginationManager<XpLog>(
-        size: 10,
-        threshold: 7,
-        loadPage: { [weak self] page in
-            guard let self = self else { return ([], 0) }
-            return await loadXpLogList(page: page, size: 10)
-        }
-    )
+//    lazy var xpLogPaginationManager = PaginationManager<XpLog>(
+//        size: 10,
+//        threshold: 7,
+//        loadPage: { [weak self] page in
+//            guard let self = self else { return ([], 0) }
+//            return await loadXpLogList(page: page, size: 10)
+//        }
+//    )
     
     private let userNetwork: UserNetwork
     private let challengeNetwork: ChallengeNetwork
@@ -61,7 +61,7 @@ final class MyPageViewModel: ObservableObject {
     func loadInitialData() async {
         // TODO: 도전내역 등록했을 때 재호출하도록 수정
         await challengePaginationManager.loadData(isRefreshing: true)
-        await xpLogPaginationManager.loadData(isRefreshing: true)
+        // await xpLogPaginationManager.loadData(isRefreshing: true)
     }
     
     @discardableResult @MainActor
@@ -98,18 +98,18 @@ final class MyPageViewModel: ObservableObject {
         return (challengeList, getChallengeList.total)
     }
     
-    @discardableResult @MainActor
-    func loadXpLogList(page: Int, size: Int) async -> ([XpLog], Int) {
-        let getXpLogList = await fetchXpLog(page: page, size: size)
-        
-        if page == 0 {
-            self.xpLogList = getXpLogList.data
-        } else {
-            self.xpLogList += getXpLogList.data
-        }
-        
-        return (xpLogList, getXpLogList.total)
-    }
+//    @discardableResult @MainActor
+//    func loadXpLogList(page: Int, size: Int) async -> ([XpLog], Int) {
+//        let getXpLogList = await fetchXpLog(page: page, size: size)
+//        
+//        if page == 0 {
+//            self.xpLogList = getXpLogList.data
+//        } else {
+//            self.xpLogList += getXpLogList.data
+//        }
+//        
+//        return (xpLogList, getXpLogList.total)
+//    }
     
     private func fetchChallenges(page: Int, size: Int) async -> (data: [ChallengeViewModelItem], total: Int) {
         let response = await challengeNetwork.getChallenges(page: page, size: size)
@@ -124,17 +124,17 @@ final class MyPageViewModel: ObservableObject {
         }
     }
     
-    private func fetchXpLog(page: Int, size: Int) async -> (data: [XpLog], total: Int) {
-        let res = await xpNetwork.getXpHistory(page: page, size: size)
-        
-        switch res {
-        case .success(let model):
-            return (model.data, model.total)
-        case .failure(let error):
-            Log("XP 로그 조회 실패: \(error)")
-            return ([], 0)
-        }
-    }
+//    private func fetchXpLog(page: Int, size: Int) async -> (data: [XpLog], total: Int) {
+//        let res = await xpNetwork.getXpHistory(page: page, size: size)
+//        
+//        switch res {
+//        case .success(let model):
+//            return (model.data, model.total)
+//        case .failure(let error):
+//            Log("XP 로그 조회 실패: \(error)")
+//            return ([], 0)
+//        }
+//    }
     
     @MainActor
     func fetchUser() async {
@@ -188,13 +188,13 @@ final class MyPageViewModel: ObservableObject {
         switch type {
         case .challenge:
             return challengePaginationManager.canLoadMoreData()
-        case .xpLog:
-            return xpLogPaginationManager.canLoadMoreData()
+//        case .xpLog:
+//            return xpLogPaginationManager.canLoadMoreData()
         }
     }
     
     enum PaginationDataType {
         case challenge
-        case xpLog
+//        case xpLog
     }
 }
