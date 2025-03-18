@@ -70,6 +70,7 @@ final class UserService: ObservableObject {
             await updateLoginStatus(false)
             return false
         }
+        dump(authUser)
         guard let user = await authService.loginWithChannel(user: authUser, channel: AuthChannel.fromString(value: authChannel)!) else {
             // try await logout()
             return false

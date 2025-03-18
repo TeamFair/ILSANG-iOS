@@ -1,23 +1,20 @@
 //
-//  MyPageViewModel.swift
+//  OtherUserProfileViewModel.swift
 //  ILSANG
 //
-//  Created by Kim Andrew on 6/25/24.
+//  Created by Lee Jinhee on 3/8/25.
 //
 
+import Foundation
 import UIKit
 
 @MainActor
-final class MyPageViewModel: ObservableObject {
+final class OtherUserProfileViewModel: ObservableObject {
     @Published var userData: User?
-    @Published var userProfileImage: UIImage?
-    @Published var selectedTab: MyPageTab = .quest
+    @Published var userProfileIamge: UIImage?
     
     @Published var xpStats: [XpStat: Int] = [:]
     @Published var challengeList: [ChallengeViewModelItem] = []
-    @Published var xpLogList: [XpLog] = []
-    
-    @Published var challengeDelete = false
     
     lazy var challengePaginationManager = PaginationManager<ChallengeViewModelItem>(
         size: 10,
@@ -28,40 +25,33 @@ final class MyPageViewModel: ObservableObject {
         }
     )
     
-//    lazy var xpLogPaginationManager = PaginationManager<XpLog>(
-//        size: 10,
-//        threshold: 7,
-//        loadPage: { [weak self] page in
-//            guard let self = self else { return ([], 0) }
-//            return await loadXpLogList(page: page, size: 10)
-//        }
-//    )
-    
+    let customerId: String
     private let userNetwork: UserNetwork
     private let challengeNetwork: ChallengeNetwork
     private let imageNetwork: ImageNetwork
     private let xpNetwork: XPNetwork
     
-    init(userNetwork: UserNetwork, challengeNetwork: ChallengeNetwork, imageNetwork: ImageNetwork, xpNetwork: XPNetwork) {
+    var currentLv: Int {
+        XpLevelCalculator.convertXPtoLv(xp: userData?.xpPoint)
+    }
+    var progress: Double {
+        let levelData = XpLevelCalculator.xpProgressInCurrentLevel(xp: userData?.xpPoint ?? 0, level: currentLv)
+        return XpLevelCalculator.calculateProgress(currentValue: levelData.currentLevelXP, totalValue: levelData.requiredXPForNextLevel)
+    }
+    
+    init(customerId: String, userNetwork: UserNetwork, challengeNetwork: ChallengeNetwork, imageNetwork: ImageNetwork, xpNetwork: XPNetwork) {
+        self.customerId = customerId
+        
         self.userNetwork = userNetwork
         self.challengeNetwork = challengeNetwork
         self.imageNetwork = imageNetwork
         self.xpNetwork = xpNetwork
-        
-        self.userData = UserService.shared.currentUser
-    }
-    
-    @MainActor
-    func loadDataIfNeeded() async {
-        if challengeList.isEmpty || xpLogList.isEmpty {
-            await loadInitialData()
-        }
     }
     
     func loadInitialData() async {
-        // TODO: 도전내역 등록했을 때 재호출하도록 수정
+        await fetchUser(customerId: customerId)
+        await fetchXpStats(customerId: customerId)
         await challengePaginationManager.loadData(isRefreshing: true)
-        // await xpLogPaginationManager.loadData(isRefreshing: true)
     }
     
     @discardableResult @MainActor
@@ -98,21 +88,8 @@ final class MyPageViewModel: ObservableObject {
         return (challengeList, getChallengeList.total)
     }
     
-//    @discardableResult @MainActor
-//    func loadXpLogList(page: Int, size: Int) async -> ([XpLog], Int) {
-//        let getXpLogList = await fetchXpLog(page: page, size: size)
-//        
-//        if page == 0 {
-//            self.xpLogList = getXpLogList.data
-//        } else {
-//            self.xpLogList += getXpLogList.data
-//        }
-//        
-//        return (xpLogList, getXpLogList.total)
-//    }
-    
     private func fetchChallenges(page: Int, size: Int) async -> (data: [ChallengeViewModelItem], total: Int) {
-        let response = await challengeNetwork.getChallenges(page: page, size: size)
+        let response = await challengeNetwork.getChallenges(page: page, size: size, userId: customerId)
         
         switch response {
         case .success(let res):
@@ -124,39 +101,23 @@ final class MyPageViewModel: ObservableObject {
         }
     }
     
-//    private func fetchXpLog(page: Int, size: Int) async -> (data: [XpLog], total: Int) {
-//        let res = await xpNetwork.getXpHistory(page: page, size: size)
-//        
-//        switch res {
-//        case .success(let model):
-//            return (model.data, model.total)
-//        case .failure(let error):
-//            Log("XP 로그 조회 실패: \(error)")
-//            return ([], 0)
-//        }
-//    }
-    
     @MainActor
-    func fetchUser() async {
-        let res = await userNetwork.getUser()
+    func fetchUser(customerId: String) async {
+        let res = await userNetwork.getUser(customerId: customerId)
         
         switch res {
         case .success(let model):
             self.userData = model.data
-            if let profileImage = userData?.profileImage {
-                self.userProfileImage = await getImage(imageId: profileImage) /// 프로필 이미지 불러오기
-            } else {
-                self.userProfileImage = nil
-            }
-        case .failure(let err):
+            self.userProfileIamge = await ImageCacheService.shared.loadImageAsync(imageId: model.data.profileImage ?? "")
+        case .failure(let error):
             self.userData = nil
-            Log(err)
+            Log("사용자 정보 조회 실패: \(error)")
         }
     }
     
     @MainActor
-    func fetchXpStats() async {
-        let res = await xpNetwork.getXpStats()
+    func fetchXpStats(customerId: String) async {
+        let res = await xpNetwork.getXpStats(customerId: customerId)
         
         switch res {
         case .success(let model):
@@ -173,28 +134,11 @@ final class MyPageViewModel: ObservableObject {
         }
     }
     
-    func updateChallengeStatus(challengeId: String, imageId: String) async -> Bool {
-        let deleteChallengeRes = await challengeNetwork.deleteChallenge(challengeId: challengeId)
-        let deleteImageRes = await imageNetwork.deleteImage(imageId: imageId)
-        
-        return deleteChallengeRes && deleteImageRes
-    }
-    
     func getImage(imageId: String) async -> UIImage? {
         await ImageCacheService.shared.loadImageAsync(imageId: imageId)
     }
     
-    func hasMorePage(for type: PaginationDataType) -> Bool {
-        switch type {
-        case .challenge:
-            return challengePaginationManager.canLoadMoreData()
-//        case .xpLog:
-//            return xpLogPaginationManager.canLoadMoreData()
-        }
-    }
-    
-    enum PaginationDataType {
-        case challenge
-//        case xpLog
+    func hasMorePage() -> Bool {
+        challengePaginationManager.canLoadMoreData()
     }
 }

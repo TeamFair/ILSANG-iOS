@@ -12,6 +12,8 @@ struct Rank {
     let nickname: String
     var xpType: String? = nil
     let score: Int
+    var profileImageId: String?
+    var profileIamge: UIImage?
 }
 
 struct RankingItemView: View {
@@ -23,13 +25,13 @@ struct RankingItemView: View {
         case vertical
     }
     
-    init(topRank: TopRank, style: RankingItemStyle) {
-        self.rank = Rank(idx: topRank.lank, nickname: topRank.nickname, score: topRank.xpSum)
+    init(topRank: TopRankViewModelItem, style: RankingItemStyle) {
+        self.rank = Rank(idx: topRank.lank, nickname: topRank.nickname, score: topRank.xpSum, profileImageId: topRank.profileImageId, profileIamge: topRank.profileImage)
         self.style = style
     }
     
-    init(idx: Int, statRank: StatRank, style: RankingItemStyle) {
-        self.rank = Rank(idx: idx, nickname: statRank.nickname, xpType: statRank.xpType, score: statRank.xpPoint)
+    init(idx: Int, statRank: StatRankViewModelItem, style: RankingItemStyle) {
+        self.rank = Rank(idx: idx, nickname: statRank.nickname, xpType: statRank.xpType, score: statRank.xpPoint, profileImageId: statRank.profileImageId, profileIamge: statRank.profileImage)
         self.style = style
     }
     
@@ -60,18 +62,26 @@ fileprivate struct RankingHorizontalItemView: View {
                     .font(.system(size: 15, weight: .bold))
                     .foregroundStyle(.gray500)
             }
-            
-            Text("😍")
-                .font(.system(size: 23, weight: .bold))
-                .frame(width: 48, height: 48)
-                .background(
-                    Circle().fill(Color.backgroundBlue)
-                )
-                .padding(.horizontal, UIDevice.isSEDevice ? 16 : 24)
+            if let profileIamge = rank.profileIamge {
+                Image(uiImage: profileIamge)
+                    .resizable()
+                    .frame(width: 48, height: 48)
+                    .clipShape(Circle())
+                    .padding(.horizontal, UIDevice.isSEDevice ? 16 : 24)
+            } else {
+                Text("😍")
+                    .font(.system(size: 23, weight: .bold))
+                    .frame(width: 48, height: 48)
+                    .background(
+                        Circle().fill(Color.backgroundBlue)
+                    )
+                    .padding(.horizontal, UIDevice.isSEDevice ? 16 : 24)
+            }
             
             VStack (alignment: .leading, spacing: 4) {
                 Text(rank.nickname)
                     .font(.system(size: 15, weight: .bold))
+                    .foregroundStyle(.black)
                 
                 if let xpType = rank.xpType {
                     Text("\(convertStat(xpType)) : \(rank.score)p")
@@ -118,13 +128,21 @@ fileprivate struct RankingVerticalItemView: View {
     
     var body: some View {
         VStack(spacing: 6) {
-            Text("😍")
-                .font(.system(size: 23, weight: .bold))
-                .frame(width: 64, height: 64)
-                .background(
-                    Circle().fill(Color.backgroundBlue)
-                )
-                .padding(6)
+            if let profileIamge = rank.profileIamge {
+                Image(uiImage: profileIamge)
+                    .resizable()
+                    .frame(width: 64, height: 64)
+                    .clipShape(Circle())
+                    .padding(6)
+            } else {
+                Text("😍")
+                    .font(.system(size: 23, weight: .bold))
+                    .frame(width: 64, height: 64)
+                    .background(
+                        Circle().fill(Color.backgroundBlue)
+                    )
+                    .padding(6)
+            }
             
             // 랭킹 아이콘 & 순위
             let idx = rank.idx

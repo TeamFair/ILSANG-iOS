@@ -58,7 +58,8 @@ struct SettingAlertView: View {
 }
 
 enum AlertType {
-    case NickName
+    case CancleEditProfile
+    case DeleteProfileImage
     case Logout
     case Withdrawal
     case Report
@@ -66,8 +67,10 @@ enum AlertType {
     
     var title: String {
         switch self {
-        case .NickName:
-            "닉네임 변경을 취소할까요?"
+        case .CancleEditProfile:
+            "프로필 변경을 취소할까요?"
+        case .DeleteProfileImage:
+            "프로필 사진을 삭제하시겠습니까?"
         case .Logout:
             "로그아웃 하시겠어요?"
         case .Withdrawal:
@@ -81,8 +84,10 @@ enum AlertType {
     
     var subtitle: String? {
         switch self {
-        case .NickName:
+        case .CancleEditProfile:
             "변경을 완료하지 않으면\n프로필이 저장되지 않습니다."
+        case .DeleteProfileImage:
+            "기본 사진으로 변경됩니다."
         case .Logout:
             nil
         case .Withdrawal:
@@ -96,7 +101,7 @@ enum AlertType {
     
     var disagree: String {
         switch self {
-        case .NickName,.Withdrawal, .Report,.ChallengeDelete:
+        case .CancleEditProfile, .DeleteProfileImage, .Withdrawal, .Report,.ChallengeDelete:
             "취소"
         case .Logout:
             "아니요"
@@ -105,7 +110,7 @@ enum AlertType {
     
     var agree: String {
         switch self {
-        case .NickName,.Withdrawal,.Report,.ChallengeDelete:
+        case .CancleEditProfile, .DeleteProfileImage, .Withdrawal,.Report,.ChallengeDelete:
             "확인"
         case .Logout:
             "예"
@@ -116,7 +121,8 @@ enum AlertType {
 #Preview {
     VStack{
         SettingAlertView(alertType: .Logout,onCancel: {print("Yes")},onConfirm: {print("NO")})
-        SettingAlertView(alertType: .NickName,onCancel: {print("Yes")},onConfirm: {print("NO")})
+        SettingAlertView(alertType: .CancleEditProfile,onCancel: {print("Yes")},onConfirm: {print("NO")})
+        SettingAlertView(alertType: .DeleteProfileImage,onCancel: {print("Yes")},onConfirm: {print("NO")})
         SettingAlertView(alertType: .Withdrawal,onCancel: {print("Yes")},onConfirm: {print("NO")})
         SettingAlertView(alertType: .ChallengeDelete,onCancel: {print("Yes")},onConfirm: {print("NO")})
     }

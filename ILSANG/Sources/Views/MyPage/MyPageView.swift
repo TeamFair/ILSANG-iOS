@@ -51,7 +51,12 @@ struct MyPageView: View {
     @ViewBuilder
     private var content: some View {
         // 개인 프로필
-        MyPageProfile(nickName: vm.userData?.nickname, level: XpLevelCalculator.convertXPtoLv(xp: vm.userData?.xpPoint ?? 0))
+        MyPageProfile(
+            nickName: vm.userData?.nickname,
+            profileImage: vm.userProfileImage,
+            profileImageId: vm.userData?.profileImage,
+            level: XpLevelCalculator.convertXPtoLv(xp: vm.userData?.xpPoint ?? 0)
+        )
         
         // 퀘스트/활동/뱃지 세그먼트
         MyPageTabView(selectedTab: $vm.selectedTab)
@@ -60,8 +65,8 @@ struct MyPageView: View {
         switch vm.selectedTab {
         case .quest:
             MyPageChallengeList(vm: vm)
-        case .activity:
-            MyPageActiveList(vm: vm)
+//        case .activity:
+//            MyPageActiveList(vm: vm)
         case .info:
             MyPageInfoView(xpPoint: vm.userData?.xpPoint, xpStats: vm.xpStats)
         }

@@ -22,7 +22,11 @@ struct ApprovalItemContentView: View {
     var body: some View {
         NavigationStack {
             VStack(alignment: .leading, spacing: 16) {
-                profileView(nickname: item.nickname, time: item.time)
+                NavigationLink {
+                    OtherUserProfileView(customerId: item.customerId)
+                } label: {
+                    profileView(nickname: item.nickname, time: item.time)
+                }
                 
                 Text(item.title)
                     .font(.system(size: 23, weight: .bold))
@@ -81,9 +85,10 @@ struct ApprovalItemContentView: View {
     
     private func profileView(nickname: String, time: String) -> some View {
         HStack(spacing: 10) {
-            Image(.profileCircle)
+            Image(uiImage: item.profileImage ?? .profileCircle)
                 .resizable()
                 .frame(width: 35, height: 35)
+                .clipShape(Circle())
             VStack(alignment: .leading, spacing: 3) {
                 Text(nickname)
                     .font(.system(size: 14, weight: .semibold))
