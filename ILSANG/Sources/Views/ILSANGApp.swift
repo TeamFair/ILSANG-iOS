@@ -6,9 +6,22 @@
 //
 
 import SwiftUI
+import FirebaseCore
+import FirebaseAnalytics
+
+class AppDelegate: NSObject, UIApplicationDelegate {
+    
+    func application(_ application: UIApplication,
+                     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
+        FirebaseApp.configure()
+        return true
+    }
+}
 
 @main
 struct ILSANGApp: App {
+    @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
+
     @AppStorage("isLogin") var isLogin = Bool()
     
     @State private var isTutorialVisible = Bool()
