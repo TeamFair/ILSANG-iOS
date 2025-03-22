@@ -14,27 +14,36 @@ class SubmitRouterViewModel: ObservableObject {
     @Published var submitStatus: SubmitStatus = .inProgress
     
     private let submitService: ImageChallengeSubmitService
-    
+    private let quizNetwork: QuizNetwork
+
     let selectedQuest: QuestViewModelItem
     private var submitTask: Task<Void, Never>?
     
-    init(selectedImage: UIImage? = nil, selectedQuest: QuestViewModelItem, submitService: ImageChallengeSubmitService) {
+    init(selectedImage: UIImage? = nil, selectedQuest: QuestViewModelItem, submitService: ImageChallengeSubmitService, quizNetwork: QuizNetwork) {
         self.selectedImage = selectedImage
         self.selectedQuest = selectedQuest
         self.submitService = submitService
+        self.quizNetwork = quizNetwork
     }
     
     /// 제출 요청
-    func submit() {
+    func submit(userAnswer: String? = nil, quizId: String? = nil) {
         self.showSubmitAlertView = true
-        self.startSubmitTask()
+        self.startSubmitTask(userAnswer: userAnswer, quizId: quizId)
     }
     
     /// 제출 작업 시작
-    private func startSubmitTask() {
-        if submitTask == nil || submitTask?.isCancelled == true { // 이거 추가함!!!!
+    private func startSubmitTask(userAnswer: String?, quizId: String?) {
+        if submitTask == nil || submitTask?.isCancelled == true {
             submitTask = Task {
-                await self.postChallengeWithImage()
+                switch selectedQuest.missionType {
+                case .quiz(let quizType):
+                    if let userAnswer, let quizId {
+                        await self.postChallengeWithQuiz(userAnswer: userAnswer, quizId: quizId)
+                    }
+                case .image:
+                    await self.postChallengeWithImage()
+                }
             }
         }
     }
@@ -67,6 +76,18 @@ class SubmitRouterViewModel: ObservableObject {
         if isSuccess {
             submitStatus = .complete
         } else {
+            submitStatus = .fail
+        }
+    }
+    
+    @MainActor
+    func postChallengeWithQuiz(userAnswer: String, quizId: String) async {
+        let response = await quizNetwork.postQuizChallenge(questId: selectedQuest.id, quizId: quizId, answer: userAnswer)
+        
+        switch response {
+        case .success:
+            submitStatus = .complete
+        case .failure:
             submitStatus = .fail
         }
     }

@@ -7,8 +7,9 @@
 
 import SwiftUI
 
+// TODO: 에러처리 재정의 필요
 struct HomeView: View {
-    @StateObject var vm: HomeViewModel = HomeViewModel(questNetwork: QuestNetwork(), rankNetwork: RankNetwork(), bannerNetwork: BannerNetwork())
+    @State var vm: HomeViewModel = HomeViewModel(questNetwork: QuestNetwork(), rankNetwork: RankNetwork(), bannerNetwork: BannerNetwork())
     @EnvironmentObject var sharedState: SharedState
     @Environment(\.redactionReasons) var redactionReasons
     
@@ -60,7 +61,18 @@ struct HomeView: View {
                 .interactiveDismissDisabled()
         }
         .navigationDestination(isPresented: $vm.showQuestEngageView) {
-            QuestEngageView(vm: QuestEngageViewModel(quest: vm.selectedQuest, questNetwork: QuestNetwork()))
+            QuestEngageView(
+                vm: QuestEngageViewModel(
+                    quest: vm.selectedQuest,
+                    quizNetwork: QuizNetwork()
+                ),
+                submitVM: SubmitRouterViewModel(
+                    selectedImage: nil,
+                    selectedQuest: vm.selectedQuest,
+                    submitService: ImageChallengeSubmitService(imageNetwork: ImageNetwork(), challengeNetwork: ChallengeNetwork()),
+                    quizNetwork: QuizNetwork()
+                )
+            )
         }
     }
     

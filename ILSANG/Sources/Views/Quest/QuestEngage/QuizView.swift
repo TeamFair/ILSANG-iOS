@@ -8,17 +8,18 @@
 import SwiftUI
 
 struct QuizView: View, KeyboardReadable {
-    let quest: QuestViewModelItem
+    let missionType: QuestViewModelItem.MissionType
+    let quiz: Quiz
     @Binding var selectedAnswer: String
     @Binding var isKeyboardVisible: Bool
     
     var body: some View {
-        if case let .quiz(quizType) = quest.approvalType {
+        if case let .quiz(quizType) = missionType {
             switch quizType {
             case .text:
-                textQuizView(question: quest.question, hint: quest.hint ?? "", userAnswer: selectedAnswer)
+                textQuizView(question: quiz.question, hint: quiz.hint, userAnswer: selectedAnswer)
             case .ox:
-                oxQuizView(question: quest.question, selection: selectedAnswer)
+                oxQuizView(question: quiz.question, selection: selectedAnswer)
             }
         }
     }
@@ -123,8 +124,8 @@ struct QuizView: View, KeyboardReadable {
 
 #Preview {
     VStack {
-        QuizView(quest: .mockData, selectedAnswer: .constant("answer"), isKeyboardVisible: .constant(true))
-        QuizView(quest: .mockQuestList[1], selectedAnswer: .constant("answer"), isKeyboardVisible: .constant(true))
+        QuizView(missionType: .quiz(.ox), quiz: Quiz(quizId: "1", question: "질문", hint: "힌드", answers: [.init(content: "답")]), selectedAnswer: .constant("answer"), isKeyboardVisible: .constant(true))
+        QuizView(missionType: .quiz(.text), quiz: Quiz(quizId: "1", question: "질문", hint: "힌드", answers: [.init(content: "답")]), selectedAnswer: .constant("answer"), isKeyboardVisible: .constant(true))
     }
     .padding()
     .background(Color.background)

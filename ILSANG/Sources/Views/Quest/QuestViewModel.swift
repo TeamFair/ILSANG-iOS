@@ -32,13 +32,19 @@ class QuestViewModel: ObservableObject {
         didSet {
             // TODO: 도전내역 등록 완료시 리스트에서 퀘스트만 삭제/추가하도록 개선(퀘스트 조회 API 호출x)
             if showSubmitRouterView == false {
-                Task {
-                    await loadInitialData()
-                }
+                Task { await loadInitialData() }
             }
         }
     }
-    @Published var showQuestEngageView: Bool = false
+    @Published var showQuestEngageView: Bool = false {
+        didSet {
+            // TODO: 도전내역 등록 완료시 리스트에서 퀘스트만 삭제/추가하도록 개선(퀘스트 조회 API 호출x)
+            if showQuestEngageView == false {
+                Task { await loadInitialData() }
+            }
+        }
+    }
+    
     @Published var itemListByStatus: [QuestStatus: [QuestViewModelItem]] = [
         .default: [],
         .repeat: [],
@@ -289,7 +295,7 @@ class QuestViewModel: ObservableObject {
     
     func onQuestApprovalTapped() {
         showQuestSheet = false
-        if selectedQuest.approvalType == .image { // TODO: 사진/ox 구분
+        if selectedQuest.missionType == .image {
             showSubmitRouterView = true
         } else {
             showQuestEngageView = true

@@ -11,7 +11,7 @@ struct ChallengeViewModelItem: Hashable {
     let challengeId: String
     let userNickName: String?
     let missionTitle: String?
-    let challengeImageId: String
+    let challengeImageId: String?
     let writerImageId: String?
     let status: String
     let createdAt: String

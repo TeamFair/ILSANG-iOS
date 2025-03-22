@@ -12,17 +12,33 @@ struct QuestViewModelItem: Hashable, Identifiable {
     var image: UIImage?
     let imageId: String?
     let mainImageId: String?
+    let missionId: String
+    let missionType: MissionType
     let missionTitle: String
     let writer: String
     var rewardDic: [XpStat: Int]
     let type: String
     let target: String
     
-    init(id: String, image: UIImage? = nil, imageId: String, mainImageId: String, missionTitle: String, writer: String, rewardDic: [XpStat: Int], type: String, target: String) {
+    init(
+        id: String,
+        image: UIImage? = nil,
+        imageId: String,
+        mainImageId: String,
+        missionId: String,
+        missionType: MissionType,
+        missionTitle: String,
+        writer: String,
+        rewardDic: [XpStat: Int],
+        type: String,
+        target: String
+    ) {
         self.id = id
         self.image = image
         self.imageId = imageId
         self.mainImageId = mainImageId
+        self.missionId = missionId
+        self.missionType = missionType
         self.missionTitle = missionTitle
         self.writer = writer
         self.rewardDic = rewardDic
@@ -35,6 +51,8 @@ struct QuestViewModelItem: Hashable, Identifiable {
         self.image = nil
         self.imageId = quest.imageId
         self.mainImageId = quest.mainImageId
+        self.missionId = quest.missionId
+        self.missionType = MissionType(rawValue: quest.missionType) ?? .image
         self.missionTitle = quest.missionTitle
         self.writer = quest.writer
         self.rewardDic = [:]
@@ -50,12 +68,17 @@ struct QuestViewModelItem: Hashable, Identifiable {
     
     var isRepeatQuest: Bool { self.type == "REPEAT" }
     var repeatType: RepeatType? { RepeatType(rawValue: self.target.lowercased()) ?? nil }
-    var approvalType: ApprovalType { self.type == "REPEAT" ? .quiz(self.target == "DAILY" ? .text : .ox ) : .image } // TODO: 수정
-    var question: String { "문제입니다" } // TODO: 수정
-    var hint: String? { "힌트입니다." } // TODO: 수정
     
-    enum QuizType {
+    enum QuizType: Hashable {
         case text, ox
+        
+        init?(rawValue: String) {
+            switch rawValue {
+            case "WORDS": self = .text
+            case "OX": self = .ox
+            default: return nil
+            }
+        }
         
         var description: String {
             switch self {
@@ -65,10 +88,22 @@ struct QuestViewModelItem: Hashable, Identifiable {
                 "OX"
             }
         }
+        
     }
     
-    enum ApprovalType: Equatable {
+    enum MissionType: Equatable, Hashable {
+        
         case quiz(QuizType), image
+        
+        init?(rawValue: String) {
+            if let quizType = QuizType(rawValue: rawValue) {
+                self = .quiz(quizType)
+            } else if rawValue == "FREE" {
+                self = .image
+            } else {
+                return nil
+            }
+        }
         
         var description: String {
             switch self {
@@ -85,14 +120,17 @@ struct QuestViewModelItem: Hashable, Identifiable {
     }
 }
 
+// TODO: mockdata, 팩토리 패턴 적용
 extension QuestViewModelItem {
     static let mockImageId = "IMQU2024071520500801"
     
     static let mockData: QuestViewModelItem = QuestViewModelItem(
         id: "11",
         image: .img0,
-        imageId: mockImageId, 
+        imageId: mockImageId,
         mainImageId: mockImageId,
+        missionId: "1",
+        missionType: .image,
         missionTitle: "아메리카노 15잔 마시기",
         writer: "이디야커피",
         rewardDic: [.charm: 30, .intellect: 100, .fun: 5],
@@ -105,8 +143,22 @@ extension QuestViewModelItem {
         image: .img0,
         imageId: mockImageId,
         mainImageId: mockImageId,
-        missionTitle: "아이스 아메리카노 가나잔 마시",
-        writer: "이디야커피",
+        missionId: "1",
+        missionType: .image,
+        missionTitle: "아메리카노 15잔 마시기",        writer: "이디야커피",
+        rewardDic: [.charm: 30, .intellect: 100, .fun: 5],
+        type: "REPEAT",
+        target: "DAILY"
+    )
+    
+    static let mockRepeat2Data: QuestViewModelItem = QuestViewModelItem(
+        id: "11",
+        image: .img0,
+        imageId: mockImageId,
+        mainImageId: mockImageId,
+        missionId: "1",
+        missionType: .image,
+        missionTitle: "아메리카노 15잔 마시기",        writer: "이디야커피",
         rewardDic: [.charm: 30, .intellect: 100, .fun: 5],
         type: "REPEAT",
         target: "DAILY"
@@ -118,7 +170,9 @@ extension QuestViewModelItem {
             image: .img0,
             imageId: mockImageId,
             mainImageId: mockImageId,
-            missionTitle: "아이스 카페라떼 15잔 마시기",
+            missionId: "1",
+            missionType: .image,
+            missionTitle: "아메리카노 15잔 마시기",
             writer: "이디야커피",
             rewardDic: [.charm: 3, .strength: 25],
             type: "REPEAT",
@@ -129,7 +183,9 @@ extension QuestViewModelItem {
             image: .img0,
             imageId: mockImageId,
             mainImageId: mockImageId,
-            missionTitle: "하늘 사진 찍기",
+            missionId: "1",
+            missionType: .image,
+            missionTitle: "아메리카노 15잔 마시기",
             writer: "이디야커피",
             rewardDic: [.charm: 3, .fun: 25, .sociability: 20, .strength: 25],
             type: "REPEAT",
@@ -140,7 +196,9 @@ extension QuestViewModelItem {
             image: .img0,
             imageId: mockImageId,
             mainImageId: mockImageId,
-            missionTitle: "아이스 아메리카노 15잔 마시기",
+            missionId: "1",
+            missionType: .image,
+            missionTitle: "아메리카노 15잔 마시기",
             writer: "이디야커피",
             rewardDic: [.charm: 30],
             type: "REPEAT",
@@ -151,7 +209,9 @@ extension QuestViewModelItem {
             image: .img0,
             imageId: mockImageId,
             mainImageId: mockImageId,
-            missionTitle: "카페라떼 1잔 마시기",
+            missionId: "1",
+            missionType: .image,
+            missionTitle: "아메리카노 15잔 마시기",
             writer: "투썸플레이스",
             rewardDic: [.charm: 20, .sociability: 100, .strength: 25],
             type: "DEFAULT",
@@ -162,7 +222,9 @@ extension QuestViewModelItem {
             image: .img0,
             imageId: mockImageId,
             mainImageId: mockImageId,
-            missionTitle: "아이스 카페라떼 11잔 마시기",
+            missionId: "1",
+            missionType: .image,
+            missionTitle: "아메리카노 15잔 마시기",
             writer: "이디야커피",
             rewardDic: [.charm: 3, .strength: 25],
             type: "REPEAT",
@@ -173,7 +235,9 @@ extension QuestViewModelItem {
             image: .img0,
             imageId: mockImageId,
             mainImageId: mockImageId,
-            missionTitle: "하늘 사진 찍기22",
+            missionId: "1",
+            missionType: .image,
+            missionTitle: "아메리카노 15잔 마시기",
             writer: "이디야커피",
             rewardDic: [.charm: 3, .fun: 25, .sociability: 20, .strength: 25],
             type: "REPEAT",
@@ -184,7 +248,9 @@ extension QuestViewModelItem {
             image: .img0,
             imageId: mockImageId,
             mainImageId: mockImageId,
-            missionTitle: "아이스 아메리카노 33잔 마시기",
+            missionId: "1",
+            missionType: .image,
+            missionTitle: "아메리카노 15잔 마시기",
             writer: "이디야커피",
             rewardDic: [.charm: 30],
             type: "REPEAT",
@@ -195,7 +261,9 @@ extension QuestViewModelItem {
             image: .img0,
             imageId: mockImageId,
             mainImageId: mockImageId,
-            missionTitle: "카페라떼 44잔 마시기",
+            missionId: "1",
+            missionType: .image,
+            missionTitle: "아메리카노 15잔 마시기",
             writer: "투썸플레이스",
             rewardDic: [.charm: 20, .sociability: 100, .strength: 25],
             type: "DEFAULT",

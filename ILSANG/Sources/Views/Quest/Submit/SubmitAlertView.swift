@@ -47,5 +47,5 @@ struct SubmitAlertView: View {
 }
 
 #Preview {
-    SubmitAlertView(vm: SubmitRouterViewModel(selectedImage: nil, selectedQuest: .mockData, submitService: ImageChallengeSubmitService(imageNetwork: ImageNetwork(), challengeNetwork: ChallengeNetwork())))
+    SubmitAlertView(vm: SubmitRouterViewModel(selectedImage: nil, selectedQuest: .mockData, submitService: ImageChallengeSubmitService(imageNetwork: ImageNetwork(), challengeNetwork: ChallengeNetwork()), quizNetwork: QuizNetwork()))
 }

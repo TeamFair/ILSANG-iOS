@@ -39,7 +39,7 @@ struct QuestInfoView: View {
                     
                     // 인증방법 태그 (사진, 서술형, OX)
                     TagView(
-                        title:  quest.approvalType.description,
+                        title:  quest.missionType.description,
                         tagStyle: .approvalType
                     )
                 }

@@ -79,7 +79,10 @@ final class MyPageViewModel: ObservableObject {
             for (index, challenge) in newChallengeList.enumerated() {
                 group.addTask {
                     let imageId = challenge.challengeImageId
-                    let image = await ImageCacheService.shared.loadImageAsync(imageId: imageId)
+                    var image: UIImage? = nil
+                    if let imageId {
+                        image = await ImageCacheService.shared.loadImageAsync(imageId: imageId)
+                    }
                     return (index, image)
                 }
             }
@@ -173,9 +176,12 @@ final class MyPageViewModel: ObservableObject {
         }
     }
     
-    func updateChallengeStatus(challengeId: String, imageId: String) async -> Bool {
+    func updateChallengeStatus(challengeId: String, imageId: String?) async -> Bool {
+        var deleteImageRes = true  // 기본값 설정
+        if let imageId {
+            deleteImageRes = await imageNetwork.deleteImage(imageId: imageId)
+        }
         let deleteChallengeRes = await challengeNetwork.deleteChallenge(challengeId: challengeId)
-        let deleteImageRes = await imageNetwork.deleteImage(imageId: imageId)
         
         return deleteChallengeRes && deleteImageRes
     }

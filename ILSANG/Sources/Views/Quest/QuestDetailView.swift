@@ -12,7 +12,7 @@ struct QuestDetailView: View {
     let action: () -> Void
     
     var approvalDescription: String {
-        switch quest.approvalType {
+        switch quest.missionType {
         case .quiz:
             "퀘스트를 지금 인증하고,\n보상을 적립받으세요!"
         case .image:
