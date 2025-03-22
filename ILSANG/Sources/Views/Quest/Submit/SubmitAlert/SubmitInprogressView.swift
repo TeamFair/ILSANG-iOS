@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct SubmitView: View {
+struct SubmitInprogressView: View {
     @State private var animate = false
     
     var body: some View {
@@ -37,5 +37,5 @@ struct SubmitView: View {
 }
 
 #Preview {
-    SubmitView()
+    SubmitInprogressView()
 }

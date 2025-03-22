@@ -13,9 +13,10 @@ enum ViewStatus {
     case loaded
 }
 
-final class HomeViewModel: ObservableObject {
-    @Published var viewStatus: ViewStatus = .loading
-    @Published var userProfileImage: UIImage?
+@Observable
+final class HomeViewModel {
+    var viewStatus: ViewStatus = .loading
+    var userProfileImage: UIImage?
     var recommendQuestTitle: String {
         if let nickname = UserService.shared.currentUser?.nickname {
             return nickname + "님을 위한 추천 퀘스트"
@@ -23,24 +24,24 @@ final class HomeViewModel: ObservableObject {
             return "추천 퀘스트"
         }
     }
-    @Published var mainBanners: [Banner] = []
-    @Published var userRankList: [TopRankViewModelItem] = [] // 10개
-    @Published var largestRewardQuestList: [XpStat: [QuestViewModelItem]] = [:] // 3*5개
-    @Published var recommendQuestList: [QuestViewModelItem] = [] //QuestViewModelItem.mockQuestList // 10개
-    @Published var popularQuestList: [QuestViewModelItem] = QuestViewModelItem.mockQuestList // 4n개
+    var mainBanners: [Banner] = []
+    var userRankList: [TopRankViewModelItem] = [] // 10개
+    var largestRewardQuestList: [XpStat: [QuestViewModelItem]] = [:] // 3*5개
+    var recommendQuestList: [QuestViewModelItem] = [] //QuestViewModelItem.mockQuestList // 10개
+    var popularQuestList: [QuestViewModelItem] = QuestViewModelItem.mockQuestList // 4n개
     
-    @Published var selectedXpStat: XpStat = .strength
-
-    @Published var showQuestSheet: Bool = false
-    @Published var selectedQuest: QuestViewModelItem = .mockData
-    @Published var selectedPopularTabIndex: Int = 0
+    var selectedXpStat: XpStat = .strength
+    
+    var showQuestSheet: Bool = false
+    var selectedQuest: QuestViewModelItem = .mockData
+    var selectedPopularTabIndex: Int = 0
     let popularChunkSize: Int = 4
     var paginatedPopularQuests: [[QuestViewModelItem]] {
         popularQuestList.chunks(of: popularChunkSize)
     }
-    @Published var showSubmitRouterView: Bool = false {
+    var showSubmitRouterView: Bool = false {
         didSet {
-            // TODO: 해당 섹션 데이터만 다시 불러오도록 수정
+            // TODO: 해당 데이터가 포함되어있으면 제거 or 리로드하도록 수정
             if showSubmitRouterView == false {
                 Task {
                     await loadInitialData()
@@ -48,12 +49,23 @@ final class HomeViewModel: ObservableObject {
             }
         }
     }
+    var showQuestEngageView: Bool = false {
+        didSet {
+            // TODO: 해당 데이터가 포함되어있으면 제거 or 리로드하도록 수정
+            if showSubmitRouterView == false {
+                Task {
+                    await loadInitialData()
+                }
+            }
+        }
+    }
+
     var errorCnt = 0
-    @Published var showMainBanners: Bool = true
-    @Published var showLargestRewardQuest: Bool = true
-    @Published var showRecommendRewardQuest: Bool = true
-    @Published var showPopularRewardQuest: Bool = true
-    @Published var showRankList = true
+    var showMainBanners: Bool = true
+    var showLargestRewardQuest: Bool = true
+    var showRecommendRewardQuest: Bool = true
+    var showPopularRewardQuest: Bool = true
+    var showRankList = true
     
     private let questNetwork: QuestNetwork
     private let rankNetwork: RankNetwork
@@ -331,7 +343,11 @@ final class HomeViewModel: ObservableObject {
     
     func onQuestApprovalTapped() {
         showQuestSheet = false
-        showSubmitRouterView = true
+        if selectedQuest.missionType == .image { // TODO: 사진/ox 구분
+            showSubmitRouterView = true
+        } else {
+            showQuestEngageView = true
+        }
     }
 }
 
