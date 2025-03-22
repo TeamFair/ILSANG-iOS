@@ -69,7 +69,10 @@ final class OtherUserProfileViewModel: ObservableObject {
             for (index, challenge) in newChallengeList.enumerated() {
                 group.addTask {
                     let imageId = challenge.challengeImageId
-                    let image = await ImageCacheService.shared.loadImageAsync(imageId: imageId)
+                    var image: UIImage? = nil
+                    if let imageId {
+                        let image = await ImageCacheService.shared.loadImageAsync(imageId: imageId)
+                    }
                     return (index, image)
                 }
             }

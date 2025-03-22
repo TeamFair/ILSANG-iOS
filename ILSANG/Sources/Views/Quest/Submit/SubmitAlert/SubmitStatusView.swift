@@ -15,12 +15,17 @@ struct SubmitStatusView: View {
     var body: some View {
         VStack(spacing: 0) {
             switch status {
-            case .submit:
-                SubmitView()
+            case .inProgress:
+                SubmitInprogressView()
             case .fail:
                 SubmitFailView()
-            default:
-                IconView(iconWidth: status.iconWidth, size: .medium, icon: status.icon, color: status.color)
+            case .retry:
+                Image(.retry)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 60, height: 60)
+            case .complete:
+                EmptyView()
             }
             
             Text(status.title)
@@ -29,22 +34,18 @@ struct SubmitStatusView: View {
                 .padding(.top, 15)
                 .padding(.bottom, 9)
             
-            HStack(spacing: 0) {
-                Text(status.subtitle)
-                    .foregroundColor(.gray400)
-                    .font(.system(size: 15, weight: .regular))
-                Text(status.emoticon)
-                    .font(.system(size: 12))
-            }
-            .padding(.bottom, 4)
+            Text(status.subtitle)
+                .foregroundColor(.gray400)
+                .font(.system(size: 15, weight: .regular))
+                .padding(.bottom, 4)
             
             PrimaryButton(title: "확인") {
                 onConfirm()
             }
             .padding(16)
-            .opacity(status == .submit ? 0 : 1)
+            .opacity(status == .inProgress ? 0 : 1)
         }
-        .padding(.top, status == .submit ? 90 : 30)
+        .padding(.top, status == .inProgress ? 90 : 30)
         .frame(width: 260, height: 240)
         .background(
             RoundedRectangle(cornerRadius: 16)
@@ -54,9 +55,10 @@ struct SubmitStatusView: View {
 }
 
 #Preview {
-    VStack {
-        SubmitStatusView(status: .submit, onConfirm: {})
+    ScrollView {
+        SubmitStatusView(status: .inProgress, onConfirm: {})
         SubmitStatusView(status: .fail, onConfirm: {})
+        SubmitStatusView(status: .retry, onConfirm: {})
         SubmitCompleteView(quest: .mockData, action: {})
     }
     .frame(maxWidth: .infinity, maxHeight: .infinity)

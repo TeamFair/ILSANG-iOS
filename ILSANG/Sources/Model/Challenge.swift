@@ -13,7 +13,8 @@ struct Challenge: Decodable, Hashable {
     let userProfileImageId: String?
     let userNickName: String?
     let missionTitle: String?
-    let receiptImageId, status: String
+    let receiptImageId: String?
+    let status: String
     let questImageId: String?
     let createdAt: String
     let likeCnt, hateCnt: Int

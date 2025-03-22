@@ -116,7 +116,7 @@ final class ApprovalViewModel {
         return await withTaskGroup(of: (Int, UIImage?, UIImage?, Emoji?).self) { group in
             for (index, challenge) in challenges.enumerated() {
                 group.addTask {
-                    async let challengeImage = ImageCacheService.shared.loadImageAsync(imageId: challenge.imageId)
+                    async let challengeImage = ImageCacheService.shared.loadImageAsync(imageId: challenge.imageId ?? "")
                     async let profileImage: UIImage? = {
                         guard let profileImageId = challenge.profileImageId else { return nil }
                         return await ImageCacheService.shared.loadImageAsync(imageId: profileImageId)
@@ -322,7 +322,7 @@ struct ApprovalViewModelItem: Identifiable {
     var profileImageId: String?
     var profileImage: UIImage?
     var image: UIImage?
-    var imageId: String
+    var imageId: String?
     var nickname: String
     var time: String
     var likeCnt: Int
@@ -364,7 +364,7 @@ struct ApprovalViewModelItem: Identifiable {
         self.profileImage = nil
         self.profileImageId = challenge.userProfileImageId
         self.image = nil
-        self.imageId = challenge.receiptImageId
+        self.imageId = challenge.receiptImageId ?? nil
         // TODO: nickname 옵셔널 해제
         self.nickname = challenge.userNickName ?? "일상"
         self.time = challenge.createdAt.timeAgoSinceDate()

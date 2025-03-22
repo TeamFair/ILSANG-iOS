@@ -33,7 +33,7 @@ struct SubmitAlertView: View {
     @ViewBuilder
     private var submitAlertView: some View {
         switch vm.submitStatus {
-        case .submit, .fail:
+        case .inProgress, .fail, .retry:
             SubmitStatusView(status: vm.submitStatus) {
                 vm.showSubmitAlertView = false
             }
@@ -47,5 +47,5 @@ struct SubmitAlertView: View {
 }
 
 #Preview {
-    SubmitAlertView(vm: SubmitRouterViewModel(selectedImage: nil, selectedQuest: .mockData, submitService: ImageChallengeSubmitService(imageNetwork: ImageNetwork(), challengeNetwork: ChallengeNetwork())))
+    SubmitAlertView(vm: SubmitRouterViewModel(selectedImage: nil, selectedQuest: .mockData, submitService: ImageChallengeSubmitService(imageNetwork: ImageNetwork(), challengeNetwork: ChallengeNetwork()), quizNetwork: QuizNetwork()))
 }

@@ -28,14 +28,19 @@ struct ChallengeDetailView: View {
                 trailingButton /// 공유 & 삭제 버튼
             }
             .padding(.bottom, 8) // 세로로 긴 이미지 대응 (NavigationTitleView의 bottom 패딩과 겹침)
-           
-            if vm.challengeList.indices.contains(idx),
-                let missionImage = vm.challengeList[idx].challengeImage {
-                ChallengeImageView(missionImage: missionImage, challengeData: vm.challengeList[idx])
-            } else {
-                ErrorView(title: "챌린지 정보를 불러오지 못했어요", subTitle: "챌린지 정보를 불러오는 데 실패했어요.\n인터넷 연결 상태 확인 후 다시 시도해주세요.") {
-                    Task {
-                        vm.challengeList[idx].challengeImage = await vm.getImage(imageId: vm.challengeList[idx].challengeImageId)
+            
+            if vm.challengeList.indices.contains(idx) {
+                if let missionImage = vm.challengeList[idx].challengeImage {
+                    ChallengeImageView(missionImage: missionImage, challengeData: vm.challengeList[idx])
+                } else if vm.challengeList[idx].challengeImage == nil {
+                    ChallengeImageView(missionImage: nil, challengeData: vm.challengeList[idx])
+                } else {
+                    ErrorView(title: "챌린지 정보를 불러오지 못했어요", subTitle: "챌린지 정보를 불러오는 데 실패했어요.\n인터넷 연결 상태 확인 후 다시 시도해주세요.") {
+                        Task {
+                            if let challengeImageId = vm.challengeList[idx].challengeImageId {
+                                vm.challengeList[idx].challengeImage = await vm.getImage(imageId: challengeImageId)
+                            }
+                        }
                     }
                 }
             }
@@ -106,17 +111,29 @@ struct ChallengeDetailView: View {
 }
 
 struct ChallengeImageView: View {
-    let missionImage: UIImage
+    let missionImage: UIImage?
     let challengeData : ChallengeViewModelItem
-
+    
     var body: some View {
-        Image(uiImage: missionImage)
-            .resizable()
-            .aspectRatio(contentMode: .fit)
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .overlay(alignment: .bottom) {
-                challengeInfoView /// 도전내역 정보 컴포넌트
-            }
+        if let missionImage {
+            Image(uiImage: missionImage)
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .overlay(alignment: .bottom) {
+                    challengeInfoView /// 도전내역 정보 컴포넌트
+                }
+        }else {
+            Image(uiImage:.logoWithAlpha)
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .frame(height: 72)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .padding(.bottom, 80)
+                .overlay(alignment: .bottom) {
+                    challengeInfoView /// 도전내역 정보 컴포넌트
+                }
+        }
     }
     
     private var challengeInfoView: some View {
