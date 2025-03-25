@@ -196,6 +196,9 @@ extension QuestView {
             selection: $vm.questFilterState.selectedValue,
             width: 150
         )
+        .onChange(of: vm.questFilterState.selectedValue) { _, newValue in
+            AnalyticsService.logEvent(.questFilterClick(filterOption: newValue.description))
+        }
     }
     
     private var filterPickerRepeatView: some View {

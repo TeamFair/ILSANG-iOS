@@ -289,6 +289,7 @@ class QuestViewModel: ObservableObject {
     }
     
     func onQuestTapped(quest: QuestViewModelItem) {
+        AnalyticsService.logEvent(.questItemClick(questId: quest.id, questType: quest.type.uppercased()))
         selectedQuest = quest
         showQuestSheet = true
     }
