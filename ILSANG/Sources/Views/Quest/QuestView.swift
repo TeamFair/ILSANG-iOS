@@ -43,7 +43,9 @@ struct QuestView: View {
             vm.closeFilterPicker()
         }
         .onReceive(sharedState.$selectedXpStat) { newValue in
+            // 외부에서 스탯 변경 시 기본 탭으로 변경
             vm.selectedXpStat = newValue
+            vm.selectedHeader = .default
         }
         .sheet(isPresented: $vm.showQuestSheet) {
             QuestDetailView(quest: vm.selectedQuest) {
