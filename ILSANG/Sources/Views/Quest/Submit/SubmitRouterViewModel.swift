@@ -74,6 +74,7 @@ class SubmitRouterViewModel: ObservableObject {
         let isSuccess = await submitService.execute(questId: selectedQuest.id, image: selectedImage)
         
         if isSuccess {
+            AnalyticsService.logEvent(.questSubmitClick(questId: selectedQuest.id, questType: selectedQuest.type.uppercased()))
             submitStatus = .complete
         } else {
             submitStatus = .fail
@@ -86,6 +87,7 @@ class SubmitRouterViewModel: ObservableObject {
         
         switch response {
         case .success:
+            AnalyticsService.logEvent(.questSubmitClick(questId: selectedQuest.id, questType: selectedQuest.type.uppercased()))
             submitStatus = .complete
         case .failure:
             submitStatus = .fail

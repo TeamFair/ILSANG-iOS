@@ -59,7 +59,11 @@ final class HomeViewModel {
             }
         }
     }
-
+    
+    // 다른 유저 프로필 확인
+    var showOtherUserProfileView = false
+    var selectedCustomerId: String? = nil
+    
     var errorCnt = 0
     var showMainBanners: Bool = true
     var showLargestRewardQuest: Bool = true

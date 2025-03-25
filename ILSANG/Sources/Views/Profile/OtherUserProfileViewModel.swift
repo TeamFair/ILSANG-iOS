@@ -71,7 +71,7 @@ final class OtherUserProfileViewModel: ObservableObject {
                     let imageId = challenge.challengeImageId
                     var image: UIImage? = nil
                     if let imageId {
-                        let image = await ImageCacheService.shared.loadImageAsync(imageId: imageId)
+                        image = await ImageCacheService.shared.loadImageAsync(imageId: imageId)
                     }
                     return (index, image)
                 }

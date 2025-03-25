@@ -31,6 +31,7 @@ class LoginViewModel: ObservableObject {
         
         Task {
             await UserService.shared.login(appleCredential: credential)
+            // TODO: 로그인 GA 연결
         }
     }
 }
