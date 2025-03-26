@@ -9,52 +9,38 @@ import SwiftUI
 import UIKit
 
 struct CustomerServiceView: View {
-    @Environment(\.dismiss) var dismiss
     
     var body: some View {
-        VStack(spacing: 0) {
-            NavigationTitleView(title: "고객센터", isSeparatorHidden: true) {
-                dismiss()
-            }
-            
+        StandardScreenView(title: "고객센터") {
             HStack {
                 Text("인스타그램")
-                    .font(.system(size: 17).bold())
-                    .foregroundColor(.gray400)
-                
+                    .styledFont(.semibold, size: 16, lineHeight: 16)
+                    .foregroundColor(.gray500)
                 Spacer()
-                
                 Text("illsang.official")
                     .underline()
-                    .font(.system(size: 17))
-                    .foregroundColor(.gray200)
+                    .font(.system(size: 16))
+                    .foregroundColor(.gray300)
             }
-            .padding(.horizontal, 25)
-            .padding(.vertical, 26)
+            .padding(20)
+            .padding(.vertical, 4)
             .background(.white)
             .onTapGesture {
                 openInstagram()
             }
-            
-            Spacer()
-            
         }
-        .frame(maxWidth: .infinity)
-        //MARK: 색상 변경시 수정
-        .background(Color.background)
-        .navigationBarBackButtonHidden()
     }
-}
-
-private func openInstagram() {
-    //고객센터 인스타 URL
-    let appURL = URL(string: "instagram://user?username=illsang.official")!
-    let webURL = URL(string: "https://www.instagram.com/illsang.official?igsh=NjJjbXc3cmU3aG56")!
     
-    if UIApplication.shared.canOpenURL(appURL) {
-          UIApplication.shared.open(appURL, options: [:], completionHandler: nil)
-    } else {
-        UIApplication.shared.open(webURL)
+    private func openInstagram() {
+        //고객센터 인스타 URL
+        let appURL = URL(string: "instagram://user?username=illsang.official")!
+        let webURL = URL(string: "https://www.instagram.com/illsang.official?igsh=NjJjbXc3cmU3aG56")!
+        
+        if UIApplication.shared.canOpenURL(appURL) {
+            UIApplication.shared.open(appURL, options: [:], completionHandler: nil)
+        } else {
+            UIApplication.shared.open(webURL)
+        }
     }
 }
 
