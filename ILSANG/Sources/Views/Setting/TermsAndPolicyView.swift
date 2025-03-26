@@ -6,66 +6,70 @@
 //
 
 import SwiftUI
-import PDFKit
 
 struct TermsAndPolicyView: View {
-    @Environment(\.dismiss) var dismiss
-    @State private var isToggle: Bool = false
+    @State private var expandedItem: String? = nil
+    
+    let terms: [(title: String, date: String, fileName: String)] = [
+        ("개인정보 처리방침", "2025.03.28", "2503_PRIVACY_POLICY"),
+        ("서비스 이용약관", "2024.02.01", "2406_TERMS_OF_USE")
+    ]
     
     var body: some View {
-        VStack(spacing: 0) {
-            NavigationTitleView(title: "약관 및 정책", isSeparatorHidden: true) {
-                dismiss()
-            }
-            
-            List {
-                HStack {
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text("서비스 이용약관")
-                            .foregroundColor(.gray500)
-
-                        Text("2024.02.01")
-                            .foregroundColor(.gray300)
-                    }
-                    
-                    Spacer()
-                    
-                    Button {
-                        withAnimation {
-                            isToggle.toggle()
-                        }
-                    } label: {
-                        Image(systemName: isToggle ? "chevron.down" : "chevron.up")
-                            .foregroundColor(Color.gray200)
+        StandardScreenView(title: "약관 및 정책") {
+            ScrollView {
+                LazyVStack(spacing: 0) {
+                    ForEach(terms, id: \..title) { term in
+                        TermsListItem(
+                            term: term,
+                            isExpanded: expandedItem == term.title,
+                            toggleExpansion: {
+                                withAnimation {
+                                    expandedItem = (expandedItem == term.title) ? nil : term.title
+                                }
+                            }
+                        )
                     }
                 }
-                .frame(height: 48)
-                
-                if isToggle {
-                    Text(contract)
-                        .font(Font.custom("Pretendard", size: 15))
-                        .listRowBackground(Color.clear)
-                }
             }
-            .listStyle(.plain)
         }
-        .background(Color.background)
-        .navigationBarBackButtonHidden()
     }
 }
 
-//내부 PDF를 뷰로 변경
-struct PDFKitView: UIViewRepresentable {
-    let url: URL
+struct TermsListItem: View {
+    let term: (title: String, date: String, fileName: String)
+    let isExpanded: Bool
+    let toggleExpansion: () -> Void
     
-    func makeUIView(context: UIViewRepresentableContext<PDFKitView>) -> PDFView {
-        let pdfView = PDFView()
-        pdfView.document = PDFDocument(url: self.url)
-        pdfView.autoScales = true
-        return pdfView
-    }
+    private let pdfFrameHeight = 580.0
     
-    func updateUIView(_ uiView: PDFView, context: UIViewRepresentableContext<PDFKitView>) {
+    var body: some View {
+        VStack(alignment: .leading, spacing: 0) {
+            HStack {
+                Button(action: toggleExpansion) {
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text(term.title)
+                            .styledFont(.semibold, size: 16, lineHeight: 16)
+                            .foregroundColor(.gray500)
+                        Text(term.date)
+                            .styledFont(.subTitle1)
+                            .foregroundColor(.gray300)
+                    }
+                    Spacer()
+                    Image(systemName: isExpanded ? "chevron.down" : "chevron.up")
+                        .foregroundColor(Color.gray300)
+                        .fontWeight(.medium)
+                }
+            }
+            .padding(.vertical, 16)
+            .padding(.horizontal, 20)
+            .background(Color.white)
+            
+            if isExpanded {
+                PDFKitView(fileName: term.fileName)
+                    .frame(height: pdfFrameHeight)
+            }
+        }
     }
 }
 

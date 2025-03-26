@@ -8,24 +8,15 @@
 import SwiftUI
 
 struct OpenSourceInfoView: View {
-    @Environment(\.dismiss) var dismiss
     
     var body: some View {
-        VStack(spacing: 0) {
-            NavigationTitleView(title: "오픈소스 정보", isSeparatorHidden: true) {
-                dismiss()
-            }
-            VStack {
-                Text(openSource)
-                    .font(Font.custom("Pretendard", size: 15))
-                    .listRowBackground(Color.clear)
-                
-                Spacer()
-            }
-            .padding(.vertical, 15)
+        StandardScreenView(title: "오픈소스 정보") {
+            Text(openSource)
+                .styledFont(.regular, size: 16, lineHeight: 16)
+                .padding(16)
+                .foregroundStyle(.gray500)
+                .frame(maxWidth: .infinity)
         }
-        .background(Color.background)
-        .navigationBarBackButtonHidden()
     }
 }
 

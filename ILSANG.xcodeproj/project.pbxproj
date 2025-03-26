@@ -14,6 +14,8 @@
 		600211EA2C1EEE6D000CC02E /* APITarget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 600211E92C1EEE6D000CC02E /* APITarget.swift */; };
 		600211EC2C1EEED7000CC02E /* APIManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 600211EB2C1EEED7000CC02E /* APIManager.swift */; };
 		600211EE2C1EEF91000CC02E /* EmojiNetwork.swift in Sources */ = {isa = PBXBuildFile; fileRef = 600211ED2C1EEF91000CC02E /* EmojiNetwork.swift */; };
+		60054F9E2D9316F800E7C5A6 /* 2503_PRIVACY_POLICY.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 60054F9D2D9316F800E7C5A6 /* 2503_PRIVACY_POLICY.pdf */; };
+		60054FA02D931AA300E7C5A6 /* PDFKitView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60054F9F2D931AA300E7C5A6 /* PDFKitView.swift */; };
 		600D83A42C7B1FA4005C93E2 /* PaginationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 600D83A32C7B1FA4005C93E2 /* PaginationManager.swift */; };
 		6011891D2C3E8B3B0070F2AD /* UserService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6011891C2C3E8B3B0070F2AD /* UserService.swift */; };
 		6011891F2C3E94380070F2AD /* AuthUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6011891E2C3E94380070F2AD /* AuthUser.swift */; };
@@ -57,6 +59,7 @@
 		604687AA2D1FDA090056E394 /* CarouselAutoSlideView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 604687A92D1FDA090056E394 /* CarouselAutoSlideView.swift */; };
 		604687AC2D213B890056E394 /* StatHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 604687AB2D213B890056E394 /* StatHeaderView.swift */; };
 		604687AE2D216EAC0056E394 /* QuestStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 604687AD2D216EAC0056E394 /* QuestStyle.swift */; };
+		60505D702D941D0A00121C4C /* StandardScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60505D6F2D941D0A00121C4C /* StandardScreenView.swift */; };
 		605334552D298A1400599159 /* TutorialView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605334542D298A1400599159 /* TutorialView.swift */; };
 		605334572D29BE3600599159 /* TutorialViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605334562D29BE3600599159 /* TutorialViewModel.swift */; };
 		6053345C2D31182500599159 /* XpLevelCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6053345B2D31182500599159 /* XpLevelCalculator.swift */; };
@@ -191,6 +194,8 @@
 		600211E92C1EEE6D000CC02E /* APITarget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APITarget.swift; sourceTree = "<group>"; };
 		600211EB2C1EEED7000CC02E /* APIManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIManager.swift; sourceTree = "<group>"; };
 		600211ED2C1EEF91000CC02E /* EmojiNetwork.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmojiNetwork.swift; sourceTree = "<group>"; };
+		60054F9D2D9316F800E7C5A6 /* 2503_PRIVACY_POLICY.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = 2503_PRIVACY_POLICY.pdf; sourceTree = "<group>"; };
+		60054F9F2D931AA300E7C5A6 /* PDFKitView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PDFKitView.swift; sourceTree = "<group>"; };
 		600D83A32C7B1FA4005C93E2 /* PaginationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaginationManager.swift; sourceTree = "<group>"; };
 		601189182C3E84720070F2AD /* ILSANG.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ILSANG.entitlements; sourceTree = "<group>"; };
 		6011891C2C3E8B3B0070F2AD /* UserService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserService.swift; sourceTree = "<group>"; };
@@ -237,6 +242,7 @@
 		604687A92D1FDA090056E394 /* CarouselAutoSlideView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarouselAutoSlideView.swift; sourceTree = "<group>"; };
 		604687AB2D213B890056E394 /* StatHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatHeaderView.swift; sourceTree = "<group>"; };
 		604687AD2D216EAC0056E394 /* QuestStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestStyle.swift; sourceTree = "<group>"; };
+		60505D6F2D941D0A00121C4C /* StandardScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StandardScreenView.swift; sourceTree = "<group>"; };
 		605334542D298A1400599159 /* TutorialView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TutorialView.swift; sourceTree = "<group>"; };
 		605334562D29BE3600599159 /* TutorialViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TutorialViewModel.swift; sourceTree = "<group>"; };
 		6053345B2D31182500599159 /* XpLevelCalculator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XpLevelCalculator.swift; sourceTree = "<group>"; };
@@ -855,6 +861,7 @@
 			isa = PBXGroup;
 			children = (
 				A19628642C076D7B0037C53A /* SettingView.swift */,
+				60505D6F2D941D0A00121C4C /* StandardScreenView.swift */,
 				A10EF9382C87292C003D78A2 /* OpenSourceInfoView.swift */,
 				A196286A2C0859730037C53A /* CustomerServiceView.swift */,
 				A196286C2C0859820037C53A /* TermsAndPolicyView.swift */,
@@ -868,6 +875,7 @@
 			isa = PBXGroup;
 			children = (
 				606C87B02C0CC89B002D5C3E /* 2406_TERMS_OF_USE.pdf */,
+				60054F9D2D9316F800E7C5A6 /* 2503_PRIVACY_POLICY.pdf */,
 			);
 			path = PDF;
 			sourceTree = "<group>";
@@ -884,6 +892,7 @@
 				6044B7322C33F754002C13A0 /* ErrorView.swift */,
 				606132772CD68FE300830948 /* TagView.swift */,
 				604687A92D1FDA090056E394 /* CarouselAutoSlideView.swift */,
+				60054F9F2D931AA300E7C5A6 /* PDFKitView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -1027,6 +1036,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				60ADF9C62D59D6C200556958 /* Roboto-Medium.ttf in Resources */,
+				60054F9E2D9316F800E7C5A6 /* 2503_PRIVACY_POLICY.pdf in Resources */,
 				60B8BA112BF9EF50005F6DE3 /* Launch Screen.storyboard in Resources */,
 				60B8B9EE2BF9EEF3005F6DE3 /* Preview Assets.xcassets in Resources */,
 				606C87B12C0CC89B002D5C3E /* 2406_TERMS_OF_USE.pdf in Resources */,
@@ -1119,6 +1129,7 @@
 				9FE63D702CB3AAF100CA7940 /* RankingViewModel.swift in Sources */,
 				6057361C2D8AC8A800CF7051 /* Quiz.swift in Sources */,
 				6053345F2D31272B00599159 /* MyPagePointSectionView.swift in Sources */,
+				60054FA02D931AA300E7C5A6 /* PDFKitView.swift in Sources */,
 				601BCF142D7B502400138387 /* OtherUserXpStatView.swift in Sources */,
 				605DA0D62C07123400CC9450 /* View++.swift in Sources */,
 				A1678CCE2CF4C59C00843854 /* MyPageShareImage.swift in Sources */,
@@ -1200,6 +1211,7 @@
 				60ADF8892D57B53100556958 /* QuestEngageViewModel.swift in Sources */,
 				60C6B4D52C2C565700926C0E /* ChallengeNetwork.swift in Sources */,
 				A11D88F72C916DE500846122 /* Icon.swift in Sources */,
+				60505D702D941D0A00121C4C /* StandardScreenView.swift in Sources */,
 				602988222D041DDC00903806 /* RepeatType.swift in Sources */,
 				A19628652C076D7B0037C53A /* SettingView.swift in Sources */,
 				607FCC332C01AA7300BB2D04 /* SubmitAlertView.swift in Sources */,
