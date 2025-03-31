@@ -32,12 +32,19 @@ class QuestViewModel: ObservableObject {
         didSet {
             // TODO: 도전내역 등록 완료시 리스트에서 퀘스트만 삭제/추가하도록 개선(퀘스트 조회 API 호출x)
             if showSubmitRouterView == false {
-                Task {
-                    await loadInitialData()
-                }
+                Task { await loadInitialData() }
             }
         }
     }
+    @Published var showQuestEngageView: Bool = false {
+        didSet {
+            // TODO: 도전내역 등록 완료시 리스트에서 퀘스트만 삭제/추가하도록 개선(퀘스트 조회 API 호출x)
+            if showQuestEngageView == false {
+                Task { await loadInitialData() }
+            }
+        }
+    }
+    
     @Published var itemListByStatus: [QuestStatus: [QuestViewModelItem]] = [
         .default: [],
         .repeat: [],
@@ -281,14 +288,19 @@ class QuestViewModel: ObservableObject {
         }
     }
     
-    func tappedQuestBtn(quest: QuestViewModelItem) {
+    func onQuestTapped(quest: QuestViewModelItem) {
+        AnalyticsService.logEvent(.questItemClick(questId: quest.id, questType: quest.type.uppercased()))
         selectedQuest = quest
         showQuestSheet = true
     }
     
-    func tappedQuestApprovalBtn() {
+    func onQuestApprovalTapped() {
         showQuestSheet = false
-        showSubmitRouterView = true
+        if selectedQuest.missionType == .image {
+            showSubmitRouterView = true
+        } else {
+            showQuestEngageView = true
+        }
     }
     
     func closeFilterPicker() {

@@ -14,6 +14,8 @@
 		600211EA2C1EEE6D000CC02E /* APITarget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 600211E92C1EEE6D000CC02E /* APITarget.swift */; };
 		600211EC2C1EEED7000CC02E /* APIManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 600211EB2C1EEED7000CC02E /* APIManager.swift */; };
 		600211EE2C1EEF91000CC02E /* EmojiNetwork.swift in Sources */ = {isa = PBXBuildFile; fileRef = 600211ED2C1EEF91000CC02E /* EmojiNetwork.swift */; };
+		60054F9E2D9316F800E7C5A6 /* 2503_PRIVACY_POLICY.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 60054F9D2D9316F800E7C5A6 /* 2503_PRIVACY_POLICY.pdf */; };
+		60054FA02D931AA300E7C5A6 /* PDFKitView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60054F9F2D931AA300E7C5A6 /* PDFKitView.swift */; };
 		600D83A42C7B1FA4005C93E2 /* PaginationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 600D83A32C7B1FA4005C93E2 /* PaginationManager.swift */; };
 		6011891D2C3E8B3B0070F2AD /* UserService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6011891C2C3E8B3B0070F2AD /* UserService.swift */; };
 		6011891F2C3E94380070F2AD /* AuthUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6011891E2C3E94380070F2AD /* AuthUser.swift */; };
@@ -31,6 +33,7 @@
 		601BCF202D7C2DC100138387 /* UINavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 601BCF1F2D7C2DC100138387 /* UINavigationController.swift */; };
 		601BCF392D7EE63100138387 /* CustomImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 601BCF352D7EE63100138387 /* CustomImagePicker.swift */; };
 		601BCF3B2D7F13E900138387 /* ProfileEditViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 601BCF3A2D7F13E900138387 /* ProfileEditViewModel.swift */; };
+		60246FA82D91E57E007C05B3 /* AnalyticsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60246FA72D91E57E007C05B3 /* AnalyticsService.swift */; };
 		6028A94A2D39721F003FBC8C /* RankNetwork.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6028A9492D39721F003FBC8C /* RankNetwork.swift */; };
 		6028A94C2D397730003FBC8C /* TopRank.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6028A94B2D39772F003FBC8C /* TopRank.swift */; };
 		6029881E2D041D3900903806 /* QuestStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6029881D2D041D3900903806 /* QuestStatus.swift */; };
@@ -43,7 +46,7 @@
 		603CF4E52D732DD800A2D19E /* ImageFullScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 603CF4E42D732DD800A2D19E /* ImageFullScreenView.swift */; };
 		603CF4EF2D79A83600A2D19E /* SubmitStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 603CF4EE2D79A83600A2D19E /* SubmitStatus.swift */; };
 		603CF4F12D79A85500A2D19E /* SubmitFailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 603CF4F02D79A85500A2D19E /* SubmitFailView.swift */; };
-		603CF4F32D79A8CE00A2D19E /* SubmitView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 603CF4F22D79A8CE00A2D19E /* SubmitView.swift */; };
+		603CF4F32D79A8CE00A2D19E /* SubmitInprogressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 603CF4F22D79A8CE00A2D19E /* SubmitInprogressView.swift */; };
 		603CF4F52D79A90100A2D19E /* SubmitCompleteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 603CF4F42D79A90100A2D19E /* SubmitCompleteView.swift */; };
 		603F040B2C2416D2008A2332 /* ImageNetwork.swift in Sources */ = {isa = PBXBuildFile; fileRef = 603F040A2C2416D2008A2332 /* ImageNetwork.swift */; };
 		603F04132C26ADC6008A2332 /* CommonResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 603F04122C26ADC6008A2332 /* CommonResponse.swift */; };
@@ -56,10 +59,13 @@
 		604687AA2D1FDA090056E394 /* CarouselAutoSlideView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 604687A92D1FDA090056E394 /* CarouselAutoSlideView.swift */; };
 		604687AC2D213B890056E394 /* StatHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 604687AB2D213B890056E394 /* StatHeaderView.swift */; };
 		604687AE2D216EAC0056E394 /* QuestStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 604687AD2D216EAC0056E394 /* QuestStyle.swift */; };
+		60505D702D941D0A00121C4C /* StandardScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60505D6F2D941D0A00121C4C /* StandardScreenView.swift */; };
 		605334552D298A1400599159 /* TutorialView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605334542D298A1400599159 /* TutorialView.swift */; };
 		605334572D29BE3600599159 /* TutorialViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605334562D29BE3600599159 /* TutorialViewModel.swift */; };
 		6053345C2D31182500599159 /* XpLevelCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6053345B2D31182500599159 /* XpLevelCalculator.swift */; };
 		6053345F2D31272B00599159 /* MyPagePointSectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6053345E2D31272B00599159 /* MyPagePointSectionView.swift */; };
+		6057361A2D8AC6F000CF7051 /* QuizNetwork.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605736192D8AC6F000CF7051 /* QuizNetwork.swift */; };
+		6057361C2D8AC8A800CF7051 /* Quiz.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6057361B2D8AC8A800CF7051 /* Quiz.swift */; };
 		605DA0C92C07097F00CC9450 /* ImagePreviewButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605DA0C82C07097F00CC9450 /* ImagePreviewButton.swift */; };
 		605DA0CD2C070A0300CC9450 /* Camera.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605DA0CC2C070A0300CC9450 /* Camera.swift */; };
 		605DA0CF2C07118900CC9450 /* SubmitRouterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605DA0CE2C07118900CC9450 /* SubmitRouterView.swift */; };
@@ -92,6 +98,11 @@
 		60943FE62C0A38FB00C8A714 /* ApprovalViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60943FE52C0A38FB00C8A714 /* ApprovalViewModel.swift */; };
 		609A76D92CFC50C7009F4567 /* QuestImageWithTagView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 609A76D82CFC50C7009F4567 /* QuestImageWithTagView.swift */; };
 		609A76DB2CFC5E90009F4567 /* StatGridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 609A76DA2CFC5E90009F4567 /* StatGridView.swift */; };
+		60A902DA2D89315800CA4489 /* FirebaseAnalyticsWithoutAdIdSupport in Frameworks */ = {isa = PBXBuildFile; productRef = 60A902D92D89315800CA4489 /* FirebaseAnalyticsWithoutAdIdSupport */; };
+		60A902DE2D89315800CA4489 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 60A902DD2D89315800CA4489 /* FirebaseAuth */; };
+		60A902E02D89315800CA4489 /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = 60A902DF2D89315800CA4489 /* FirebaseCore */; };
+		60ADF8872D57B49B00556958 /* QuestEngageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60ADF8862D57B49B00556958 /* QuestEngageView.swift */; };
+		60ADF8892D57B53100556958 /* QuestEngageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60ADF8882D57B53100556958 /* QuestEngageViewModel.swift */; };
 		60ADF9BD2D59D3FD00556958 /* FontStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60ADF9BC2D59D3FD00556958 /* FontStyle.swift */; };
 		60ADF9BF2D59D41E00556958 /* Font++.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60ADF9BE2D59D41E00556958 /* Font++.swift */; };
 		60ADF9C22D59D47100556958 /* FontWithLineHeight.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60ADF9C12D59D47100556958 /* FontWithLineHeight.swift */; };
@@ -99,6 +110,10 @@
 		60ADF9C72D59D6CB00556958 /* SFPRODISPLAYREGULAR.otf in Resources */ = {isa = PBXBuildFile; fileRef = A1EB633A2C132B0800B63F9C /* SFPRODISPLAYREGULAR.otf */; };
 		60ADF9C92D5A019B00556958 /* UIApplication.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60ADF9C82D5A019A00556958 /* UIApplication.swift */; };
 		60ADF9CB2D5A01BA00556958 /* UISheetPresentationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60ADF9CA2D5A01BA00556958 /* UISheetPresentationController.swift */; };
+		60ADF9CD2D5DD3D000556958 /* RoundedBackground.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60ADF9CC2D5DD3D000556958 /* RoundedBackground.swift */; };
+		60ADF9D22D5DDC5B00556958 /* QuizView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60ADF9D12D5DDC5B00556958 /* QuizView.swift */; };
+		60ADF9D42D5DDD2000556958 /* QuestInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60ADF9D32D5DDD2000556958 /* QuestInfoView.swift */; };
+		60ADF9D62D5DDD4400556958 /* EngageSubscriptionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60ADF9D52D5DDD4400556958 /* EngageSubscriptionView.swift */; };
 		60ADF9D82D60927900556958 /* ChallengeViewModelItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60ADF9D72D60927900556958 /* ChallengeViewModelItem.swift */; };
 		60B8B9E72BF9EEF1005F6DE3 /* ILSANGApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60B8B9E62BF9EEF1005F6DE3 /* ILSANGApp.swift */; };
 		60B8B9E92BF9EEF1005F6DE3 /* QuestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60B8B9E82BF9EEF1005F6DE3 /* QuestView.swift */; };
@@ -179,6 +194,8 @@
 		600211E92C1EEE6D000CC02E /* APITarget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APITarget.swift; sourceTree = "<group>"; };
 		600211EB2C1EEED7000CC02E /* APIManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIManager.swift; sourceTree = "<group>"; };
 		600211ED2C1EEF91000CC02E /* EmojiNetwork.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmojiNetwork.swift; sourceTree = "<group>"; };
+		60054F9D2D9316F800E7C5A6 /* 2503_PRIVACY_POLICY.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = 2503_PRIVACY_POLICY.pdf; sourceTree = "<group>"; };
+		60054F9F2D931AA300E7C5A6 /* PDFKitView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PDFKitView.swift; sourceTree = "<group>"; };
 		600D83A32C7B1FA4005C93E2 /* PaginationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaginationManager.swift; sourceTree = "<group>"; };
 		601189182C3E84720070F2AD /* ILSANG.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ILSANG.entitlements; sourceTree = "<group>"; };
 		6011891C2C3E8B3B0070F2AD /* UserService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserService.swift; sourceTree = "<group>"; };
@@ -197,6 +214,9 @@
 		601BCF1F2D7C2DC100138387 /* UINavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UINavigationController.swift; sourceTree = "<group>"; };
 		601BCF352D7EE63100138387 /* CustomImagePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomImagePicker.swift; sourceTree = "<group>"; };
 		601BCF3A2D7F13E900138387 /* ProfileEditViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileEditViewModel.swift; sourceTree = "<group>"; };
+		6021FE712D898B3100B26115 /* GoogleService-Info-dev.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info-dev.plist"; sourceTree = "<group>"; };
+		6021FE722D898B3400B26115 /* GoogleService-Info-dev.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info-dev.plist"; sourceTree = "<group>"; };
+		60246FA72D91E57E007C05B3 /* AnalyticsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsService.swift; sourceTree = "<group>"; };
 		6028A9492D39721F003FBC8C /* RankNetwork.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RankNetwork.swift; sourceTree = "<group>"; };
 		6028A94B2D39772F003FBC8C /* TopRank.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopRank.swift; sourceTree = "<group>"; };
 		6029881D2D041D3900903806 /* QuestStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestStatus.swift; sourceTree = "<group>"; };
@@ -209,7 +229,7 @@
 		603CF4E42D732DD800A2D19E /* ImageFullScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageFullScreenView.swift; sourceTree = "<group>"; };
 		603CF4EE2D79A83600A2D19E /* SubmitStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubmitStatus.swift; sourceTree = "<group>"; };
 		603CF4F02D79A85500A2D19E /* SubmitFailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubmitFailView.swift; sourceTree = "<group>"; };
-		603CF4F22D79A8CE00A2D19E /* SubmitView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubmitView.swift; sourceTree = "<group>"; };
+		603CF4F22D79A8CE00A2D19E /* SubmitInprogressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubmitInprogressView.swift; sourceTree = "<group>"; };
 		603CF4F42D79A90100A2D19E /* SubmitCompleteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubmitCompleteView.swift; sourceTree = "<group>"; };
 		603F040A2C2416D2008A2332 /* ImageNetwork.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageNetwork.swift; sourceTree = "<group>"; };
 		603F04122C26ADC6008A2332 /* CommonResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonResponse.swift; sourceTree = "<group>"; };
@@ -222,10 +242,13 @@
 		604687A92D1FDA090056E394 /* CarouselAutoSlideView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarouselAutoSlideView.swift; sourceTree = "<group>"; };
 		604687AB2D213B890056E394 /* StatHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatHeaderView.swift; sourceTree = "<group>"; };
 		604687AD2D216EAC0056E394 /* QuestStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestStyle.swift; sourceTree = "<group>"; };
+		60505D6F2D941D0A00121C4C /* StandardScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StandardScreenView.swift; sourceTree = "<group>"; };
 		605334542D298A1400599159 /* TutorialView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TutorialView.swift; sourceTree = "<group>"; };
 		605334562D29BE3600599159 /* TutorialViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TutorialViewModel.swift; sourceTree = "<group>"; };
 		6053345B2D31182500599159 /* XpLevelCalculator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XpLevelCalculator.swift; sourceTree = "<group>"; };
 		6053345E2D31272B00599159 /* MyPagePointSectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPagePointSectionView.swift; sourceTree = "<group>"; };
+		605736192D8AC6F000CF7051 /* QuizNetwork.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuizNetwork.swift; sourceTree = "<group>"; };
+		6057361B2D8AC8A800CF7051 /* Quiz.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Quiz.swift; sourceTree = "<group>"; };
 		605DA0C82C07097F00CC9450 /* ImagePreviewButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePreviewButton.swift; sourceTree = "<group>"; };
 		605DA0CC2C070A0300CC9450 /* Camera.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Camera.swift; sourceTree = "<group>"; };
 		605DA0CE2C07118900CC9450 /* SubmitRouterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubmitRouterView.swift; sourceTree = "<group>"; };
@@ -260,11 +283,18 @@
 		60943FE52C0A38FB00C8A714 /* ApprovalViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApprovalViewModel.swift; sourceTree = "<group>"; };
 		609A76D82CFC50C7009F4567 /* QuestImageWithTagView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestImageWithTagView.swift; sourceTree = "<group>"; };
 		609A76DA2CFC5E90009F4567 /* StatGridView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatGridView.swift; sourceTree = "<group>"; };
+		60A902D42D89300C00CA4489 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		60ADF8862D57B49B00556958 /* QuestEngageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestEngageView.swift; sourceTree = "<group>"; };
+		60ADF8882D57B53100556958 /* QuestEngageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestEngageViewModel.swift; sourceTree = "<group>"; };
 		60ADF9BC2D59D3FD00556958 /* FontStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FontStyle.swift; sourceTree = "<group>"; };
 		60ADF9BE2D59D41E00556958 /* Font++.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Font++.swift"; sourceTree = "<group>"; };
 		60ADF9C12D59D47100556958 /* FontWithLineHeight.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FontWithLineHeight.swift; sourceTree = "<group>"; };
 		60ADF9C82D5A019A00556958 /* UIApplication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIApplication.swift; sourceTree = "<group>"; };
 		60ADF9CA2D5A01BA00556958 /* UISheetPresentationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UISheetPresentationController.swift; sourceTree = "<group>"; };
+		60ADF9CC2D5DD3D000556958 /* RoundedBackground.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedBackground.swift; sourceTree = "<group>"; };
+		60ADF9D12D5DDC5B00556958 /* QuizView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuizView.swift; sourceTree = "<group>"; };
+		60ADF9D32D5DDD2000556958 /* QuestInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestInfoView.swift; sourceTree = "<group>"; };
+		60ADF9D52D5DDD4400556958 /* EngageSubscriptionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EngageSubscriptionView.swift; sourceTree = "<group>"; };
 		60ADF9D72D60927900556958 /* ChallengeViewModelItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChallengeViewModelItem.swift; sourceTree = "<group>"; };
 		60B8B9E32BF9EEF1005F6DE3 /* ILSANG.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ILSANG.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		60B8B9E62BF9EEF1005F6DE3 /* ILSANGApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ILSANGApp.swift; sourceTree = "<group>"; };
@@ -331,6 +361,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				60A902DE2D89315800CA4489 /* FirebaseAuth in Frameworks */,
+				60A902DA2D89315800CA4489 /* FirebaseAnalyticsWithoutAdIdSupport in Frameworks */,
+				60A902E02D89315800CA4489 /* FirebaseCore in Frameworks */,
 				606292DD2C19EAB00098B6D2 /* Alamofire in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -362,6 +395,7 @@
 				A1FF91732C257F6400F03E4B /* XpLog.swift */,
 				60C6B4D62C2C569800926C0E /* Challenge.swift */,
 				60924DC82C48C00E00221072 /* Quest.swift */,
+				6057361B2D8AC8A800CF7051 /* Quiz.swift */,
 				6011891E2C3E94380070F2AD /* AuthUser.swift */,
 				60E258042D09CE1B0052C048 /* StatRank.swift */,
 				6028A94B2D39772F003FBC8C /* TopRank.swift */,
@@ -395,6 +429,7 @@
 		6011891B2C3E8B2B0070F2AD /* Service */ = {
 			isa = PBXGroup;
 			children = (
+				60246FA62D91E571007C05B3 /* AnalyticsService */,
 				6011891C2C3E8B3B0070F2AD /* UserService.swift */,
 				601189202C3E94A60070F2AD /* AuthService.swift */,
 				60299E382CC13DEC0039663F /* ImageCacheService.swift */,
@@ -413,6 +448,48 @@
 				601BCF112D7B449C00138387 /* OtherUserProfileViewModel.swift */,
 			);
 			path = Profile;
+			sourceTree = "<group>";
+		};
+		6021FE692D8985C300B26115 /* FirebaseConfig */ = {
+			isa = PBXGroup;
+			children = (
+				6021FE6A2D8985D600B26115 /* Debug */,
+				6021FE6F2D89860600B26115 /* Staging */,
+				6021FE6C2D8985F300B26115 /* Release */,
+			);
+			path = FirebaseConfig;
+			sourceTree = "<group>";
+		};
+		6021FE6A2D8985D600B26115 /* Debug */ = {
+			isa = PBXGroup;
+			children = (
+				6021FE722D898B3400B26115 /* GoogleService-Info-dev.plist */,
+			);
+			path = Debug;
+			sourceTree = "<group>";
+		};
+		6021FE6C2D8985F300B26115 /* Release */ = {
+			isa = PBXGroup;
+			children = (
+				60A902D42D89300C00CA4489 /* GoogleService-Info.plist */,
+			);
+			path = Release;
+			sourceTree = "<group>";
+		};
+		6021FE6F2D89860600B26115 /* Staging */ = {
+			isa = PBXGroup;
+			children = (
+				6021FE712D898B3100B26115 /* GoogleService-Info-dev.plist */,
+			);
+			path = Staging;
+			sourceTree = "<group>";
+		};
+		60246FA62D91E571007C05B3 /* AnalyticsService */ = {
+			isa = PBXGroup;
+			children = (
+				60246FA72D91E57E007C05B3 /* AnalyticsService.swift */,
+			);
+			path = AnalyticsService;
 			sourceTree = "<group>";
 		};
 		6029881C2D041D2500903806 /* Enum */ = {
@@ -440,7 +517,7 @@
 			children = (
 				606C21CB2CC6B4FC00803947 /* SubmitStatusView.swift */,
 				603CF4F42D79A90100A2D19E /* SubmitCompleteView.swift */,
-				603CF4F22D79A8CE00A2D19E /* SubmitView.swift */,
+				603CF4F22D79A8CE00A2D19E /* SubmitInprogressView.swift */,
 				603CF4F02D79A85500A2D19E /* SubmitFailView.swift */,
 				603CF4EE2D79A83600A2D19E /* SubmitStatus.swift */,
 			);
@@ -521,6 +598,7 @@
 				A18EB9AF2C26B61C00405D56 /* WithdrawNetwork.swift */,
 				603F040A2C2416D2008A2332 /* ImageNetwork.swift */,
 				60C6B4D42C2C565700926C0E /* ChallengeNetwork.swift */,
+				605736192D8AC6F000CF7051 /* QuizNetwork.swift */,
 				A1C642292C33F55A004954CA /* QuestNetwork.swift */,
 			);
 			path = Network;
@@ -543,6 +621,7 @@
 				605F28512CF1B2C5007EA739 /* QuestDetailView.swift */,
 				607FCBE82BFE418600BB2D04 /* QuestViewModel.swift */,
 				607FCBE62BFD12B100BB2D04 /* QuestViewModelItem.swift */,
+				60ADF9D02D5DDC4000556958 /* QuestEngage */,
 				607FCBE32BFD124900BB2D04 /* QuestItemView.swift */,
 				604687AD2D216EAC0056E394 /* QuestStyle.swift */,
 				60C6B4DD2C2D046000926C0E /* Submit */,
@@ -635,8 +714,21 @@
 			isa = PBXGroup;
 			children = (
 				60ADF9C12D59D47100556958 /* FontWithLineHeight.swift */,
+				60ADF9CC2D5DD3D000556958 /* RoundedBackground.swift */,
 			);
 			path = ViewModifier;
+			sourceTree = "<group>";
+		};
+		60ADF9D02D5DDC4000556958 /* QuestEngage */ = {
+			isa = PBXGroup;
+			children = (
+				60ADF8862D57B49B00556958 /* QuestEngageView.swift */,
+				60ADF8882D57B53100556958 /* QuestEngageViewModel.swift */,
+				60ADF9D32D5DDD2000556958 /* QuestInfoView.swift */,
+				60ADF9D52D5DDD4400556958 /* EngageSubscriptionView.swift */,
+				60ADF9D12D5DDC5B00556958 /* QuizView.swift */,
+			);
+			path = QuestEngage;
 			sourceTree = "<group>";
 		};
 		60B8B9DA2BF9EEF1005F6DE3 = {
@@ -698,6 +790,7 @@
 		60B8BA122BF9EF8B005F6DE3 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				6021FE692D8985C300B26115 /* FirebaseConfig */,
 				606132752CD3494C00830948 /* XCConfig */,
 				A1EB63342C132A3B00B63F9C /* Fonts */,
 				A19628702C085C080037C53A /* PDF */,
@@ -768,6 +861,7 @@
 			isa = PBXGroup;
 			children = (
 				A19628642C076D7B0037C53A /* SettingView.swift */,
+				60505D6F2D941D0A00121C4C /* StandardScreenView.swift */,
 				A10EF9382C87292C003D78A2 /* OpenSourceInfoView.swift */,
 				A196286A2C0859730037C53A /* CustomerServiceView.swift */,
 				A196286C2C0859820037C53A /* TermsAndPolicyView.swift */,
@@ -781,6 +875,7 @@
 			isa = PBXGroup;
 			children = (
 				606C87B02C0CC89B002D5C3E /* 2406_TERMS_OF_USE.pdf */,
+				60054F9D2D9316F800E7C5A6 /* 2503_PRIVACY_POLICY.pdf */,
 			);
 			path = PDF;
 			sourceTree = "<group>";
@@ -797,6 +892,7 @@
 				6044B7322C33F754002C13A0 /* ErrorView.swift */,
 				606132772CD68FE300830948 /* TagView.swift */,
 				604687A92D1FDA090056E394 /* CarouselAutoSlideView.swift */,
+				60054F9F2D931AA300E7C5A6 /* PDFKitView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -831,6 +927,7 @@
 			buildPhases = (
 				60B8B9DF2BF9EEF1005F6DE3 /* Sources */,
 				60B8B9E02BF9EEF1005F6DE3 /* Frameworks */,
+				6021FE662D8984B600B26115 /* Setup Firebase Environment GoogleService-Info.plist */,
 				60B8B9E12BF9EEF1005F6DE3 /* Resources */,
 				606132742CD332AD00830948 /* ShellScript */,
 			);
@@ -841,6 +938,9 @@
 			name = ILSANG;
 			packageProductDependencies = (
 				606292DC2C19EAB00098B6D2 /* Alamofire */,
+				60A902D92D89315800CA4489 /* FirebaseAnalyticsWithoutAdIdSupport */,
+				60A902DD2D89315800CA4489 /* FirebaseAuth */,
+				60A902DF2D89315800CA4489 /* FirebaseCore */,
 			);
 			productName = ILSANG;
 			productReference = 60B8B9E32BF9EEF1005F6DE3 /* ILSANG.app */;
@@ -917,6 +1017,7 @@
 			mainGroup = 60B8B9DA2BF9EEF1005F6DE3;
 			packageReferences = (
 				606292DB2C19EAB00098B6D2 /* XCRemoteSwiftPackageReference "Alamofire" */,
+				60A902D62D89315800CA4489 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 			);
 			productRefGroup = 60B8B9E42BF9EEF1005F6DE3 /* Products */;
 			projectDirPath = "";
@@ -935,6 +1036,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				60ADF9C62D59D6C200556958 /* Roboto-Medium.ttf in Resources */,
+				60054F9E2D9316F800E7C5A6 /* 2503_PRIVACY_POLICY.pdf in Resources */,
 				60B8BA112BF9EF50005F6DE3 /* Launch Screen.storyboard in Resources */,
 				60B8B9EE2BF9EEF3005F6DE3 /* Preview Assets.xcassets in Resources */,
 				606C87B12C0CC89B002D5C3E /* 2406_TERMS_OF_USE.pdf in Resources */,
@@ -960,6 +1062,24 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		6021FE662D8984B600B26115 /* Setup Firebase Environment GoogleService-Info.plist */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Setup Firebase Environment GoogleService-Info.plist";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "echo \"Source Root: ${SRCROOT}\"\n\ncase \"${CONFIGURATION}\" in\n  \"Debug\" )\ncp -r \"$SRCROOT/${PRODUCT_NAME}/Resources/FirebaseConfig/Debug/GoogleService-Info-dev.plist\" \"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/GoogleService-Info.plist\" ;;\n  \"Staging\" )\ncp -r \"$SRCROOT/${PRODUCT_NAME}/Resources/FirebaseConfig/Staging/GoogleService-Info-dev.plist\" \"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/GoogleService-Info.plist\" ;;\n  \"Release\" )\ncp -r \"$SRCROOT/${PRODUCT_NAME}/Resources/FirebaseConfig/Release/GoogleService-Info.plist\" \"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/GoogleService-Info.plist\" ;;\n*)\n;;\nesac\n";
+		};
 		606132742CD332AD00830948 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -998,7 +1118,7 @@
 				A1AB3D692C1141B3001EB9D8 /* KakaoLoginButtonView.swift in Sources */,
 				A142E0312C2D9F37004395F8 /* SettingAlertView.swift in Sources */,
 				601BCF392D7EE63100138387 /* CustomImagePicker.swift in Sources */,
-				603CF4F32D79A8CE00A2D19E /* SubmitView.swift in Sources */,
+				603CF4F32D79A8CE00A2D19E /* SubmitInprogressView.swift in Sources */,
 				601189272C3F00FB0070F2AD /* AuthChannel.swift in Sources */,
 				604687AE2D216EAC0056E394 /* QuestStyle.swift in Sources */,
 				A1BB60262BFE05B000AAADD4 /* MyPageTabView.swift in Sources */,
@@ -1007,7 +1127,9 @@
 				602988202D041D4700903806 /* XpStat.swift in Sources */,
 				9FE63D722CB3AB4F00CA7940 /* RankingItemView.swift in Sources */,
 				9FE63D702CB3AAF100CA7940 /* RankingViewModel.swift in Sources */,
+				6057361C2D8AC8A800CF7051 /* Quiz.swift in Sources */,
 				6053345F2D31272B00599159 /* MyPagePointSectionView.swift in Sources */,
+				60054FA02D931AA300E7C5A6 /* PDFKitView.swift in Sources */,
 				601BCF142D7B502400138387 /* OtherUserXpStatView.swift in Sources */,
 				605DA0D62C07123400CC9450 /* View++.swift in Sources */,
 				A1678CCE2CF4C59C00843854 /* MyPageShareImage.swift in Sources */,
@@ -1035,7 +1157,9 @@
 				A1AB3D6E2C117569001EB9D8 /* Color.swift in Sources */,
 				A1501B082C48C3C6001410E1 /* MyPageActiveList.swift in Sources */,
 				A13BD3932CA182A0003FF9BE /* XpStats.swift in Sources */,
+				60ADF9CD2D5DD3D000556958 /* RoundedBackground.swift in Sources */,
 				A1AB3D682C1141B3001EB9D8 /* GoogleLoginButtonView.swift in Sources */,
+				60ADF9D62D5DDD4400556958 /* EngageSubscriptionView.swift in Sources */,
 				601189292C3F022D0070F2AD /* LoginViewModel.swift in Sources */,
 				604687A52D1FC36A0056E394 /* TitleWithContentView.swift in Sources */,
 				A19628622C0763F90037C53A /* ProfileEditView.swift in Sources */,
@@ -1057,6 +1181,7 @@
 				60C6B4DC2C2D042700926C0E /* Image.swift in Sources */,
 				A18EB9B02C26B61C00405D56 /* WithdrawNetwork.swift in Sources */,
 				603CF4EF2D79A83600A2D19E /* SubmitStatus.swift in Sources */,
+				60246FA82D91E57E007C05B3 /* AnalyticsService.swift in Sources */,
 				A1868C442C09B6C50020BF16 /* ChallengeDetailView.swift in Sources */,
 				6044B71D2C32B6A4002C13A0 /* UIImage++.swift in Sources */,
 				607FCBD42BFA648000BB2D04 /* Tab.swift in Sources */,
@@ -1067,7 +1192,10 @@
 				60ADF9BD2D59D3FD00556958 /* FontStyle.swift in Sources */,
 				60299E312CBFFF160039663F /* TransferableUIImage.swift in Sources */,
 				601BCF3B2D7F13E900138387 /* ProfileEditViewModel.swift in Sources */,
+				60ADF9D42D5DDD2000556958 /* QuestInfoView.swift in Sources */,
 				A1FF91722C257E9A00F03E4B /* User.swift in Sources */,
+				60ADF9D22D5DDC5B00556958 /* QuizView.swift in Sources */,
+				6057361A2D8AC6F000CF7051 /* QuizNetwork.swift in Sources */,
 				60B8B9E92BF9EEF1005F6DE3 /* QuestView.swift in Sources */,
 				60C6B4D72C2C569800926C0E /* Challenge.swift in Sources */,
 				60B8B9E72BF9EEF1005F6DE3 /* ILSANGApp.swift in Sources */,
@@ -1080,8 +1208,10 @@
 				60ADF9BF2D59D41E00556958 /* Font++.swift in Sources */,
 				60004AD92D42373300CD2254 /* Banner.swift in Sources */,
 				601BCF102D7B43F000138387 /* OtherUserProfileView.swift in Sources */,
+				60ADF8892D57B53100556958 /* QuestEngageViewModel.swift in Sources */,
 				60C6B4D52C2C565700926C0E /* ChallengeNetwork.swift in Sources */,
 				A11D88F72C916DE500846122 /* Icon.swift in Sources */,
+				60505D702D941D0A00121C4C /* StandardScreenView.swift in Sources */,
 				602988222D041DDC00903806 /* RepeatType.swift in Sources */,
 				A19628652C076D7B0037C53A /* SettingView.swift in Sources */,
 				607FCC332C01AA7300BB2D04 /* SubmitAlertView.swift in Sources */,
@@ -1098,6 +1228,7 @@
 				606132782CD68FE300830948 /* TagView.swift in Sources */,
 				6029881E2D041D3900903806 /* QuestStatus.swift in Sources */,
 				609A76DB2CFC5E90009F4567 /* StatGridView.swift in Sources */,
+				60ADF8872D57B49B00556958 /* QuestEngageView.swift in Sources */,
 				605DA0CD2C070A0300CC9450 /* Camera.swift in Sources */,
 				600211EE2C1EEF91000CC02E /* EmojiNetwork.swift in Sources */,
 				601189212C3E94A60070F2AD /* AuthService.swift in Sources */,
@@ -1235,9 +1366,10 @@
 				DEVELOPMENT_ASSET_PATHS = "\"ILSANG/Resources/Preview Content\"";
 				DEVELOPMENT_TEAM = V589568L2Q;
 				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ILSANG/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "$(APP_NAME)";
+				INFOPLIST_KEY_CFBundleDisplayName = "일상 DEV";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
 				INFOPLIST_KEY_NSCameraUsageDescription = "일상은 퀘스트 인증 사진을 촬영하기 위해 카메라 접근 권한이 필요합니다.\n계속하려면 카메라 접근 권한을 허용해주세요.";
 				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "일상은 촬영한 퀘스트 인증 사진을 저장하기 위해 앨범 접근 권한이 필요합니다.\n계속하려면 앨범 접근 권한을 허용해주세요.";
@@ -1254,7 +1386,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.3.4;
+				MARKETING_VERSION = 1.3.5;
 				PRODUCT_BUNDLE_IDENTIFIER = "$(APP_BUNDLE_ID)";
 				"PRODUCT_BUNDLE_IDENTIFIER[sdk=iphoneos*]" = com.ilsang240615.dev;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1442,9 +1574,10 @@
 				DEVELOPMENT_ASSET_PATHS = "\"ILSANG/Resources/Preview Content\"";
 				DEVELOPMENT_TEAM = V589568L2Q;
 				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ILSANG/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "$(APP_NAME)";
+				INFOPLIST_KEY_CFBundleDisplayName = "일상 DEV";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
 				INFOPLIST_KEY_NSCameraUsageDescription = "일상은 퀘스트 인증 사진을 촬영하기 위해 카메라 접근 권한이 필요합니다.\n계속하려면 카메라 접근 권한을 허용해주세요.";
 				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "일상은 촬영한 퀘스트 인증 사진을 저장하기 위해 앨범 접근 권한이 필요합니다.\n계속하려면 앨범 접근 권한을 허용해주세요.";
@@ -1461,7 +1594,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.3.4;
+				MARKETING_VERSION = 1.3.5;
 				PRODUCT_BUNDLE_IDENTIFIER = "$(APP_BUNDLE_ID)";
 				"PRODUCT_BUNDLE_IDENTIFIER[sdk=iphoneos*]" = com.ilsang240615.dev;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1486,9 +1619,10 @@
 				DEVELOPMENT_ASSET_PATHS = "\"ILSANG/Resources/Preview Content\"";
 				DEVELOPMENT_TEAM = V589568L2Q;
 				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ILSANG/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "$(APP_NAME)";
+				INFOPLIST_KEY_CFBundleDisplayName = "일상";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
 				INFOPLIST_KEY_NSCameraUsageDescription = "일상은 퀘스트 인증 사진을 촬영하기 위해 카메라 접근 권한이 필요합니다.\n계속하려면 카메라 접근 권한을 허용해주세요.";
 				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "일상은 촬영한 퀘스트 인증 사진을 저장하기 위해 앨범 접근 권한이 필요합니다.\n계속하려면 앨범 접근 권한을 허용해주세요.";
@@ -1505,7 +1639,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.3.4;
+				MARKETING_VERSION = 1.3.5;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -1646,6 +1780,14 @@
 				minimumVersion = 5.9.1;
 			};
 		};
+		60A902D62D89315800CA4489 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 11.10.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -1653,6 +1795,21 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 606292DB2C19EAB00098B6D2 /* XCRemoteSwiftPackageReference "Alamofire" */;
 			productName = Alamofire;
+		};
+		60A902D92D89315800CA4489 /* FirebaseAnalyticsWithoutAdIdSupport */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 60A902D62D89315800CA4489 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAnalyticsWithoutAdIdSupport;
+		};
+		60A902DD2D89315800CA4489 /* FirebaseAuth */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 60A902D62D89315800CA4489 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAuth;
+		};
+		60A902DF2D89315800CA4489 /* FirebaseCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 60A902D62D89315800CA4489 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseCore;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

@@ -8,12 +8,13 @@
 import SwiftUI
 import Photos
 
+/// 제출을 처리하고 서버와 통신하는 역할
 struct SubmitRouterView: View {
     @StateObject var vm: SubmitRouterViewModel
     @Environment(\.dismiss) var dismiss
 
     init(selectedQuest: QuestViewModelItem) {
-        _vm = StateObject(wrappedValue: SubmitRouterViewModel(selectedQuest: selectedQuest, submitService: ImageChallengeSubmitService(imageNetwork: ImageNetwork(), challengeNetwork: ChallengeNetwork())))
+        _vm = StateObject(wrappedValue: SubmitRouterViewModel(selectedQuest: selectedQuest, submitService: ImageChallengeSubmitService(imageNetwork: ImageNetwork(), challengeNetwork: ChallengeNetwork()), quizNetwork: QuizNetwork()))
     }
 
     var body: some View {

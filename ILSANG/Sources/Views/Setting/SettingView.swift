@@ -11,6 +11,7 @@ struct SettingView: View {
     
     @Environment(\.dismiss) var dismiss
     @State private var logoutAlert = false
+    @State var selectedSetting: Setting?
     
     private let settingList: [Setting] = [
         Setting(title: "고객센터", type: .navigate),
@@ -26,27 +27,35 @@ struct SettingView: View {
             NavigationTitleView(title: "설정", isSeparatorHidden: true) {
                 dismiss()
             }
+            .padding(.bottom, 8) // 세로로 긴 이미지 대응 (NavigationTitleView의 bottom 패딩과 겹침)
             
             List(settingList) { item in
-                Group {
-                    switch item.type {
-                    case .navigate:
-                        NavigationLink(destination: destinationView(for: item)) {
-                            settingListItemView(title: item.title, titleColor: item.titleColor)
-                        }
-                    case .alert:
-                        Button {
+                settingListItemView(item: item)
+                    .onTapGesture {
+                        if item.type == .navigate {
+                            selectedSetting = item
+                        } else if item.type == .alert {
                             logoutAlert.toggle()
-                        } label: {
-                            settingListItemView(title: item.title, titleColor: item.titleColor)
                         }
-                    case .info(let subInfo):
-                        settingListItemView(title: item.title, titleColor: item.titleColor, subInfo: subInfo)
                     }
-                }
-                .listRowSeparator(.hidden)
+                    .listRowSeparator(.hidden)
             }
+            .listRowSpacing(2)
             .listStyle(.plain)
+            .navigationDestination(item: $selectedSetting) { setting in
+                switch setting.title {
+                case "고객센터":
+                    CustomerServiceView()
+                case "약관 및 정책":
+                    TermsAndPolicyView()
+                case "오픈소스 정보":
+                    OpenSourceInfoView()
+                case "회원 탈퇴":
+                    DeleteAccountView()
+                default:
+                    EmptyView()
+                }
+            }
         }
         .navigationBarBackButtonHidden()
         .overlay {
@@ -60,34 +69,29 @@ struct SettingView: View {
         }
     }
     
-    private func settingListItemView(title: String, titleColor: Color, subInfo: String = "") -> some View {
+    private func settingListItemView(item: Setting) -> some View {
         HStack {
-            Text(title)
-                .font(.system(size: 17, weight: .bold))
-                .foregroundColor(titleColor)
+            Text(item.title)
+                .font(.system(size: 17, weight: .semibold))
+                .foregroundColor(item.titleColor)
             Spacer()
-            Text(subInfo)
-                .font(.system(size: 17, weight: .regular))
-                .foregroundColor(.gray200)
+            switch item.type {
+            case .navigate:
+                Image(systemName: "chevron.right")
+                    .foregroundStyle(.gray300)
+                    .fontWeight(.medium)
+            case .alert:
+                EmptyView()
+            case .info(let string):
+                Text(string)
+                    .font(.system(size: 16, weight: .medium))
+                    .foregroundColor(.gray200)
+                    .monospacedDigit()
+            }
         }
         .frame(height: 36)
-    }
-    
-    //특정 Setting에 따라서 뷰를 다르게 호출
-    @ViewBuilder
-    private func destinationView(for item: Setting) -> some View {
-        switch item.title {
-        case "고객센터":
-            CustomerServiceView()
-        case "약관 및 정책":
-            TermsAndPolicyView()
-        case "오픈소스 정보" :
-            OpenSourceInfoView()
-        case "회원 탈퇴":
-            DeleteAccountView()
-        default:
-            Text("")
-        }
+        .frame(maxWidth: .infinity)
+        .background()
     }
     
     private func logout() {

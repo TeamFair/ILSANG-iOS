@@ -7,8 +7,9 @@
 
 import SwiftUI
 
+// TODO: 에러처리 재정의 필요
 struct HomeView: View {
-    @StateObject var vm: HomeViewModel = HomeViewModel(questNetwork: QuestNetwork(), rankNetwork: RankNetwork(), bannerNetwork: BannerNetwork())
+    @State var vm: HomeViewModel = HomeViewModel(questNetwork: QuestNetwork(), rankNetwork: RankNetwork(), bannerNetwork: BannerNetwork())
     @EnvironmentObject var sharedState: SharedState
     @Environment(\.redactionReasons) var redactionReasons
     
@@ -25,7 +26,7 @@ struct HomeView: View {
     }
     
     var body: some View {
-        Group {
+        NavigationStack {
             switch vm.viewStatus {
             case .loading, .loaded:
                 ScrollView {
@@ -58,6 +59,20 @@ struct HomeView: View {
         .fullScreenCover(isPresented: $vm.showSubmitRouterView) {
             SubmitRouterView(selectedQuest: vm.selectedQuest)
                 .interactiveDismissDisabled()
+        }
+        .navigationDestination(isPresented: $vm.showQuestEngageView) {
+            QuestEngageView(
+                vm: QuestEngageViewModel(
+                    quest: vm.selectedQuest,
+                    quizNetwork: QuizNetwork()
+                ),
+                submitVM: SubmitRouterViewModel(
+                    selectedImage: nil,
+                    selectedQuest: vm.selectedQuest,
+                    submitService: ImageChallengeSubmitService(imageNetwork: ImageNetwork(), challengeNetwork: ChallengeNetwork()),
+                    quizNetwork: QuizNetwork()
+                )
+            )
         }
     }
     
@@ -112,6 +127,7 @@ struct HomeView: View {
                         .frame(height: height)
                         .clipShape(RoundedRectangle(cornerRadius: 12))
                         .onTapGesture {
+                            AnalyticsService.logEvent(.homeBannerClick(bannerId: item.id))
                             if let tab = vm.getTabFromURL(from: item.description) { /// 해당하는 탭으로 이동
                                 sharedState.selectedTab = tab
                             }
@@ -147,6 +163,7 @@ struct HomeView: View {
                     style: PopularStyle(repeatType: RepeatType(rawValue: quest.target.lowercased()) ?? .daily),
                     tagTitle: "\(quest.totalRewardXP())XP"
                 ) {
+                    AnalyticsService.logEvent(.homePopularQuestClick(questId: quest.id))
                     vm.onQuestTapped(quest: quest)
                 }
             }
@@ -165,6 +182,7 @@ struct HomeView: View {
                                 style: PopularStyle(repeatType: RepeatType(rawValue: quest.target.lowercased()) ?? .daily),
                                 tagTitle: "\(quest.totalRewardXP())XP"
                             ) {
+                                AnalyticsService.logEvent(.homePopularQuestClick(questId: quest.id))
                                 vm.onQuestTapped(quest: quest)
                             }
                         }
@@ -204,6 +222,7 @@ struct HomeView: View {
                             QuestItemView(
                                 quest: quest,
                                 style: RecommendStyle()) {
+                                    AnalyticsService.logEvent(.homeRecommendQuestClick(questId: quest.id))
                                     vm.onQuestTapped(quest: quest)
                                 }
                         }
@@ -239,6 +258,7 @@ struct HomeView: View {
                             style: UncompletedStyle(),
                             tagTitle: String(quest.totalRewardXP())+"XP"
                         ) {
+                            AnalyticsService.logEvent(.homeBigRewardQuestClick(questId: quest.id, stat: vm.selectedXpStat.parameterText))
                             vm.onQuestTapped(quest: quest)
                         }
                     }
@@ -259,8 +279,10 @@ struct HomeView: View {
                 ScrollView(.horizontal) {
                     HStack(spacing: 8) {
                         ForEach(Array(vm.userRankList.enumerated()), id: \.offset) { idx, rank in
-                            NavigationLink {
-                                OtherUserProfileView(customerId: rank.customerId)
+                            Button {
+                                AnalyticsService.logEvent(.homeRankingClick(userId: rank.customerId))
+                                vm.selectedCustomerId = rank.customerId
+                                vm.showOtherUserProfileView = true
                             } label: {
                                 RankingItemView(topRank: rank, style: .vertical)
                             }
@@ -269,6 +291,11 @@ struct HomeView: View {
                     .padding(.horizontal, LayoutConstants.horizontalPadding)
                 }
                 .scrollIndicators(.never)
+                .navigationDestination(isPresented: $vm.showOtherUserProfileView) {
+                    if let customerId = vm.selectedCustomerId {
+                        OtherUserProfileView(customerId: customerId)
+                    }
+                }
         )
     }
     

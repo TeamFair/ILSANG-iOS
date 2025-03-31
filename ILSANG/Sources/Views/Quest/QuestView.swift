@@ -43,11 +43,13 @@ struct QuestView: View {
             vm.closeFilterPicker()
         }
         .onReceive(sharedState.$selectedXpStat) { newValue in
+            // 외부에서 스탯 변경 시 기본 탭으로 변경
             vm.selectedXpStat = newValue
+            vm.selectedHeader = .default
         }
         .sheet(isPresented: $vm.showQuestSheet) {
             QuestDetailView(quest: vm.selectedQuest) {
-                vm.tappedQuestApprovalBtn()
+                vm.onQuestApprovalTapped()
             }
             .presentationDetents([.height(UISheetPresentationController.Detent.questDetailDetentHeight)])
             .presentationDragIndicator(.hidden)
@@ -58,6 +60,18 @@ struct QuestView: View {
         .fullScreenCover(isPresented: $vm.showSubmitRouterView) {
             SubmitRouterView(selectedQuest: vm.selectedQuest)
                 .interactiveDismissDisabled()
+        }
+        .navigationDestination(isPresented: $vm.showQuestEngageView) {
+            let quizNetwork = QuizNetwork()
+            return QuestEngageView(
+                vm: QuestEngageViewModel(quest: vm.selectedQuest, quizNetwork: quizNetwork),
+                submitVM: SubmitRouterViewModel(
+                    selectedImage: nil,
+                    selectedQuest: vm.selectedQuest,
+                    submitService: ImageChallengeSubmitService(imageNetwork: ImageNetwork(), challengeNetwork: ChallengeNetwork()),
+                    quizNetwork: quizNetwork
+                )
+            )
         }
     }
 }
@@ -128,7 +142,7 @@ extension QuestView {
                         style: UncompletedStyle(),
                         tagTitle: String(quest.totalRewardXP())+"XP"
                     ) {
-                        vm.tappedQuestBtn(quest: quest)
+                        vm.onQuestTapped(quest: quest)
                     }
                 }
             case .repeat: // 미완료 반복 퀘스트
@@ -138,7 +152,7 @@ extension QuestView {
                         style: RepeatStyle(repeatType: vm.repeatFilterState.selectedValue),
                         tagTitle: vm.repeatFilterState.selectedValue.description
                     ) {
-                        vm.tappedQuestBtn(quest: quest)
+                        vm.onQuestTapped(quest: quest)
                     }
                 }
             case .completed: // 완료 퀘스트
@@ -184,6 +198,9 @@ extension QuestView {
             selection: $vm.questFilterState.selectedValue,
             width: 150
         )
+        .onChange(of: vm.questFilterState.selectedValue) { _, newValue in
+            AnalyticsService.logEvent(.questFilterClick(filterOption: newValue.description))
+        }
     }
     
     private var filterPickerRepeatView: some View {

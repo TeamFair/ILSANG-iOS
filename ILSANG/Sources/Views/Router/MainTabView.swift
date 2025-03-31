@@ -25,6 +25,9 @@ struct MainTabView: View {
             .environmentObject(sharedState) // 뷰 모델 전달
             .navigationBarTitleDisplayMode(.inline)
             .navigationBarBackButtonHidden(true)
+            .onChange(of: sharedState.selectedTab) { _, newTab in
+                AnalyticsService.logEvent(.bottomTabClick(tabName: sharedState.selectedTab.rawValue.uppercased()))
+            }
         }
     }
     

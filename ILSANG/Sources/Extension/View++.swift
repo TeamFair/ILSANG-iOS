@@ -104,4 +104,19 @@ extension View {
             )
         )
     }
+
+    func roundedBackground(cornerRadius: CGFloat, bgColor: Color = .white) -> some View {
+        return ModifiedContent(
+            content: self,
+            modifier: RoundedBackground(
+                cornerRadius: cornerRadius,
+                backgroundColor: bgColor
+            )
+        )
+    }
+    
+    // 키보드밖 화면 터치시 키보드 사라짐 .onTapGesture에서 사용
+    func hideKeyboard() {
+        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+    }
 }

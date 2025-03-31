@@ -12,14 +12,12 @@ struct MyPageView: View {
     @StateObject var vm: MyPageViewModel = MyPageViewModel(userNetwork: UserNetwork(), challengeNetwork: ChallengeNetwork(), imageNetwork: ImageNetwork(), xpNetwork: XPNetwork())
     
     var body: some View {
-        NavigationView {
-            VStack(spacing: 0) {
-                header  // 타이틀 & 설정버튼
-                content // 프로필 & 퀘스트/활동/내정보 컨텐츠
-            }
-            .padding(.horizontal, 20)
-            .background(Color.background)
+        VStack(spacing: 0) {
+            header  // 타이틀 & 설정버튼
+            content // 프로필 & 퀘스트/활동/내정보 컨텐츠
         }
+        .padding(.horizontal, 20)
+        .background(Color.background)
         .task {
             // TODO:
             // 1) 초기화시 데이터 로딩하도록 수정

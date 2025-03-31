@@ -95,7 +95,7 @@ struct ImageDataTransferable: Transferable {
             submitService: ImageChallengeSubmitService(
                 imageNetwork: ImageNetwork(),
                 challengeNetwork: ChallengeNetwork()
-            )
+            ), quizNetwork: QuizNetwork()
         )
     )
 }

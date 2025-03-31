@@ -11,6 +11,7 @@ struct NavigationTitleView: View {
     let title: String
     var isSeparatorHidden = false
     var isDismissButtonHidden = false
+    var background: Color = .white
     var action: (() -> Void?)? = nil
 
     var body: some View {
@@ -30,7 +31,7 @@ struct NavigationTitleView: View {
                 .font(.system(size: 17, weight: .bold))
                 .padding(.horizontal, 20)
                 .frame(height: 45)
-                .background(Color.white)
+                .background(background)
             
             if !isSeparatorHidden {
                 SeparatorView()
