@@ -24,6 +24,7 @@ class QuestViewModel: ObservableObject {
     // 필터
     @Published var repeatFilterState: FilterPickerState<RepeatType>
     @Published var questFilterState: FilterPickerState<QuestFilterType>
+    @Published var eventFilterState: FilterPickerState<EventQuestFilterType>
 
     // 선택된 퀘스트
     @Published var selectedQuest: QuestViewModelItem = .mockData
@@ -48,11 +49,13 @@ class QuestViewModel: ObservableObject {
     @Published var itemListByStatus: [QuestStatus: [QuestViewModelItem]] = [
         .default: [],
         .repeat: [],
+        .event: [],
         .completed: []
     ]
     
     var defaultQuestListByXpStat: [XpStat: [QuestViewModelItem]] = Dictionary(uniqueKeysWithValues: XpStat.allCases.map { ($0, []) })
     var repeatQuestListByXpStat: [XpStat: [QuestViewModelItem]] = Dictionary(uniqueKeysWithValues: XpStat.allCases.map { ($0, []) })
+    var eventQuestListByXpStat: [XpStat: [QuestViewModelItem]] = Dictionary(uniqueKeysWithValues: XpStat.allCases.map { ($0, []) })
 
     var filteredDefaultQuestListByXpStat: [QuestViewModelItem] {
         switch questFilterState.selectedValue {
@@ -75,6 +78,22 @@ class QuestViewModel: ObservableObject {
             return repeatQuestListByXpStat[selectedXpStat, default: []]
         }
     }
+
+    var filteredEventQuestList: [QuestViewModelItem] {
+        switch eventFilterState.selectedValue  {
+        case .pointHighest:
+            return eventQuestListByXpStat[selectedXpStat, default: []].sorted { $0.rewardDic[selectedXpStat, default: 0] > $1.rewardDic[selectedXpStat, default: 0] }
+        case .pointLowest:
+            return eventQuestListByXpStat[selectedXpStat, default: []].sorted { $0.rewardDic[selectedXpStat, default: 0] < $1.rewardDic[selectedXpStat, default: 0] }
+        case .popular:
+            return eventQuestListByXpStat[selectedXpStat, default: []]
+        case .upcoming:
+            return eventQuestListByXpStat[selectedXpStat, default: []].sorted(by: {
+                guard let date1 = $0.expireDate.toDate(), let date2 = $1.expireDate.toDate() else { return false }
+                return date1 < date2
+            })
+        }
+    }
     
     var isCurrentListEmpty: Bool {
         switch selectedHeader {
@@ -82,10 +101,13 @@ class QuestViewModel: ObservableObject {
             return itemListByStatus[.default, default: []].isEmpty || filteredDefaultQuestListByXpStat.isEmpty
         case .repeat:
             return itemListByStatus[.repeat, default: []].isEmpty || filteredRepeatQuestListByXpStat.isEmpty
+        case .event:
+            return itemListByStatus[.event, default: []].isEmpty || filteredEventQuestList.isEmpty
         case .completed:
             return itemListByStatus[.completed, default: []].isEmpty
         }
     }
+    
     // TODO: 퀘스트 갯수 확인 필요
     // TODO: 현재 0페이지만 불러오며, 임시로 80개 로딩. 스탯 분류&필터링과 관련해서 기획 & API 수정에 따라 페이지네이션 로직 수정 필요
     lazy var defaultPaginationManager = PaginationManager<QuestViewModelItem>(
@@ -104,6 +126,16 @@ class QuestViewModel: ObservableObject {
         loadPage: { [weak self] page in
             guard let self = self else { return ([], 0) }
             return await loadQuestListWithImage(page: page, size: 40, status: .repeat)
+        }
+    )
+    
+    // TODO: 스탯 분류&필터링과 관련해서 기획 & API 수정에 따라 페이지네이션 로직 수정 필요
+    lazy var eventPaginationManager = PaginationManager<QuestViewModelItem>(
+        size: 30,
+        threshold: 28,
+        loadPage: { [weak self] page in
+            guard let self = self else { return ([], 0) }
+            return await loadQuestListWithImage(page: page, size: 30, status: .event)
         }
     )
     
@@ -128,6 +160,7 @@ class QuestViewModel: ObservableObject {
         
         // 필터 설정
         questFilterState = FilterPickerState(initialValue: QuestFilterType.popular)
+        eventFilterState = FilterPickerState(initialValue: EventQuestFilterType.popular)
         repeatFilterState = FilterPickerState(initialValue: RepeatType.daily)
         repeatFilterState.onSelectionChange = { [weak self] _ in
             guard let self = self else { return }
@@ -145,8 +178,9 @@ class QuestViewModel: ObservableObject {
         await changeViewStatus(.loading)
         async let defaultLoad: () = defaultPaginationManager.loadData(isRefreshing: true)
         async let repeatLoad: () = repeatPaginationManager.loadData(isRefreshing: true)
+        async let eventLoad: () = eventPaginationManager.loadData(isRefreshing: true)
         async let completedLoad: () = completedPaginationManager.loadData(isRefreshing: true)
-        _ = await (defaultLoad, repeatLoad, completedLoad)
+        _ = await (defaultLoad, repeatLoad, eventLoad, completedLoad)
         await changeViewStatus(.loaded)
     }
     
@@ -164,6 +198,8 @@ class QuestViewModel: ObservableObject {
             await defaultPaginationManager.loadData(isRefreshing: true)
         case .repeat:
             await repeatPaginationManager.loadData(isRefreshing: true)
+        case .event:
+            await eventPaginationManager.loadData(isRefreshing: true)
         case .completed:
             await completedPaginationManager.loadData(isRefreshing: true)
         }
@@ -226,10 +262,15 @@ class QuestViewModel: ObservableObject {
         }
         itemListByStatus[status] = currentQuestList
         
-        if status == .default {
+        switch status {
+        case .default:
             mapDefaultQuestByXpStat()
-        } else if status == .repeat {
+        case .repeat:
             mapRepeatQuestByXpStat()
+        case .event:
+            mapEventQuestByXpStat()
+        case .completed:
+            break
         }
         return (itemListByStatus[status, default: []], getQuestList.total)
     }
@@ -257,6 +298,18 @@ class QuestViewModel: ObservableObject {
         }
     }
     
+    private func mapEventQuestByXpStat() {
+        guard let eventQuestList = itemListByStatus[.event] else { return }
+        dump(itemListByStatus[.event])
+        self.eventQuestListByXpStat = self.eventQuestListByXpStat.mapValues { _ in [] } // 초기화
+        
+        for item in eventQuestList {
+            for reward in item.rewardDic {
+                eventQuestListByXpStat[reward.key]?.append(item)
+            }
+        }
+    }
+    
     private func getQuestList(page: Int, size: Int, status: QuestStatus) async -> (data: [QuestViewModelItem], total: Int) {
         let result: Result<ResponseWithPage<[Quest]>, Error>
         
@@ -265,6 +318,8 @@ class QuestViewModel: ObservableObject {
             result = await questNetwork.getDefaultQuest(page: page, size: size)
         case .repeat:
             result = await questNetwork.getRepeatQuest(status: self.repeatFilterState.selectedValue, page: page, size: size)
+        case .event:
+            result = await questNetwork.getEventQuest(page: page, size: size)
         case .completed:
             result = await questNetwork.getCompletedQuest(page: page, size: size)
         }
@@ -283,6 +338,8 @@ class QuestViewModel: ObservableObject {
             return defaultPaginationManager.canLoadMoreData()
         case .repeat:
             return repeatPaginationManager.canLoadMoreData()
+        case .event:
+            return eventPaginationManager.canLoadMoreData()
         case .completed:
             return completedPaginationManager.canLoadMoreData()
         }
@@ -306,5 +363,6 @@ class QuestViewModel: ObservableObject {
     func closeFilterPicker() {
         self.questFilterState.pickerStatus  = .close
         self.repeatFilterState.pickerStatus = .close
+        self.eventFilterState.pickerStatus = .close
     }
 }

@@ -160,7 +160,7 @@ struct HomeView: View {
             ForEach(vm.popularQuestList) { quest in
                 QuestItemView(
                     quest: quest,
-                    style: PopularStyle(repeatType: RepeatType(rawValue: quest.target.lowercased()) ?? .daily),
+                    style: PopularStyle(type: quest.type, repeatType: RepeatType(rawValue: quest.target.lowercased()) ?? .daily),
                     tagTitle: "\(quest.totalRewardXP())XP"
                 ) {
                     AnalyticsService.logEvent(.homePopularQuestClick(questId: quest.id))
@@ -179,7 +179,7 @@ struct HomeView: View {
                         ForEach(vm.paginatedPopularQuests[pageIndex]) { quest in
                             QuestItemView(
                                 quest: quest,
-                                style: PopularStyle(repeatType: RepeatType(rawValue: quest.target.lowercased()) ?? .daily),
+                                style: PopularStyle(type: quest.type, repeatType: RepeatType(rawValue: quest.target.lowercased()) ?? .daily),
                                 tagTitle: "\(quest.totalRewardXP())XP"
                             ) {
                                 AnalyticsService.logEvent(.homePopularQuestClick(questId: quest.id))
