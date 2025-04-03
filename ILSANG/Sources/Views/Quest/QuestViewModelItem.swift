@@ -19,6 +19,7 @@ struct QuestViewModelItem: Hashable, Identifiable {
     var rewardDic: [XpStat: Int]
     let type: String
     let target: String
+    let expireDate: String
     
     init(
         id: String,
@@ -31,7 +32,8 @@ struct QuestViewModelItem: Hashable, Identifiable {
         writer: String,
         rewardDic: [XpStat: Int],
         type: String,
-        target: String
+        target: String,
+        expireDate: String
     ) {
         self.id = id
         self.image = image
@@ -44,6 +46,7 @@ struct QuestViewModelItem: Hashable, Identifiable {
         self.rewardDic = rewardDic
         self.type = type
         self.target = target
+        self.expireDate = expireDate
     }
     
     init(quest: Quest) {
@@ -58,14 +61,15 @@ struct QuestViewModelItem: Hashable, Identifiable {
         self.rewardDic = [:]
         self.type = quest.type
         self.target = quest.target
-        
+        self.expireDate = quest.expireDate
+
         for reward in quest.rewardList where reward.quantity > 0 && reward.type == "XP" {
             if let content = reward.content, let stat = XpStat(rawValue: content.lowercased()) {
                 rewardDic[stat] = reward.quantity
             }
         }
     }
-    
+    var isEventQuest: Bool { self.type == "EVENT" }
     var isRepeatQuest: Bool { self.type == "REPEAT" }
     var repeatType: RepeatType? { RepeatType(rawValue: self.target.lowercased()) ?? nil }
     
@@ -135,7 +139,8 @@ extension QuestViewModelItem {
         writer: "이디야커피",
         rewardDic: [.charm: 30, .intellect: 100, .fun: 5],
         type: "DEFAULT",
-        target: "NONE"
+        target: "NONE",
+        expireDate: "2030-12-30T00:00:00"
     )
     
     static let mockRepeatData: QuestViewModelItem = QuestViewModelItem(
@@ -148,7 +153,8 @@ extension QuestViewModelItem {
         missionTitle: "아메리카노 15잔 마시기",        writer: "이디야커피",
         rewardDic: [.charm: 30, .intellect: 100, .fun: 5],
         type: "REPEAT",
-        target: "DAILY"
+        target: "DAILY",
+        expireDate: "2030-12-30T00:00:00"
     )
     
     static let mockRepeat2Data: QuestViewModelItem = QuestViewModelItem(
@@ -161,7 +167,8 @@ extension QuestViewModelItem {
         missionTitle: "아메리카노 15잔 마시기",        writer: "이디야커피",
         rewardDic: [.charm: 30, .intellect: 100, .fun: 5],
         type: "REPEAT",
-        target: "DAILY"
+        target: "DAILY",
+        expireDate: "2030-12-30T00:00:00"
     )
     
     static let mockQuestList: [QuestViewModelItem] = [
@@ -176,7 +183,8 @@ extension QuestViewModelItem {
             writer: "이디야커피",
             rewardDic: [.charm: 3, .strength: 25],
             type: "REPEAT",
-            target: "MONTHLY"
+            target: "MONTHLY",
+            expireDate: "2030-12-30T00:00:00"
         ),
         QuestViewModelItem(
             id: "9f8aacc9-98c1-f9d7d35a67fb",
@@ -189,7 +197,8 @@ extension QuestViewModelItem {
             writer: "이디야커피",
             rewardDic: [.charm: 3, .fun: 25, .sociability: 20, .strength: 25],
             type: "REPEAT",
-            target: "DAILY"
+            target: "DAILY",
+            expireDate: "2030-12-30T00:00:00"
         ),
         QuestViewModelItem(
             id: "9f8aacc9-a221-4-f9d7d35a67fb",
@@ -202,7 +211,8 @@ extension QuestViewModelItem {
             writer: "이디야커피",
             rewardDic: [.charm: 30],
             type: "REPEAT",
-            target: "WEEKLY"
+            target: "WEEKLY",
+            expireDate: "2030-12-30T00:00:00"
         ),
         QuestViewModelItem(
             id: "13",
@@ -215,7 +225,8 @@ extension QuestViewModelItem {
             writer: "투썸플레이스",
             rewardDic: [.charm: 20, .sociability: 100, .strength: 25],
             type: "DEFAULT",
-            target: "NONE"
+            target: "NONE",
+            expireDate: "2030-12-30T00:00:00"
         ),
         QuestViewModelItem(
             id: "9f89d7d35a67fb",
@@ -228,7 +239,8 @@ extension QuestViewModelItem {
             writer: "이디야커피",
             rewardDic: [.charm: 3, .strength: 25],
             type: "REPEAT",
-            target: "MONTHLY"
+            target: "MONTHLY",
+            expireDate: "2030-12-30T00:00:00"
         ),
         QuestViewModelItem(
             id: "9f8aac7fb",
@@ -241,7 +253,8 @@ extension QuestViewModelItem {
             writer: "이디야커피",
             rewardDic: [.charm: 3, .fun: 25, .sociability: 20, .strength: 25],
             type: "REPEAT",
-            target: "DAILY"
+            target: "DAILY",
+            expireDate: "2030-12-30T00:00:00"
         ),
         QuestViewModelItem(
             id: "9f8aacc9-23421-4-fd35a67fb",
@@ -254,7 +267,8 @@ extension QuestViewModelItem {
             writer: "이디야커피",
             rewardDic: [.charm: 30],
             type: "REPEAT",
-            target: "WEEKLY"
+            target: "WEEKLY",
+            expireDate: "2030-12-30T00:00:00"
         ),
         QuestViewModelItem(
             id: "212132",
@@ -267,7 +281,8 @@ extension QuestViewModelItem {
             writer: "투썸플레이스",
             rewardDic: [.charm: 20, .sociability: 100, .strength: 25],
             type: "DEFAULT",
-            target: "NONE"
+            target: "NONE",
+            expireDate: "2030-12-30T00:00:00"
         )
     ]
 }

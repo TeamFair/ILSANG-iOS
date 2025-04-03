@@ -12,6 +12,7 @@ struct Quest: Codable {
     let missionTitle: String
     let missionType: String
     let status: String
+    let expireDate: String
     let creatorRole: String
     let imageId, mainImageId: String?
     let popularYn: Bool
