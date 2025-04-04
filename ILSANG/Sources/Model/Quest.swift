@@ -22,6 +22,24 @@ struct Quest: Codable {
     let score: Int
 }
 
+struct QuestDetail: Codable {
+    let questId: String
+    let missionTitles: [String]
+    let rewardList: [Reward]
+    let status, expiredData, imageId: String
+    let score: Int
+    let type, target: String
+    let topLikeChallenges: [ChallengeImage]
+    let customerRank: Int?
+    let favoriteYn: Bool
+}
+
+struct ChallengeImage: Codable, Hashable {
+    let challengeId: String
+    let receiptImage: String
+    let status: String
+}
+
 struct Reward: Codable {
     let quantity: Int
     let content: String?

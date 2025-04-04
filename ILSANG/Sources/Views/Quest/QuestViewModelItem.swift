@@ -7,7 +7,15 @@
 
 import UIKit
 
-struct QuestViewModelItem: Hashable, Identifiable {
+@Observable
+class QuestViewModelItem: Hashable, Identifiable, ObservableObject {
+    static func == (lhs: QuestViewModelItem, rhs: QuestViewModelItem) -> Bool {
+        lhs.id == rhs.id
+    }
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
+    
     let id: String
     var image: UIImage?
     let imageId: String?
@@ -20,6 +28,9 @@ struct QuestViewModelItem: Hashable, Identifiable {
     let type: String
     let target: String
     let expireDate: String
+    var challengeImageIds: [ChallengeImage]
+    var challengeImages: [UIImage]
+    var customerRank: Int
     
     init(
         id: String,
@@ -33,7 +44,10 @@ struct QuestViewModelItem: Hashable, Identifiable {
         rewardDic: [XpStat: Int],
         type: String,
         target: String,
-        expireDate: String
+        expireDate: String,
+        challengeImageIds: [ChallengeImage],
+        challengeImages: [UIImage],
+        customerRank: Int
     ) {
         self.id = id
         self.image = image
@@ -47,6 +61,9 @@ struct QuestViewModelItem: Hashable, Identifiable {
         self.type = type
         self.target = target
         self.expireDate = expireDate
+        self.challengeImageIds = challengeImageIds
+        self.challengeImages = challengeImages
+        self.customerRank = customerRank
     }
     
     init(quest: Quest) {
@@ -62,7 +79,10 @@ struct QuestViewModelItem: Hashable, Identifiable {
         self.type = quest.type
         self.target = quest.target
         self.expireDate = quest.expireDate
-
+        self.challengeImageIds = []
+        self.challengeImages = []
+        self.customerRank = 0
+        
         for reward in quest.rewardList where reward.quantity > 0 && reward.type == "XP" {
             if let content = reward.content, let stat = XpStat(rawValue: content.lowercased()) {
                 rewardDic[stat] = reward.quantity
@@ -122,6 +142,29 @@ struct QuestViewModelItem: Hashable, Identifiable {
     func totalRewardXP() -> Int {
         self.rewardDic.values.reduce(0, +)
     }
+    
+    func updateChallengeImages(challengeImageIds: [ChallengeImage], customerRank: Int?) async {
+        self.challengeImageIds = challengeImageIds
+        self.customerRank = customerRank ?? 0
+        
+        let newImages = await withTaskGroup(of: UIImage?.self) { group -> [UIImage] in
+            var images: [UIImage] = []
+            
+            for challenge in challengeImageIds {
+                group.addTask {
+                    await ImageCacheService.shared.loadImageAsync(imageId: challenge.receiptImage)
+                }
+            }
+            for await image in group {
+                if let image = image {
+                    images.append(image)
+                }
+            }
+            
+            return images
+        }
+        self.challengeImages = newImages
+    }
 }
 
 // TODO: mockdata, 팩토리 패턴 적용
@@ -140,7 +183,10 @@ extension QuestViewModelItem {
         rewardDic: [.charm: 30, .intellect: 100, .fun: 5],
         type: "DEFAULT",
         target: "NONE",
-        expireDate: "2030-12-30T00:00:00"
+        expireDate: "2030-12-30T00:00:00",
+        challengeImageIds: [],
+        challengeImages: [],
+        customerRank: 1
     )
     
     static let mockRepeatData: QuestViewModelItem = QuestViewModelItem(
@@ -154,7 +200,10 @@ extension QuestViewModelItem {
         rewardDic: [.charm: 30, .intellect: 100, .fun: 5],
         type: "REPEAT",
         target: "DAILY",
-        expireDate: "2030-12-30T00:00:00"
+        expireDate: "2030-12-30T00:00:00",
+        challengeImageIds: [],
+        challengeImages: [],
+        customerRank: 1
     )
     
     static let mockRepeat2Data: QuestViewModelItem = QuestViewModelItem(
@@ -168,7 +217,10 @@ extension QuestViewModelItem {
         rewardDic: [.charm: 30, .intellect: 100, .fun: 5],
         type: "REPEAT",
         target: "DAILY",
-        expireDate: "2030-12-30T00:00:00"
+        expireDate: "2030-12-30T00:00:00",
+        challengeImageIds: [],
+        challengeImages: [],
+        customerRank: 1
     )
     
     static let mockQuestList: [QuestViewModelItem] = [
@@ -184,7 +236,10 @@ extension QuestViewModelItem {
             rewardDic: [.charm: 3, .strength: 25],
             type: "REPEAT",
             target: "MONTHLY",
-            expireDate: "2030-12-30T00:00:00"
+            expireDate: "2030-12-30T00:00:00",
+            challengeImageIds: [],
+            challengeImages: [],
+            customerRank: 1
         ),
         QuestViewModelItem(
             id: "9f8aacc9-98c1-f9d7d35a67fb",
@@ -198,7 +253,10 @@ extension QuestViewModelItem {
             rewardDic: [.charm: 3, .fun: 25, .sociability: 20, .strength: 25],
             type: "REPEAT",
             target: "DAILY",
-            expireDate: "2030-12-30T00:00:00"
+            expireDate: "2030-12-30T00:00:00",
+            challengeImageIds: [],
+            challengeImages: [],
+            customerRank: 1
         ),
         QuestViewModelItem(
             id: "9f8aacc9-a221-4-f9d7d35a67fb",
@@ -212,7 +270,10 @@ extension QuestViewModelItem {
             rewardDic: [.charm: 30],
             type: "REPEAT",
             target: "WEEKLY",
-            expireDate: "2030-12-30T00:00:00"
+            expireDate: "2030-12-30T00:00:00",
+            challengeImageIds: [],
+            challengeImages: [],
+            customerRank: 1
         ),
         QuestViewModelItem(
             id: "13",
@@ -226,7 +287,10 @@ extension QuestViewModelItem {
             rewardDic: [.charm: 20, .sociability: 100, .strength: 25],
             type: "DEFAULT",
             target: "NONE",
-            expireDate: "2030-12-30T00:00:00"
+            expireDate: "2030-12-30T00:00:00",
+            challengeImageIds: [],
+            challengeImages: [],
+            customerRank: 1
         ),
         QuestViewModelItem(
             id: "9f89d7d35a67fb",
@@ -240,7 +304,10 @@ extension QuestViewModelItem {
             rewardDic: [.charm: 3, .strength: 25],
             type: "REPEAT",
             target: "MONTHLY",
-            expireDate: "2030-12-30T00:00:00"
+            expireDate: "2030-12-30T00:00:00",
+            challengeImageIds: [],
+            challengeImages: [],
+            customerRank: 1
         ),
         QuestViewModelItem(
             id: "9f8aac7fb",
@@ -254,7 +321,10 @@ extension QuestViewModelItem {
             rewardDic: [.charm: 3, .fun: 25, .sociability: 20, .strength: 25],
             type: "REPEAT",
             target: "DAILY",
-            expireDate: "2030-12-30T00:00:00"
+            expireDate: "2030-12-30T00:00:00",
+            challengeImageIds: [],
+            challengeImages: [],
+            customerRank: 1
         ),
         QuestViewModelItem(
             id: "9f8aacc9-23421-4-fd35a67fb",
@@ -268,7 +338,10 @@ extension QuestViewModelItem {
             rewardDic: [.charm: 30],
             type: "REPEAT",
             target: "WEEKLY",
-            expireDate: "2030-12-30T00:00:00"
+            expireDate: "2030-12-30T00:00:00",
+            challengeImageIds: [],
+            challengeImages: [],
+            customerRank: 1
         ),
         QuestViewModelItem(
             id: "212132",
@@ -282,7 +355,10 @@ extension QuestViewModelItem {
             rewardDic: [.charm: 20, .sociability: 100, .strength: 25],
             type: "DEFAULT",
             target: "NONE",
-            expireDate: "2030-12-30T00:00:00"
+            expireDate: "2030-12-30T00:00:00",
+            challengeImageIds: [],
+            challengeImages: [],
+            customerRank: 1
         )
     ]
 }

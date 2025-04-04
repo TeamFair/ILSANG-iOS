@@ -29,7 +29,7 @@ struct QuestEngageView: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: 16) {
                     // 퀘스트 정보
-                    QuestInfoView(quest: vm.quest)
+                    QuestEngageInfoView(quest: vm.quest)
                     
                     // 인증 참여 방법 설명
                     if case let .quiz(quizType) = vm.quest.missionType {
