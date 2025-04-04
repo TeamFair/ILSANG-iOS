@@ -81,7 +81,11 @@ struct DefaultQuestView<Style: DefaultQuestStyleProtocol>: View {
                         .font(.system(size: 13, weight: .regular))
                         .foregroundColor(.gray400)
                         .padding(.bottom, 4)
-                    StatGridView(rewardDic: quest.rewardDic, expireDate: quest.type == "EVENT" ? quest.expireDate : nil)
+                    StatGridView(
+                        rewardDic: quest.rewardDic,
+                        expireDate: quest.type == "EVENT" ? quest.expireDate : nil,
+                        showEventTagView: Style.self != CompletedStyle.self 
+                    )
                 }
                 Spacer(minLength: 0)
                 style.trailingView()

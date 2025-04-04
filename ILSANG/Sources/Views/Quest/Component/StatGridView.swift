@@ -10,6 +10,7 @@ import SwiftUI
 struct StatGridView: View {
     let rewardDic: [XpStat: Int]
     let expireDate: String?
+    let showEventTagView: Bool
     
     var body: some View {
         if rewardDic.filter({ $0.value > 0 }).count <= 2 {
@@ -54,7 +55,7 @@ struct StatGridView: View {
     
     @ViewBuilder
     private var eventTagView: some View {
-        if let tagTitle = expireDate?.timeAgoSinceDate(withYear: false) {
+        if let tagTitle = expireDate?.timeAgoSinceDate(withYear: false), showEventTagView {
             TagView(title: "~"+tagTitle, tagStyle: .eventDate)
         }
     }
@@ -62,6 +63,6 @@ struct StatGridView: View {
 
 
 #Preview {
-    StatGridView(rewardDic: [.charm: 225, .fun: 0, .intellect: 392, .strength: 20, .sociability: 20], expireDate: nil)
+    StatGridView(rewardDic: [.charm: 225, .fun: 0, .intellect: 392, .strength: 20, .sociability: 20], expireDate: nil, showEventTagView: false)
         .padding(.horizontal, 20)
 }
