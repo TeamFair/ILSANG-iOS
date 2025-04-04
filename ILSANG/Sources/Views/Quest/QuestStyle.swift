@@ -171,7 +171,6 @@ struct PopularStyle: QuestStyleProtocol {
     
     init(type: String, repeatType: RepeatType) {
         self.type = QuestType(rawValue: type.lowercased()) ?? .none
-        print(type)
         self.repeatType = repeatType
     }
     

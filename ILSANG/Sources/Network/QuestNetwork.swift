@@ -62,4 +62,8 @@ final class QuestNetwork {
         let parameters: Parameters = ["page": page, "size": size, "rewardContent": xpStat.parameterText]
         return await Network.requestData(url: questUrl+"largeRewardQuest", method: .get, parameters: parameters, withToken: true)
     }
+    
+    func getQuestDetail(questId: String) async -> Result<Response<QuestDetail>, Error> {
+        return await Network.requestData(url: questUrl+"quest/"+questId, method: .get, parameters: nil, withToken: true)
+    }
 }

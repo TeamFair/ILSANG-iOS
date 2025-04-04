@@ -47,13 +47,16 @@ struct HomeView: View {
         }
         .background(Color.background)
         .sheet(isPresented: $vm.showQuestSheet) {
-            QuestDetailView(quest: vm.selectedQuest) {
+            let tall = vm.selectedQuest.isRepeatQuest || vm.selectedQuest.missionType == .image
+            
+            QuestDetailView(vm: QuestDetailViewModel(quest: vm.selectedQuest, questNetwork: QuestNetwork())) {
                 vm.onQuestApprovalTapped()
             }
-            .presentationDetents([.height(UISheetPresentationController.Detent.questDetailDetentHeight)])
+            .presentationCornerRadius(24)
             .presentationDragIndicator(.hidden)
+            .presentationDetents([tall ? .height(UISheetPresentationController.Detent.questDetailDetentHeightTall) : .height(UISheetPresentationController.Detent.questDetailDetentHeightShort)])
             .onAppear {
-                UIApplication.shared.updateSheetDetents(to: [.questDetailDetent], whenCurrentDetentsAre: [.large()])
+                UIApplication.shared.updateSheetDetents(to: [tall ? .questDetailDetentTall : .questDetailDetentShort], whenCurrentDetentsAre: [.large()])
             }
         }
         .fullScreenCover(isPresented: $vm.showSubmitRouterView) {

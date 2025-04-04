@@ -9,4 +9,8 @@ import UIKit
 
 extension CGFloat {
     static let screenWidth: CGFloat = UIScreen.main.bounds.width
+    
+    static var isSmallDevice: Bool {
+        CGFloat.screenWidth < 380
+    }
 }

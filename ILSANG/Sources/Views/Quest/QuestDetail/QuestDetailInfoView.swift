@@ -1,13 +1,13 @@
 //
-//  QuestInfoView.swift
+//  QuestDetailInfoView.swift
 //  ILSANG
 //
-//  Created by Lee Jinhee on 2/13/25.
+//  Created by Lee Jinhee on 4/4/25.
 //
 
 import SwiftUI
 
-struct QuestInfoView: View {
+struct QuestDetailInfoView: View {
     let quest: QuestViewModelItem
     
     var body: some View {
@@ -15,23 +15,15 @@ struct QuestInfoView: View {
             Image(uiImage: quest.image ?? .logo)
                 .resizable()
                 .scaledToFill()
-                .frame(width: 80, height: 80)
+                .frame(width: CGFloat.isSmallDevice ? 60 : 80, height: CGFloat.isSmallDevice ? 60 : 80)
                 .clipShape(Circle())
                 .padding(.trailing, 8)
             
-            VStack(alignment: .leading, spacing: 2) {
-                Text(quest.writer)
-                    .styledFont(.regular, size: 15, lineHeight: 26)
-                
-                Text(quest.missionTitle.forceCharWrapping)
-                    .styledFont(.bold, size: 18, lineHeight: 28)
-                    .kerning(-0.2)
-                    .lineLimit(2)
-                
+            VStack(alignment: .leading, spacing: 8) {
                 HStack(spacing: 4) {
                     // 이벤트 퀘스트 태그
                     if quest.isEventQuest {
-                        TagView(title: "~"+quest.expireDate.timeAgoSinceDate(withYear: false), image: .event, tagStyle: .eventWithIcon)
+                        TagView(title: "한정", image: .event, tagStyle: .eventWithIcon)
                     }
                     
                     // 반복 퀘스트 태그
@@ -44,10 +36,15 @@ struct QuestInfoView: View {
                     
                     // 인증방법 태그 (사진, 서술형, OX)
                     TagView(
-                        title:  quest.missionType.description,
+                        title: quest.missionType.description,
                         tagStyle: .approvalType
                     )
                 }
+                
+                Text(quest.missionTitle.forceCharWrapping)
+                    .styledFont(.bold, size: CGFloat.isSmallDevice ? 16 : 18, lineHeight: CGFloat.isSmallDevice ? 24 : 26)
+                    .kerning(-0.2)
+                    .lineLimit(2)
             }
             
             Spacer(minLength: 8)
@@ -62,12 +59,12 @@ struct QuestInfoView: View {
                 )
         }
         .foregroundStyle(.gray500)
-        .padding(.horizontal, 16)
-        .padding(.vertical, 20)
-        .roundedBackground(cornerRadius: 12)
+        .frame(minHeight: 80, maxHeight: 88)
+        .padding(.vertical, 14)
     }
 }
 
+
 #Preview {
-    QuestInfoView(quest: .mockData)
+    QuestDetailInfoView(quest: .mockData)
 }

@@ -72,6 +72,12 @@
 		605DA0D12C0711CA00CC9450 /* CameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605DA0D02C0711CA00CC9450 /* CameraView.swift */; };
 		605DA0D32C0711E900CC9450 /* CameraViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605DA0D22C0711E900CC9450 /* CameraViewModel.swift */; };
 		605DA0D62C07123400CC9450 /* View++.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605DA0D52C07123400CC9450 /* View++.swift */; };
+		605E813D2D9F1B9900ECDB15 /* QuestDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605E813C2D9F1B9900ECDB15 /* QuestDetailViewModel.swift */; };
+		605E81402D9FE45C00ECDB15 /* QuestDetailInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605E813F2D9FE45C00ECDB15 /* QuestDetailInfoView.swift */; };
+		605E81422D9FE4D300ECDB15 /* QuestDetailApprovalImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605E81412D9FE4C400ECDB15 /* QuestDetailApprovalImageView.swift */; };
+		605E81442D9FE56000ECDB15 /* QuestDetailTitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605E81432D9FE56000ECDB15 /* QuestDetailTitleView.swift */; };
+		605E81462D9FE6D800ECDB15 /* QuestDetailRepeatRankView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605E81452D9FE6D800ECDB15 /* QuestDetailRepeatRankView.swift */; };
+		605E814A2D9FEB2300ECDB15 /* QuestDetailStatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605E81492D9FEB2300ECDB15 /* QuestDetailStatView.swift */; };
 		605F28522CF1B2C5007EA739 /* QuestDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605F28512CF1B2C5007EA739 /* QuestDetailView.swift */; };
 		6060B2EA2C08947B0083944D /* Image++.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6060B2E92C08947B0083944D /* Image++.swift */; };
 		606132782CD68FE300830948 /* TagView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 606132772CD68FE300830948 /* TagView.swift */; };
@@ -112,7 +118,7 @@
 		60ADF9CB2D5A01BA00556958 /* UISheetPresentationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60ADF9CA2D5A01BA00556958 /* UISheetPresentationController.swift */; };
 		60ADF9CD2D5DD3D000556958 /* RoundedBackground.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60ADF9CC2D5DD3D000556958 /* RoundedBackground.swift */; };
 		60ADF9D22D5DDC5B00556958 /* QuizView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60ADF9D12D5DDC5B00556958 /* QuizView.swift */; };
-		60ADF9D42D5DDD2000556958 /* QuestInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60ADF9D32D5DDD2000556958 /* QuestInfoView.swift */; };
+		60ADF9D42D5DDD2000556958 /* QuestEngageInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60ADF9D32D5DDD2000556958 /* QuestEngageInfoView.swift */; };
 		60ADF9D62D5DDD4400556958 /* EngageSubscriptionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60ADF9D52D5DDD4400556958 /* EngageSubscriptionView.swift */; };
 		60ADF9D82D60927900556958 /* ChallengeViewModelItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60ADF9D72D60927900556958 /* ChallengeViewModelItem.swift */; };
 		60B8B9E72BF9EEF1005F6DE3 /* ILSANGApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60B8B9E62BF9EEF1005F6DE3 /* ILSANGApp.swift */; };
@@ -255,6 +261,12 @@
 		605DA0D02C0711CA00CC9450 /* CameraView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraView.swift; sourceTree = "<group>"; };
 		605DA0D22C0711E900CC9450 /* CameraViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraViewModel.swift; sourceTree = "<group>"; };
 		605DA0D52C07123400CC9450 /* View++.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View++.swift"; sourceTree = "<group>"; };
+		605E813C2D9F1B9900ECDB15 /* QuestDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestDetailViewModel.swift; sourceTree = "<group>"; };
+		605E813F2D9FE45C00ECDB15 /* QuestDetailInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestDetailInfoView.swift; sourceTree = "<group>"; };
+		605E81412D9FE4C400ECDB15 /* QuestDetailApprovalImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestDetailApprovalImageView.swift; sourceTree = "<group>"; };
+		605E81432D9FE56000ECDB15 /* QuestDetailTitleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestDetailTitleView.swift; sourceTree = "<group>"; };
+		605E81452D9FE6D800ECDB15 /* QuestDetailRepeatRankView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestDetailRepeatRankView.swift; sourceTree = "<group>"; };
+		605E81492D9FEB2300ECDB15 /* QuestDetailStatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestDetailStatView.swift; sourceTree = "<group>"; };
 		605F28512CF1B2C5007EA739 /* QuestDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestDetailView.swift; sourceTree = "<group>"; };
 		6060B2E92C08947B0083944D /* Image++.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Image++.swift"; sourceTree = "<group>"; };
 		606132712CD3256C00830948 /* Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Release.xcconfig; sourceTree = "<group>"; };
@@ -293,7 +305,7 @@
 		60ADF9CA2D5A01BA00556958 /* UISheetPresentationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UISheetPresentationController.swift; sourceTree = "<group>"; };
 		60ADF9CC2D5DD3D000556958 /* RoundedBackground.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedBackground.swift; sourceTree = "<group>"; };
 		60ADF9D12D5DDC5B00556958 /* QuizView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuizView.swift; sourceTree = "<group>"; };
-		60ADF9D32D5DDD2000556958 /* QuestInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestInfoView.swift; sourceTree = "<group>"; };
+		60ADF9D32D5DDD2000556958 /* QuestEngageInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestEngageInfoView.swift; sourceTree = "<group>"; };
 		60ADF9D52D5DDD4400556958 /* EngageSubscriptionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EngageSubscriptionView.swift; sourceTree = "<group>"; };
 		60ADF9D72D60927900556958 /* ChallengeViewModelItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChallengeViewModelItem.swift; sourceTree = "<group>"; };
 		60B8B9E32BF9EEF1005F6DE3 /* ILSANG.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ILSANG.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -563,6 +575,20 @@
 			path = Extension;
 			sourceTree = "<group>";
 		};
+		605E813E2D9FE36800ECDB15 /* QuestDetail */ = {
+			isa = PBXGroup;
+			children = (
+				605F28512CF1B2C5007EA739 /* QuestDetailView.swift */,
+				605E813C2D9F1B9900ECDB15 /* QuestDetailViewModel.swift */,
+				605E813F2D9FE45C00ECDB15 /* QuestDetailInfoView.swift */,
+				605E81432D9FE56000ECDB15 /* QuestDetailTitleView.swift */,
+				605E81412D9FE4C400ECDB15 /* QuestDetailApprovalImageView.swift */,
+				605E81452D9FE6D800ECDB15 /* QuestDetailRepeatRankView.swift */,
+				605E81492D9FEB2300ECDB15 /* QuestDetailStatView.swift */,
+			);
+			path = QuestDetail;
+			sourceTree = "<group>";
+		};
 		6060B2EB2C08D0C80083944D /* Camera */ = {
 			isa = PBXGroup;
 			children = (
@@ -618,12 +644,12 @@
 			children = (
 				609A76D72CFC507A009F4567 /* Component */,
 				60B8B9E82BF9EEF1005F6DE3 /* QuestView.swift */,
-				605F28512CF1B2C5007EA739 /* QuestDetailView.swift */,
 				607FCBE82BFE418600BB2D04 /* QuestViewModel.swift */,
 				607FCBE62BFD12B100BB2D04 /* QuestViewModelItem.swift */,
-				60ADF9D02D5DDC4000556958 /* QuestEngage */,
 				607FCBE32BFD124900BB2D04 /* QuestItemView.swift */,
 				604687AD2D216EAC0056E394 /* QuestStyle.swift */,
+				605E813E2D9FE36800ECDB15 /* QuestDetail */,
+				60ADF9D02D5DDC4000556958 /* QuestEngage */,
 				60C6B4DD2C2D046000926C0E /* Submit */,
 				6060B2EB2C08D0C80083944D /* Camera */,
 			);
@@ -724,7 +750,7 @@
 			children = (
 				60ADF8862D57B49B00556958 /* QuestEngageView.swift */,
 				60ADF8882D57B53100556958 /* QuestEngageViewModel.swift */,
-				60ADF9D32D5DDD2000556958 /* QuestInfoView.swift */,
+				60ADF9D32D5DDD2000556958 /* QuestEngageInfoView.swift */,
 				60ADF9D52D5DDD4400556958 /* EngageSubscriptionView.swift */,
 				60ADF9D12D5DDC5B00556958 /* QuizView.swift */,
 			);
@@ -1139,6 +1165,7 @@
 				60ADF9D82D60927900556958 /* ChallengeViewModelItem.swift in Sources */,
 				A1AB3D5D2C113A70001EB9D8 /* LoginView.swift in Sources */,
 				6028A94C2D397730003FBC8C /* TopRank.swift in Sources */,
+				605E81422D9FE4D300ECDB15 /* QuestDetailApprovalImageView.swift in Sources */,
 				606C21CC2CC6B4FC00803947 /* SubmitStatusView.swift in Sources */,
 				60E258052D09CE1B0052C048 /* StatRank.swift in Sources */,
 				A196286F2C0859910037C53A /* DeleteAccountView.swift in Sources */,
@@ -1146,6 +1173,7 @@
 				6044B7352C3442E6002C13A0 /* NetworkError.swift in Sources */,
 				601BCF1A2D7C134500138387 /* ProgressBar.swift in Sources */,
 				601189232C3E95D40070F2AD /* AuthNetwork.swift in Sources */,
+				605E81402D9FE45C00ECDB15 /* QuestDetailInfoView.swift in Sources */,
 				609A76D92CFC50C7009F4567 /* QuestImageWithTagView.swift in Sources */,
 				605F28522CF1B2C5007EA739 /* QuestDetailView.swift in Sources */,
 				A1AB3D6A2C1141B3001EB9D8 /* AppleLoginButtonView.swift in Sources */,
@@ -1164,6 +1192,7 @@
 				604687A52D1FC36A0056E394 /* TitleWithContentView.swift in Sources */,
 				A19628622C0763F90037C53A /* ProfileEditView.swift in Sources */,
 				601BCF1C2D7C150700138387 /* OtherUserChallengeDetailView.swift in Sources */,
+				605E81462D9FE6D800ECDB15 /* QuestDetailRepeatRankView.swift in Sources */,
 				60C6B4DF2C2D053600926C0E /* SubmitRouterViewModel.swift in Sources */,
 				604687AA2D1FDA090056E394 /* CarouselAutoSlideView.swift in Sources */,
 				605DA0C92C07097F00CC9450 /* ImagePreviewButton.swift in Sources */,
@@ -1176,6 +1205,7 @@
 				A1F0ADC02CD738C30068E0A6 /* Polygon.swift in Sources */,
 				603F04132C26ADC6008A2332 /* CommonResponse.swift in Sources */,
 				607FCBE42BFD124900BB2D04 /* QuestItemView.swift in Sources */,
+				605E81442D9FE56000ECDB15 /* QuestDetailTitleView.swift in Sources */,
 				606C87AF2C0B9B8C002D5C3E /* ApprovalItemView.swift in Sources */,
 				60943FE62C0A38FB00C8A714 /* ApprovalViewModel.swift in Sources */,
 				60C6B4DC2C2D042700926C0E /* Image.swift in Sources */,
@@ -1192,7 +1222,7 @@
 				60ADF9BD2D59D3FD00556958 /* FontStyle.swift in Sources */,
 				60299E312CBFFF160039663F /* TransferableUIImage.swift in Sources */,
 				601BCF3B2D7F13E900138387 /* ProfileEditViewModel.swift in Sources */,
-				60ADF9D42D5DDD2000556958 /* QuestInfoView.swift in Sources */,
+				60ADF9D42D5DDD2000556958 /* QuestEngageInfoView.swift in Sources */,
 				A1FF91722C257E9A00F03E4B /* User.swift in Sources */,
 				60ADF9D22D5DDC5B00556958 /* QuizView.swift in Sources */,
 				6057361A2D8AC6F000CF7051 /* QuizNetwork.swift in Sources */,
@@ -1214,6 +1244,7 @@
 				60505D702D941D0A00121C4C /* StandardScreenView.swift in Sources */,
 				602988222D041DDC00903806 /* RepeatType.swift in Sources */,
 				A19628652C076D7B0037C53A /* SettingView.swift in Sources */,
+				605E814A2D9FEB2300ECDB15 /* QuestDetailStatView.swift in Sources */,
 				607FCC332C01AA7300BB2D04 /* SubmitAlertView.swift in Sources */,
 				60ADF9C22D59D47100556958 /* FontWithLineHeight.swift in Sources */,
 				606292D82C19E70A0098B6D2 /* Network.swift in Sources */,
@@ -1223,6 +1254,7 @@
 				A1BB60282BFE129000AAADD4 /* MyPageChallengeList.swift in Sources */,
 				6011891D2C3E8B3B0070F2AD /* UserService.swift in Sources */,
 				A196286D2C0859820037C53A /* TermsAndPolicyView.swift in Sources */,
+				605E813D2D9F1B9900ECDB15 /* QuestDetailViewModel.swift in Sources */,
 				60C0F4242CCE9B2F00DB19AB /* UIDevice++.swift in Sources */,
 				A1F770642C2AABCE00DB24A0 /* MyPageViewModel.swift in Sources */,
 				606132782CD68FE300830948 /* TagView.swift in Sources */,
