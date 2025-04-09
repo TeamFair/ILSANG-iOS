@@ -10,6 +10,7 @@ import SwiftUI
 /// 퀘스트 스타일 프로토콜
 protocol QuestStyleProtocol {
     var tagStyle: TagView.TagStyle? { get }
+    var tagImage: ImageResource? { get }
     var tagOffset: (x: CGFloat, y: CGFloat) { get }
     var imageSize: CGSize { get }
     var trailingPadding: CGFloat { get }
@@ -44,6 +45,7 @@ protocol DefaultQuestStyleProtocol: QuestStyleProtocol {
 
 struct UncompletedStyle: DefaultQuestStyleProtocol {
     var tagStyle: TagView.TagStyle? { .xp }
+    var tagImage: ImageResource? { nil }
     var tagOffset: (x: CGFloat, y: CGFloat) { (48, 5) }
     var trailingPadding: CGFloat { 20 }
         
@@ -61,10 +63,31 @@ struct UncompletedStyle: DefaultQuestStyleProtocol {
     }
 }
 
+struct EventStyle: DefaultQuestStyleProtocol {
+    var tagStyle: TagView.TagStyle? { .eventWithIcon }
+    var tagImage: ImageResource? { .event }
+    var tagOffset: (x: CGFloat, y: CGFloat) { (48, 5) }
+    var trailingPadding: CGFloat { 20 }
+        
+    func trailingView() -> some View {
+        IconView(iconWidth: 6, size: .small, icon: .arrowRight, color: .gray)
+    }
+    
+    func overlayView() -> some View {
+        EmptyView()
+    }
+    
+    @ViewBuilder
+    func viewForQuest(quest: QuestCommonModel) -> some View {
+        DefaultQuestView(quest: quest, style: EventStyle())
+    }
+}
+
 struct CompletedStyle: DefaultQuestStyleProtocol {
     static let separatorOffset: CGFloat = 72.0
 
     var tagStyle: TagView.TagStyle? { .xp }
+    var tagImage: ImageResource? { nil }
     var tagOffset: (x: CGFloat, y: CGFloat) { (48, 5) }
     var isDisabled: Bool { true }
     
@@ -100,7 +123,8 @@ struct RepeatStyle: DefaultQuestStyleProtocol {
     let repeatType: RepeatType
 
     var tagStyle: TagView.TagStyle? { .repeat(repeatType) }
-    var tagOffset: (x: CGFloat, y: CGFloat) { (54, 3) }
+    var tagImage: ImageResource? { nil }
+    var tagOffset: (x: CGFloat, y: CGFloat) { (48, 5) }
     var trailingPadding: CGFloat { 20 }
     
     func trailingView() -> some View {
@@ -120,6 +144,7 @@ struct RepeatStyle: DefaultQuestStyleProtocol {
 
 struct RecommendStyle: QuestStyleProtocol {
     var tagStyle: TagView.TagStyle? { nil }
+    var tagImage: ImageResource? { nil }
     var tagOffset: (x: CGFloat, y: CGFloat) { (16, 16) }
     var imageSize: CGSize { CGSize(width: 64, height: 64)}
     
@@ -130,16 +155,35 @@ struct RecommendStyle: QuestStyleProtocol {
 }
 
 struct PopularStyle: QuestStyleProtocol {
+    let type: QuestType
     let repeatType: RepeatType
+    var tagImage: ImageResource? { .event }
+    var tagStyle: TagView.TagStyle? {
+        switch type {
+        case .repeat: .repeat(repeatType)
+        case .event: .eventWithIcon
+        default: nil
+        }
+    }
     
-    var tagStyle: TagView.TagStyle? { .repeat(repeatType) }
     var tagOffset: (x: CGFloat, y: CGFloat) { (16, 16) }
     var imageSize: CGSize { CGSize(width: (UIScreen.main.bounds.width - 40 - 2) / 2, height: 137)}
     
+    init(type: String, repeatType: RepeatType) {
+        self.type = QuestType(rawValue: type.lowercased()) ?? .none
+        self.repeatType = repeatType
+    }
+    
     @ViewBuilder
     func viewForQuest(quest: QuestCommonModel) -> some View {
-        PopularQuestView(quest: quest, style: PopularStyle(repeatType: repeatType))
+        PopularQuestView(quest: quest, style: PopularStyle(type: quest.type, repeatType: repeatType), type: type)
     }
+}
+
+enum QuestType: String {
+    case event
+    case none
+    case `repeat`
 }
 
 struct VLine: Shape {

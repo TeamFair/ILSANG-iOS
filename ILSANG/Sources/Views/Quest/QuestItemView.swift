@@ -16,6 +16,7 @@ struct QuestCommonModel {
     let image: UIImage?
     let type: String
     let target: String
+    let expireDate: String
     let tagTitle: String?
     let action: (() -> Void)?
 }
@@ -38,6 +39,7 @@ struct QuestItemView<Style: QuestStyleProtocol>: View {
             image: quest.image, 
             type: quest.type,
             target: quest.target,
+            expireDate: quest.expireDate,
             tagTitle: tagTitle,
             action: action
         )
@@ -61,6 +63,7 @@ struct DefaultQuestView<Style: DefaultQuestStyleProtocol>: View {
                 QuestImageWithTagView(
                     image: quest.writerImage,
                     tagTitle: quest.tagTitle ?? "",
+                    tagImage: style.tagImage,
                     tagStyle: style.tagStyle ?? .xp,
                     tagOffset: style.tagOffset, 
                     imageSize: style.imageSize
@@ -78,7 +81,11 @@ struct DefaultQuestView<Style: DefaultQuestStyleProtocol>: View {
                         .font(.system(size: 13, weight: .regular))
                         .foregroundColor(.gray400)
                         .padding(.bottom, 4)
-                    StatGridView(rewardDic: quest.rewardDic)
+                    StatGridView(
+                        rewardDic: quest.rewardDic,
+                        expireDate: quest.type == "EVENT" ? quest.expireDate : nil,
+                        showEventTagView: Style.self != CompletedStyle.self 
+                    )
                 }
                 Spacer(minLength: 0)
                 style.trailingView()
@@ -103,6 +110,7 @@ struct DefaultQuestView<Style: DefaultQuestStyleProtocol>: View {
 struct PopularQuestView<Style: QuestStyleProtocol>: View {
     let quest: QuestCommonModel
     let style: Style
+    let type: QuestType
     
     var body: some View {
         Button(action: { quest.action?() }) {
@@ -113,8 +121,11 @@ struct PopularQuestView<Style: QuestStyleProtocol>: View {
                     .frame(width: style.imageSize.width, height:  style.imageSize.height)
                     .clipped()
                     .overlay(alignment: .topTrailing) {
-                        if let tagTitle = RepeatType(rawValue: quest.target.lowercased())?.description {
+                        if let tagTitle = RepeatType(rawValue: quest.target.lowercased())?.description, type == .repeat {
                             TagView(title: tagTitle, tagStyle: style.tagStyle ?? .xp)
+                                .offset(x: -style.tagOffset.x, y: style.tagOffset.y)
+                        }  else if type == .event {
+                            TagView(title: "한정", image: style.tagImage, tagStyle: style.tagStyle ?? .xp)
                                 .offset(x: -style.tagOffset.x, y: style.tagOffset.y)
                         }
                     }

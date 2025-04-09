@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Combine
 
 struct QuestView: View {
     @StateObject var vm: QuestViewModel
@@ -19,7 +20,7 @@ struct QuestView: View {
         VStack(spacing: 0) {
             headerView
                 
-            if vm.selectedHeader == .default || vm.selectedHeader == .repeat {
+            if vm.selectedHeader != .completed {
                 subHeaderView
             }
             
@@ -38,7 +39,11 @@ struct QuestView: View {
             await vm.loadDataIfNeeded()
         }
         .onReceive(
-            vm.$selectedHeader.combineLatest(vm.$selectedXpStat, vm.questFilterState.$selectedValue, vm.repeatFilterState.$selectedValue)
+            vm.$selectedHeader
+                .combineLatest(vm.$selectedXpStat)
+                .combineLatest(vm.questFilterState.$selectedValue)
+                .combineLatest(vm.repeatFilterState.$selectedValue)
+                .combineLatest(vm.eventFilterState.$selectedValue)
         ) { _ in
             vm.closeFilterPicker()
         }
@@ -48,13 +53,16 @@ struct QuestView: View {
             vm.selectedHeader = .default
         }
         .sheet(isPresented: $vm.showQuestSheet) {
-            QuestDetailView(quest: vm.selectedQuest) {
+            let tall = vm.selectedQuest.isRepeatQuest || vm.selectedQuest.missionType == .image
+            
+            QuestDetailView(vm: QuestDetailViewModel(quest: vm.selectedQuest, questNetwork: QuestNetwork())) {
                 vm.onQuestApprovalTapped()
             }
-            .presentationDetents([.height(UISheetPresentationController.Detent.questDetailDetentHeight)])
+            .presentationCornerRadius(24)
             .presentationDragIndicator(.hidden)
+            .presentationDetents([tall ? .height(UISheetPresentationController.Detent.questDetailDetentHeightTall) : .height(UISheetPresentationController.Detent.questDetailDetentHeightShort)])
             .onAppear {
-                UIApplication.shared.updateSheetDetents(to: [.questDetailDetent], whenCurrentDetentsAre: [.large()])
+                UIApplication.shared.updateSheetDetents(to: [tall ? .questDetailDetentTall : .questDetailDetentShort], whenCurrentDetentsAre: [.large()])
             }
         }
         .fullScreenCover(isPresented: $vm.showSubmitRouterView) {
@@ -122,13 +130,18 @@ extension QuestView {
                     questListEmptyView
                 }
             }
-            .onReceive(vm.$selectedHeader
-                .combineLatest(vm.$selectedXpStat, vm.questFilterState.$selectedValue, vm.repeatFilterState.$selectedValue)) { _ in
-                    vm.closeFilterPicker()
-                    withAnimation {
-                        proxy.scrollTo("top", anchor: .top)
-                    }
+            .onReceive(
+                vm.$selectedHeader
+                        .combineLatest(vm.$selectedXpStat)
+                        .combineLatest(vm.questFilterState.$selectedValue)
+                        .combineLatest(vm.repeatFilterState.$selectedValue)
+                        .combineLatest(vm.eventFilterState.$selectedValue)
+            ) { _ in
+                vm.closeFilterPicker()
+                withAnimation {
+                    proxy.scrollTo("top", anchor: .top)
                 }
+            }
         }
     }
     
@@ -155,6 +168,16 @@ extension QuestView {
                         vm.onQuestTapped(quest: quest)
                     }
                 }
+            case .event: // 미완료 이벤트 퀘스트
+                ForEach(vm.filteredEventQuestList, id: \.id) { quest in
+                    QuestItemView(
+                        quest: quest,
+                        style: EventStyle(),
+                        tagTitle: "한정"
+                    ) {
+                        vm.onQuestTapped(quest: quest)
+                    }
+                }
             case .completed: // 완료 퀘스트
                 ForEach(vm.itemListByStatus[.completed, default: []], id: \.id) { quest in
                     QuestItemView(
@@ -172,7 +195,7 @@ extension QuestView {
                 }
             }
         }
-        .padding(.top, vm.selectedHeader == .default || vm.selectedHeader == .repeat ? 70 : 0)
+        .padding(.top, vm.selectedHeader != .completed ? 70 : 0)
         .overlay(alignment: .top) {
             Group {
                 if (vm.selectedHeader == .default) {
@@ -182,6 +205,8 @@ extension QuestView {
                         filterPickerRepeatView
                         filterPickerDefaultView
                     }
+                } else if (vm.selectedHeader == .event) {
+                    filterPickerEventView
                 }
             }
             .padding(.top, 13)
@@ -208,6 +233,14 @@ extension QuestView {
             status: $vm.repeatFilterState.pickerStatus,
             selection: $vm.repeatFilterState.selectedValue,
             width: 85
+        )
+    }
+    
+    private var filterPickerEventView: some View {
+        PickerView<EventQuestFilterType>(
+            status: $vm.eventFilterState.pickerStatus,
+            selection: $vm.eventFilterState.selectedValue,
+            width: 150
         )
     }
     

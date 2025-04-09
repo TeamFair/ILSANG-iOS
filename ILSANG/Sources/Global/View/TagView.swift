@@ -17,7 +17,7 @@ struct TagView: View {
             if let image = image {
                 Image(image)
                     .resizable()
-                    .frame(width: 12, height: 12)
+                    .frame(width: tagStyle.iconSize, height: tagStyle.iconSize)
                     .scaledToFit()
                     .frame(width: 18, height: 18)
             }
@@ -30,16 +30,13 @@ struct TagView: View {
 
 extension TagView {
     enum TagStyle {
-        case level, levelStroke, xp, xpWithIcon, `repeat`(RepeatType), approvalType
+        case level, levelStroke, xp, xpWithIcon, `repeat`(RepeatType), approvalType, eventWithIcon, eventDate
         
         var font: Font {
             switch self {
-            case .level: return .system(size: 13, weight: .bold)
-            case .levelStroke: return .system(size: 13, weight: .bold)
-            case .xp: return .system(size: 10, weight: .semibold)
-            case .xpWithIcon: return .system(size: 12, weight: .regular)
-            case .repeat: return .system(size: 10, weight: .semibold)
-            case .approvalType: return .system(size: 10, weight: .semibold)
+            case .level, .levelStroke: return .system(size: 13, weight: .bold)
+            case .xpWithIcon, .eventDate: return .system(size: 12, weight: .regular)
+            case .xp, .repeat, .approvalType, .eventWithIcon: return .system(size: 10, weight: .semibold)
             }
         }
         
@@ -51,6 +48,7 @@ extension TagView {
             case .xpWithIcon: return .primaryPurple
             case .repeat(let type): return type.fgColor
             case .approvalType: return .white
+            case .eventDate, .eventWithIcon: return .white
             }
         }
         
@@ -62,6 +60,7 @@ extension TagView {
             case .xpWithIcon: return .clear
             case .repeat: return .white
             case .approvalType: return .gray500
+            case .eventDate, .eventWithIcon: return .primaryPurple
             }
         }
         
@@ -86,21 +85,31 @@ extension TagView {
             case .xp: return EdgeInsets(top: 0, leading: 7, bottom: 0, trailing: 7)
             case .xpWithIcon: return EdgeInsets(top: 0, leading: 4, bottom: 0, trailing: 4)
             case .repeat: return EdgeInsets(top: 0, leading: 11, bottom: 0, trailing: 11)
+            case .eventDate: return EdgeInsets(top: 0, leading: 6, bottom: 0, trailing: 6)
+            case .eventWithIcon: return EdgeInsets(top: 0, leading: 4, bottom: 0, trailing: 6)
             case .approvalType: return EdgeInsets(top: 0, leading: 11, bottom: 0, trailing: 11)
             }
         }
         
         var height: CGFloat {
             switch self {
-            case .level, .levelStroke, .xp, .repeat, .approvalType:
+            case .level, .levelStroke, .xp, .repeat, .approvalType, .eventWithIcon:
                 20
-            case .xpWithIcon:
+            case .xpWithIcon, .eventDate:
                 25
             }
         }
         
+        var iconSize: CGFloat {
+            switch self {
+            case .eventWithIcon: 16
+            case .xpWithIcon: 12
+            default: 0
+            }
+        }
+        
         var cornerRadius: CGFloat {
-            return 12
+            return 16
         }
     }
 }

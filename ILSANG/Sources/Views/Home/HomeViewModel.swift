@@ -342,7 +342,9 @@ final class HomeViewModel {
     
     func onQuestTapped(quest: QuestViewModelItem) {
         selectedQuest = quest
-        showQuestSheet.toggle()
+        DispatchQueue.main.asyncAfter(deadline: .now()+0.3) {
+            self.showQuestSheet.toggle()
+        }
     }
     
     func onQuestApprovalTapped() {

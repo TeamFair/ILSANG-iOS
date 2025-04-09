@@ -102,6 +102,17 @@ enum QuestFilterType: String, Hashable, CustomStringConvertible, CaseIterable {
     }
 }
 
+enum EventQuestFilterType: String, Hashable, CustomStringConvertible, CaseIterable {
+    case upcoming = "임박순"
+    case pointHighest = "포인트 높은 순"
+    case pointLowest = "포인트 낮은 순"
+    case popular = "인기순"
+    
+    var description: String {
+        return self.rawValue
+    }
+}
+
 enum PickerStatus {
     case open
     case close

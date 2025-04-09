@@ -12,6 +12,9 @@ extension UISheetPresentationController.Detent.Identifier {
 }
 
 extension UISheetPresentationController.Detent {
-    static let questDetailDetentHeight: CGFloat = 464.0
-    static let questDetailDetent = UISheetPresentationController.Detent.custom { _ in questDetailDetentHeight }
+    static let questDetailDetentHeightTall: CGFloat = 632.0
+    static let questDetailDetentTall = UISheetPresentationController.Detent.custom { _ in questDetailDetentHeightTall }
+    
+    static let questDetailDetentHeightShort: CGFloat = 440.0
+    static let questDetailDetentShort = UISheetPresentationController.Detent.custom { _ in questDetailDetentHeightShort }
 }

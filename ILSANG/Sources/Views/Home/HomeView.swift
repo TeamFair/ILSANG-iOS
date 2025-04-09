@@ -47,13 +47,16 @@ struct HomeView: View {
         }
         .background(Color.background)
         .sheet(isPresented: $vm.showQuestSheet) {
-            QuestDetailView(quest: vm.selectedQuest) {
+            let tall = vm.selectedQuest.isRepeatQuest || vm.selectedQuest.missionType == .image
+            
+            QuestDetailView(vm: QuestDetailViewModel(quest: vm.selectedQuest, questNetwork: QuestNetwork())) {
                 vm.onQuestApprovalTapped()
             }
-            .presentationDetents([.height(UISheetPresentationController.Detent.questDetailDetentHeight)])
+            .presentationCornerRadius(24)
             .presentationDragIndicator(.hidden)
+            .presentationDetents([tall ? .height(UISheetPresentationController.Detent.questDetailDetentHeightTall) : .height(UISheetPresentationController.Detent.questDetailDetentHeightShort)])
             .onAppear {
-                UIApplication.shared.updateSheetDetents(to: [.questDetailDetent], whenCurrentDetentsAre: [.large()])
+                UIApplication.shared.updateSheetDetents(to: [tall ? .questDetailDetentTall : .questDetailDetentShort], whenCurrentDetentsAre: [.large()])
             }
         }
         .fullScreenCover(isPresented: $vm.showSubmitRouterView) {
@@ -160,7 +163,7 @@ struct HomeView: View {
             ForEach(vm.popularQuestList) { quest in
                 QuestItemView(
                     quest: quest,
-                    style: PopularStyle(repeatType: RepeatType(rawValue: quest.target.lowercased()) ?? .daily),
+                    style: PopularStyle(type: quest.type, repeatType: RepeatType(rawValue: quest.target.lowercased()) ?? .daily),
                     tagTitle: "\(quest.totalRewardXP())XP"
                 ) {
                     AnalyticsService.logEvent(.homePopularQuestClick(questId: quest.id))
@@ -179,7 +182,7 @@ struct HomeView: View {
                         ForEach(vm.paginatedPopularQuests[pageIndex]) { quest in
                             QuestItemView(
                                 quest: quest,
-                                style: PopularStyle(repeatType: RepeatType(rawValue: quest.target.lowercased()) ?? .daily),
+                                style: PopularStyle(type: quest.type, repeatType: RepeatType(rawValue: quest.target.lowercased()) ?? .daily),
                                 tagTitle: "\(quest.totalRewardXP())XP"
                             ) {
                                 AnalyticsService.logEvent(.homePopularQuestClick(questId: quest.id))
