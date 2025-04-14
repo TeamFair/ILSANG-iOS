@@ -37,8 +37,8 @@ protocol DefaultQuestStyleProtocol: QuestStyleProtocol {
     associatedtype OverlayView: View
    
     @ViewBuilder
-    func trailingView()  -> TrailingView
-   
+    func trailingView(for quest: QuestCommonModel) -> TrailingView
+
     @ViewBuilder
     func overlayView()  -> OverlayView
 }
@@ -47,10 +47,10 @@ struct UncompletedStyle: DefaultQuestStyleProtocol {
     var tagStyle: TagView.TagStyle? { .xp }
     var tagImage: ImageResource? { nil }
     var tagOffset: (x: CGFloat, y: CGFloat) { (48, 5) }
-    var trailingPadding: CGFloat { 20 }
+    var trailingPadding: CGFloat { 16 }
         
-    func trailingView() -> some View {
-        IconView(iconWidth: 6, size: .small, icon: .arrowRight, color: .gray)
+    func trailingView(for quest: QuestCommonModel) -> some View {
+        TrailingStarView(favoriteYn: quest.favoriteYn)
     }
     
     func overlayView() -> some View {
@@ -67,10 +67,10 @@ struct EventStyle: DefaultQuestStyleProtocol {
     var tagStyle: TagView.TagStyle? { .eventWithIcon }
     var tagImage: ImageResource? { .event }
     var tagOffset: (x: CGFloat, y: CGFloat) { (48, 5) }
-    var trailingPadding: CGFloat { 20 }
+    var trailingPadding: CGFloat { 16 }
         
-    func trailingView() -> some View {
-        IconView(iconWidth: 6, size: .small, icon: .arrowRight, color: .gray)
+    func trailingView(for quest: QuestCommonModel) -> some View {
+        TrailingStarView(favoriteYn: quest.favoriteYn)
     }
     
     func overlayView() -> some View {
@@ -91,8 +91,7 @@ struct CompletedStyle: DefaultQuestStyleProtocol {
     var tagOffset: (x: CGFloat, y: CGFloat) { (48, 5) }
     var isDisabled: Bool { true }
     
-    @ViewBuilder
-    func trailingView() -> some View {
+    func trailingView(for quest: QuestCommonModel) -> some View {
         VStack(spacing: 7) {
             IconView(iconWidth: 13, size: .small, icon: .check, color: .green)
             Text("적립완료")
@@ -125,10 +124,10 @@ struct RepeatStyle: DefaultQuestStyleProtocol {
     var tagStyle: TagView.TagStyle? { .repeat(repeatType) }
     var tagImage: ImageResource? { nil }
     var tagOffset: (x: CGFloat, y: CGFloat) { (48, 5) }
-    var trailingPadding: CGFloat { 20 }
+    var trailingPadding: CGFloat { 16 }
     
-    func trailingView() -> some View {
-        IconView(iconWidth: 6, size: .small, icon: .arrowRight, color: .gray)
+    func trailingView(for quest: QuestCommonModel) -> some View {
+        TrailingStarView(favoriteYn: quest.favoriteYn)
     }
     
     func overlayView() -> some View {
@@ -170,7 +169,7 @@ struct PopularStyle: QuestStyleProtocol {
     var imageSize: CGSize { CGSize(width: (UIScreen.main.bounds.width - 40 - 2) / 2, height: 137)}
     
     init(type: String, repeatType: RepeatType) {
-        self.type = QuestType(rawValue: type.lowercased()) ?? .none
+        self.type = QuestType(rawValue: type.lowercased())
         self.repeatType = repeatType
     }
     
@@ -184,6 +183,19 @@ enum QuestType: String {
     case event
     case none
     case `repeat`
+    
+    init(rawValue: String) {
+        switch rawValue.lowercased() {
+        case "event":
+            self = .event
+        case "repeat":
+            self = .repeat
+        case "normal", "none":
+            self = .none
+        default:
+            self = .none
+        }
+    }
 }
 
 struct VLine: Shape {
@@ -192,5 +204,19 @@ struct VLine: Shape {
         path.move(to: CGPoint(x: 0, y: 0))
         path.addLine(to: CGPoint(x: 0, y: rect.height))
         return path
+    }
+}
+
+struct TrailingStarView: View {
+    let favoriteYn: Bool
+    
+    var body: some View {
+        VStack {
+            Image(.star)
+                .renderingMode(.template)
+                .foregroundStyle(favoriteYn ? .primary300 : .gray100)
+                .offset(y: -4)
+            Spacer()
+        }
     }
 }

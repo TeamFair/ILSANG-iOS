@@ -10,7 +10,6 @@ import SwiftUI
 // TODO: 에러처리 재정의 필요
 struct HomeView: View {
     @Bindable var vm: HomeViewModel
-    
     @EnvironmentObject var sharedState: SharedState
     @Environment(\.redactionReasons) var redactionReasons
     
@@ -49,8 +48,15 @@ struct HomeView: View {
         .background(Color.background)
         .sheet(isPresented: $vm.showQuestSheet) {
             let tall = vm.selectedQuest.isRepeatQuest || vm.selectedQuest.missionType == .image
-            
-            QuestDetailView(vm: QuestDetailViewModel(quest: vm.selectedQuest, questNetwork: QuestNetwork())) {
+            QuestDetailView(
+                vm: QuestDetailViewModel(
+                    quest: vm.selectedQuest,
+                    questNetwork: QuestNetwork(),
+                    onUpdate: { quest in
+                        vm.toggleFavoriteStatus(quest: quest)
+                    }
+                )
+            ) {
                 vm.onQuestApprovalTapped()
             }
             .presentationCornerRadius(24)
@@ -225,10 +231,11 @@ struct HomeView: View {
                         ForEach(vm.recommendQuestList, id: \.id) { quest in
                             QuestItemView(
                                 quest: quest,
-                                style: RecommendStyle()) {
-                                    AnalyticsService.logEvent(.homeRecommendQuestClick(questId: quest.id))
-                                    vm.onQuestTapped(quest: quest)
-                                }
+                                style: RecommendStyle()
+                            ) {
+                                AnalyticsService.logEvent(.homeRecommendQuestClick(questId: quest.id))
+                                vm.onQuestTapped(quest: quest)
+                            }
                         }
                     }
                     .padding(.horizontal, LayoutConstants.horizontalPadding)

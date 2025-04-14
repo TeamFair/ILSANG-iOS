@@ -20,6 +20,7 @@ struct Quest: Codable {
     let type: String
     let target: String
     let score: Int
+    let favoriteYn: Bool
 }
 
 struct QuestDetail: Codable {

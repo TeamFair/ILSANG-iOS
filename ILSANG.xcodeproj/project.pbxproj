@@ -87,6 +87,8 @@
 		606C21CC2CC6B4FC00803947 /* SubmitStatusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 606C21CB2CC6B4FC00803947 /* SubmitStatusView.swift */; };
 		606C87AF2C0B9B8C002D5C3E /* ApprovalItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 606C87AE2C0B9B8C002D5C3E /* ApprovalItemView.swift */; };
 		606C87B12C0CC89B002D5C3E /* 2406_TERMS_OF_USE.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 606C87B02C0CC89B002D5C3E /* 2406_TERMS_OF_USE.pdf */; };
+		606F18152DA3E1F800ABEA84 /* FavoriteNetwork.swift in Sources */ = {isa = PBXBuildFile; fileRef = 606F18142DA3E1F800ABEA84 /* FavoriteNetwork.swift */; };
+		606F18172DA650DE00ABEA84 /* FavoriteService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 606F18162DA650DE00ABEA84 /* FavoriteService.swift */; };
 		607FCBD42BFA648000BB2D04 /* Tab.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FCBD32BFA648000BB2D04 /* Tab.swift */; };
 		607FCBD62BFA660C00BB2D04 /* MainTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FCBD52BFA660C00BB2D04 /* MainTabView.swift */; };
 		607FCBD82BFA681500BB2D04 /* ApprovalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FCBD72BFA681500BB2D04 /* ApprovalView.swift */; };
@@ -278,6 +280,8 @@
 		606C21CB2CC6B4FC00803947 /* SubmitStatusView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubmitStatusView.swift; sourceTree = "<group>"; };
 		606C87AE2C0B9B8C002D5C3E /* ApprovalItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApprovalItemView.swift; sourceTree = "<group>"; };
 		606C87B02C0CC89B002D5C3E /* 2406_TERMS_OF_USE.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = 2406_TERMS_OF_USE.pdf; sourceTree = "<group>"; };
+		606F18142DA3E1F800ABEA84 /* FavoriteNetwork.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteNetwork.swift; sourceTree = "<group>"; };
+		606F18162DA650DE00ABEA84 /* FavoriteService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteService.swift; sourceTree = "<group>"; };
 		607FCBD32BFA648000BB2D04 /* Tab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tab.swift; sourceTree = "<group>"; };
 		607FCBD52BFA660C00BB2D04 /* MainTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabView.swift; sourceTree = "<group>"; };
 		607FCBD72BFA681500BB2D04 /* ApprovalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApprovalView.swift; sourceTree = "<group>"; };
@@ -444,6 +448,7 @@
 				60246FA62D91E571007C05B3 /* AnalyticsService */,
 				6011891C2C3E8B3B0070F2AD /* UserService.swift */,
 				601189202C3E94A60070F2AD /* AuthService.swift */,
+				606F18162DA650DE00ABEA84 /* FavoriteService.swift */,
 				60299E382CC13DEC0039663F /* ImageCacheService.swift */,
 				603CF4CA2D7057BF00A2D19E /* ImageChallengeSubmitService.swift */,
 			);
@@ -616,6 +621,7 @@
 				600211EF2C1EF3F5000CC02E /* Base */,
 				601189222C3E95D40070F2AD /* AuthNetwork.swift */,
 				60004AD62D4221F500CD2254 /* BannerNetwork.swift */,
+				606F18142DA3E1F800ABEA84 /* FavoriteNetwork.swift */,
 				600211ED2C1EEF91000CC02E /* EmojiNetwork.swift */,
 				6028A9492D39721F003FBC8C /* RankNetwork.swift */,
 				A1FF916D2C250C3B00F03E4B /* UserNetwork.swift */,
@@ -1135,6 +1141,7 @@
 				60ADF9C92D5A019B00556958 /* UIApplication.swift in Sources */,
 				60924DC92C48C00E00221072 /* Quest.swift in Sources */,
 				604687A32D1FC32E0056E394 /* HomeViewModel.swift in Sources */,
+				606F18172DA650DE00ABEA84 /* FavoriteService.swift in Sources */,
 				A196286B2C0859730037C53A /* CustomerServiceView.swift in Sources */,
 				607FCBE22BFA6A8300BB2D04 /* Buttons.swift in Sources */,
 				605DA0CF2C07118900CC9450 /* SubmitRouterView.swift in Sources */,
@@ -1187,6 +1194,7 @@
 				A13BD3932CA182A0003FF9BE /* XpStats.swift in Sources */,
 				60ADF9CD2D5DD3D000556958 /* RoundedBackground.swift in Sources */,
 				A1AB3D682C1141B3001EB9D8 /* GoogleLoginButtonView.swift in Sources */,
+				606F18152DA3E1F800ABEA84 /* FavoriteNetwork.swift in Sources */,
 				60ADF9D62D5DDD4400556958 /* EngageSubscriptionView.swift in Sources */,
 				601189292C3F022D0070F2AD /* LoginViewModel.swift in Sources */,
 				604687A52D1FC36A0056E394 /* TitleWithContentView.swift in Sources */,
@@ -1356,7 +1364,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
-				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;

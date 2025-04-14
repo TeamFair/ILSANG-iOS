@@ -18,6 +18,8 @@ struct QuestCommonModel {
     let target: String
     let expireDate: String
     let tagTitle: String?
+    let favoriteYn: Bool
+    let favoriteAction: (() -> ())?
     let action: (() -> Void)?
 }
 
@@ -30,7 +32,7 @@ struct QuestItemView<Style: QuestStyleProtocol>: View {
         let separatorOffset = 72.0
     }
 
-    init(quest: QuestViewModelItem, style: Style, tagTitle: String? = nil, action: @escaping () -> Void) {
+    init(quest: QuestViewModelItem, style: Style, tagTitle: String? = nil, favoriteAction: (() -> Void)? = nil,  action: @escaping () -> Void) {
         self.quest = QuestCommonModel(
             title: quest.missionTitle,
             writer: quest.writer,
@@ -41,6 +43,8 @@ struct QuestItemView<Style: QuestStyleProtocol>: View {
             target: quest.target,
             expireDate: quest.expireDate,
             tagTitle: tagTitle,
+            favoriteYn: quest.favoriteYn,
+            favoriteAction: favoriteAction,
             action: action
         )
         self.style = style
@@ -88,7 +92,11 @@ struct DefaultQuestView<Style: DefaultQuestStyleProtocol>: View {
                     )
                 }
                 Spacer(minLength: 0)
-                style.trailingView()
+                
+                style.trailingView(for: quest)
+                    .onTapGesture {
+                        quest.favoriteAction?()
+                    }
             }
             .padding(.vertical, 20)
             .padding(.leading, 20)
