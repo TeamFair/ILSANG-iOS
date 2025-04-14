@@ -8,10 +8,11 @@
 import UIKit
 
 @Observable
-class QuestViewModelItem: Hashable, Identifiable, ObservableObject {
+class QuestViewModelItem: Hashable, Identifiable {
     static func == (lhs: QuestViewModelItem, rhs: QuestViewModelItem) -> Bool {
         lhs.id == rhs.id
     }
+    
     func hash(into hasher: inout Hasher) {
         hasher.combine(id)
     }
@@ -31,6 +32,7 @@ class QuestViewModelItem: Hashable, Identifiable, ObservableObject {
     var challengeImageIds: [ChallengeImage]
     var challengeImages: [UIImage]
     var customerRank: Int
+    var favoriteYn: Bool
     
     init(
         id: String,
@@ -47,7 +49,8 @@ class QuestViewModelItem: Hashable, Identifiable, ObservableObject {
         expireDate: String,
         challengeImageIds: [ChallengeImage],
         challengeImages: [UIImage],
-        customerRank: Int
+        customerRank: Int,
+        favoriteYn: Bool
     ) {
         self.id = id
         self.image = image
@@ -64,6 +67,7 @@ class QuestViewModelItem: Hashable, Identifiable, ObservableObject {
         self.challengeImageIds = challengeImageIds
         self.challengeImages = challengeImages
         self.customerRank = customerRank
+        self.favoriteYn = favoriteYn
     }
     
     init(quest: Quest) {
@@ -82,6 +86,7 @@ class QuestViewModelItem: Hashable, Identifiable, ObservableObject {
         self.challengeImageIds = []
         self.challengeImages = []
         self.customerRank = 0
+        self.favoriteYn = quest.favoriteYn
         
         for reward in quest.rewardList where reward.quantity > 0 && reward.type == "XP" {
             if let content = reward.content, let stat = XpStat(rawValue: content.lowercased()) {
@@ -186,7 +191,8 @@ extension QuestViewModelItem {
         expireDate: "2030-12-30T00:00:00",
         challengeImageIds: [],
         challengeImages: [],
-        customerRank: 1
+        customerRank: 1,
+        favoriteYn: false
     )
     
     static let mockRepeatData: QuestViewModelItem = QuestViewModelItem(
@@ -203,7 +209,8 @@ extension QuestViewModelItem {
         expireDate: "2030-12-30T00:00:00",
         challengeImageIds: [],
         challengeImages: [],
-        customerRank: 1
+        customerRank: 1,
+        favoriteYn: false
     )
     
     static let mockRepeat2Data: QuestViewModelItem = QuestViewModelItem(
@@ -220,7 +227,8 @@ extension QuestViewModelItem {
         expireDate: "2030-12-30T00:00:00",
         challengeImageIds: [],
         challengeImages: [],
-        customerRank: 1
+        customerRank: 1,
+        favoriteYn: false
     )
     
     static let mockQuestList: [QuestViewModelItem] = [
@@ -239,7 +247,8 @@ extension QuestViewModelItem {
             expireDate: "2030-12-30T00:00:00",
             challengeImageIds: [],
             challengeImages: [],
-            customerRank: 1
+            customerRank: 1,
+            favoriteYn: false
         ),
         QuestViewModelItem(
             id: "9f8aacc9-98c1-f9d7d35a67fb",
@@ -256,7 +265,8 @@ extension QuestViewModelItem {
             expireDate: "2030-12-30T00:00:00",
             challengeImageIds: [],
             challengeImages: [],
-            customerRank: 1
+            customerRank: 1,
+            favoriteYn: false
         ),
         QuestViewModelItem(
             id: "9f8aacc9-a221-4-f9d7d35a67fb",
@@ -273,7 +283,8 @@ extension QuestViewModelItem {
             expireDate: "2030-12-30T00:00:00",
             challengeImageIds: [],
             challengeImages: [],
-            customerRank: 1
+            customerRank: 1,
+            favoriteYn: false
         ),
         QuestViewModelItem(
             id: "13",
@@ -290,7 +301,8 @@ extension QuestViewModelItem {
             expireDate: "2030-12-30T00:00:00",
             challengeImageIds: [],
             challengeImages: [],
-            customerRank: 1
+            customerRank: 1,
+            favoriteYn: false
         ),
         QuestViewModelItem(
             id: "9f89d7d35a67fb",
@@ -307,7 +319,8 @@ extension QuestViewModelItem {
             expireDate: "2030-12-30T00:00:00",
             challengeImageIds: [],
             challengeImages: [],
-            customerRank: 1
+            customerRank: 1,
+            favoriteYn: false
         ),
         QuestViewModelItem(
             id: "9f8aac7fb",
@@ -324,7 +337,8 @@ extension QuestViewModelItem {
             expireDate: "2030-12-30T00:00:00",
             challengeImageIds: [],
             challengeImages: [],
-            customerRank: 1
+            customerRank: 1,
+            favoriteYn: false
         ),
         QuestViewModelItem(
             id: "9f8aacc9-23421-4-fd35a67fb",
@@ -341,7 +355,8 @@ extension QuestViewModelItem {
             expireDate: "2030-12-30T00:00:00",
             challengeImageIds: [],
             challengeImages: [],
-            customerRank: 1
+            customerRank: 1,
+            favoriteYn: false
         ),
         QuestViewModelItem(
             id: "212132",
@@ -358,7 +373,8 @@ extension QuestViewModelItem {
             expireDate: "2030-12-30T00:00:00",
             challengeImageIds: [],
             challengeImages: [],
-            customerRank: 1
+            customerRank: 1,
+            favoriteYn: false
         )
     ]
 }

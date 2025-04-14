@@ -53,9 +53,9 @@ class QuestViewModel: ObservableObject {
         .completed: []
     ]
     
-    var defaultQuestListByXpStat: [XpStat: [QuestViewModelItem]] = Dictionary(uniqueKeysWithValues: XpStat.allCases.map { ($0, []) })
-    var repeatQuestListByXpStat: [XpStat: [QuestViewModelItem]] = Dictionary(uniqueKeysWithValues: XpStat.allCases.map { ($0, []) })
-    var eventQuestListByXpStat: [XpStat: [QuestViewModelItem]] = Dictionary(uniqueKeysWithValues: XpStat.allCases.map { ($0, []) })
+    @Published var defaultQuestListByXpStat: [XpStat: [QuestViewModelItem]] = Dictionary(uniqueKeysWithValues: XpStat.allCases.map { ($0, []) })
+    @Published var repeatQuestListByXpStat: [XpStat: [QuestViewModelItem]] = Dictionary(uniqueKeysWithValues: XpStat.allCases.map { ($0, []) })
+    @Published var eventQuestListByXpStat: [XpStat: [QuestViewModelItem]] = Dictionary(uniqueKeysWithValues: XpStat.allCases.map { ($0, []) })
 
     var filteredDefaultQuestListByXpStat: [QuestViewModelItem] {
         switch questFilterState.selectedValue {
@@ -65,6 +65,8 @@ class QuestViewModel: ObservableObject {
             return defaultQuestListByXpStat[selectedXpStat, default: []].sorted { $0.rewardDic[selectedXpStat, default: 0] < $1.rewardDic[selectedXpStat, default: 0] }
         case .popular:
             return defaultQuestListByXpStat[selectedXpStat, default: []]
+        case .favorite:
+            return defaultQuestListByXpStat[selectedXpStat, default: []].filter { $0.favoriteYn }
         }
     }
     
@@ -76,6 +78,8 @@ class QuestViewModel: ObservableObject {
             return repeatQuestListByXpStat[selectedXpStat, default: []].sorted { $0.rewardDic[selectedXpStat, default: 0] < $1.rewardDic[selectedXpStat, default: 0] }
         case .popular:
             return repeatQuestListByXpStat[selectedXpStat, default: []]
+        case .favorite:
+            return repeatQuestListByXpStat[selectedXpStat, default: []].filter { $0.favoriteYn }
         }
     }
 
@@ -92,6 +96,8 @@ class QuestViewModel: ObservableObject {
                 guard let date1 = $0.expireDate.toDate(), let date2 = $1.expireDate.toDate() else { return false }
                 return date1 < date2
             })
+        case .favorite:
+            return eventQuestListByXpStat[selectedXpStat, default: []].filter { $0.favoriteYn }
         }
     }
     
@@ -109,7 +115,7 @@ class QuestViewModel: ObservableObject {
     }
     
     // TODO: 퀘스트 갯수 확인 필요
-    // TODO: 현재 0페이지만 불러오며, 임시로 80개 로딩. 스탯 분류&필터링과 관련해서 기획 & API 수정에 따라 페이지네이션 로직 수정 필요
+    // TODO: 현재 0페이지만 불러오며, 임시로 60개 로딩. 스탯 분류&필터링과 관련해서 기획 & API 수정에 따라 페이지네이션 로직 수정 필요
     lazy var defaultPaginationManager = PaginationManager<QuestViewModelItem>(
         size: 60,
         threshold: 58,
@@ -153,11 +159,13 @@ class QuestViewModel: ObservableObject {
     var lastRefreshTime: Date? = nil
     
     private let questNetwork: QuestNetwork
-    
-    init(questNetwork: QuestNetwork, selectedXpStat: XpStat) {
+    private let favoriteService: FavoriteService
+
+    init(questNetwork: QuestNetwork, favoriteService: FavoriteService, selectedXpStat: XpStat) {
         self.selectedXpStat = selectedXpStat
         self.questNetwork = questNetwork
-        
+        self.favoriteService = favoriteService
+
         // 필터 설정
         questFilterState = FilterPickerState(initialValue: QuestFilterType.popular)
         eventFilterState = FilterPickerState(initialValue: EventQuestFilterType.popular)
@@ -351,6 +359,11 @@ class QuestViewModel: ObservableObject {
         DispatchQueue.main.asyncAfter(deadline: .now()+0.3) {
             self.showQuestSheet = true
         }
+    }
+    
+    /// 즐겨찾기 상태를 UI에 즉시 반영하고,  서버 반영은 디바운싱 처리
+    func toggleFavoriteStatus(quest: QuestViewModelItem) {
+        favoriteService.toggle(quest: quest)
     }
     
     func onQuestApprovalTapped() {

@@ -74,11 +74,14 @@ final class HomeViewModel {
     private let questNetwork: QuestNetwork
     private let rankNetwork: RankNetwork
     private let bannerNetwork: BannerNetwork
+    private let favoriteService: FavoriteService
     
-    init(questNetwork: QuestNetwork, rankNetwork: RankNetwork, bannerNetwork: BannerNetwork) {
+    init(questNetwork: QuestNetwork, rankNetwork: RankNetwork, bannerNetwork: BannerNetwork, favoriteService: FavoriteService) {
         self.questNetwork = questNetwork
         self.rankNetwork = rankNetwork
         self.bannerNetwork = bannerNetwork
+        self.favoriteService = favoriteService
+        
         Task {
             await loadInitialData()
         }
@@ -354,6 +357,11 @@ final class HomeViewModel {
         } else {
             showQuestEngageView = true
         }
+    }
+    
+    /// 즐겨찾기 상태를 UI에 즉시 반영하고,  서버 반영은 디바운싱 처리
+    func toggleFavoriteStatus(quest: QuestViewModelItem) {
+        favoriteService.toggle(quest: quest)
     }
 }
 

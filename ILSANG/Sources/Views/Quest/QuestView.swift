@@ -13,7 +13,7 @@ struct QuestView: View {
     @EnvironmentObject var sharedState: SharedState
 
     init(initialXpStat: XpStat) {
-        _vm = StateObject(wrappedValue: QuestViewModel(questNetwork: QuestNetwork(), selectedXpStat: initialXpStat))
+        _vm = StateObject(wrappedValue: QuestViewModel(questNetwork: QuestNetwork(), favoriteService: FavoriteService(favoriteNetwork: FavoriteNetwork()), selectedXpStat: initialXpStat))
     }
     
     var body: some View {
@@ -55,7 +55,14 @@ struct QuestView: View {
         .sheet(isPresented: $vm.showQuestSheet) {
             let tall = vm.selectedQuest.isRepeatQuest || vm.selectedQuest.missionType == .image
             
-            QuestDetailView(vm: QuestDetailViewModel(quest: vm.selectedQuest, questNetwork: QuestNetwork())) {
+            QuestDetailView(
+                vm: QuestDetailViewModel(
+                    quest: vm.selectedQuest,
+                    questNetwork: QuestNetwork(),
+                    onUpdate: { quest in
+                        vm.toggleFavoriteStatus(quest: quest)
+                    })
+            ) {
                 vm.onQuestApprovalTapped()
             }
             .presentationCornerRadius(24)
@@ -71,6 +78,7 @@ struct QuestView: View {
         }
         .navigationDestination(isPresented: $vm.showQuestEngageView) {
             let quizNetwork = QuizNetwork()
+            
             return QuestEngageView(
                 vm: QuestEngageViewModel(quest: vm.selectedQuest, quizNetwork: quizNetwork),
                 submitVM: SubmitRouterViewModel(
@@ -153,10 +161,12 @@ extension QuestView {
                     QuestItemView(
                         quest: quest,
                         style: UncompletedStyle(),
-                        tagTitle: String(quest.totalRewardXP())+"XP"
-                    ) {
-                        vm.onQuestTapped(quest: quest)
-                    }
+                        tagTitle: String(quest.totalRewardXP())+"XP") {
+                            vm.toggleFavoriteStatus(quest: quest)
+                        } action: {
+                            vm.onQuestTapped(quest: quest)
+                        }
+                   
                 }
             case .repeat: // 미완료 반복 퀘스트
                 ForEach(vm.filteredRepeatQuestListByXpStat, id: \.id) { quest in
@@ -165,6 +175,8 @@ extension QuestView {
                         style: RepeatStyle(repeatType: vm.repeatFilterState.selectedValue),
                         tagTitle: vm.repeatFilterState.selectedValue.description
                     ) {
+                        vm.toggleFavoriteStatus(quest: quest)
+                    } action: {
                         vm.onQuestTapped(quest: quest)
                     }
                 }
@@ -175,6 +187,8 @@ extension QuestView {
                         style: EventStyle(),
                         tagTitle: "한정"
                     ) {
+                        vm.toggleFavoriteStatus(quest: quest)
+                    } action: {
                         vm.onQuestTapped(quest: quest)
                     }
                 }
@@ -184,7 +198,7 @@ extension QuestView {
                         quest: quest,
                         style: CompletedStyle(),
                         tagTitle: String(quest.totalRewardXP())+"XP"
-                    ) { }
+                    ) { } action: { }
                 }
                 
                 if vm.hasMorePage(status: .completed) {

@@ -7,14 +7,14 @@
 
 import SwiftUI
 
-@MainActor
-class QuestDetailViewModel: ObservableObject {
-    @Published var quest: QuestViewModelItem
-    @Published var isLoading: Bool = false
-    
-    @Published var showImageSheetView: Bool = false
-    @Published var selectedImage: UIImage = .logo
-    
+@Observable
+class QuestDetailViewModel {
+    var quest: QuestViewModelItem
+    var isLoading: Bool = false
+    var showImageSheetView: Bool = false
+    var selectedImage: UIImage = .logo
+    private let onUpdate: (QuestViewModelItem) -> Void
+
     var approvalDescription: String {
         switch quest.missionType {
         case .quiz:
@@ -26,9 +26,10 @@ class QuestDetailViewModel: ObservableObject {
     
     private let questNetwork: QuestNetwork
     
-    init(quest: QuestViewModelItem, questNetwork: QuestNetwork) {
+    init(quest: QuestViewModelItem, questNetwork: QuestNetwork, onUpdate: @escaping (QuestViewModelItem) -> Void) {
         self.quest = quest
         self.questNetwork = questNetwork
+        self.onUpdate = onUpdate
     }
     
     func fetchQuestDetail() async {
@@ -52,5 +53,9 @@ class QuestDetailViewModel: ObservableObject {
     func onImageTapped(image: UIImage) {
         selectedImage = image
         showImageSheetView.toggle()
+    }
+    
+    func toggleFavorite() {
+        onUpdate(quest)
     }
 }
