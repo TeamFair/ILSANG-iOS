@@ -67,6 +67,10 @@ struct ILSANGApp: App {
             .task {
                 await runAppStartup()
             }
+            .onReceive(NotificationCenter.default.publisher(for: UIApplication.didEnterBackgroundNotification)) { _ in
+                /// 백그라운드 진입 시 디스크 캐시 정리
+                ImageCacheService.shared.cleanupDiskCache()
+            }
         }
     }
     
