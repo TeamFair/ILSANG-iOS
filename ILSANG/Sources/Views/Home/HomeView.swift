@@ -9,7 +9,7 @@ import SwiftUI
 
 // TODO: 에러처리 재정의 필요
 struct HomeView: View {
-    @State var vm: HomeViewModel = HomeViewModel(questNetwork: QuestNetwork(), rankNetwork: RankNetwork(), bannerNetwork: BannerNetwork(), favoriteService: FavoriteService(favoriteNetwork: FavoriteNetwork()))
+    @Bindable var vm: HomeViewModel
     @EnvironmentObject var sharedState: SharedState
     @Environment(\.redactionReasons) var redactionReasons
     
@@ -323,7 +323,12 @@ struct HomeView: View {
 }
 
 #Preview {
-    HomeView()
+    let viewModel = HomeViewModel(
+        questNetwork: QuestNetwork(),
+        rankNetwork: RankNetwork(),
+        bannerNetwork: BannerNetwork()
+    )
+    HomeView(vm: viewModel)
 }
 
 extension Array {
