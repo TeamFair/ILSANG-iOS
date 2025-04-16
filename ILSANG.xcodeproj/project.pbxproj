@@ -106,6 +106,9 @@
 		60943FE62C0A38FB00C8A714 /* ApprovalViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60943FE52C0A38FB00C8A714 /* ApprovalViewModel.swift */; };
 		609A76D92CFC50C7009F4567 /* QuestImageWithTagView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 609A76D82CFC50C7009F4567 /* QuestImageWithTagView.swift */; };
 		609A76DB2CFC5E90009F4567 /* StatGridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 609A76DA2CFC5E90009F4567 /* StatGridView.swift */; };
+		60A2ADF32DAE62BD007AC375 /* SettingItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60A2ADF22DAE62BD007AC375 /* SettingItemView.swift */; };
+		60A2ADF52DAE66BD007AC375 /* SettingToggleItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60A2ADF42DAE66BD007AC375 /* SettingToggleItemView.swift */; };
+		60A2ADF82DAE6B68007AC375 /* FAQView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60A2ADF72DAE6B68007AC375 /* FAQView.swift */; };
 		60A902DA2D89315800CA4489 /* FirebaseAnalyticsWithoutAdIdSupport in Frameworks */ = {isa = PBXBuildFile; productRef = 60A902D92D89315800CA4489 /* FirebaseAnalyticsWithoutAdIdSupport */; };
 		60A902DE2D89315800CA4489 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 60A902DD2D89315800CA4489 /* FirebaseAuth */; };
 		60A902E02D89315800CA4489 /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = 60A902DF2D89315800CA4489 /* FirebaseCore */; };
@@ -299,6 +302,9 @@
 		60943FE52C0A38FB00C8A714 /* ApprovalViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApprovalViewModel.swift; sourceTree = "<group>"; };
 		609A76D82CFC50C7009F4567 /* QuestImageWithTagView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestImageWithTagView.swift; sourceTree = "<group>"; };
 		609A76DA2CFC5E90009F4567 /* StatGridView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatGridView.swift; sourceTree = "<group>"; };
+		60A2ADF22DAE62BD007AC375 /* SettingItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingItemView.swift; sourceTree = "<group>"; };
+		60A2ADF42DAE66BD007AC375 /* SettingToggleItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingToggleItemView.swift; sourceTree = "<group>"; };
+		60A2ADF72DAE6B68007AC375 /* FAQView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FAQView.swift; sourceTree = "<group>"; };
 		60A902D42D89300C00CA4489 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		60ADF8862D57B49B00556958 /* QuestEngageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestEngageView.swift; sourceTree = "<group>"; };
 		60ADF8882D57B53100556958 /* QuestEngageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestEngageViewModel.swift; sourceTree = "<group>"; };
@@ -742,6 +748,17 @@
 			path = Component;
 			sourceTree = "<group>";
 		};
+		60A2ADF62DAE66CF007AC375 /* Component */ = {
+			isa = PBXGroup;
+			children = (
+				60505D6F2D941D0A00121C4C /* StandardScreenView.swift */,
+				60A2ADF22DAE62BD007AC375 /* SettingItemView.swift */,
+				60A2ADF42DAE66BD007AC375 /* SettingToggleItemView.swift */,
+				A142E0302C2D9F37004395F8 /* SettingAlertView.swift */,
+			);
+			path = Component;
+			sourceTree = "<group>";
+		};
 		60ADF9C52D59D5D600556958 /* ViewModifier */ = {
 			isa = PBXGroup;
 			children = (
@@ -892,13 +909,13 @@
 		A19628632C076D5A0037C53A /* Setting */ = {
 			isa = PBXGroup;
 			children = (
+				60A2ADF62DAE66CF007AC375 /* Component */,
 				A19628642C076D7B0037C53A /* SettingView.swift */,
-				60505D6F2D941D0A00121C4C /* StandardScreenView.swift */,
-				A10EF9382C87292C003D78A2 /* OpenSourceInfoView.swift */,
 				A196286A2C0859730037C53A /* CustomerServiceView.swift */,
+				60A2ADF72DAE6B68007AC375 /* FAQView.swift */,
 				A196286C2C0859820037C53A /* TermsAndPolicyView.swift */,
+				A10EF9382C87292C003D78A2 /* OpenSourceInfoView.swift */,
 				A196286E2C0859910037C53A /* DeleteAccountView.swift */,
-				A142E0302C2D9F37004395F8 /* SettingAlertView.swift */,
 			);
 			path = Setting;
 			sourceTree = "<group>";
@@ -1140,6 +1157,7 @@
 			files = (
 				60ADF9C92D5A019B00556958 /* UIApplication.swift in Sources */,
 				60924DC92C48C00E00221072 /* Quest.swift in Sources */,
+				60A2ADF82DAE6B68007AC375 /* FAQView.swift in Sources */,
 				604687A32D1FC32E0056E394 /* HomeViewModel.swift in Sources */,
 				606F18172DA650DE00ABEA84 /* FavoriteService.swift in Sources */,
 				A196286B2C0859730037C53A /* CustomerServiceView.swift in Sources */,
@@ -1183,6 +1201,7 @@
 				605E81402D9FE45C00ECDB15 /* QuestDetailInfoView.swift in Sources */,
 				609A76D92CFC50C7009F4567 /* QuestImageWithTagView.swift in Sources */,
 				605F28522CF1B2C5007EA739 /* QuestDetailView.swift in Sources */,
+				60A2ADF52DAE66BD007AC375 /* SettingToggleItemView.swift in Sources */,
 				A1AB3D6A2C1141B3001EB9D8 /* AppleLoginButtonView.swift in Sources */,
 				600211EC2C1EEED7000CC02E /* APIManager.swift in Sources */,
 				60FB50CD2D15CEAE00C55E82 /* HomeView.swift in Sources */,
@@ -1257,6 +1276,7 @@
 				60ADF9C22D59D47100556958 /* FontWithLineHeight.swift in Sources */,
 				606292D82C19E70A0098B6D2 /* Network.swift in Sources */,
 				A1501B0A2C48C3E5001410E1 /* MyPageInfoView.swift in Sources */,
+				60A2ADF32DAE62BD007AC375 /* SettingItemView.swift in Sources */,
 				608EBFA12C39C5BB00B862CC /* String++.swift in Sources */,
 				600211EA2C1EEE6D000CC02E /* APITarget.swift in Sources */,
 				A1BB60282BFE129000AAADD4 /* MyPageChallengeList.swift in Sources */,

@@ -326,7 +326,8 @@ struct HomeView: View {
     let viewModel = HomeViewModel(
         questNetwork: QuestNetwork(),
         rankNetwork: RankNetwork(),
-        bannerNetwork: BannerNetwork()
+        bannerNetwork: BannerNetwork(),
+        favoriteService: FavoriteService(favoriteNetwork: FavoriteNetwork())
     )
     HomeView(vm: viewModel)
 }

@@ -13,7 +13,8 @@ struct MainTabView: View {
     let viewModel = HomeViewModel(
         questNetwork: QuestNetwork(),
         rankNetwork: RankNetwork(),
-        bannerNetwork: BannerNetwork()
+        bannerNetwork: BannerNetwork(),
+        favoriteService: FavoriteService(favoriteNetwork: FavoriteNetwork())
     )
     
     var body: some View {

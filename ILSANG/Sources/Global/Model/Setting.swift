@@ -25,6 +25,7 @@ enum SettingType: Hashable {
     case navigate
     case alert
     case info(String)
+    case infoWithUnderLine(String)
 }
 
 let openSource = """
