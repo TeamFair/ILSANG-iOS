@@ -269,6 +269,8 @@ struct HomeView: View {
                             style: UncompletedStyle(),
                             tagTitle: String(quest.totalRewardXP())+"XP"
                         ) {
+                            vm.toggleFavoriteStatus(quest: quest)
+                        } action: {
                             AnalyticsService.logEvent(.homeBigRewardQuestClick(questId: quest.id, stat: vm.selectedXpStat.parameterText))
                             vm.onQuestTapped(quest: quest)
                         }
