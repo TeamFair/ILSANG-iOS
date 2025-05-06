@@ -9,24 +9,22 @@ import SwiftUI
 import UIKit
 
 struct CustomerServiceView: View {
+    private let settingList: [Setting] = [
+        Setting(title: "인스타그램", type: .infoWithUnderLine("illsang.official")),
+        Setting(title: "디스코드", type: .info("인스타그램 바이오링크 확인")),
+        Setting(title: "이메일", type: .info("illsangtech@gmail.com"))
+    ]
     
     var body: some View {
         StandardScreenView(title: "고객센터") {
-            HStack {
-                Text("인스타그램")
-                    .styledFont(.semibold, size: 16, lineHeight: 16)
-                    .foregroundColor(.gray500)
-                Spacer()
-                Text("illsang.official")
-                    .underline()
-                    .font(.system(size: 16))
-                    .foregroundColor(.gray300)
-            }
-            .padding(20)
-            .padding(.vertical, 4)
-            .background(.white)
-            .onTapGesture {
-                openInstagram()
+            LazyVStack(spacing: 0) {
+                ForEach(settingList) { item in
+                    SettingItemView(item: item, action: {
+                        if item.title == "인스타그램" {
+                            openInstagram()
+                        }
+                    })
+                }
             }
         }
     }

@@ -12,10 +12,11 @@ struct OpenSourceInfoView: View {
     var body: some View {
         StandardScreenView(title: "오픈소스 정보") {
             Text(openSource)
-                .styledFont(.regular, size: 16, lineHeight: 16)
+                .styledFont(.regular, size: 16, lineHeight: 18)
                 .padding(16)
                 .foregroundStyle(.gray500)
                 .frame(maxWidth: .infinity)
+                .background(Color.white)
         }
     }
 }

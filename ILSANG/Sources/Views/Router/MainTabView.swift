@@ -9,7 +9,14 @@ import SwiftUI
 
 struct MainTabView: View {
     @StateObject var sharedState = SharedState()
-
+   
+    let viewModel = HomeViewModel(
+        questNetwork: QuestNetwork(),
+        rankNetwork: RankNetwork(),
+        bannerNetwork: BannerNetwork(),
+        favoriteService: FavoriteService(favoriteNetwork: FavoriteNetwork())
+    )
+    
     var body: some View {
         NavigationStack {
             TabView(selection: $sharedState.selectedTab) {
@@ -35,7 +42,7 @@ struct MainTabView: View {
     func createTabView(for tab: Tab) -> some View {
         switch tab {
         case .home:
-            HomeView()
+            HomeView(vm: viewModel)
         case .quest:
             QuestView(initialXpStat: sharedState.selectedXpStat)
         case .approval:
