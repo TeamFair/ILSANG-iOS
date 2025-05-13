@@ -13,10 +13,9 @@ struct MyPageView: View {
     
     var body: some View {
         VStack(spacing: 0) {
-            header  // 타이틀 & 설정버튼
+            header  // 타이틀 & 설정 버튼
             content // 프로필 & 퀘스트/활동/내정보 컨텐츠
         }
-        .padding(.horizontal, 20)
         .background(Color.background)
         .task {
             // TODO:
@@ -44,29 +43,49 @@ struct MyPageView: View {
         }
         .frame(height: 50)
         .padding(.bottom, 5)
+        .padding(.horizontal, 20)
     }
     
     @ViewBuilder
     private var content: some View {
-        // 개인 프로필
-        MyPageProfile(
-            nickName: vm.userData?.nickname,
-            profileImage: vm.userProfileImage,
-            profileImageId: vm.userData?.profileImage,
-            level: XpLevelCalculator.convertXPtoLv(xp: vm.userData?.xpPoint ?? 0)
-        )
-        
-        // 퀘스트/활동/뱃지 세그먼트
-        MyPageTabView(selectedTab: $vm.selectedTab)
-        
-        // 퀘스트/활동/뱃지 리스트
-        switch vm.selectedTab {
-        case .quest:
-            MyPageChallengeList(vm: vm)
-//        case .activity:
-//            MyPageActiveList(vm: vm)
-        case .info:
-            MyPageInfoView(xpPoint: vm.userData?.xpPoint, xpStats: vm.xpStats)
+        ScrollView {
+            VStack(spacing: 0) {
+                // 프로필
+                MyPageProfile(
+                    nickName: vm.userData?.nickname,
+                    profileImage: vm.userProfileImage,
+                    profileImageId: vm.userData?.profileImage,
+                    level: vm.xpStatus.currentLv,
+                    progress: vm.xpStatus.progress,
+                    honorTitle: vm.honorTitle,
+                    honorType: vm.honorType
+                )
+                .padding(.bottom, 36)
+                
+                // 퀘스트/뱃지 세그먼트
+                MyPageTabView(selectedTab: $vm.selectedTab)
+                    .padding(.bottom, 16)
+                
+                // 퀘스트/뱃지 컨텐츠
+                switch vm.selectedTab {
+                case .quest:
+                    MyPageChallengeList(vm: vm)
+                case .info:                    
+                    MyPageInfoView(xpPoint: vm.userData?.xpPoint, xpStats: vm.xpStats, honorTitle: vm.honorTitle)
+                }
+            }
+            .padding(.bottom, 72)
+            .padding(.horizontal, 20)
+        }
+        .scrollIndicators(vm.selectedTab == .quest ? .visible : .never)
+        .refreshable {
+            switch vm.selectedTab {
+            case .quest:
+                await vm.challengePaginationManager.loadData(isRefreshing: true)
+            case .info:
+                await vm.fetchUser()
+                await vm.fetchXpStats()
+            }
         }
     }
 }

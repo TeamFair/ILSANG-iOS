@@ -7,9 +7,32 @@
 
 import UIKit
 
+struct XpStatus {
+    let currentXp: Int
+    let currentLv: Int
+    let remainXp: Int
+    let progress: Double
+
+    init(currentXp: Int) {
+        self.currentXp = currentXp
+        self.currentLv = XpLevelCalculator.convertXPtoLv(xp: currentXp)
+        self.remainXp = XpLevelCalculator.xpForNextLv(xp: currentXp)
+        
+        let levelData = XpLevelCalculator.xpProgressInCurrentLevel(xp: currentXp, level: currentLv)
+        self.progress = XpLevelCalculator.calculateProgress(
+            currentValue: levelData.currentLevelXP,
+            totalValue: levelData.requiredXPForNextLevel
+        )
+    }
+}
+
 @MainActor
 final class MyPageViewModel: ObservableObject {
     @Published var userData: User?
+    @Published var xpStatus: XpStatus = XpStatus(currentXp: 0)
+    // TODO: 칭호 데이터 연결
+    @Published var honorTitle: String? = "세상을 움직이는 자"
+    @Published var honorType: HonorGrade? = .legend
     @Published var userProfileImage: UIImage?
     @Published var selectedTab: MyPageTab = .quest
     
@@ -49,6 +72,7 @@ final class MyPageViewModel: ObservableObject {
         self.xpNetwork = xpNetwork
         
         self.userData = UserService.shared.currentUser
+        self.xpStatus = XpStatus(currentXp: userData?.xpPoint ?? 0)
     }
     
     @MainActor
@@ -151,6 +175,9 @@ final class MyPageViewModel: ObservableObject {
             } else {
                 self.userProfileImage = nil
             }
+            self.honorTitle = userData?.title?.name
+            self.honorType = HonorGrade(rawValue: userData?.title?.type.lowercased() ?? "") ?? nil
+
         case .failure(let err):
             self.userData = nil
             Log(err)

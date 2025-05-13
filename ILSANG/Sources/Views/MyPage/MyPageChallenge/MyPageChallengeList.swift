@@ -17,30 +17,23 @@ struct MyPageChallengeList: View {
                 .foregroundColor(.gray400)
                 .frame(maxWidth: .infinity, alignment: .leading)
             
-            ScrollView {
-                LazyVStack(spacing: 9) {
-                    ForEach(Array(vm.challengeList.enumerated()), id: \.offset) { idx, challenge in
-                        NavigationLink(destination: ChallengeDetailView(vm: vm, idx: idx)) {
-                            ChallengeListItemView(challenge: challenge)
-                        }
-                    }
-                    
-                    if vm.hasMorePage(for: .challenge) {
-                        ProgressView()
-                            .padding(.top, 12)
-                            .task {
-                                await vm.challengePaginationManager.loadData(isRefreshing: false)
-                            }
+            LazyVStack(spacing: 9) {
+                ForEach(Array(vm.challengeList.enumerated()), id: \.offset) { idx, challenge in
+                    NavigationLink(destination: ChallengeDetailView(vm: vm, idx: idx)) {
+                        ChallengeListItemView(challenge: challenge)
                     }
                 }
-                .padding(.top, 12)
-                .padding(.bottom, 72)
+                
+                if vm.hasMorePage(for: .challenge) {
+                    ProgressView()
+                        .padding(.top, 12)
+                        .task {
+                            await vm.challengePaginationManager.loadData(isRefreshing: false)
+                        }
+                }
             }
-            .refreshable {
-                await vm.challengePaginationManager.loadData(isRefreshing: true)
-            }
+            .frame(maxWidth: .infinity, minHeight: 400, maxHeight: .infinity)
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
         .overlay {
             if vm.challengeList.isEmpty {
                 EmptyView(title: "수행한 퀘스트가 없어요!")
