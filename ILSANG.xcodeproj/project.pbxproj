@@ -16,6 +16,9 @@
 		600211EE2C1EEF91000CC02E /* EmojiNetwork.swift in Sources */ = {isa = PBXBuildFile; fileRef = 600211ED2C1EEF91000CC02E /* EmojiNetwork.swift */; };
 		60054F9E2D9316F800E7C5A6 /* 2503_PRIVACY_POLICY.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 60054F9D2D9316F800E7C5A6 /* 2503_PRIVACY_POLICY.pdf */; };
 		60054FA02D931AA300E7C5A6 /* PDFKitView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60054F9F2D931AA300E7C5A6 /* PDFKitView.swift */; };
+		600657DC2DBCCBAA0022D117 /* MyPageInfoCardBottomView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 600657DB2DBCCBAA0022D117 /* MyPageInfoCardBottomView.swift */; };
+		600657E02DBCFEE80022D117 /* HonorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 600657DF2DBCFEE20022D117 /* HonorView.swift */; };
+		600657E42DBD2DF50022D117 /* MyPageHonorManageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 600657E32DBD2DF50022D117 /* MyPageHonorManageView.swift */; };
 		600D83A42C7B1FA4005C93E2 /* PaginationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 600D83A32C7B1FA4005C93E2 /* PaginationManager.swift */; };
 		6011891D2C3E8B3B0070F2AD /* UserService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6011891C2C3E8B3B0070F2AD /* UserService.swift */; };
 		6011891F2C3E94380070F2AD /* AuthUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6011891E2C3E94380070F2AD /* AuthUser.swift */; };
@@ -63,7 +66,7 @@
 		605334552D298A1400599159 /* TutorialView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605334542D298A1400599159 /* TutorialView.swift */; };
 		605334572D29BE3600599159 /* TutorialViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605334562D29BE3600599159 /* TutorialViewModel.swift */; };
 		6053345C2D31182500599159 /* XpLevelCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6053345B2D31182500599159 /* XpLevelCalculator.swift */; };
-		6053345F2D31272B00599159 /* MyPagePointSectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6053345E2D31272B00599159 /* MyPagePointSectionView.swift */; };
+		6053345F2D31272B00599159 /* MyPageInfoCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6053345E2D31272B00599159 /* MyPageInfoCardView.swift */; };
 		6057361A2D8AC6F000CF7051 /* QuizNetwork.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605736192D8AC6F000CF7051 /* QuizNetwork.swift */; };
 		6057361C2D8AC8A800CF7051 /* Quiz.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6057361B2D8AC8A800CF7051 /* Quiz.swift */; };
 		605DA0C92C07097F00CC9450 /* ImagePreviewButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605DA0C82C07097F00CC9450 /* ImagePreviewButton.swift */; };
@@ -207,6 +210,9 @@
 		600211ED2C1EEF91000CC02E /* EmojiNetwork.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmojiNetwork.swift; sourceTree = "<group>"; };
 		60054F9D2D9316F800E7C5A6 /* 2503_PRIVACY_POLICY.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = 2503_PRIVACY_POLICY.pdf; sourceTree = "<group>"; };
 		60054F9F2D931AA300E7C5A6 /* PDFKitView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PDFKitView.swift; sourceTree = "<group>"; };
+		600657DB2DBCCBAA0022D117 /* MyPageInfoCardBottomView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPageInfoCardBottomView.swift; sourceTree = "<group>"; };
+		600657DF2DBCFEE20022D117 /* HonorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HonorView.swift; sourceTree = "<group>"; };
+		600657E32DBD2DF50022D117 /* MyPageHonorManageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPageHonorManageView.swift; sourceTree = "<group>"; };
 		600D83A32C7B1FA4005C93E2 /* PaginationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaginationManager.swift; sourceTree = "<group>"; };
 		601189182C3E84720070F2AD /* ILSANG.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ILSANG.entitlements; sourceTree = "<group>"; };
 		6011891C2C3E8B3B0070F2AD /* UserService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserService.swift; sourceTree = "<group>"; };
@@ -257,7 +263,7 @@
 		605334542D298A1400599159 /* TutorialView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TutorialView.swift; sourceTree = "<group>"; };
 		605334562D29BE3600599159 /* TutorialViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TutorialViewModel.swift; sourceTree = "<group>"; };
 		6053345B2D31182500599159 /* XpLevelCalculator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XpLevelCalculator.swift; sourceTree = "<group>"; };
-		6053345E2D31272B00599159 /* MyPagePointSectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPagePointSectionView.swift; sourceTree = "<group>"; };
+		6053345E2D31272B00599159 /* MyPageInfoCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPageInfoCardView.swift; sourceTree = "<group>"; };
 		605736192D8AC6F000CF7051 /* QuizNetwork.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuizNetwork.swift; sourceTree = "<group>"; };
 		6057361B2D8AC8A800CF7051 /* Quiz.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Quiz.swift; sourceTree = "<group>"; };
 		605DA0C82C07097F00CC9450 /* ImagePreviewButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePreviewButton.swift; sourceTree = "<group>"; };
@@ -438,6 +444,14 @@
 			path = Base;
 			sourceTree = "<group>";
 		};
+		600657E22DBD2DD10022D117 /* MyPageHonor */ = {
+			isa = PBXGroup;
+			children = (
+				600657E32DBD2DF50022D117 /* MyPageHonorManageView.swift */,
+			);
+			path = MyPageHonor;
+			sourceTree = "<group>";
+		};
 		600D83A22C7B1F7E005C93E2 /* Manager */ = {
 			isa = PBXGroup;
 			children = (
@@ -560,7 +574,8 @@
 			isa = PBXGroup;
 			children = (
 				A1501B092C48C3E5001410E1 /* MyPageInfoView.swift */,
-				6053345E2D31272B00599159 /* MyPagePointSectionView.swift */,
+				6053345E2D31272B00599159 /* MyPageInfoCardView.swift */,
+				600657DB2DBCCBAA0022D117 /* MyPageInfoCardBottomView.swift */,
 				A1678CCD2CF4C58900843854 /* MyPageShareImage.swift */,
 			);
 			path = MyPageInfo;
@@ -689,6 +704,7 @@
 				A1F770632C2AABCE00DB24A0 /* MyPageViewModel.swift */,
 				60299E2F2CBFF8D20039663F /* MyPageChallenge */,
 				6053345D2D3126F900599159 /* MyPageInfo */,
+				600657E22DBD2DD10022D117 /* MyPageHonor */,
 				A1501B072C48C3C6001410E1 /* MyPageActiveList.swift */,
 			);
 			path = MyPage;
@@ -932,6 +948,7 @@
 		A19628732C08647F0037C53A /* View */ = {
 			isa = PBXGroup;
 			children = (
+				600657DF2DBCFEE20022D117 /* HonorView.swift */,
 				A1F0ADBF2CD738A20068E0A6 /* Polygon.swift */,
 				601BCF192D7C134500138387 /* ProgressBar.swift */,
 				607FCBE12BFA6A8300BB2D04 /* Buttons.swift */,
@@ -1179,7 +1196,7 @@
 				9FE63D722CB3AB4F00CA7940 /* RankingItemView.swift in Sources */,
 				9FE63D702CB3AAF100CA7940 /* RankingViewModel.swift in Sources */,
 				6057361C2D8AC8A800CF7051 /* Quiz.swift in Sources */,
-				6053345F2D31272B00599159 /* MyPagePointSectionView.swift in Sources */,
+				6053345F2D31272B00599159 /* MyPageInfoCardView.swift in Sources */,
 				60054FA02D931AA300E7C5A6 /* PDFKitView.swift in Sources */,
 				601BCF142D7B502400138387 /* OtherUserXpStatView.swift in Sources */,
 				605DA0D62C07123400CC9450 /* View++.swift in Sources */,
@@ -1240,6 +1257,7 @@
 				603CF4EF2D79A83600A2D19E /* SubmitStatus.swift in Sources */,
 				60246FA82D91E57E007C05B3 /* AnalyticsService.swift in Sources */,
 				A1868C442C09B6C50020BF16 /* ChallengeDetailView.swift in Sources */,
+				600657DC2DBCCBAA0022D117 /* MyPageInfoCardBottomView.swift in Sources */,
 				6044B71D2C32B6A4002C13A0 /* UIImage++.swift in Sources */,
 				607FCBD42BFA648000BB2D04 /* Tab.swift in Sources */,
 				601BCF122D7B449C00138387 /* OtherUserProfileViewModel.swift in Sources */,
@@ -1291,6 +1309,7 @@
 				60ADF8872D57B49B00556958 /* QuestEngageView.swift in Sources */,
 				605DA0CD2C070A0300CC9450 /* Camera.swift in Sources */,
 				600211EE2C1EEF91000CC02E /* EmojiNetwork.swift in Sources */,
+				600657E42DBD2DF50022D117 /* MyPageHonorManageView.swift in Sources */,
 				601189212C3E94A60070F2AD /* AuthService.swift in Sources */,
 				603CF4E52D732DD800A2D19E /* ImageFullScreenView.swift in Sources */,
 				607FCBD62BFA660C00BB2D04 /* MainTabView.swift in Sources */,
@@ -1300,6 +1319,7 @@
 				6028A94A2D39721F003FBC8C /* RankNetwork.swift in Sources */,
 				605DA0D12C0711CA00CC9450 /* CameraView.swift in Sources */,
 				A1FF91702C25119200F03E4B /* XPNetwork.swift in Sources */,
+				600657E02DBCFEE80022D117 /* HonorView.swift in Sources */,
 				A1BB602C2BFF145100AAADD4 /* MyPageProfile.swift in Sources */,
 				607FCBE92BFE418600BB2D04 /* QuestViewModel.swift in Sources */,
 				607FCBE72BFD12B100BB2D04 /* QuestViewModelItem.swift in Sources */,

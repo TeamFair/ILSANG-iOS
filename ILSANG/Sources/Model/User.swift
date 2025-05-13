@@ -11,4 +11,12 @@ struct User: Decodable {
     let completeChallengeCount: Int
     let xpPoint: Int
     let profileImage: String?
+    let title: Title?
+}
+
+struct Title: Decodable {
+    let id: String
+    let name: String
+    let type: String
+    let createdAt: String
 }

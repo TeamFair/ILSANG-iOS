@@ -19,6 +19,11 @@ extension View {
     }
     
     @ViewBuilder
+    func frame(_ size: CGFloat) -> some View {
+        self.frame(width: size, height: size)
+    }
+    
+    @ViewBuilder
     func cropImagePicker(show: Binding<Bool>, croppedImage: Binding<UIImage?>) -> some View {
         CustomImagePicker(show: show, croppedImage: croppedImage) {
             self

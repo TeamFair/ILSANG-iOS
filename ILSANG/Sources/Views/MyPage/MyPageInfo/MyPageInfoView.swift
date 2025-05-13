@@ -10,15 +10,35 @@ import SwiftUI
 struct MyPageInfoView: View {
     let xpPoint: Int?
     let xpStats: [XpStat: Int]
+    let honorTitle: String?
     
     @State private var touchedIdx: Int? = nil
+    private let contentSpacing: CGFloat = 16
     
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading) {
-                MyPagePointSectionView(currentXp: xpPoint ?? 0)
+            VStack(alignment: .leading, spacing: contentSpacing) {
+                HStack(spacing: contentSpacing) {
+                    NavigationLink {
+                        MyPageHonorManageView()
+                    } label: {
+                        MyPageInfoCardView(
+                            title: "내 칭호",
+                            content: honorTitle ?? "",
+                            showTitleChevron: true,
+                            trailContent:
+                                HonorTrailingView(hasHonorTitie: honorTitle != nil)
+                        )
+                    }
+                    
+                    MyPageInfoCardView(
+                        title: "총 포인트",
+                        content: "\(String(xpPoint ?? 0).formatNumberInText())XP",
+                        trailContent: TotalXpTrailingView()
+                    )
+                }
                 
-                VStack(alignment: .leading, spacing: 24) {
+                VStack(alignment: .leading, spacing: 28) {
                     Text("능력별 포인트")
                         .font(.system(size: 12))
                         .foregroundColor(.gray400)
@@ -137,7 +157,11 @@ struct MyPageInfoView: View {
     private var profileShareImage: UIImage {
         let renderer = ImageRenderer(
             content:
-                MyPageShareImage(xpPoint: xpPoint ?? 0, xpStats: xpStats)
+                MyPageShareImage(
+                    xpPoint: xpPoint ?? 0,
+                    xpStats: xpStats,
+                    honorTitle: honorTitle
+                )
                 .frame(width: 340)
         )
         
@@ -185,6 +209,6 @@ struct PentagonGraphView: View {
 
 #Preview {
     MyPageInfoView(
-        xpPoint: 0, xpStats: [:]
+        xpPoint: 0, xpStats: [:], honorTitle: "세상을 움직이는 자"
     )
 }

@@ -10,10 +10,25 @@ import SwiftUI
 struct MyPageShareImage: View {
     let xpPoint: Int
     let xpStats: [XpStat: Int]
-        
+    let honorTitle: String?
+    
     var body: some View {
         VStack(alignment: .leading) {
-            MyPagePointSectionView(currentXp: xpPoint)
+            HStack(spacing: 16) {
+                MyPageInfoCardView(
+                    title: "내 칭호",
+                    content: honorTitle ?? "",
+                    showTitleChevron: true,
+                    trailContent:
+                        HonorTrailingView(hasHonorTitie: honorTitle != nil)
+                )
+                
+                MyPageInfoCardView(
+                    title: "총 포인트",
+                    content: "\(String(xpPoint).formatNumberInText())XP",
+                    trailContent: TotalXpTrailingView()
+                )
+            }
             
             VStack(alignment: .leading, spacing: 24) {
                 Text("능력별 포인트")
