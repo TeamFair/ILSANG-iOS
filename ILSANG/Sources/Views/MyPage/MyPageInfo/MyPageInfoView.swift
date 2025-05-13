@@ -167,15 +167,15 @@ struct PentagonGraphView: View {
 
     private func BackgroundPolygons(width: CGFloat) -> some View {
         ZStack {
-            Polygon(count: 5, relativeCornerRadius: 0.20)
+            Polygon(count: 5, relativeCornerRadius: 0.08)
                 .stroke(.gray300, lineWidth: 1)
                 .frame(width: width, height: width)
             
-            Polygon(count: 5, relativeCornerRadius: 0.20)
+            Polygon(count: 5, relativeCornerRadius: 0.08)
                 .stroke(.gray100, lineWidth: 1)
                 .frame(width: width * 0.9, height: width * 0.9)
             
-            Polygon(count: 5, relativeCornerRadius: 0.20)
+            Polygon(count: 5, relativeCornerRadius: 0.08)
                 .stroke(.gray100, lineWidth: 1)
                 .frame(width: width * 0.5, height: width * 0.5)
         }
