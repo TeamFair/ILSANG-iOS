@@ -70,6 +70,7 @@ struct MyPageInfoView: View {
             ZStack {
                 PentagonStatLabel(xpStat: stat)
                     .position(x: labelPoint.x, y: labelPoint.y)
+                    .offset(x: stat == .sociability ? -10 : 0)
                     .onTapGesture {
                         touchedIdx = (touchedIdx == index) ? nil : index
                     }
@@ -80,7 +81,7 @@ struct MyPageInfoView: View {
                         .zIndex(3)
                 }
             }
-            .padding(.top, 20)
+            .padding(.top, 22)
         }
         .frame(width: width, height: width, alignment: .center)
     }
@@ -167,15 +168,15 @@ struct PentagonGraphView: View {
 
     private func BackgroundPolygons(width: CGFloat) -> some View {
         ZStack {
-            Polygon(count: 5, relativeCornerRadius: 0.20)
+            Polygon(count: 5, relativeCornerRadius: 0.08)
                 .stroke(.gray300, lineWidth: 1)
                 .frame(width: width, height: width)
             
-            Polygon(count: 5, relativeCornerRadius: 0.20)
+            Polygon(count: 5, relativeCornerRadius: 0.08)
                 .stroke(.gray100, lineWidth: 1)
                 .frame(width: width * 0.9, height: width * 0.9)
             
-            Polygon(count: 5, relativeCornerRadius: 0.20)
+            Polygon(count: 5, relativeCornerRadius: 0.08)
                 .stroke(.gray100, lineWidth: 1)
                 .frame(width: width * 0.5, height: width * 0.5)
         }
