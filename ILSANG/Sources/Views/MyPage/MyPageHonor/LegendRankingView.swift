@@ -13,17 +13,28 @@ struct LegendRankingView: View {
     @Environment(\.dismiss) var dismiss
     private let leadingTrailingColumnWidth: CGFloat = 50
     
-    init(honorId: String) {
-        self._vm = StateObject(wrappedValue: LegendRankingViewModel(honorId: honorId, honorNetwork: HonorNetwork()))
+    init(honorId: String, honorName: String) {
+        self._vm = StateObject(wrappedValue: LegendRankingViewModel(honorId: honorId, honorName: honorName, honorNetwork: HonorNetwork()))
     }
     
     var body: some View {
         VStack(spacing: 0) {
-            NavigationTitleView(title: "체력왕", isSeparatorHidden: true, background: .background) {
+            NavigationTitleView(title: "", isSeparatorHidden: true, background: .background) {
                 dismiss()
             }
             .padding(.bottom, 8) // 세로로 긴 이미지 대응 (NavigationTitleView의 bottom 패딩과 겹침)
-            
+            .overlay {
+                HStack(spacing: 8) {
+                    if let legendImage = HonorGrade.legend.image {
+                        Image(uiImage: legendImage)
+                            .resizable()
+                            .frame(18)
+                    }
+                    Text(vm.honorName)
+                        .styledFont(.bold, size: 17, lineHeight: 22)
+                        .foregroundStyle(.gray500)
+                }
+            }
             if vm.historyRanks.isEmpty {
                 EmptyView(title: "해당 칭호를 획득한\n유저가 없어요")
             } else {
@@ -48,7 +59,7 @@ struct LegendRankingView: View {
 }
 
 #Preview {
-    LegendRankingView(honorId: "TQ00030")
+    LegendRankingView(honorId: "TQ00030", honorName: "체력왕")
 }
 
 struct HistoryRankViewModelItem {
@@ -87,43 +98,5 @@ struct HistoryRankViewModelItem {
             profileImageId: historyRank.customer.profileImage,
             profileImage: profileImage
         )
-    }
-}
-
-final class LegendRankingViewModel: ObservableObject {
-    @Published var historyRanks: [HistoryRankViewModelItem] = []
-    private let honorId: String
-    private let honorNetwork: HonorNetwork
-
-    init(honorId: String, honorNetwork: HonorNetwork) {
-        self.honorId = honorId
-        self.honorNetwork = honorNetwork
-    }
-    
-    @MainActor
-    func fetchLegendRanks() async {
-        let result = await honorNetwork.getLegendRank(honorId: honorId)
-        switch result {
-        case .success(let res):
-            let items = await withTaskGroup(of: (Int, HistoryRankViewModelItem).self) { group in
-                for (index, rank) in res.data.enumerated() {
-                    group.addTask {
-                        let item = await HistoryRankViewModelItem.make(from: rank)
-                        return (index, item)
-                    }
-                }
-                
-                var results = Array<HistoryRankViewModelItem?>(repeating: nil, count: res.data.count)
-                for await (index, item) in group {
-                    results[index] = item
-                }
-                
-                return results.compactMap { $0 } // nil 제거
-            }
-            
-            self.historyRanks = items
-        case .failure(let error):
-            print("Error fetching legend ranks: \(error)")
-        }
     }
 }

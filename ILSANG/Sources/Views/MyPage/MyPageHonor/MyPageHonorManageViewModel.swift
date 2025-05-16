@@ -12,7 +12,7 @@ final class MyPageHonorManageViewModel: ObservableObject {
     @Published var selectedHonorGrade: HonorGrade = .standard
     @Published var isShowHonorInfoPopup: Bool = false
     @Published var showRankingView: Bool = false
-    @Published var selectedTitleIdToShowRanking: String?
+    @Published var selectedHonorToShowRanking: HonorItem?
     
     @Published var selectedHistoryId: String?
     private let initialHonor = UserService.shared.currentUser?.title
@@ -120,8 +120,8 @@ final class MyPageHonorManageViewModel: ObservableObject {
         isShowHonorInfoPopup = false
     }
     
-    func navigateToRankingView(titleId: String) {
-        selectedTitleIdToShowRanking = titleId
+    func navigateToRankingView(honor: HonorItem) {
+        selectedHonorToShowRanking = honor
         showRankingView = true
     }
 }

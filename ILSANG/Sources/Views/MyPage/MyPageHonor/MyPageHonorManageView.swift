@@ -119,8 +119,8 @@ struct MyPageHonorManageView: View {
                 }
             }
             .navigationDestination(isPresented: $vm.showRankingView) {
-                if let honorId = vm.selectedTitleIdToShowRanking  {
-                    LegendRankingView(honorId: honorId)
+                if let honor = vm.selectedHonorToShowRanking  {
+                    LegendRankingView(honorId: honor.titleId, honorName: honor.title)
                 }
             }
         }
@@ -133,7 +133,7 @@ struct MyPageHonorManageView: View {
         ) {
             vm.selectHonor(honor)
         } onShowRankingView: {
-            vm.navigateToRankingView(titleId: honor.titleId)
+            vm.navigateToRankingView(honor: honor)
         }
     }
     

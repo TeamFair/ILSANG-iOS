@@ -75,6 +75,7 @@
 		605445D02DD4366D0005742D /* HonorInfoPopupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605445CF2DD436650005742D /* HonorInfoPopupView.swift */; };
 		605445D22DD7169A0005742D /* LegendRankingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605445D12DD7137A0005742D /* LegendRankingView.swift */; };
 		605445D42DD73F910005742D /* Rank.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605445D32DD73F910005742D /* Rank.swift */; };
+		605445D62DD78EE50005742D /* LegendRankingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605445D52DD78EE50005742D /* LegendRankingViewModel.swift */; };
 		6057361A2D8AC6F000CF7051 /* QuizNetwork.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605736192D8AC6F000CF7051 /* QuizNetwork.swift */; };
 		6057361C2D8AC8A800CF7051 /* Quiz.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6057361B2D8AC8A800CF7051 /* Quiz.swift */; };
 		605DA0C92C07097F00CC9450 /* ImagePreviewButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605DA0C82C07097F00CC9450 /* ImagePreviewButton.swift */; };
@@ -280,6 +281,7 @@
 		605445CF2DD436650005742D /* HonorInfoPopupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HonorInfoPopupView.swift; sourceTree = "<group>"; };
 		605445D12DD7137A0005742D /* LegendRankingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LegendRankingView.swift; sourceTree = "<group>"; };
 		605445D32DD73F910005742D /* Rank.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Rank.swift; sourceTree = "<group>"; };
+		605445D52DD78EE50005742D /* LegendRankingViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LegendRankingViewModel.swift; sourceTree = "<group>"; };
 		605736192D8AC6F000CF7051 /* QuizNetwork.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuizNetwork.swift; sourceTree = "<group>"; };
 		6057361B2D8AC8A800CF7051 /* Quiz.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Quiz.swift; sourceTree = "<group>"; };
 		605DA0C82C07097F00CC9450 /* ImagePreviewButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePreviewButton.swift; sourceTree = "<group>"; };
@@ -469,6 +471,7 @@
 				605445C32DD36CE60005742D /* HonorListItemView.swift */,
 				605445CF2DD436650005742D /* HonorInfoPopupView.swift */,
 				605445D12DD7137A0005742D /* LegendRankingView.swift */,
+				605445D52DD78EE50005742D /* LegendRankingViewModel.swift */,
 			);
 			path = MyPageHonor;
 			sourceTree = "<group>";
@@ -1244,6 +1247,7 @@
 				601BCF1A2D7C134500138387 /* ProgressBar.swift in Sources */,
 				601189232C3E95D40070F2AD /* AuthNetwork.swift in Sources */,
 				605E81402D9FE45C00ECDB15 /* QuestDetailInfoView.swift in Sources */,
+				605445D62DD78EE50005742D /* LegendRankingViewModel.swift in Sources */,
 				609A76D92CFC50C7009F4567 /* QuestImageWithTagView.swift in Sources */,
 				605F28522CF1B2C5007EA739 /* QuestDetailView.swift in Sources */,
 				60A2ADF52DAE66BD007AC375 /* SettingToggleItemView.swift in Sources */,
