@@ -11,6 +11,7 @@ struct HonorListItemView: View {
     let honor: HonorItem
     let rowColumnWidth: CGFloat
     let onSelect: () -> Void
+    let onShowRankingView: () -> ()
     
     var body: some View {
         HStack(spacing: 0) {
@@ -32,11 +33,14 @@ struct HonorListItemView: View {
                     .frame(width: rowColumnWidth)
             }
             
-            Text(honor.title.forceCharWrapping)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .multilineTextAlignment(.leading)
-                .foregroundStyle(.gray400)
-                .padding(.horizontal, 8)
+            Button(action: onShowRankingView) {
+                Text(honor.title.forceCharWrapping)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .multilineTextAlignment(.leading)
+                    .foregroundStyle(.gray400)
+                    .padding(.horizontal, 8)
+            }
+            .disabled(honor.type != .legend) // 전설 칭호만 랭킹 조회 가능
             
             Text(honor.acquisitionCondition.forceCharWrapping)
                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -70,6 +74,5 @@ struct HonorListItemView: View {
 
 
 #Preview {
-    HonorListItemView(honor: .init(titleId: "3",historyId: "4", isSelected: true, title: "일상의 개척자", acquisitionCondition: "일상 회원가입 시", type: .legend), rowColumnWidth: 50) {
-    }
+    HonorListItemView(honor: .init(titleId: "3",historyId: "4", isSelected: true, title: "일상의 개척자", acquisitionCondition: "일상 회원가입 시", type: .legend), rowColumnWidth: 50) { } onShowRankingView: { }
 }

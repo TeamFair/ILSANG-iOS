@@ -7,15 +7,6 @@
 
 import SwiftUI
 
-struct Rank {
-    let idx: Int
-    let nickname: String
-    var xpType: String? = nil
-    let score: Int
-    var profileImageId: String?
-    var profileIamge: UIImage?
-}
-
 struct RankingItemView: View {
     let rank: Rank
     let style: RankingItemStyle
@@ -23,16 +14,6 @@ struct RankingItemView: View {
     enum RankingItemStyle {
         case horizontal
         case vertical
-    }
-    
-    init(topRank: TopRankViewModelItem, style: RankingItemStyle) {
-        self.rank = Rank(idx: topRank.lank, nickname: topRank.nickname, score: topRank.xpSum, profileImageId: topRank.profileImageId, profileIamge: topRank.profileImage)
-        self.style = style
-    }
-    
-    init(idx: Int, statRank: StatRankViewModelItem, style: RankingItemStyle) {
-        self.rank = Rank(idx: idx, nickname: statRank.nickname, xpType: statRank.xpType, score: statRank.xpPoint, profileImageId: statRank.profileImageId, profileIamge: statRank.profileImage)
-        self.style = style
     }
     
     var body: some View {
@@ -50,65 +31,67 @@ fileprivate struct RankingHorizontalItemView: View {
     
     var body: some View {
         HStack(spacing: 0) {
-            // 랭킹 아이콘 & 순위
-            let idx = rank.idx
-            if idx <= 3 {
-                Image("rank\(idx)")
-                    .resizable()
-                    .frame(width: 26, height: 26)
-            } else {
-                Text("\(idx)")
-                    .frame(width: 26, height: 26, alignment: .center)
-                    .font(.system(size: 15, weight: .bold))
-                    .foregroundStyle(.gray500)
-            }
-            if let profileIamge = rank.profileIamge {
-                Image(uiImage: profileIamge)
-                    .resizable()
-                    .frame(width: 48, height: 48)
-                    .clipShape(Circle())
-                    .padding(.horizontal, UIDevice.isSEDevice ? 16 : 24)
-            } else {
-                Text("😍")
-                    .font(.system(size: 23, weight: .bold))
-                    .frame(width: 48, height: 48)
-                    .background(
-                        Circle().fill(Color.backgroundBlue)
-                    )
-                    .padding(.horizontal, UIDevice.isSEDevice ? 16 : 24)
-            }
+            RankIconView(idx: rank.idx, size: 26, fontStyle: .heading2)
+
+            RankProfileImageView(image: rank.profileImage, size: 48)
+                .padding(.leading, 8)
+                .padding(.trailing, 16)
             
-            VStack (alignment: .leading, spacing: 4) {
+            VStack (alignment: .leading, spacing: 6) {
                 Text(rank.nickname)
-                    .font(.system(size: 15, weight: .bold))
+                    .styledFont(.heading2)
                     .foregroundStyle(.black)
                 
-                if let xpType = rank.xpType {
-                    Text("\(convertStat(xpType)) : \(rank.score)p")
-                        .font(.system(size: 13))
-                        .foregroundColor(.gray400)
-                } else {
-                    Text("\(rank.score)p")
-                        .font(.system(size: 13))
-                        .foregroundColor(.gray400)
-                }
+                titleView
+                
+                descriptionView
             }
             
             Spacer(minLength: 0)
             
-            // MARK: API 수정 후 태그뷰 추가
+            TagView(title: "LV.\(XpLevelCalculator.convertXPtoLv(xp: rank.xpTotal))", tagStyle: .level)
         }
-        .padding(.horizontal, UIDevice.isSEDevice ? 20 : 24)
-        .padding(.vertical, 26)
+        .padding(.horizontal, 20)
+        .padding(.vertical, 30)
         .frame(maxWidth: .infinity, alignment: .topLeading)
         .background(.white)
         .cornerRadius(16)
         .padding(.horizontal, 20)
     }
+    
+    @ViewBuilder
+    var titleView: some View {
+        if let title = rank.title, let honorTypeImage = rank.titleType?.image {
+            HStack(spacing: 4) {
+                Image(uiImage: honorTypeImage)
+                    .resizable()
+                    .frame(12)
+                Text(title)
+                    .styledFont(.badge1)
+                    .foregroundStyle(.gray400)
+            }
+        }
+    }
+    
+    var descriptionView: some View {
+        Group {
+            if let createAt = rank.createdTitleAt {
+                Text("\(createAt.timeAgoCreatedAt()) 획득")
+            } else if let xp = rank.xp {
+                if let xpType = rank.xpType {
+                    Text("\(convertStat(xpType)) : \(xp)p")
+                } else {
+                    Text("\(xp)p")
+                }
+            }
+        }
+        .styledFont(.caption1)
+        .foregroundColor(.gray400)
+    }
 }
 
 extension RankingHorizontalItemView {
-    //XpStat 한글 변환
+    /// XpStat 한글 변환
     func convertStat(_ xpType: String) -> String {
         let typeMapping: [String: String] = [
             "STRENGTH": "체력",
@@ -122,52 +105,71 @@ extension RankingHorizontalItemView {
     }
 }
 
-
 fileprivate struct RankingVerticalItemView: View {
     let rank: Rank
     
     var body: some View {
         VStack(spacing: 6) {
-            if let profileIamge = rank.profileIamge {
-                Image(uiImage: profileIamge)
-                    .resizable()
-                    .frame(width: 64, height: 64)
-                    .clipShape(Circle())
-                    .padding(6)
-            } else {
-                Text("😍")
-                    .font(.system(size: 23, weight: .bold))
-                    .frame(width: 64, height: 64)
-                    .background(
-                        Circle().fill(Color.backgroundBlue)
-                    )
-                    .padding(6)
-            }
+            RankProfileImageView(image: rank.profileImage, size: 64)
+                .padding(6)
             
-            // 랭킹 아이콘 & 순위
-            let idx = rank.idx
+            RankIconView(idx: rank.idx, size: 24, fontStyle: .tabBold)
+            
+            Text(rank.nickname)
+                .styledFont(.bold, size: 13, lineHeight: 20, tracking: -0.3)
+                .foregroundColor(.black)
+                .padding(.bottom, -4)
+            
+            if let xp = rank.xp {
+                Text("\(xp)xp")
+                    .styledFont(.caption1)
+                    .foregroundColor(.gray500)
+            }
+        }
+        .frame(width: 150)
+        .padding(.vertical, 16)
+        .background(.white)
+        .cornerRadius(12)
+    }
+}
+
+fileprivate struct RankProfileImageView: View {
+    let image: UIImage?
+    let size: CGFloat
+    var emoji: String = "😍"
+
+    var body: some View {
+        Group {
+            if let image = image {
+                Image(uiImage: image)
+                    .resizable()
+            } else {
+                Text(emoji)
+                    .font(.system(size: size * 0.5))
+            }
+        }
+        .frame(width: size, height: size)
+        .background(Color.backgroundBlue)
+        .clipShape(Circle())
+    }
+}
+
+fileprivate struct RankIconView: View {
+    let idx: Int
+    let size: CGFloat
+    let fontStyle: FontStyle
+    
+    var body: some View {
+        Group {
             if idx <= 3 {
                 Image("rank\(idx)")
                     .resizable()
-                    .frame(width: 24, height: 24)
             } else {
                 Text("\(idx)")
-                    .frame(width: 24, height: 24, alignment: .center)
-                    .font(.system(size: 13, weight: .semibold))
+                    .styledFont(fontStyle)
                     .foregroundStyle(.gray500)
             }
-            
-            Text(rank.nickname)
-                .font(.system(size: 13, weight: .bold))
-                .foregroundColor(.black)
-            
-            Text("\(rank.score)xp")
-                .font(.system(size: 13))
-                .foregroundColor(.gray500)
         }
-        .frame(width: 150)
-        .padding(.vertical, 17)
-        .background(.white)
-        .cornerRadius(12)
+        .frame(width: size, height: size)
     }
 }

@@ -46,8 +46,8 @@ final class UserNetwork {
     }
     
     /// titleHistoryId값을 null이나 빈값으로 요청하면 칭호 미사용
-    func putTitle(titleHistoryId: String) async -> Bool {
-        let params = ["titleHistoryId": titleHistoryId]
+    func putHonor(historyId: String) async -> Bool {
+        let params = ["titleHistoryId": historyId]
         let res: Result<ResponseWithoutData, Error> = await Network.requestData(url: url+"/title", method: .put, parameters: params, body: nil, withToken: true)
         switch res {
         case.success:

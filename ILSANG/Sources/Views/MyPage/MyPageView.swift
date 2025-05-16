@@ -95,9 +95,8 @@ struct EmptyView: View {
     
     var body: some View {
         Text(title)
-            .font(.system(size: 17))
-            .fontWeight(.medium)
-            .foregroundColor(.gray400)
+            .styledFont(.semibold, size: 23, lineHeight: 33)
+            .foregroundColor(.gray300)
             .multilineTextAlignment(.center)
             .frame(maxWidth: .infinity, maxHeight: .infinity)
     }

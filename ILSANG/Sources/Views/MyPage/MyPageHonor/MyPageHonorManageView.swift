@@ -21,9 +21,9 @@ struct MyPageHonorManageView: View {
                 }
                 .padding(.bottom, 8) // 세로로 긴 이미지 대응 (NavigationTitleView의 bottom 패딩과 겹침)
                 Group {
-                    titleSection
-                    selectHonorGradeSection
-                    contentSection
+                    honorIntroSection
+                    honorGradeTabSection
+                    honorListSection
                 }
                 .padding(.horizontal, 20)
             }
@@ -37,14 +37,14 @@ struct MyPageHonorManageView: View {
         .onDisappear {
             Task {
                 print("업데이트 - disappear")
-                await vm.updateHonorTitleIfNeeded()
+                await vm.updateHonorIfNeeded()
             }
         }
         .onChange(of: scenePhase, { _, newValue in
             if newValue != .active {
                 print("업데이트 - scene phase \(newValue)")
                 Task {
-                    await vm.updateHonorTitleIfNeeded()
+                    await vm.updateHonorIfNeeded()
                 }
             }
         })
@@ -66,7 +66,7 @@ struct MyPageHonorManageView: View {
         }
     }
     
-    private var titleSection: some View {
+    private var honorIntroSection: some View {
         HStack {
             VStack(alignment: .leading, spacing: 8) {
                 Text("칭호")
@@ -88,12 +88,12 @@ struct MyPageHonorManageView: View {
         .padding(.bottom, 36)
     }
     
-    private var selectHonorGradeSection: some View {
+    private var honorGradeTabSection: some View {
         MyPageTabView(selectedTab: $vm.selectedHonorGrade)
             .padding(.bottom, 32)
     }
     
-    private var contentSection: some View {
+    private var honorListSection: some View {
         VStack(spacing: 0) {
             HStack(spacing: 4) {
                 Text(vm.selectedHonorGrade.title)
@@ -111,20 +111,33 @@ struct MyPageHonorManageView: View {
                 .frame(height: 1)
                 .foregroundColor(.gray500)
             
-            title
+            honorHeaderView
             
-            ForEach(vm.honors[vm.selectedHonorGrade, default: []]) { honor in
-                HonorListItemView(
-                    honor: honor,
-                    rowColumnWidth: leadingTrailingColumnWidth
-                ) {
-                    vm.selectHonor(honor)
+            LazyVStack(spacing: 0) {
+                ForEach(vm.honors[vm.selectedHonorGrade, default: []]) { honor in
+                    honorListItemView(honor: honor)
+                }
+            }
+            .navigationDestination(isPresented: $vm.showRankingView) {
+                if let honor = vm.selectedHonorToShowRanking  {
+                    LegendRankingView(honorId: honor.titleId, honorName: honor.title)
                 }
             }
         }
     }
     
-    private var title: some View {
+    private func honorListItemView(honor: HonorItem) -> some View {
+        HonorListItemView(
+            honor: honor,
+            rowColumnWidth: leadingTrailingColumnWidth
+        ) {
+            vm.selectHonor(honor)
+        } onShowRankingView: {
+            vm.navigateToRankingView(honor: honor)
+        }
+    }
+    
+    private var honorHeaderView: some View {
         HStack(spacing: 0) {
             Text("선택")
                 .frame(width: leadingTrailingColumnWidth)
