@@ -7,7 +7,11 @@
 
 import SwiftUI
 
-final class HonorItem: ObservableObject, Identifiable {
+final class HonorItem: ObservableObject, Identifiable, Equatable {
+    static func == (lhs: HonorItem, rhs: HonorItem) -> Bool {
+        lhs.id == rhs.id && lhs.historyId == rhs.historyId
+    }
+    
     let titleId: String
     var historyId: String?
     let title: String

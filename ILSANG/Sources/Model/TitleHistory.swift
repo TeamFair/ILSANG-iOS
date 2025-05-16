@@ -15,6 +15,20 @@ struct TitleHistory: Decodable {
     let createdAt: String
 }
 
+struct HistoryRank: Decodable {
+    let customer: Customer
+    let titleHistory: TitleHistory
+}
+
+struct Customer: Decodable {
+    let status: String
+    let nickname: String
+    let xpPoint: Int
+    let profileImage: String?
+    let title: Title?
+}
+
+
 extension HonorHistory {
     func toDomain() -> HonorItem {
         return HonorItem(

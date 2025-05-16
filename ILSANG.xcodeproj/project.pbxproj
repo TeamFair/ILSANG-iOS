@@ -73,6 +73,8 @@
 		605445CA2DD36E440005742D /* HonorNetwork.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605445C92DD36E440005742D /* HonorNetwork.swift */; };
 		605445CC2DD36EA30005742D /* TitleHistory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605445CB2DD36E9E0005742D /* TitleHistory.swift */; };
 		605445D02DD4366D0005742D /* HonorInfoPopupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605445CF2DD436650005742D /* HonorInfoPopupView.swift */; };
+		605445D22DD7169A0005742D /* LegendRankingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605445D12DD7137A0005742D /* LegendRankingView.swift */; };
+		605445D42DD73F910005742D /* Rank.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605445D32DD73F910005742D /* Rank.swift */; };
 		6057361A2D8AC6F000CF7051 /* QuizNetwork.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605736192D8AC6F000CF7051 /* QuizNetwork.swift */; };
 		6057361C2D8AC8A800CF7051 /* Quiz.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6057361B2D8AC8A800CF7051 /* Quiz.swift */; };
 		605DA0C92C07097F00CC9450 /* ImagePreviewButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605DA0C82C07097F00CC9450 /* ImagePreviewButton.swift */; };
@@ -276,6 +278,8 @@
 		605445C92DD36E440005742D /* HonorNetwork.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HonorNetwork.swift; sourceTree = "<group>"; };
 		605445CB2DD36E9E0005742D /* TitleHistory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitleHistory.swift; sourceTree = "<group>"; };
 		605445CF2DD436650005742D /* HonorInfoPopupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HonorInfoPopupView.swift; sourceTree = "<group>"; };
+		605445D12DD7137A0005742D /* LegendRankingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LegendRankingView.swift; sourceTree = "<group>"; };
+		605445D32DD73F910005742D /* Rank.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Rank.swift; sourceTree = "<group>"; };
 		605736192D8AC6F000CF7051 /* QuizNetwork.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuizNetwork.swift; sourceTree = "<group>"; };
 		6057361B2D8AC8A800CF7051 /* Quiz.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Quiz.swift; sourceTree = "<group>"; };
 		605DA0C82C07097F00CC9450 /* ImagePreviewButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePreviewButton.swift; sourceTree = "<group>"; };
@@ -464,6 +468,7 @@
 				605445C72DD36D5E0005742D /* MyPageHonorManageViewModel.swift */,
 				605445C32DD36CE60005742D /* HonorListItemView.swift */,
 				605445CF2DD436650005742D /* HonorInfoPopupView.swift */,
+				605445D12DD7137A0005742D /* LegendRankingView.swift */,
 			);
 			path = MyPageHonor;
 			sourceTree = "<group>";
@@ -760,6 +765,7 @@
 			isa = PBXGroup;
 			children = (
 				605445C52DD36D1A0005742D /* HonorItem.swift */,
+				605445D32DD73F910005742D /* Rank.swift */,
 				60004AD42D3B799700CD2254 /* Constants.swift */,
 				A19628682C0775A70037C53A /* Setting.swift */,
 				A1AB3D6B2C1142AA001EB9D8 /* LoginButton.swift */,
@@ -1223,6 +1229,7 @@
 				605DA0D62C07123400CC9450 /* View++.swift in Sources */,
 				A1678CCE2CF4C59C00843854 /* MyPageShareImage.swift in Sources */,
 				60299E392CC13DEC0039663F /* ImageCacheService.swift in Sources */,
+				605445D42DD73F910005742D /* Rank.swift in Sources */,
 				6061327B2CDB33FD00830948 /* FilterPicker.swift in Sources */,
 				A19628752C08648C0037C53A /* NavigationTitleView.swift in Sources */,
 				60ADF9D82D60927900556958 /* ChallengeViewModelItem.swift in Sources */,
@@ -1292,6 +1299,7 @@
 				60ADF9D42D5DDD2000556958 /* QuestEngageInfoView.swift in Sources */,
 				A1FF91722C257E9A00F03E4B /* User.swift in Sources */,
 				60ADF9D22D5DDC5B00556958 /* QuizView.swift in Sources */,
+				605445D22DD7169A0005742D /* LegendRankingView.swift in Sources */,
 				6057361A2D8AC6F000CF7051 /* QuizNetwork.swift in Sources */,
 				60B8B9E92BF9EEF1005F6DE3 /* QuestView.swift in Sources */,
 				60C6B4D72C2C569800926C0E /* Challenge.swift in Sources */,

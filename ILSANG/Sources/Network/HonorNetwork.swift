@@ -14,4 +14,9 @@ final class HonorNetwork {
     func getHonorHistory() async -> Result<Response<[HonorHistory]>, Error> {
         return await Network.requestData(url: url, method: .get, parameters: nil, withToken: true)
     }
+    
+    func getLegendRank(honorId: String) async -> Result<Response<[HistoryRank]>, Error> {
+        let params = ["titleId": "\(honorId)"]
+        return await Network.requestData(url: url+"/rank", method: .get, parameters: params, withToken: true)
+    }
 }

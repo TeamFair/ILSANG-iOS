@@ -297,7 +297,7 @@ struct HomeView: View {
                                 vm.selectedCustomerId = rank.customerId
                                 vm.showOtherUserProfileView = true
                             } label: {
-                                RankingItemView(topRank: rank, style: .vertical)
+                                RankingItemView(rank: rank.toRank(), style: .vertical)
                             }
                         }
                     }

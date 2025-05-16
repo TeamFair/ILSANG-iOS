@@ -11,6 +11,8 @@ final class MyPageHonorManageViewModel: ObservableObject {
     @Published var honors: [HonorGrade: [HonorItem]] = [.standard: [], .rare: [], .legend: []]
     @Published var selectedHonorGrade: HonorGrade = .standard
     @Published var isShowHonorInfoPopup: Bool = false
+    @Published var showRankingView: Bool = false
+    @Published var selectedTitleIdToShowRanking: String?
     
     @Published var selectedHistoryId: String?
     private let initialHonor = UserService.shared.currentUser?.title
@@ -99,13 +101,13 @@ final class MyPageHonorManageViewModel: ObservableObject {
         }
     }
     
-    func updateHonorTitleIfNeeded() async {
+    func updateHonorIfNeeded() async {
         guard selectedHistoryId != initialHistoryId else {
             Log("칭호 변경 없음: 업데이트 생략 - 이미 업데이트된 칭호")
             return
         }
 
-        let updateSucc = await userNetwork.putTitle(titleHistoryId: selectedHistoryId ?? "")
+        let updateSucc = await userNetwork.putHonor(historyId: selectedHistoryId ?? "")
        
         Log("칭호 변경 있음: 업데이트 \(updateSucc ? "성공" : "실패") with \(selectedHistoryId ?? "_")")
     }
@@ -116,5 +118,10 @@ final class MyPageHonorManageViewModel: ObservableObject {
     
     func closeHonorInfoPopup() {
         isShowHonorInfoPopup = false
+    }
+    
+    func navigateToRankingView(titleId: String) {
+        selectedTitleIdToShowRanking = titleId
+        showRankingView = true
     }
 }
