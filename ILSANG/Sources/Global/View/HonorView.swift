@@ -10,10 +10,11 @@ import UIKit
 struct Honor {
     let title: String
     let image: UIImage
+    let description: String
     
-    static let standard = Honor(title: "일반", image: .honorBlue)
-    static let rare = Honor(title: "희귀", image: .honorRed)
-    static let legend = Honor(title: "전설", image: .honorGold)
+    static let standard = Honor(title: "일반", image: .honorBlue, description: "가장 일반적인 칭호")
+    static let rare = Honor(title: "희귀", image: .honorRed, description: "가장 희귀한 칭호")
+    static let legend = Honor(title: "전설", image: .honorGold, description: "가장 전설적인 칭호")
 }
 
 
