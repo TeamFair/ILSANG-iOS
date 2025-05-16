@@ -18,5 +18,6 @@ struct Title: Decodable {
     let id: String
     let name: String
     let type: String
+    let condition: String
     let createdAt: String
 }

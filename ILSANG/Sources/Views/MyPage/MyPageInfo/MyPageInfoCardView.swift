@@ -29,6 +29,7 @@ struct MyPageInfoCardView<TrailContent: View>: View {
             Text(content)
                 .styledFont(.title2)
                 .foregroundColor(.gray500)
+                .multilineTextAlignment(.leading)
             
             Spacer(minLength: 0)
             

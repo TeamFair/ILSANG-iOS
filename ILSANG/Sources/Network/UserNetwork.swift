@@ -45,6 +45,18 @@ final class UserNetwork {
         }
     }
     
+    /// titleHistoryId값을 null이나 빈값으로 요청하면 칭호 미사용
+    func putTitle(titleHistoryId: String) async -> Bool {
+        let params = ["titleHistoryId": titleHistoryId]
+        let res: Result<ResponseWithoutData, Error> = await Network.requestData(url: url+"/title", method: .put, parameters: params, body: nil, withToken: true)
+        switch res {
+        case.success:
+            return true
+        case.failure:
+            return false
+        }
+    }
+    
     /// 서버에서 프로필 이미지 연결 해제 & 이미지 삭제 처리
     func deleteUserImage() async -> Bool {
         let res: Result<ResponseWithoutData, Error> = await Network.requestData(url: url+"/image", method: .delete, parameters: nil, withToken: true)

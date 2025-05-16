@@ -8,11 +8,11 @@
 import SwiftUI
 
 struct MyPageHonorManageView: View {
-    
+    @StateObject var vm: MyPageHonorManageViewModel = MyPageHonorManageViewModel(userNetwork: UserNetwork(), honorNetwork: HonorNetwork())
+    @Environment(\.scenePhase) var scenePhase
+    @Environment(\.dismiss) var dismiss
     private let leadingTrailingColumnWidth: CGFloat = 50
     
-    @Environment(\.dismiss) var dismiss
-
     var body: some View {
         ScrollView {
             VStack(spacing: 0) {
@@ -20,11 +20,124 @@ struct MyPageHonorManageView: View {
                     dismiss()
                 }
                 .padding(.bottom, 8) // 세로로 긴 이미지 대응 (NavigationTitleView의 bottom 패딩과 겹침)
+                Group {
+                    titleSection
+                    selectHonorGradeSection
+                    contentSection
+                }
+                .padding(.horizontal, 20)
             }
         }
         .frame(maxWidth: .infinity)
         .background(Color.background)
         .navigationBarBackButtonHidden()
+        .task {
+            vm.fetchHonors()
+        }
+        .onDisappear {
+            Task {
+                print("업데이트 - disappear")
+                await vm.updateHonorTitleIfNeeded()
+            }
+        }
+        .onChange(of: scenePhase, { _, newValue in
+            if newValue != .active {
+                print("업데이트 - scene phase \(newValue)")
+                Task {
+                    await vm.updateHonorTitleIfNeeded()
+                }
+            }
+        })
+        .overlay {
+            if vm.isShowHonorInfoPopup {
+                HonorInfoPopupView {
+                    vm.closeHonorInfoPopup()
+                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .background(
+                    Color.black.opacity(0.5)
+                        .ignoresSafeArea()
+                        .animation(.easeOut, value: vm.isShowHonorInfoPopup)
+                        .onTapGesture {
+                            vm.closeHonorInfoPopup()
+                        }
+                )
+            }
+        }
+    }
+    
+    private var titleSection: some View {
+        HStack {
+            VStack(alignment: .leading, spacing: 8) {
+                Text("칭호")
+                    .styledFont(.title1)
+                    .foregroundStyle(.black)
+                Text("퀘스트를 수행하면서 칭호를 얻을 수 있어요!")
+                    .styledFont(.caption1)
+                    .foregroundStyle(.gray400)
+            }
+            Spacer()
+            Button {
+                vm.showHonorInfoPopup()
+            } label: {
+                Image(.info)
+                    .frame(30)
+            }
+        }
+        .padding(.top, 24)
+        .padding(.bottom, 36)
+    }
+    
+    private var selectHonorGradeSection: some View {
+        MyPageTabView(selectedTab: $vm.selectedHonorGrade)
+            .padding(.bottom, 32)
+    }
+    
+    private var contentSection: some View {
+        VStack(spacing: 0) {
+            HStack(spacing: 4) {
+                Text(vm.selectedHonorGrade.title)
+                    .styledFont(.heading3)
+                    .foregroundStyle(.black)
+                Image(uiImage: vm.selectedHonorGrade.image ?? .init())
+                    .resizable()
+                    .scaledToFit()
+                    .frame(24)
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(.bottom, 20)
+            
+            Rectangle()
+                .frame(height: 1)
+                .foregroundColor(.gray500)
+            
+            title
+            
+            ForEach(vm.honors[vm.selectedHonorGrade, default: []]) { honor in
+                HonorListItemView(
+                    honor: honor,
+                    rowColumnWidth: leadingTrailingColumnWidth
+                ) {
+                    vm.selectHonor(honor)
+                }
+            }
+        }
+    }
+    
+    private var title: some View {
+        HStack(spacing: 0) {
+            Text("선택")
+                .frame(width: leadingTrailingColumnWidth)
+            Text("칭호명")
+                .frame(maxWidth: .infinity)
+            Text("획득조건")
+                .frame(maxWidth: .infinity)
+            Text("획득")
+                .frame(width: leadingTrailingColumnWidth)
+        }
+        .styledFont(.tabBold)
+        .frame(height: 40)
+        .foregroundStyle(.gray500)
     }
 }
 

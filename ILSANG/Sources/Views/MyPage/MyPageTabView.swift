@@ -97,9 +97,9 @@ enum HonorGrade: String, CaseIterable, TabItemRepresentable, Equatable {
     var icon: String? { nil }
     var title: String { honor.title }
     var image: UIImage? { honor.image }
+    var description: String { honor.description }
     
-    init?(rawValue: String?) {
-        
-        self = Self.allCases.first { $0.rawValue == rawValue?.lowercased() } ?? .standard
+    init?(rawValue: String) {
+        self = Self.allCases.first { $0.rawValue == rawValue.lowercased() } ?? .standard
     }
 }

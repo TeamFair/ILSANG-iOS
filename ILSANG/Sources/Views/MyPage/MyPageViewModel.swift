@@ -177,7 +177,8 @@ final class MyPageViewModel: ObservableObject {
                 self.userProfileImage = nil
             }
             self.honorTitle = userData?.title?.name
-            self.honorType = HonorGrade(rawValue: userData?.title?.type)
+            self.honorType = HonorGrade(rawValue: userData?.title?.type ?? "")
+            UserService.shared.currentUser = model.data
         case .failure(let err):
             self.userData = nil
             Log(err)
