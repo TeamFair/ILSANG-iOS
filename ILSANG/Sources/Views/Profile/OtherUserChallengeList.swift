@@ -37,7 +37,7 @@ struct OtherUserChallengeList: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .overlay {
             if vm.challengeList.isEmpty {
-                EmptyView(title: "수행한 퀘스트가 없어요!")
+                EmptyStateView(message: "수행한 퀘스트가 없어요!", fontScale: .small)
             }
         }
     }

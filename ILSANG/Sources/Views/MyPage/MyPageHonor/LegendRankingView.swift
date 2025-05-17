@@ -35,7 +35,7 @@ struct LegendRankingView: View {
             }
             
             if vm.historyRanks.isEmpty {
-                EmptyView(title: "해당 칭호를 획득한\n유저가 없어요")
+                EmptyStateView(message: "해당 칭호를 획득한\n유저가 없어요", fontScale: .big)
             } else {
                 ScrollView {
                     LazyVStack(spacing: 12) {
