@@ -14,7 +14,7 @@ struct User: Decodable {
     let title: Title?
 }
 
-struct Title: Decodable {
+struct Title: Decodable, Hashable {
     let id: String
     let name: String
     let type: String

@@ -328,6 +328,7 @@ struct ApprovalViewModelItem: Identifiable {
     var likeCnt: Int
     var hateCnt: Int
     var emoji: Emoji?
+    let honor: Title?
     
     init(
         id: String = UUID().uuidString,
@@ -341,7 +342,8 @@ struct ApprovalViewModelItem: Identifiable {
         time: String,
         likeCnt: Int,
         hateCnt: Int,
-        emoji: Emoji?
+        emoji: Emoji?,
+        honor: Title?
     ) {
         self.id = id
         self.customerId = customerId
@@ -355,6 +357,7 @@ struct ApprovalViewModelItem: Identifiable {
         self.likeCnt = likeCnt
         self.hateCnt = hateCnt
         self.emoji = emoji
+        self.honor = honor
     }
     
     init(challenge: Challenge) {
@@ -371,6 +374,7 @@ struct ApprovalViewModelItem: Identifiable {
         self.likeCnt = challenge.likeCnt
         self.hateCnt = challenge.hateCnt
         self.emoji = nil // Emoji(isLike: false, isHate: false) // TODO: 수정
+        self.honor = challenge.honor
     }
     
     static var failedData = ApprovalViewModelItem(
@@ -384,13 +388,14 @@ struct ApprovalViewModelItem: Identifiable {
         time: "",
         likeCnt: 0,
         hateCnt: 0,
-        emoji: nil
+        emoji: nil,
+        honor: nil
     )
     
     static var mockDataList = [
-        ApprovalViewModelItem(customerId: "0000000", title: "바닐라라떼마시기", profileImageId: nil, profileImage: nil, imageId: "IMRE2024061314275774", nickname: "일상1", time: "3시간 전", likeCnt: 0, hateCnt: 0, emoji: Emoji(isLike: false, isHate: false)),
-        ApprovalViewModelItem(customerId: "0000000", title: "바닐라라떼마시기", profileImageId: nil, profileImage: nil, imageId: "IMRE2024061314275774", nickname: "일상2", time: "1시간 전", likeCnt: 0, hateCnt: 0, emoji: Emoji(isLike: false, isHate: false)),
-        ApprovalViewModelItem(customerId: "0000000", title: "바닐라라떼마시기", profileImageId: nil, profileImage: nil, imageId: "IMRE2024061314275774", nickname: "일상3", time: "2시간 전", likeCnt: 0, hateCnt: 0, emoji: Emoji(isLike: false, isHate: false)),
-        ApprovalViewModelItem(customerId: "0000000", title: "바닐라라떼마시기", profileImageId: nil, profileImage: nil, imageId: "IMRE2024061314275774", nickname: "일상4", time: "2시간 전", likeCnt: 0, hateCnt: 0, emoji: Emoji(isLike: false, isHate: false))
+        ApprovalViewModelItem(customerId: "0000000", title: "바닐라라떼마시기", profileImageId: nil, profileImage: nil, imageId: "IMRE2024061314275774", nickname: "일상1", time: "3시간 전", likeCnt: 0, hateCnt: 0, emoji: Emoji(isLike: false, isHate: false), honor: nil),
+        ApprovalViewModelItem(customerId: "0000000", title: "바닐라라떼마시기", profileImageId: nil, profileImage: nil, imageId: "IMRE2024061314275774", nickname: "일상2", time: "1시간 전", likeCnt: 0, hateCnt: 0, emoji: Emoji(isLike: false, isHate: false), honor: nil),
+        ApprovalViewModelItem(customerId: "0000000", title: "바닐라라떼마시기", profileImageId: nil, profileImage: nil, imageId: "IMRE2024061314275774", nickname: "일상3", time: "2시간 전", likeCnt: 0, hateCnt: 0, emoji: Emoji(isLike: false, isHate: false), honor: nil),
+        ApprovalViewModelItem(customerId: "0000000", title: "바닐라라떼마시기", profileImageId: nil, profileImage: nil, imageId: "IMRE2024061314275774", nickname: "일상4", time: "2시간 전", likeCnt: 0, hateCnt: 0, emoji: Emoji(isLike: false, isHate: false), honor: nil)
     ]
 }
