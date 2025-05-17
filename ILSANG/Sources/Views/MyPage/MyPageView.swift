@@ -90,12 +90,27 @@ struct MyPageView: View {
     }
 }
 
-struct EmptyView: View {
-    var title: String = ""
+struct EmptyStateView: View {
+    var message: String
+    var fontScale: FontScale
+    
+    enum FontScale {
+        case big
+        case small
+        
+        var font: FontStyle {
+            switch self {
+            case .big:
+                return .init(size: 23, weight: .semibold, lineHeight: 33, tracking: 0)
+            case .small:
+                return .init(size: 17, weight: .medium, lineHeight: 20, tracking: 0)
+            }
+        }
+    }
     
     var body: some View {
-        Text(title)
-            .styledFont(.semibold, size: 23, lineHeight: 33)
+        Text(message)
+            .styledFont(fontScale.font)
             .foregroundColor(.gray300)
             .multilineTextAlignment(.center)
             .frame(maxWidth: .infinity, maxHeight: .infinity)

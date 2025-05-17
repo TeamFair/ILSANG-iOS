@@ -24,19 +24,18 @@ struct LegendRankingView: View {
             }
             .padding(.bottom, 8) // 세로로 긴 이미지 대응 (NavigationTitleView의 bottom 패딩과 겹침)
             .overlay {
-                HStack(spacing: 8) {
-                    if let legendImage = HonorGrade.legend.image {
-                        Image(uiImage: legendImage)
-                            .resizable()
-                            .frame(18)
-                    }
-                    Text(vm.honorName)
-                        .styledFont(.bold, size: 17, lineHeight: 22)
-                        .foregroundStyle(.gray500)
-                }
+                HonorIconView(
+                    honorTitle: vm.honorName,
+                    grade: .legend,
+                    imageSize: 18,
+                    spacing: 8,
+                    font: .init(size: 17, weight: .bold, lineHeight: 22, tracking: 0),
+                    fgColor: .gray500
+                )
             }
+            
             if vm.historyRanks.isEmpty {
-                EmptyView(title: "해당 칭호를 획득한\n유저가 없어요")
+                EmptyStateView(message: "해당 칭호를 획득한\n유저가 없어요", fontScale: .big)
             } else {
                 ScrollView {
                     LazyVStack(spacing: 12) {

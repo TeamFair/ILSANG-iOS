@@ -41,7 +41,7 @@ struct MyPageActiveList: View {
         }
         .overlay {
             if vm.xpLogList.isEmpty {
-                EmptyView(title: "활동 내역이 없어요!")
+                EmptyStateView(message: "활동 내역이 없어요!", fontScale: .small)
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)

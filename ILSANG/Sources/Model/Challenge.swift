@@ -18,6 +18,7 @@ struct Challenge: Decodable, Hashable {
     let questImageId: String?
     let createdAt: String
     let likeCnt, hateCnt: Int
+    let honor: Title?
     
     enum CodingKeys: String, CodingKey {
         case challengeId
@@ -31,7 +32,8 @@ struct Challenge: Decodable, Hashable {
         case createdAt
         case likeCnt
         case hateCnt
+        case honor = "title"
     }
     
-    static let challengeMockData = Challenge(challengeId: "", customerId: "", userProfileImageId: nil, userNickName: "일상유저123", missionTitle: "바닐라라떼 마시기", receiptImageId: "", status: "", questImageId: "", createdAt: "2024-01-01'T'00:00:00", likeCnt: 3, hateCnt: 0)
+    static let challengeMockData = Challenge(challengeId: "", customerId: "", userProfileImageId: nil, userNickName: "일상유저123", missionTitle: "바닐라라떼 마시기", receiptImageId: "", status: "", questImageId: "", createdAt: "2024-01-01'T'00:00:00", likeCnt: 3, hateCnt: 0, honor: nil)
 }

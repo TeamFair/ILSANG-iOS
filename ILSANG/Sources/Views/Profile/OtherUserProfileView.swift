@@ -50,27 +50,37 @@ struct OtherUserProfileView: View {
         HStack(spacing: 16) {
             // 프로필 이미지
             ProfileImageView(profileImage: vm.userProfileIamge, imageSize: 57)
+                .overlay {
+                    TagView(title: "LV.\(vm.currentLv)", tagStyle: .levelStroke)
+                        .offset(y: 24)
+                }
             
             // 프로필 상세 - 닉네임, 레벨
-            VStack(alignment: .leading, spacing: 4) {
+            VStack(alignment: .leading, spacing: 8) {
                 Text(vm.userData?.nickname ?? "일상")
                     .styledFont(.heading2)
                     .foregroundStyle(.gray500)
                     .multilineTextAlignment(.leading)
-                HStack(alignment: .center, spacing: 6) {
-                    Text("LV.\(vm.currentLv)")
-                        .styledFont(.heading2)
-                        .foregroundStyle(.primary500)
-                    Text("|")
-                        .styledFont(.regular, size: 13, lineHeight: 18, tracking: -0.3)
-                        .foregroundStyle(.gray100)
-                    Text("\(vm.userData?.xpPoint ?? 0)XP")
-                        .styledFont(.semibold, size: 13, lineHeight: 20, tracking: -0.3)
-                        .foregroundStyle(.gray400)
-                        .offset(y: 0.4)
-                }
                 
-                ProgressBar(progress: vm.progress)
+                if let honor = vm.userData?.title, let grade = HonorGrade(rawValue: honor.type)  {
+                    HonorIconView(
+                        honorTitle: honor.name,
+                        grade: grade,
+                        imageSize: 20,
+                        spacing: 4,
+                        font: .badge1,
+                        fgColor: .gray500
+                    )
+                }
+                                    
+                HStack(alignment: .center, spacing: 6) {
+                    ProgressBar(progress: vm.progress)
+                        .frame(height: 8)
+
+                    Text("\(vm.userData?.xpPoint ?? 0)XP")
+                        .styledFont(.bold, size: 13, lineHeight: 13, tracking: 0)
+                        .foregroundStyle(.primaryPurple)
+                }
             }
         }
         .padding(.horizontal, 16)
