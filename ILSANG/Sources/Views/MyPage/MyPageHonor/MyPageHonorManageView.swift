@@ -9,6 +9,7 @@ import SwiftUI
 
 struct MyPageHonorManageView: View {
     @StateObject var vm: MyPageHonorManageViewModel = MyPageHonorManageViewModel(userNetwork: UserNetwork(), honorNetwork: HonorNetwork())
+    @EnvironmentObject var honorAcquisitionManager: HonorAcquisitionManager
     @Environment(\.scenePhase) var scenePhase
     @Environment(\.dismiss) var dismiss
     private let leadingTrailingColumnWidth: CGFloat = 50
@@ -20,6 +21,15 @@ struct MyPageHonorManageView: View {
                     dismiss()
                 }
                 .padding(.bottom, 8) // 세로로 긴 이미지 대응 (NavigationTitleView의 bottom 패딩과 겹침)
+                .overlay(alignment: .topTrailing) {
+#if DEBUG
+                    Button {
+                        honorAcquisitionManager.addMockHonors()
+                    } label: {
+                        Text("칭호 획득 팝업 보기")
+                    }
+#endif
+                }
                 Group {
                     honorIntroSection
                     honorGradeTabSection
@@ -32,7 +42,8 @@ struct MyPageHonorManageView: View {
         .background(Color.background)
         .navigationBarBackButtonHidden()
         .task {
-            vm.fetchHonors()
+            await honorAcquisitionManager.fetchUnreadHonorHistory()
+            await vm.fetchHonors()
         }
         .onDisappear {
             Task {
@@ -64,6 +75,13 @@ struct MyPageHonorManageView: View {
                 )
             }
         }
+        .overlay(
+            Group {
+                if let _ = honorAcquisitionManager.currentHonor {
+                    HonorPopupContainerView()
+                }
+            }
+        )
     }
     
     private var honorIntroSection: some View {
@@ -156,4 +174,5 @@ struct MyPageHonorManageView: View {
 
 #Preview {
     MyPageHonorManageView()
+        .environmentObject(HonorAcquisitionManager(honorNetwork: MockHonorNetwork()))
 }

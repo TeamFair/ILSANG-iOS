@@ -9,13 +9,21 @@ import SwiftUI
 
 struct MainTabView: View {
     @StateObject var sharedState = SharedState()
-   
+    @StateObject var honorAcquisitionManager = HonorAcquisitionManager(honorNetwork: defaultHonorNetwork)
     let viewModel = HomeViewModel(
         questNetwork: QuestNetwork(),
         rankNetwork: RankNetwork(),
         bannerNetwork: BannerNetwork(),
         favoriteService: FavoriteService(favoriteNetwork: FavoriteNetwork())
     )
+    
+    static var defaultHonorNetwork: HonorNetworkProtocol {
+#if DEBUG
+        return MockHonorNetwork()
+#else
+        return HonorNetwork()
+#endif
+    }
     
     var body: some View {
         NavigationStack {
@@ -29,13 +37,14 @@ struct MainTabView: View {
                         .tag(tab)
                 }
             }
-            .environmentObject(sharedState) // 뷰 모델 전달
             .navigationBarTitleDisplayMode(.inline)
             .navigationBarBackButtonHidden(true)
             .onChange(of: sharedState.selectedTab) { _, newTab in
                 AnalyticsService.logEvent(.bottomTabClick(tabName: sharedState.selectedTab.rawValue.uppercased()))
             }
         }
+        .environmentObject(sharedState)
+        .environmentObject(honorAcquisitionManager)
     }
     
     @ViewBuilder

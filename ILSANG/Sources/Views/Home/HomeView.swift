@@ -11,6 +11,7 @@ import SwiftUI
 struct HomeView: View {
     @Bindable var vm: HomeViewModel
     @EnvironmentObject var sharedState: SharedState
+    @EnvironmentObject var honorAcquisitionManager: HonorAcquisitionManager
     @Environment(\.redactionReasons) var redactionReasons
     
     private let gridItem = [GridItem(), GridItem()]
@@ -35,6 +36,9 @@ struct HomeView: View {
                         content
                     }
                 }
+                .task {
+                    await honorAcquisitionManager.fetchUnreadHonorHistory()
+                }
                 .refreshable {
                     Task {
                         await vm.loadInitialData()
@@ -46,6 +50,13 @@ struct HomeView: View {
             }
         }
         .background(Color.background)
+        .overlay(
+            Group {
+                if let _ = honorAcquisitionManager.currentHonor {
+                    HonorPopupContainerView()
+                }
+            }
+        )
         .sheet(isPresented: $vm.showQuestSheet) {
             let tall = vm.selectedQuest.isRepeatQuest || vm.selectedQuest.missionType == .image
             QuestDetailView(
@@ -90,6 +101,13 @@ struct HomeView: View {
         HStack(alignment: .bottom) {
             Image(.logoWithAlpha)
                 .frame(maxWidth: .infinity, alignment: .leading)
+#if DEBUG
+            Button {
+                honorAcquisitionManager.addMockHonors()
+            } label: {
+                Text("칭호 획득 팝업 보기")
+            }
+#endif
             Button {
                 sharedState.selectedTab = .mypage /// 마이 탭으로 이동
             } label: {
