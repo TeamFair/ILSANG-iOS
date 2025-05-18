@@ -40,4 +40,10 @@ extension HonorHistory {
             type: HonorGrade(rawValue: title.type) ?? .standard
         )
     }
+    
+    static let mockList = [
+        HonorHistory(titleHistory: TitleHistory(id: "1", createdAt: "2025-05-01T00:05:00"), title: .mockStandard),
+        HonorHistory(titleHistory: TitleHistory(id: "2", createdAt: "2025-05-01T00:05:01"), title: .mockRare),
+        HonorHistory(titleHistory: TitleHistory(id: "3", createdAt: "2025-05-01T00:05:02"), title: .mockLegend)
+    ]
 }

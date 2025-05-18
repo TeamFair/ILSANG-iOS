@@ -26,23 +26,21 @@ final class MyPageHonorManageViewModel: ObservableObject {
         self.honorNetwork = honorNetwork
     }
     
-    func fetchHonors() {
-        Task {
-            let honors = await self.fetchHonorTitles()
-            await MainActor.run {
-                self.honors = Dictionary(grouping: honors, by: \.type)
-            }
-            
-            // 초기 historyId, isSelected 업데이트
-            for (type, items) in self.honors {
-                for i in 0..<items.count {
-                    let item = items[i]
-                    if item.titleId == self.initialHonor?.id {
-                        await MainActor.run {
-                            self.selectedHistoryId = item.historyId
-                            self.initialHistoryId = item.historyId
-                            self.honors[type, default: []][i].isSelected = true
-                        }
+    func fetchHonors() async {
+        let honors = await self.fetchHonorTitles()
+        await MainActor.run {
+            self.honors = Dictionary(grouping: honors, by: \.type)
+        }
+        
+        // 초기 historyId, isSelected 업데이트
+        for (type, items) in self.honors {
+            for i in 0..<items.count {
+                let item = items[i]
+                if item.titleId == self.initialHonor?.id {
+                    await MainActor.run {
+                        self.selectedHistoryId = item.historyId
+                        self.initialHistoryId = item.historyId
+                        self.honors[type, default: []][i].isSelected = true
                     }
                 }
             }

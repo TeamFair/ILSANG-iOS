@@ -8,11 +8,34 @@
 import Alamofire
 import Foundation
 
-final class HonorNetwork {
+protocol HonorNetworkProtocol {
+    func getUnreadHonorHistory() async -> Result<Response<[HonorHistory]>, Error>
+    func readHonorHistory(historyId: String) async -> Result<ResponseWithoutData, Error>
+}
+
+struct MockHonorNetwork: HonorNetworkProtocol {
+    func getUnreadHonorHistory() async -> Result<Response<[HonorHistory]>, Error> {
+        .success(Response(data: HonorHistory.mockList, errorStatus: "", errMessage: "", status: "", message: ""))
+    }
+    
+    func readHonorHistory(historyId: String) async -> Result<ResponseWithoutData, Error> {
+        .success(.init(data: [:], errorStatus: "", errMessage: "", status: "", message: ""))
+    }
+}
+
+final class HonorNetwork: HonorNetworkProtocol {
     private let url = APIManager.makeURL(CustomerTarget(path: "title/history"))
     
     func getHonorHistory() async -> Result<Response<[HonorHistory]>, Error> {
         return await Network.requestData(url: url, method: .get, parameters: nil, withToken: true)
+    }
+    
+    func getUnreadHonorHistory() async -> Result<Response<[HonorHistory]>, Error> {
+        return await Network.requestData(url: url+"/unread", method: .get, parameters: nil, withToken: true)
+    }
+    
+    func readHonorHistory(historyId: String) async -> Result<ResponseWithoutData, Error> {
+        return await Network.requestData(url: url+"/\(historyId)/read", method: .put, parameters: nil, withToken: true)
     }
     
     func getLegendRank(honorId: String) async -> Result<Response<[HistoryRank]>, Error> {
