@@ -20,6 +20,7 @@ class QuestViewModelItem: Hashable, Identifiable {
     let id: String
     var image: UIImage?
     let imageId: String?
+    let mainImage: UIImage?
     let mainImageId: String?
     let missionId: String
     let missionType: MissionType
@@ -38,6 +39,7 @@ class QuestViewModelItem: Hashable, Identifiable {
         id: String,
         image: UIImage? = nil,
         imageId: String,
+        mainImage: UIImage? = nil,
         mainImageId: String,
         missionId: String,
         missionType: MissionType,
@@ -55,6 +57,7 @@ class QuestViewModelItem: Hashable, Identifiable {
         self.id = id
         self.image = image
         self.imageId = imageId
+        self.mainImage = mainImage
         self.mainImageId = mainImageId
         self.missionId = missionId
         self.missionType = missionType
@@ -74,6 +77,7 @@ class QuestViewModelItem: Hashable, Identifiable {
         self.id = quest.questId
         self.image = nil
         self.imageId = quest.imageId
+        self.mainImage = nil
         self.mainImageId = quest.mainImageId
         self.missionId = quest.missionId
         self.missionType = MissionType(rawValue: quest.missionType) ?? .image
@@ -213,6 +217,7 @@ extension QuestViewModelItem {
             .setMissionTitle("감정 코칭 마스터")
             .setRewardDic([.intellect: 15, .charm: 5])
             .setFavoriteYn(true)
+            .setMainImage(.logo)
             .setMissionType(.quiz(.text))
             .build(),
         

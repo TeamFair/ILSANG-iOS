@@ -11,6 +11,7 @@ final class QuestViewModelItemBuilder {
     private var id: String = UUID().uuidString
     private var image: UIImage? = nil
     private var imageId: String = QuestViewModelItem.mockImageId
+    private var mainImage: UIImage? = nil
     private var mainImageId: String = "default_main_image_id"
     private var missionId: String = UUID().uuidString
     private var missionType: QuestViewModelItem.MissionType = .image
@@ -46,6 +47,11 @@ final class QuestViewModelItemBuilder {
     
     func setMainImageId(_ mainImageId: String) -> Self {
         self.mainImageId = mainImageId
+        return self
+    }
+    
+    func setMainImage(_ image: UIImage?) -> Self {
+        self.mainImage = mainImage
         return self
     }
     
@@ -120,6 +126,7 @@ final class QuestViewModelItemBuilder {
             id: id,
             image: image,
             imageId: imageId,
+            mainImage: mainImage,
             mainImageId: mainImageId,
             missionId: missionId,
             missionType: missionType,
