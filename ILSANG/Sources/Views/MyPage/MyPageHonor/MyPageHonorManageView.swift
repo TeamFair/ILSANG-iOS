@@ -15,28 +15,18 @@ struct MyPageHonorManageView: View {
     private let leadingTrailingColumnWidth: CGFloat = 50
     
     var body: some View {
-        ScrollView {
-            VStack(spacing: 0) {
-                NavigationTitleView(title: "내 칭호", isSeparatorHidden: true, background: .background) {
-                    dismiss()
-                }
-                .padding(.bottom, 8) // 세로로 긴 이미지 대응 (NavigationTitleView의 bottom 패딩과 겹침)
-                .overlay(alignment: .topTrailing) {
-#if DEBUG
-                    Button {
-                        honorAcquisitionManager.addMockHonors()
-                    } label: {
-                        Text("칭호 획득 팝업 보기")
-                    }
-#endif
-                }
-                Group {
-                    honorIntroSection
-                    honorGradeTabSection
-                    honorListSection
-                }
-                .padding(.horizontal, 20)
+        VStack(spacing: 0) {
+            NavigationTitleView(title: "내 칭호", isSeparatorHidden: true, background: .background) {
+                dismiss()
             }
+            .padding(.bottom, 8) // 세로로 긴 이미지 대응 (NavigationTitleView의 bottom 패딩과 겹침)
+            
+            ScrollView {
+                honorIntroSection
+                honorGradeTabSection
+                honorListSection
+            }
+            .padding(.horizontal, 20)
         }
         .frame(maxWidth: .infinity)
         .background(Color.background)
@@ -47,13 +37,11 @@ struct MyPageHonorManageView: View {
         }
         .onDisappear {
             Task {
-                print("업데이트 - disappear")
                 await vm.updateHonorIfNeeded()
             }
         }
         .onChange(of: scenePhase, { _, newValue in
             if newValue != .active {
-                print("업데이트 - scene phase \(newValue)")
                 Task {
                     await vm.updateHonorIfNeeded()
                 }
