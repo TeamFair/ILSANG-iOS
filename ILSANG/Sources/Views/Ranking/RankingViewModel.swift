@@ -75,14 +75,18 @@ import UIKit
 struct StatRankViewModelItem {
     let xpType: String
     let xpPoint: Int
+    let xpTotalPoint: Int
+    let title: Title?
     let customerId: String
     let nickname: String
     let profileImageId: String?
     let profileImage: UIImage?
     
-    init(xpType: String, xpPoint: Int, customerId: String, nickname: String, profileImageId: String?, profileImage: UIImage?) {
+    init(xpType: String, xpPoint: Int, xpTotalPoint: Int, title: Title?, customerId: String, nickname: String, profileImageId: String?, profileImage: UIImage?) {
         self.xpType = xpType
         self.xpPoint = xpPoint
+        self.xpTotalPoint = xpTotalPoint
+        self.title = title
         self.customerId = customerId
         self.nickname = nickname
         self.profileImageId = profileImageId
@@ -92,6 +96,8 @@ struct StatRankViewModelItem {
     init(rank: StatRank) async {
         self.xpType = rank.xpType
         self.xpPoint = rank.xpPoint
+        self.xpTotalPoint = rank.xpTotalPoint
+        self.title = rank.title
         self.customerId = rank.customerId
         self.nickname = rank.nickname
         self.profileImageId = rank.profileImageId

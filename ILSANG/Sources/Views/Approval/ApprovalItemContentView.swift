@@ -25,7 +25,7 @@ struct ApprovalItemContentView: View {
                 NavigationLink {
                     OtherUserProfileView(customerId: item.customerId)
                 } label: {
-                    profileView(nickname: item.nickname, time: item.time)
+                    profileView(nickname: item.nickname, honor: item.honor)
                 }
                 
                 Text(item.title)
@@ -58,6 +58,12 @@ struct ApprovalItemContentView: View {
                         }
                 }
                 
+                Text(item.time)
+                    .font(.system(size: 12, weight: .regular))
+                    .frame(maxWidth: .infinity, alignment: .trailing)
+                    .foregroundStyle(.gray500)
+                    .padding(.trailing, 8)
+                
                 HStack(spacing: 16) {
                     emojiView(imageName: .thumbsUp, count: item.likeCnt, alignment: .top)
                     emojiView(imageName: .thumbsDown, count: item.hateCnt, alignment: .bottom)
@@ -83,17 +89,18 @@ struct ApprovalItemContentView: View {
         }
     }
     
-    private func profileView(nickname: String, time: String) -> some View {
+    private func profileView(nickname: String, honor: Title?) -> some View {
         HStack(spacing: 10) {
             Image(uiImage: item.profileImage ?? .profileCircle)
                 .resizable()
                 .frame(width: 35, height: 35)
                 .clipShape(Circle())
-            VStack(alignment: .leading, spacing: 3) {
+            VStack(alignment: .leading, spacing: 6) {
                 Text(nickname)
                     .font(.system(size: 14, weight: .semibold))
-                Text(time)
-                    .font(.system(size: 12, weight: .regular))
+                if let honor, let grade = HonorGrade(rawValue: honor.type) {
+                    HonorIconView(honorTitle: honor.name, grade: grade, imageSize: 20, spacing: 4, font: .badge1, fgColor: .gray500)
+                }
             }
             .foregroundStyle(.gray500)
         }

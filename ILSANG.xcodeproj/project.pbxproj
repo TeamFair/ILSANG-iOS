@@ -16,6 +16,9 @@
 		600211EE2C1EEF91000CC02E /* EmojiNetwork.swift in Sources */ = {isa = PBXBuildFile; fileRef = 600211ED2C1EEF91000CC02E /* EmojiNetwork.swift */; };
 		60054F9E2D9316F800E7C5A6 /* 2503_PRIVACY_POLICY.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 60054F9D2D9316F800E7C5A6 /* 2503_PRIVACY_POLICY.pdf */; };
 		60054FA02D931AA300E7C5A6 /* PDFKitView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60054F9F2D931AA300E7C5A6 /* PDFKitView.swift */; };
+		600657DC2DBCCBAA0022D117 /* MyPageInfoCardBottomView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 600657DB2DBCCBAA0022D117 /* MyPageInfoCardBottomView.swift */; };
+		600657E02DBCFEE80022D117 /* HonorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 600657DF2DBCFEE20022D117 /* HonorView.swift */; };
+		600657E42DBD2DF50022D117 /* MyPageHonorManageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 600657E32DBD2DF50022D117 /* MyPageHonorManageView.swift */; };
 		600D83A42C7B1FA4005C93E2 /* PaginationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 600D83A32C7B1FA4005C93E2 /* PaginationManager.swift */; };
 		6011891D2C3E8B3B0070F2AD /* UserService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6011891C2C3E8B3B0070F2AD /* UserService.swift */; };
 		6011891F2C3E94380070F2AD /* AuthUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6011891E2C3E94380070F2AD /* AuthUser.swift */; };
@@ -63,7 +66,17 @@
 		605334552D298A1400599159 /* TutorialView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605334542D298A1400599159 /* TutorialView.swift */; };
 		605334572D29BE3600599159 /* TutorialViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605334562D29BE3600599159 /* TutorialViewModel.swift */; };
 		6053345C2D31182500599159 /* XpLevelCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6053345B2D31182500599159 /* XpLevelCalculator.swift */; };
-		6053345F2D31272B00599159 /* MyPagePointSectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6053345E2D31272B00599159 /* MyPagePointSectionView.swift */; };
+		6053345F2D31272B00599159 /* MyPageInfoCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6053345E2D31272B00599159 /* MyPageInfoCardView.swift */; };
+		605445C42DD36CE60005742D /* HonorListItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605445C32DD36CE60005742D /* HonorListItemView.swift */; };
+		605445C62DD36D1F0005742D /* HonorItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605445C52DD36D1A0005742D /* HonorItem.swift */; };
+		605445C82DD36D5E0005742D /* MyPageHonorManageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605445C72DD36D5E0005742D /* MyPageHonorManageViewModel.swift */; };
+		605445CA2DD36E440005742D /* HonorNetwork.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605445C92DD36E440005742D /* HonorNetwork.swift */; };
+		605445CC2DD36EA30005742D /* TitleHistory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605445CB2DD36E9E0005742D /* TitleHistory.swift */; };
+		605445D02DD4366D0005742D /* HonorInfoPopupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605445CF2DD436650005742D /* HonorInfoPopupView.swift */; };
+		605445D22DD7169A0005742D /* LegendRankingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605445D12DD7137A0005742D /* LegendRankingView.swift */; };
+		605445D42DD73F910005742D /* Rank.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605445D32DD73F910005742D /* Rank.swift */; };
+		605445D62DD78EE50005742D /* LegendRankingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605445D52DD78EE50005742D /* LegendRankingViewModel.swift */; };
+		605445D82DD8BD120005742D /* HonorPopupContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605445D72DD8BD120005742D /* HonorPopupContainerView.swift */; };
 		6057361A2D8AC6F000CF7051 /* QuizNetwork.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605736192D8AC6F000CF7051 /* QuizNetwork.swift */; };
 		6057361C2D8AC8A800CF7051 /* Quiz.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6057361B2D8AC8A800CF7051 /* Quiz.swift */; };
 		605DA0C92C07097F00CC9450 /* ImagePreviewButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605DA0C82C07097F00CC9450 /* ImagePreviewButton.swift */; };
@@ -84,6 +97,9 @@
 		6061327B2CDB33FD00830948 /* FilterPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6061327A2CDB33FD00830948 /* FilterPicker.swift */; };
 		606292D82C19E70A0098B6D2 /* Network.swift in Sources */ = {isa = PBXBuildFile; fileRef = 606292D72C19E70A0098B6D2 /* Network.swift */; };
 		606292DD2C19EAB00098B6D2 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 606292DC2C19EAB00098B6D2 /* Alamofire */; };
+		606694F02DDA29E40000E368 /* AnimatedPopup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 606694EF2DDA29E40000E368 /* AnimatedPopup.swift */; };
+		606694F32DDA2B140000E368 /* HonorAcquisitionPopup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 606694F22DDA2B140000E368 /* HonorAcquisitionPopup.swift */; };
+		606694F52DDB25D00000E368 /* QuestViewModelItemBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 606694F42DDB25D00000E368 /* QuestViewModelItemBuilder.swift */; };
 		606C21CC2CC6B4FC00803947 /* SubmitStatusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 606C21CB2CC6B4FC00803947 /* SubmitStatusView.swift */; };
 		606C87AF2C0B9B8C002D5C3E /* ApprovalItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 606C87AE2C0B9B8C002D5C3E /* ApprovalItemView.swift */; };
 		606C87B12C0CC89B002D5C3E /* 2406_TERMS_OF_USE.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 606C87B02C0CC89B002D5C3E /* 2406_TERMS_OF_USE.pdf */; };
@@ -207,6 +223,9 @@
 		600211ED2C1EEF91000CC02E /* EmojiNetwork.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmojiNetwork.swift; sourceTree = "<group>"; };
 		60054F9D2D9316F800E7C5A6 /* 2503_PRIVACY_POLICY.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = 2503_PRIVACY_POLICY.pdf; sourceTree = "<group>"; };
 		60054F9F2D931AA300E7C5A6 /* PDFKitView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PDFKitView.swift; sourceTree = "<group>"; };
+		600657DB2DBCCBAA0022D117 /* MyPageInfoCardBottomView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPageInfoCardBottomView.swift; sourceTree = "<group>"; };
+		600657DF2DBCFEE20022D117 /* HonorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HonorView.swift; sourceTree = "<group>"; };
+		600657E32DBD2DF50022D117 /* MyPageHonorManageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPageHonorManageView.swift; sourceTree = "<group>"; };
 		600D83A32C7B1FA4005C93E2 /* PaginationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaginationManager.swift; sourceTree = "<group>"; };
 		601189182C3E84720070F2AD /* ILSANG.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ILSANG.entitlements; sourceTree = "<group>"; };
 		6011891C2C3E8B3B0070F2AD /* UserService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserService.swift; sourceTree = "<group>"; };
@@ -257,7 +276,17 @@
 		605334542D298A1400599159 /* TutorialView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TutorialView.swift; sourceTree = "<group>"; };
 		605334562D29BE3600599159 /* TutorialViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TutorialViewModel.swift; sourceTree = "<group>"; };
 		6053345B2D31182500599159 /* XpLevelCalculator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XpLevelCalculator.swift; sourceTree = "<group>"; };
-		6053345E2D31272B00599159 /* MyPagePointSectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPagePointSectionView.swift; sourceTree = "<group>"; };
+		6053345E2D31272B00599159 /* MyPageInfoCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPageInfoCardView.swift; sourceTree = "<group>"; };
+		605445C32DD36CE60005742D /* HonorListItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HonorListItemView.swift; sourceTree = "<group>"; };
+		605445C52DD36D1A0005742D /* HonorItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HonorItem.swift; sourceTree = "<group>"; };
+		605445C72DD36D5E0005742D /* MyPageHonorManageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPageHonorManageViewModel.swift; sourceTree = "<group>"; };
+		605445C92DD36E440005742D /* HonorNetwork.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HonorNetwork.swift; sourceTree = "<group>"; };
+		605445CB2DD36E9E0005742D /* TitleHistory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitleHistory.swift; sourceTree = "<group>"; };
+		605445CF2DD436650005742D /* HonorInfoPopupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HonorInfoPopupView.swift; sourceTree = "<group>"; };
+		605445D12DD7137A0005742D /* LegendRankingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LegendRankingView.swift; sourceTree = "<group>"; };
+		605445D32DD73F910005742D /* Rank.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Rank.swift; sourceTree = "<group>"; };
+		605445D52DD78EE50005742D /* LegendRankingViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LegendRankingViewModel.swift; sourceTree = "<group>"; };
+		605445D72DD8BD120005742D /* HonorPopupContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HonorPopupContainerView.swift; sourceTree = "<group>"; };
 		605736192D8AC6F000CF7051 /* QuizNetwork.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuizNetwork.swift; sourceTree = "<group>"; };
 		6057361B2D8AC8A800CF7051 /* Quiz.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Quiz.swift; sourceTree = "<group>"; };
 		605DA0C82C07097F00CC9450 /* ImagePreviewButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePreviewButton.swift; sourceTree = "<group>"; };
@@ -280,6 +309,9 @@
 		606132772CD68FE300830948 /* TagView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagView.swift; sourceTree = "<group>"; };
 		6061327A2CDB33FD00830948 /* FilterPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterPicker.swift; sourceTree = "<group>"; };
 		606292D72C19E70A0098B6D2 /* Network.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Network.swift; sourceTree = "<group>"; };
+		606694EF2DDA29E40000E368 /* AnimatedPopup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimatedPopup.swift; sourceTree = "<group>"; };
+		606694F22DDA2B140000E368 /* HonorAcquisitionPopup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HonorAcquisitionPopup.swift; sourceTree = "<group>"; };
+		606694F42DDB25D00000E368 /* QuestViewModelItemBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestViewModelItemBuilder.swift; sourceTree = "<group>"; };
 		606C21CB2CC6B4FC00803947 /* SubmitStatusView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubmitStatusView.swift; sourceTree = "<group>"; };
 		606C87AE2C0B9B8C002D5C3E /* ApprovalItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApprovalItemView.swift; sourceTree = "<group>"; };
 		606C87B02C0CC89B002D5C3E /* 2406_TERMS_OF_USE.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = 2406_TERMS_OF_USE.pdf; sourceTree = "<group>"; };
@@ -418,6 +450,7 @@
 				60C6B4D62C2C569800926C0E /* Challenge.swift */,
 				60924DC82C48C00E00221072 /* Quest.swift */,
 				6057361B2D8AC8A800CF7051 /* Quiz.swift */,
+				605445CB2DD36E9E0005742D /* TitleHistory.swift */,
 				6011891E2C3E94380070F2AD /* AuthUser.swift */,
 				60E258042D09CE1B0052C048 /* StatRank.swift */,
 				6028A94B2D39772F003FBC8C /* TopRank.swift */,
@@ -436,6 +469,19 @@
 				603F04122C26ADC6008A2332 /* CommonResponse.swift */,
 			);
 			path = Base;
+			sourceTree = "<group>";
+		};
+		600657E22DBD2DD10022D117 /* MyPageHonor */ = {
+			isa = PBXGroup;
+			children = (
+				600657E32DBD2DF50022D117 /* MyPageHonorManageView.swift */,
+				605445C72DD36D5E0005742D /* MyPageHonorManageViewModel.swift */,
+				605445C32DD36CE60005742D /* HonorListItemView.swift */,
+				605445CF2DD436650005742D /* HonorInfoPopupView.swift */,
+				605445D12DD7137A0005742D /* LegendRankingView.swift */,
+				605445D52DD78EE50005742D /* LegendRankingViewModel.swift */,
+			);
+			path = MyPageHonor;
 			sourceTree = "<group>";
 		};
 		600D83A22C7B1F7E005C93E2 /* Manager */ = {
@@ -560,7 +606,8 @@
 			isa = PBXGroup;
 			children = (
 				A1501B092C48C3E5001410E1 /* MyPageInfoView.swift */,
-				6053345E2D31272B00599159 /* MyPagePointSectionView.swift */,
+				6053345E2D31272B00599159 /* MyPageInfoCardView.swift */,
+				600657DB2DBCCBAA0022D117 /* MyPageInfoCardBottomView.swift */,
 				A1678CCD2CF4C58900843854 /* MyPageShareImage.swift */,
 			);
 			path = MyPageInfo;
@@ -638,8 +685,18 @@
 				60C6B4D42C2C565700926C0E /* ChallengeNetwork.swift */,
 				605736192D8AC6F000CF7051 /* QuizNetwork.swift */,
 				A1C642292C33F55A004954CA /* QuestNetwork.swift */,
+				605445C92DD36E440005742D /* HonorNetwork.swift */,
 			);
 			path = Network;
+			sourceTree = "<group>";
+		};
+		606694F12DDA2B030000E368 /* HonorPopup */ = {
+			isa = PBXGroup;
+			children = (
+				605445D72DD8BD120005742D /* HonorPopupContainerView.swift */,
+				606694F22DDA2B140000E368 /* HonorAcquisitionPopup.swift */,
+			);
+			path = HonorPopup;
 			sourceTree = "<group>";
 		};
 		607FCBD22BFA645100BB2D04 /* Router */ = {
@@ -658,6 +715,7 @@
 				60B8B9E82BF9EEF1005F6DE3 /* QuestView.swift */,
 				607FCBE82BFE418600BB2D04 /* QuestViewModel.swift */,
 				607FCBE62BFD12B100BB2D04 /* QuestViewModelItem.swift */,
+				606694F42DDB25D00000E368 /* QuestViewModelItemBuilder.swift */,
 				607FCBE32BFD124900BB2D04 /* QuestItemView.swift */,
 				604687AD2D216EAC0056E394 /* QuestStyle.swift */,
 				605E813E2D9FE36800ECDB15 /* QuestDetail */,
@@ -689,6 +747,7 @@
 				A1F770632C2AABCE00DB24A0 /* MyPageViewModel.swift */,
 				60299E2F2CBFF8D20039663F /* MyPageChallenge */,
 				6053345D2D3126F900599159 /* MyPageInfo */,
+				600657E22DBD2DD10022D117 /* MyPageHonor */,
 				A1501B072C48C3C6001410E1 /* MyPageActiveList.swift */,
 			);
 			path = MyPage;
@@ -726,6 +785,8 @@
 		607FCBE52BFD129E00BB2D04 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				605445C52DD36D1A0005742D /* HonorItem.swift */,
+				605445D32DD73F910005742D /* Rank.swift */,
 				60004AD42D3B799700CD2254 /* Constants.swift */,
 				A19628682C0775A70037C53A /* Setting.swift */,
 				A1AB3D6B2C1142AA001EB9D8 /* LoginButton.swift */,
@@ -932,6 +993,9 @@
 		A19628732C08647F0037C53A /* View */ = {
 			isa = PBXGroup;
 			children = (
+				606694F12DDA2B030000E368 /* HonorPopup */,
+				606694EF2DDA29E40000E368 /* AnimatedPopup.swift */,
+				600657DF2DBCFEE20022D117 /* HonorView.swift */,
 				A1F0ADBF2CD738A20068E0A6 /* Polygon.swift */,
 				601BCF192D7C134500138387 /* ProgressBar.swift */,
 				607FCBE12BFA6A8300BB2D04 /* Buttons.swift */,
@@ -1156,9 +1220,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				60ADF9C92D5A019B00556958 /* UIApplication.swift in Sources */,
+				605445C62DD36D1F0005742D /* HonorItem.swift in Sources */,
+				605445D02DD4366D0005742D /* HonorInfoPopupView.swift in Sources */,
 				60924DC92C48C00E00221072 /* Quest.swift in Sources */,
 				60A2ADF82DAE6B68007AC375 /* FAQView.swift in Sources */,
 				604687A32D1FC32E0056E394 /* HomeViewModel.swift in Sources */,
+				605445CA2DD36E440005742D /* HonorNetwork.swift in Sources */,
 				606F18172DA650DE00ABEA84 /* FavoriteService.swift in Sources */,
 				A196286B2C0859730037C53A /* CustomerServiceView.swift in Sources */,
 				607FCBE22BFA6A8300BB2D04 /* Buttons.swift in Sources */,
@@ -1179,12 +1246,13 @@
 				9FE63D722CB3AB4F00CA7940 /* RankingItemView.swift in Sources */,
 				9FE63D702CB3AAF100CA7940 /* RankingViewModel.swift in Sources */,
 				6057361C2D8AC8A800CF7051 /* Quiz.swift in Sources */,
-				6053345F2D31272B00599159 /* MyPagePointSectionView.swift in Sources */,
+				6053345F2D31272B00599159 /* MyPageInfoCardView.swift in Sources */,
 				60054FA02D931AA300E7C5A6 /* PDFKitView.swift in Sources */,
 				601BCF142D7B502400138387 /* OtherUserXpStatView.swift in Sources */,
 				605DA0D62C07123400CC9450 /* View++.swift in Sources */,
 				A1678CCE2CF4C59C00843854 /* MyPageShareImage.swift in Sources */,
 				60299E392CC13DEC0039663F /* ImageCacheService.swift in Sources */,
+				605445D42DD73F910005742D /* Rank.swift in Sources */,
 				6061327B2CDB33FD00830948 /* FilterPicker.swift in Sources */,
 				A19628752C08648C0037C53A /* NavigationTitleView.swift in Sources */,
 				60ADF9D82D60927900556958 /* ChallengeViewModelItem.swift in Sources */,
@@ -1199,6 +1267,7 @@
 				601BCF1A2D7C134500138387 /* ProgressBar.swift in Sources */,
 				601189232C3E95D40070F2AD /* AuthNetwork.swift in Sources */,
 				605E81402D9FE45C00ECDB15 /* QuestDetailInfoView.swift in Sources */,
+				605445D62DD78EE50005742D /* LegendRankingViewModel.swift in Sources */,
 				609A76D92CFC50C7009F4567 /* QuestImageWithTagView.swift in Sources */,
 				605F28522CF1B2C5007EA739 /* QuestDetailView.swift in Sources */,
 				60A2ADF52DAE66BD007AC375 /* SettingToggleItemView.swift in Sources */,
@@ -1225,11 +1294,14 @@
 				605DA0C92C07097F00CC9450 /* ImagePreviewButton.swift in Sources */,
 				600211E82C1EED40000CC02E /* Emoji.swift in Sources */,
 				605334572D29BE3600599159 /* TutorialViewModel.swift in Sources */,
+				606694F02DDA29E40000E368 /* AnimatedPopup.swift in Sources */,
 				A18EB9B22C26B62E00405D56 /* LogoutNetwork.swift in Sources */,
 				6044B7332C33F754002C13A0 /* ErrorView.swift in Sources */,
 				605DA0D32C0711E900CC9450 /* CameraViewModel.swift in Sources */,
 				6060B2EA2C08947B0083944D /* Image++.swift in Sources */,
 				A1F0ADC02CD738C30068E0A6 /* Polygon.swift in Sources */,
+				606694F52DDB25D00000E368 /* QuestViewModelItemBuilder.swift in Sources */,
+				605445C82DD36D5E0005742D /* MyPageHonorManageViewModel.swift in Sources */,
 				603F04132C26ADC6008A2332 /* CommonResponse.swift in Sources */,
 				607FCBE42BFD124900BB2D04 /* QuestItemView.swift in Sources */,
 				605E81442D9FE56000ECDB15 /* QuestDetailTitleView.swift in Sources */,
@@ -1240,6 +1312,7 @@
 				603CF4EF2D79A83600A2D19E /* SubmitStatus.swift in Sources */,
 				60246FA82D91E57E007C05B3 /* AnalyticsService.swift in Sources */,
 				A1868C442C09B6C50020BF16 /* ChallengeDetailView.swift in Sources */,
+				600657DC2DBCCBAA0022D117 /* MyPageInfoCardBottomView.swift in Sources */,
 				6044B71D2C32B6A4002C13A0 /* UIImage++.swift in Sources */,
 				607FCBD42BFA648000BB2D04 /* Tab.swift in Sources */,
 				601BCF122D7B449C00138387 /* OtherUserProfileViewModel.swift in Sources */,
@@ -1252,6 +1325,7 @@
 				60ADF9D42D5DDD2000556958 /* QuestEngageInfoView.swift in Sources */,
 				A1FF91722C257E9A00F03E4B /* User.swift in Sources */,
 				60ADF9D22D5DDC5B00556958 /* QuizView.swift in Sources */,
+				605445D22DD7169A0005742D /* LegendRankingView.swift in Sources */,
 				6057361A2D8AC6F000CF7051 /* QuizNetwork.swift in Sources */,
 				60B8B9E92BF9EEF1005F6DE3 /* QuestView.swift in Sources */,
 				60C6B4D72C2C569800926C0E /* Challenge.swift in Sources */,
@@ -1267,6 +1341,7 @@
 				601BCF102D7B43F000138387 /* OtherUserProfileView.swift in Sources */,
 				60ADF8892D57B53100556958 /* QuestEngageViewModel.swift in Sources */,
 				60C6B4D52C2C565700926C0E /* ChallengeNetwork.swift in Sources */,
+				605445D82DD8BD120005742D /* HonorPopupContainerView.swift in Sources */,
 				A11D88F72C916DE500846122 /* Icon.swift in Sources */,
 				60505D702D941D0A00121C4C /* StandardScreenView.swift in Sources */,
 				602988222D041DDC00903806 /* RepeatType.swift in Sources */,
@@ -1275,9 +1350,11 @@
 				607FCC332C01AA7300BB2D04 /* SubmitAlertView.swift in Sources */,
 				60ADF9C22D59D47100556958 /* FontWithLineHeight.swift in Sources */,
 				606292D82C19E70A0098B6D2 /* Network.swift in Sources */,
+				605445CC2DD36EA30005742D /* TitleHistory.swift in Sources */,
 				A1501B0A2C48C3E5001410E1 /* MyPageInfoView.swift in Sources */,
 				60A2ADF32DAE62BD007AC375 /* SettingItemView.swift in Sources */,
 				608EBFA12C39C5BB00B862CC /* String++.swift in Sources */,
+				605445C42DD36CE60005742D /* HonorListItemView.swift in Sources */,
 				600211EA2C1EEE6D000CC02E /* APITarget.swift in Sources */,
 				A1BB60282BFE129000AAADD4 /* MyPageChallengeList.swift in Sources */,
 				6011891D2C3E8B3B0070F2AD /* UserService.swift in Sources */,
@@ -1291,6 +1368,7 @@
 				60ADF8872D57B49B00556958 /* QuestEngageView.swift in Sources */,
 				605DA0CD2C070A0300CC9450 /* Camera.swift in Sources */,
 				600211EE2C1EEF91000CC02E /* EmojiNetwork.swift in Sources */,
+				600657E42DBD2DF50022D117 /* MyPageHonorManageView.swift in Sources */,
 				601189212C3E94A60070F2AD /* AuthService.swift in Sources */,
 				603CF4E52D732DD800A2D19E /* ImageFullScreenView.swift in Sources */,
 				607FCBD62BFA660C00BB2D04 /* MainTabView.swift in Sources */,
@@ -1300,8 +1378,10 @@
 				6028A94A2D39721F003FBC8C /* RankNetwork.swift in Sources */,
 				605DA0D12C0711CA00CC9450 /* CameraView.swift in Sources */,
 				A1FF91702C25119200F03E4B /* XPNetwork.swift in Sources */,
+				600657E02DBCFEE80022D117 /* HonorView.swift in Sources */,
 				A1BB602C2BFF145100AAADD4 /* MyPageProfile.swift in Sources */,
 				607FCBE92BFE418600BB2D04 /* QuestViewModel.swift in Sources */,
+				606694F32DDA2B140000E368 /* HonorAcquisitionPopup.swift in Sources */,
 				607FCBE72BFD12B100BB2D04 /* QuestViewModelItem.swift in Sources */,
 				605334552D298A1400599159 /* TutorialView.swift in Sources */,
 				A19628692C0775A70037C53A /* Setting.swift in Sources */,
@@ -1409,7 +1489,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = "$(APP_BUNDLE_ID)";
 				SDKROOT = iphoneos;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Staging;
@@ -1446,13 +1526,14 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.4.1;
+				MARKETING_VERSION = 1.4.3;
 				PRODUCT_BUNDLE_IDENTIFIER = "$(APP_BUNDLE_ID)";
 				"PRODUCT_BUNDLE_IDENTIFIER[sdk=iphoneos*]" = com.ilsang240615.dev;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
@@ -1558,7 +1639,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = "$(APP_BUNDLE_ID)";
 				SDKROOT = iphoneos;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
@@ -1617,6 +1698,7 @@
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = "$(APP_BUNDLE_ID)";
 				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited)";
 				SWIFT_COMPILATION_MODE = wholemodule;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -1654,13 +1736,14 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.4.1;
+				MARKETING_VERSION = 1.4.3;
 				PRODUCT_BUNDLE_IDENTIFIER = "$(APP_BUNDLE_ID)";
 				"PRODUCT_BUNDLE_IDENTIFIER[sdk=iphoneos*]" = com.ilsang240615.dev;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
@@ -1699,11 +1782,12 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.4.1;
+				MARKETING_VERSION = 1.4.3;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;

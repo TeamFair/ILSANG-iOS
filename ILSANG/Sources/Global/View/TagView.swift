@@ -30,11 +30,13 @@ struct TagView: View {
 
 extension TagView {
     enum TagStyle {
-        case level, levelStroke, xp, xpWithIcon, `repeat`(RepeatType), approvalType, eventWithIcon, eventDate
-        
+        case level, xp, xpWithIcon, `repeat`(RepeatType), approvalType
+        case levelStroke, levelStrokeBig
+        case eventWithIcon, eventDate
         var font: Font {
             switch self {
             case .level, .levelStroke: return .system(size: 13, weight: .bold)
+            case .levelStrokeBig: return .system(size: 19, weight: .bold)
             case .xpWithIcon, .eventDate: return .system(size: 12, weight: .regular)
             case .xp, .repeat, .approvalType, .eventWithIcon: return .system(size: 10, weight: .semibold)
             }
@@ -44,6 +46,7 @@ extension TagView {
             switch self {
             case .level: return .white
             case .levelStroke: return .primaryPurple
+            case .levelStrokeBig: return .primaryPurple
             case .xp: return .white
             case .xpWithIcon: return .primaryPurple
             case .repeat(let type): return type.fgColor
@@ -56,6 +59,7 @@ extension TagView {
             switch self {
             case .level: return .primaryPurple
             case .levelStroke: return .white
+            case .levelStrokeBig: return .white
             case .xp: return .primaryPurple
             case .xpWithIcon: return .clear
             case .repeat: return .white
@@ -73,7 +77,7 @@ extension TagView {
         
         var strokeColor: Color? {
             switch self {
-            case .xpWithIcon, .levelStroke: return .primaryPurple
+            case .xpWithIcon, .levelStroke, .levelStrokeBig: return .primaryPurple
             default: return nil
             }
         }
@@ -82,6 +86,7 @@ extension TagView {
             switch self {
             case .level: return EdgeInsets(top: 2, leading: 12, bottom: 2, trailing: 12)
             case .levelStroke: return EdgeInsets(top: 5, leading: 12, bottom: 5, trailing: 12)
+            case .levelStrokeBig: return EdgeInsets(top: 6, leading: 21, bottom: 6, trailing: 21)
             case .xp: return EdgeInsets(top: 0, leading: 7, bottom: 0, trailing: 7)
             case .xpWithIcon: return EdgeInsets(top: 0, leading: 4, bottom: 0, trailing: 4)
             case .repeat: return EdgeInsets(top: 0, leading: 11, bottom: 0, trailing: 11)
@@ -97,6 +102,8 @@ extension TagView {
                 20
             case .xpWithIcon, .eventDate:
                 25
+            case .levelStrokeBig:
+                30
             }
         }
         

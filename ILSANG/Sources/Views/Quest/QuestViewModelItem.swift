@@ -20,6 +20,7 @@ class QuestViewModelItem: Hashable, Identifiable {
     let id: String
     var image: UIImage?
     let imageId: String?
+    let mainImage: UIImage?
     let mainImageId: String?
     let missionId: String
     let missionType: MissionType
@@ -38,6 +39,7 @@ class QuestViewModelItem: Hashable, Identifiable {
         id: String,
         image: UIImage? = nil,
         imageId: String,
+        mainImage: UIImage? = nil,
         mainImageId: String,
         missionId: String,
         missionType: MissionType,
@@ -55,6 +57,7 @@ class QuestViewModelItem: Hashable, Identifiable {
         self.id = id
         self.image = image
         self.imageId = imageId
+        self.mainImage = mainImage
         self.mainImageId = mainImageId
         self.missionId = missionId
         self.missionType = missionType
@@ -74,6 +77,7 @@ class QuestViewModelItem: Hashable, Identifiable {
         self.id = quest.questId
         self.image = nil
         self.imageId = quest.imageId
+        self.mainImage = nil
         self.mainImageId = quest.mainImageId
         self.missionId = quest.missionId
         self.missionType = MissionType(rawValue: quest.missionType) ?? .image
@@ -172,209 +176,91 @@ class QuestViewModelItem: Hashable, Identifiable {
     }
 }
 
-// TODO: mockdata, 팩토리 패턴 적용
 extension QuestViewModelItem {
     static let mockImageId = "IMQU2024071520500801"
     
-    static let mockData: QuestViewModelItem = QuestViewModelItem(
-        id: "11",
-        image: .img0,
-        imageId: mockImageId,
-        mainImageId: mockImageId,
-        missionId: "1",
-        missionType: .image,
-        missionTitle: "아메리카노 15잔 마시기",
-        writer: "이디야커피",
-        rewardDic: [.charm: 30, .intellect: 100, .fun: 5],
-        type: "DEFAULT",
-        target: "NONE",
-        expireDate: "2030-12-30T00:00:00",
-        challengeImageIds: [],
-        challengeImages: [],
-        customerRank: 1,
-        favoriteYn: false
-    )
+    static let mockData: QuestViewModelItem = QuestViewModelItemBuilder()
+        .setMissionTitle("러닝 30분하기")
+        .setRewardDic([.fun: 15, .strength: 5])
+        .setFavoriteYn(true)
+        .setChallengeImageIds([.init(challengeId: "CH001", receiptImage: "", status: "")])
+        .build()
     
-    static let mockRepeatData: QuestViewModelItem = QuestViewModelItem(
-        id: "11",
-        image: .img0,
-        imageId: mockImageId,
-        mainImageId: mockImageId,
-        missionId: "1",
-        missionType: .image,
-        missionTitle: "아메리카노 15잔 마시기",        writer: "이디야커피",
-        rewardDic: [.charm: 30, .intellect: 100, .fun: 5],
-        type: "REPEAT",
-        target: "DAILY",
-        expireDate: "2030-12-30T00:00:00",
-        challengeImageIds: [],
-        challengeImages: [],
-        customerRank: 1,
-        favoriteYn: false
-    )
-    
-    static let mockRepeat2Data: QuestViewModelItem = QuestViewModelItem(
-        id: "11",
-        image: .img0,
-        imageId: mockImageId,
-        mainImageId: mockImageId,
-        missionId: "1",
-        missionType: .image,
-        missionTitle: "아메리카노 15잔 마시기",        writer: "이디야커피",
-        rewardDic: [.charm: 30, .intellect: 100, .fun: 5],
-        type: "REPEAT",
-        target: "DAILY",
-        expireDate: "2030-12-30T00:00:00",
-        challengeImageIds: [],
-        challengeImages: [],
-        customerRank: 1,
-        favoriteYn: false
-    )
+    static let mockRepeatData: QuestViewModelItem = QuestViewModelItemBuilder()
+        .setMissionTitle("러닝 30분하기")
+        .setRepeatType(.daily)
+        .setRewardDic([.fun: 15, .strength: 5])
+        .setFavoriteYn(true)
+        .setChallengeImageIds([.init(challengeId: "CH001", receiptImage: "", status: "")])
+        .setCustomerRank(2)
+        .build()
     
     static let mockQuestList: [QuestViewModelItem] = [
-        QuestViewModelItem(
-            id: "9f8aacc9-a221-491b-98c1-f9d7d35a67fb",
-            image: .img0,
-            imageId: mockImageId,
-            mainImageId: mockImageId,
-            missionId: "1",
-            missionType: .image,
-            missionTitle: "아메리카노 15잔 마시기",
-            writer: "이디야커피",
-            rewardDic: [.charm: 3, .strength: 25],
-            type: "REPEAT",
-            target: "MONTHLY",
-            expireDate: "2030-12-30T00:00:00",
-            challengeImageIds: [],
-            challengeImages: [],
-            customerRank: 1,
-            favoriteYn: false
-        ),
-        QuestViewModelItem(
-            id: "9f8aacc9-98c1-f9d7d35a67fb",
-            image: .img0,
-            imageId: mockImageId,
-            mainImageId: mockImageId,
-            missionId: "1",
-            missionType: .image,
-            missionTitle: "아메리카노 15잔 마시기",
-            writer: "이디야커피",
-            rewardDic: [.charm: 3, .fun: 25, .sociability: 20, .strength: 25],
-            type: "REPEAT",
-            target: "DAILY",
-            expireDate: "2030-12-30T00:00:00",
-            challengeImageIds: [],
-            challengeImages: [],
-            customerRank: 1,
-            favoriteYn: false
-        ),
-        QuestViewModelItem(
-            id: "9f8aacc9-a221-4-f9d7d35a67fb",
-            image: .img0,
-            imageId: mockImageId,
-            mainImageId: mockImageId,
-            missionId: "1",
-            missionType: .image,
-            missionTitle: "아메리카노 15잔 마시기",
-            writer: "이디야커피",
-            rewardDic: [.charm: 30],
-            type: "REPEAT",
-            target: "WEEKLY",
-            expireDate: "2030-12-30T00:00:00",
-            challengeImageIds: [],
-            challengeImages: [],
-            customerRank: 1,
-            favoriteYn: false
-        ),
-        QuestViewModelItem(
-            id: "13",
-            image: .img0,
-            imageId: mockImageId,
-            mainImageId: mockImageId,
-            missionId: "1",
-            missionType: .image,
-            missionTitle: "아메리카노 15잔 마시기",
-            writer: "투썸플레이스",
-            rewardDic: [.charm: 20, .sociability: 100, .strength: 25],
-            type: "DEFAULT",
-            target: "NONE",
-            expireDate: "2030-12-30T00:00:00",
-            challengeImageIds: [],
-            challengeImages: [],
-            customerRank: 1,
-            favoriteYn: false
-        ),
-        QuestViewModelItem(
-            id: "9f89d7d35a67fb",
-            image: .img0,
-            imageId: mockImageId,
-            mainImageId: mockImageId,
-            missionId: "1",
-            missionType: .image,
-            missionTitle: "아메리카노 15잔 마시기",
-            writer: "이디야커피",
-            rewardDic: [.charm: 3, .strength: 25],
-            type: "REPEAT",
-            target: "MONTHLY",
-            expireDate: "2030-12-30T00:00:00",
-            challengeImageIds: [],
-            challengeImages: [],
-            customerRank: 1,
-            favoriteYn: false
-        ),
-        QuestViewModelItem(
-            id: "9f8aac7fb",
-            image: .img0,
-            imageId: mockImageId,
-            mainImageId: mockImageId,
-            missionId: "1",
-            missionType: .image,
-            missionTitle: "아메리카노 15잔 마시기",
-            writer: "이디야커피",
-            rewardDic: [.charm: 3, .fun: 25, .sociability: 20, .strength: 25],
-            type: "REPEAT",
-            target: "DAILY",
-            expireDate: "2030-12-30T00:00:00",
-            challengeImageIds: [],
-            challengeImages: [],
-            customerRank: 1,
-            favoriteYn: false
-        ),
-        QuestViewModelItem(
-            id: "9f8aacc9-23421-4-fd35a67fb",
-            image: .img0,
-            imageId: mockImageId,
-            mainImageId: mockImageId,
-            missionId: "1",
-            missionType: .image,
-            missionTitle: "아메리카노 15잔 마시기",
-            writer: "이디야커피",
-            rewardDic: [.charm: 30],
-            type: "REPEAT",
-            target: "WEEKLY",
-            expireDate: "2030-12-30T00:00:00",
-            challengeImageIds: [],
-            challengeImages: [],
-            customerRank: 1,
-            favoriteYn: false
-        ),
-        QuestViewModelItem(
-            id: "212132",
-            image: .img0,
-            imageId: mockImageId,
-            mainImageId: mockImageId,
-            missionId: "1",
-            missionType: .image,
-            missionTitle: "아메리카노 15잔 마시기",
-            writer: "투썸플레이스",
-            rewardDic: [.charm: 20, .sociability: 100, .strength: 25],
-            type: "DEFAULT",
-            target: "NONE",
-            expireDate: "2030-12-30T00:00:00",
-            challengeImageIds: [],
-            challengeImages: [],
-            customerRank: 1,
-            favoriteYn: false
-        )
+        QuestViewModelItemBuilder()
+            .setMissionTitle("미라클모닝 실천하기")
+            .setRepeatType(.daily)
+            .setRewardDic([.strength: 15, .intellect: 5])
+            .setFavoriteYn(true)
+            .setChallengeImageIds([.init(challengeId: "CH001", receiptImage: "", status: "")])
+            .setCustomerRank(2)
+            .build(),
+        
+        QuestViewModelItemBuilder()
+            .setMissionTitle("가족 사랑 지킴이")
+            .setRepeatType(.weekly)
+            .setMissionType(.quiz(.ox))
+            .setRewardDic([.sociability: 20, .charm: 10])
+            .setCustomerRank(3)
+            .build(),
+        
+        QuestViewModelItemBuilder()
+            .setMissionTitle("감정 코칭 마스터")
+            .setRewardDic([.intellect: 15, .charm: 5])
+            .setFavoriteYn(true)
+            .setMainImage(.logo)
+            .setMissionType(.quiz(.text))
+            .build(),
+        
+        QuestViewModelItemBuilder()
+            .setMissionTitle("미션 타이틀")
+            .setWriter("루틴디자이너")
+            .setRepeatType(.weekly)
+            .setRewardDic([.intellect: 20])
+            .setFavoriteYn(true)
+            .setCustomerRank(2)
+            .build(),
+        
+        QuestViewModelItemBuilder()
+            .setId("quest-106")
+            .setMissionTitle("🎨 취미탐험가")
+            .setWriter("취미부스터")
+            .setRepeatType(.monthly)
+            .setRewardDic([.fun: 30, .intellect: 5])
+            .setFavoriteYn(true)
+            .setCustomerRank(3)
+            .build(),
+        
+        QuestViewModelItemBuilder()
+            .setId("quest-107")
+            .setMissionTitle("📚 가계부 전략가")
+            .setWriter("절약미학자")
+            .setRepeatType(.weekly)
+            .setRewardDic([.intellect: 25])
+            .setCustomerRank(5)
+            .build(),
+        
+        QuestViewModelItemBuilder()
+            .setMissionTitle("운동 30분하기")
+            .setRepeatType(.daily)
+            .setRewardDic([.fun: 15, .strength: 15])
+            .setFavoriteYn(true)
+            .setCustomerRank(1)
+            .build(),
+        
+        QuestViewModelItemBuilder()
+            .setMissionTitle("카페라떼 마시기")
+            .setRewardDic([.fun: 20])
+            .setFavoriteYn(true)
+            .build()
     ]
 }

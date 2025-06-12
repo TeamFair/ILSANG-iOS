@@ -7,13 +7,13 @@
 
 import SwiftUI
 
-struct MyPageTabView: View {
-    @Binding var selectedTab: MyPageTab
-    private let tabs = MyPageTab.allCases
+struct MyPageTabView<Tab: TabItemRepresentable & CaseIterable & Equatable>: View {
+    @Binding var selectedTab: Tab
+    private let tabs = Tab.allCases
     
     var body: some View {
         HStack(spacing: 10) {
-            ForEach(tabs, id: \.title) { tab in
+            ForEach(Array(tabs), id: \.title) { tab in
                 Button {
                     selectedTab = tab
                 } label: {
@@ -21,20 +21,27 @@ struct MyPageTabView: View {
                 }
             }
         }
-        .padding(.vertical, 20)
     }
 }
 
-struct MyPageTabItemView: View {
-    let tab: MyPageTab
+struct MyPageTabItemView<Tab: TabItemRepresentable>: View {
+    let tab: Tab
     let isSelected: Bool
     
     var body: some View {
         HStack(alignment: .center, spacing: 4) {
-            Text(tab.icon)
-                .font(.system(size: 11))
+            if let image = tab.image {
+                Image(uiImage: image)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(18)
+            }
+            if let icon = tab.icon {
+                Text(icon)
+                    .styledFont(.tabBold)
+            }
             Text(tab.title)
-                .font(.system(size: 14))
+                .styledFont(.tabBold)
                 .fontWeight(.semibold)
                 .foregroundColor(isSelected ? Color.white : Color.gray500)
         }
@@ -47,24 +54,52 @@ struct MyPageTabItemView: View {
     }
 }
 
-enum MyPageTab: CaseIterable {
+protocol TabItemRepresentable {
+    var title: String { get }
+    var icon: String? { get }
+    var image: UIImage? { get }
+}
+
+enum MyPageTab: CaseIterable, TabItemRepresentable, Equatable {
     case quest
-    // case activity
     case info
     
     var title: String {
         switch self {
         case .quest: return "챌린지"
-            // case .activity: return "활동"
         case .info: return "내 정보"
         }
     }
     
-    var icon: String {
+    var icon: String? {
         switch self {
         case .quest: return "📜"
-            // case .activity: return "⛳️"
         case .info: return "🎖️"
         }
+    }
+    
+    var image: UIImage? { nil }
+}
+
+
+enum HonorGrade: String, CaseIterable, TabItemRepresentable, Equatable {
+    case standard
+    case rare
+    case legend
+    
+    var honor: Honor {
+        switch self {
+        case .standard: Honor.standard
+        case .rare: Honor.rare
+        case .legend: Honor.legend
+        }
+    }
+    var icon: String? { nil }
+    var title: String { honor.title }
+    var image: UIImage? { honor.image }
+    var description: String { honor.description }
+    
+    init?(rawValue: String) {
+        self = Self.allCases.first { $0.rawValue == rawValue.lowercased() } ?? .standard
     }
 }

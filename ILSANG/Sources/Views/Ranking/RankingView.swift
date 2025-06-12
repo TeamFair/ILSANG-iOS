@@ -67,7 +67,7 @@ extension RankingView {
                         NavigationLink {
                             OtherUserProfileView(customerId: rank.customerId)
                         } label: {
-                            RankingItemView(idx: idx + 1, statRank: rank, style: .horizontal)
+                            RankingItemView(rank: rank.toRank(idx: idx+1), style: .horizontal)
                         }
                     }
                 }
