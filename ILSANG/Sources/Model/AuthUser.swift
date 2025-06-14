@@ -6,7 +6,6 @@
 //
 
 struct AuthUser {
-    var email: String
     var accessToken: String
     var refreshToken: String
 }

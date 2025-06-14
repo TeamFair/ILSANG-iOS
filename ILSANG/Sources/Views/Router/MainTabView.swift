@@ -18,11 +18,7 @@ struct MainTabView: View {
     )
     
     static var defaultHonorNetwork: HonorNetworkProtocol {
-#if DEBUG
-        return MockHonorNetwork()
-#else
-        return HonorNetwork()
-#endif
+        return HonorNetwork() // MockHonorNetwork()
     }
     
     var body: some View {

@@ -16,6 +16,13 @@ class AppDelegate: NSObject, UIApplicationDelegate {
 #if RELEASE
          FirebaseApp.configure()
 #endif
+        
+        NotificationCenter.default.removeObserver(self, name: .sessionExpired, object: nil)
+        NotificationCenter.default.addObserver(forName: .sessionExpired, object: nil, queue: .main) { _ in
+            Task { @MainActor in
+                UserService.shared.logout()
+            }
+        }
         return true
     }
 }
@@ -28,6 +35,7 @@ struct ILSANGApp: App {
     
     @State private var isTutorialVisible = Bool()
     @State private var isSplashScreenVisible = true
+    @State private var showSheet = false
     
     // 강제 업데이트 관련
     @State private var needUpdate = false
@@ -51,6 +59,17 @@ struct ILSANGApp: App {
                         }
                 }
             }
+#if !RELEASE
+            .overlay(alignment: .topLeading) {
+                Button { showSheet = true } label: {
+                    Text("로그인 정보")
+                }
+            }
+            .sheet(isPresented: $showSheet, content: {
+                loginInfoView
+            })
+#endif
+
             .alert("업데이트 알림", isPresented: $needUpdate, actions: {
                 Button("업데이트") { AppVersionManager.shared.openAppStore() }
             }, message: {
@@ -76,14 +95,63 @@ struct ILSANGApp: App {
         }
     }
     
+#if !RELEASE
+    private var loginInfoView: some View {
+        ScrollView {
+            VStack(spacing: 20) {
+                showItems("Provider", UserService.shared.authChannel)
+                showItems("AuthToken", UserService.shared.authToken)
+                showItems("IdentityToken", UserService.shared.accessToken)
+                Button {
+                    UserService.shared.authToken = ""
+                } label: {
+                    Text("REMOVE AuthToken")
+                }
+            }
+            .padding(20)
+        }
+    }
+    
+    private func showItems(_ title: String, _ value: String) -> some View {
+        HStack(alignment: .top, spacing: 16) {
+            Text(title)
+                .styledFont(.heading2)
+                .frame(width: 100, alignment: .leading)
+            Text(value)
+                .styledFont(.body)
+                .frame(maxWidth: .infinity)
+            Button {
+                copyToClipboard(text: value)
+            } label: {
+                Image(systemName: "doc.on.clipboard.fill")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 18, height: 18)
+                    .foregroundStyle(.blue)
+            }
+            .frame(20)
+        }
+        .foregroundStyle(.black)
+    }
+#endif
+    
+    func copyToClipboard(text: String) {
+        UIPasteboard.general.string = text
+        let feedbackGenerator = UISelectionFeedbackGenerator()
+
+        feedbackGenerator.prepare()
+        feedbackGenerator.selectionChanged()
+    }
+    
     @MainActor
     private func runAppStartup() async {
         // 1. 스플래시 화면 표시
         try? await Task.sleep(nanoseconds: 1_500_000_000) // 1.5초 대기
         
-        // 2. 로그인 상태 확인
+        // 2. 로그인 상태 확인 -> API 호출 시 401 에러나면 로그인 화면으로 이동 (isLogin = false)
         if isLogin {
-            let _ = await UserService.shared.login()
+            // try await UserService.shared.login()
+            await UserService.shared.fetchUserInfo()
         }
         
         // 3. 업데이트 확인
@@ -137,7 +205,7 @@ struct SplashScreenView: View {
 public func Log<T>(_ object: T?, filename: String = #file, line: Int = #line, funcName: String = #function) {
 #if DEBUG
     if let obj = object {
-        print("\(filename.components(separatedBy: "/").last ?? "")(\(line)) : \(funcName) : \(obj)")
+        print("\(filename.components(separatedBy: "/").last ?? "")(\(line)) : \(obj)") // \(funcName) : \(obj)")
     } else {
         print("\(filename.components(separatedBy: "/").last ?? "")(\(line)) : \(funcName) : nil")
     }
