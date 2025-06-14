@@ -6,7 +6,6 @@
 //
 
 import Alamofire
-import Foundation
 import UIKit
 
 final class Network {
@@ -62,11 +61,14 @@ final class Network {
             request = AF.request(fullPath, method: method, encoding: parameters != nil ? URLEncoding.queryString : JSONEncoding.default, headers: headers)
         }
         
-        let response = await request.validate(statusCode: 200..<300)
-            .serializingDecodable(T.self, emptyResponseCodes: [200])
-            .response
         
-        switch response.result {
+        let response = await request
+            .serializingResponse(using: DecodableResponseSerializer<T>(emptyResponseCodes: [200]))
+            .response
+        let statusCode = response.response?.statusCode ?? -1
+        let result = handleStatusCode(statusCode, data: try? response.result.get())
+        
+        switch result {
         case .success(let res):
             Log("네트워크 요청 성공: \(fullPath), \(request.request?.httpMethod ?? "")")
             return .success(res)
@@ -170,6 +172,12 @@ final class Network {
             } else {
                 return .failure(NetworkError.unknownError)
             }
+        case 401:
+            /// 세션 만료 → Notification 발송(로그아웃 처리)
+            DispatchQueue.main.async {
+                NotificationCenter.default.post(name: .sessionExpired, object: nil)
+            }
+            return .failure(NetworkError.unauthorized)
         case 400..<500:
             return .failure(NetworkError.clientError)
         case 500..<600:

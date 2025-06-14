@@ -101,13 +101,6 @@ struct HomeView: View {
         HStack(alignment: .bottom) {
             Image(.logoWithAlpha)
                 .frame(maxWidth: .infinity, alignment: .leading)
-#if DEBUG
-            Button {
-                honorAcquisitionManager.addMockHonors()
-            } label: {
-                Text("칭호 획득 팝업 보기")
-            }
-#endif
             Button {
                 sharedState.selectedTab = .mypage /// 마이 탭으로 이동
             } label: {

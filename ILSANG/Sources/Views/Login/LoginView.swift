@@ -21,10 +21,6 @@ struct LoginView: View {
             
             VStack(spacing: 16) {
                 Spacer()
-#if DEBUG
-                Text("테스트 로그인")
-                    .onTapGesture { vm.testLogin() }
-#endif
 
                 AppleLoginButtonView(vm: vm)
                 // KakaoLoginButtonView(buttonAction: vm.kakaoButtonAction)

@@ -118,6 +118,7 @@
 		608EBF9F2C39C17F00B862CC /* Dictionary++.swift in Sources */ = {isa = PBXBuildFile; fileRef = 608EBF9E2C39C17F00B862CC /* Dictionary++.swift */; };
 		608EBFA12C39C5BB00B862CC /* String++.swift in Sources */ = {isa = PBXBuildFile; fileRef = 608EBFA02C39C5BB00B862CC /* String++.swift */; };
 		6090A5F52D53AC3300A01429 /* AppVersionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6090A5F42D53AC3300A01429 /* AppVersionManager.swift */; };
+		609169DE2DFD59C100A34D4F /* Notification++.swift in Sources */ = {isa = PBXBuildFile; fileRef = 609169DD2DFD59C100A34D4F /* Notification++.swift */; };
 		60924DC92C48C00E00221072 /* Quest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60924DC82C48C00E00221072 /* Quest.swift */; };
 		60943FE62C0A38FB00C8A714 /* ApprovalViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60943FE52C0A38FB00C8A714 /* ApprovalViewModel.swift */; };
 		609A76D92CFC50C7009F4567 /* QuestImageWithTagView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 609A76D82CFC50C7009F4567 /* QuestImageWithTagView.swift */; };
@@ -330,6 +331,7 @@
 		608EBF9E2C39C17F00B862CC /* Dictionary++.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Dictionary++.swift"; sourceTree = "<group>"; };
 		608EBFA02C39C5BB00B862CC /* String++.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String++.swift"; sourceTree = "<group>"; };
 		6090A5F42D53AC3300A01429 /* AppVersionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppVersionManager.swift; sourceTree = "<group>"; };
+		609169DD2DFD59C100A34D4F /* Notification++.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Notification++.swift"; sourceTree = "<group>"; };
 		60924DC82C48C00E00221072 /* Quest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Quest.swift; sourceTree = "<group>"; };
 		60943FE52C0A38FB00C8A714 /* ApprovalViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApprovalViewModel.swift; sourceTree = "<group>"; };
 		609A76D82CFC50C7009F4567 /* QuestImageWithTagView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestImageWithTagView.swift; sourceTree = "<group>"; };
@@ -616,6 +618,7 @@
 		605DA0D42C07122200CC9450 /* Extension */ = {
 			isa = PBXGroup;
 			children = (
+				609169DD2DFD59C100A34D4F /* Notification++.swift */,
 				60DADF542C6B4EC7001A0B3A /* Data++.swift */,
 				608EBF9E2C39C17F00B862CC /* Dictionary++.swift */,
 				605DA0D52C07123400CC9450 /* View++.swift */,
@@ -1340,6 +1343,7 @@
 				60004AD92D42373300CD2254 /* Banner.swift in Sources */,
 				601BCF102D7B43F000138387 /* OtherUserProfileView.swift in Sources */,
 				60ADF8892D57B53100556958 /* QuestEngageViewModel.swift in Sources */,
+				609169DE2DFD59C100A34D4F /* Notification++.swift in Sources */,
 				60C6B4D52C2C565700926C0E /* ChallengeNetwork.swift in Sources */,
 				605445D82DD8BD120005742D /* HonorPopupContainerView.swift in Sources */,
 				A11D88F72C916DE500846122 /* Icon.swift in Sources */,
