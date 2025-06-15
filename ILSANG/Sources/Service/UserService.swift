@@ -13,36 +13,36 @@ final class UserService: ObservableObject {
     let authService: AuthService = AuthService()
     
     @AppStorage("isLogin") var isLogin = Bool()
-    
-    @AppStorage("authToken") var authToken: String = ""
     @AppStorage("accessToken") var accessToken: String = ""
     @AppStorage("refreshToken") var refreshToken: String = ""
-    // @AppStorage("userEmail") var userEmail: String = ""
     @AppStorage("authChannel") var authChannel = ""
-    
-    /// Apple Login은 1번만 emai을 제공하기 때문에 따로 관리
-    // @AppStorage("appleEmail") var appleEmail: String = ""
     
     @Published var currentUser: User?
     
-    static var shared = UserService()
+    static let shared = UserService()
     
     private init() { }
     
     // MARK: - 로그인
     /// 첫 애플 로그인하는 경우
-    @MainActor
+    // TODO: 애플 로그인 - 백이랑 상의해서 리프레시토큰 받아야함
     func login(appleCredential: ASAuthorizationAppleIDCredential) async {
-        guard let authResult = await authService.loginWithApple(credential: appleCredential) else {
-            return
-        }
-        
-        // TODO: 애플 로그인 - 백이랑 상의해서 리프레시토큰 받아야함
-        self.authChannel = AuthChannel.Apple.stringValue
-        self.authToken = authResult.authToken
-        self.accessToken = authResult.authUser.accessToken
-        self.refreshToken = authResult.authUser.refreshToken
-        
+        guard let authResult = await authService.loginWithApple(credential: appleCredential) else { return }
+        await handleLoginSuccess(authResult: authResult, channel: .Apple)
+    }
+    
+    /// 구글 로그인하는 경우
+    func loginWithGoogle() async {
+        guard let authResult = await authService.loginWithGoogle() else { return }
+        await handleLoginSuccess(authResult: authResult, channel: .Google)
+    }
+    
+    @MainActor
+    private func handleLoginSuccess(authResult: Auth, channel: AuthChannel) async {
+        self.accessToken = authResult.authorization
+        self.refreshToken = authResult.refreshToken
+        self.authChannel = channel.stringValue
+
         await fetchUserInfo()
         if self.currentUser != nil {
             self.isLogin = true
@@ -94,9 +94,11 @@ final class UserService: ObservableObject {
 //        await fetchUserInfo()
 //    }
     
-
-    func logout() {
+    func logout() async -> Bool {
+        if !isLogin { return true }
+        let logoutSucc = await authService.logout()
         resetUserSession()
+        return logoutSucc
     }
     
     // TODO: REVOKE
@@ -106,15 +108,9 @@ final class UserService: ObservableObject {
     
     private func resetUserSession() {
         isLogin = false
-        authToken = ""
         accessToken = ""
         refreshToken = ""
         currentUser = nil
-    }
-    
-    private func loginSucc(with authToken: String) {
-        self.isLogin = true
-        self.authToken = authToken
     }
 }
 

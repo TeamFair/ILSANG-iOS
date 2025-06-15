@@ -35,17 +35,6 @@ enum LoginButton {
         }
     }
     
-    var fontName: String {
-        switch self {
-        case .kakao:
-            return "AppleSDGothicNeoR"
-        case .google:
-            return "Roboto-Medium"
-        case .apple:
-            return "SFPRODISPLAYREGULAR"
-        }
-    }
-    
     var accentColor: Color {
         switch self {
         case .kakao:

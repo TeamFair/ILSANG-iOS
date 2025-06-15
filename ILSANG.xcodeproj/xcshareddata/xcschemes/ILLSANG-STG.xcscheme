@@ -15,22 +15,22 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "60B8B9E22BF9EEF1005F6DE3"
-               BuildableName = "ILSANG.app"
-               BlueprintName = "ILSANG"
+               BuildableName = "ILLSANG.app"
+               BlueprintName = "ILLSANG"
                ReferencedContainer = "container:ILSANG.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
    </BuildAction>
    <TestAction
-      buildConfiguration = "Debug"
+      buildConfiguration = "Staging"
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       shouldUseLaunchSchemeArgsEnv = "YES"
       shouldAutocreateTestPlan = "YES">
    </TestAction>
    <LaunchAction
-      buildConfiguration = "Debug"
+      buildConfiguration = "Staging"
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       launchStyle = "0"
@@ -44,35 +44,20 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "60B8B9E22BF9EEF1005F6DE3"
-            BuildableName = "ILSANG.app"
-            BlueprintName = "ILSANG"
+            BuildableName = "ILLSANG.app"
+            BlueprintName = "ILLSANG"
             ReferencedContainer = "container:ILSANG.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <CommandLineArguments>
          <CommandLineArgument
-            argument = "-FIRAnalyticsDebugEnabled"
-            isEnabled = "YES">
-         </CommandLineArgument>
-         <CommandLineArgument
             argument = "-FIRDebugEnabled"
             isEnabled = "YES">
          </CommandLineArgument>
-         <CommandLineArgument
-            argument = "-FIRAnalyticsVerboseLoggingEnabled"
-            isEnabled = "NO">
-         </CommandLineArgument>
       </CommandLineArguments>
-      <EnvironmentVariables>
-         <EnvironmentVariable
-            key = ""
-            value = ""
-            isEnabled = "NO">
-         </EnvironmentVariable>
-      </EnvironmentVariables>
    </LaunchAction>
    <ProfileAction
-      buildConfiguration = "Debug"
+      buildConfiguration = "Staging"
       shouldUseLaunchSchemeArgsEnv = "YES"
       savedToolIdentifier = ""
       useCustomWorkingDirectory = "NO"
@@ -82,17 +67,17 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "60B8B9E22BF9EEF1005F6DE3"
-            BuildableName = "ILSANG.app"
-            BlueprintName = "ILSANG"
+            BuildableName = "ILLSANG.app"
+            BlueprintName = "ILLSANG"
             ReferencedContainer = "container:ILSANG.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>
    <AnalyzeAction
-      buildConfiguration = "Debug">
+      buildConfiguration = "Staging">
    </AnalyzeAction>
    <ArchiveAction
-      buildConfiguration = "Debug"
+      buildConfiguration = "Staging"
       revealArchiveInOrganizer = "YES">
    </ArchiveAction>
 </Scheme>

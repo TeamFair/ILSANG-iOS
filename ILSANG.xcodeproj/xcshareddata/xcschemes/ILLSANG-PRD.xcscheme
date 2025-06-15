@@ -15,8 +15,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "60B8B9E22BF9EEF1005F6DE3"
-               BuildableName = "ILSANG.app"
-               BlueprintName = "ILSANG"
+               BuildableName = "ILLSANG.app"
+               BlueprintName = "ILLSANG"
                ReferencedContainer = "container:ILSANG.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -44,8 +44,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "60B8B9E22BF9EEF1005F6DE3"
-            BuildableName = "ILSANG.app"
-            BlueprintName = "ILSANG"
+            BuildableName = "ILLSANG.app"
+            BlueprintName = "ILLSANG"
             ReferencedContainer = "container:ILSANG.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
@@ -67,8 +67,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "60B8B9E22BF9EEF1005F6DE3"
-            BuildableName = "ILSANG.app"
-            BlueprintName = "ILSANG"
+            BuildableName = "ILLSANG.app"
+            BlueprintName = "ILLSANG"
             ReferencedContainer = "container:ILSANG.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>

@@ -17,3 +17,5 @@ APP_NAME = 일상
 APP_BUNDLE_ID = com.ilsang240615
 
 SWIFT_ACTIVE_COMPILATION_CONDITIONS = RELEASE PRD
+
+GIDClientID = 702150906844-g5jvs1fm6u1j1rfnvptkoe4eraak2uk9.apps.googleusercontent.com
