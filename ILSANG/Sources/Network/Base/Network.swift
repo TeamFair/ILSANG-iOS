@@ -43,14 +43,55 @@ final class Network {
         return headers
     }
     
-    static func requestData<T: Decodable>(url: String, method: HTTPMethod, parameters: Parameters?, body: Data? = nil, withToken: Bool, page: Int? = nil, size: Int? = nil) async -> Result<T, Error> {
+    static func requestData<T: Decodable>(
+        url: String,
+        method: HTTPMethod,
+        parameters: Parameters?,
+        body: Data? = nil,
+        withToken: Bool,
+        page: Int? = nil,
+        size: Int? = nil,
+        retryOnAuthFail: Bool = true
+    ) async -> Result<T, Error> {
+        // 1차 시도
+        let result: Result<T, Error> = await performRequest(
+            url: url, method: method, parameters: parameters, body: body, withToken: withToken, page: page, size: size
+        )
+        
+        // 401 에러인 경우, 토큰 갱신 후 재시도
+        if retryOnAuthFail,
+            case .failure(let error) = result,
+           (error as? NetworkError) == .unauthorized {
+            
+            let refreshSuccess = await TokenManager.shared.refreshTokenIfNeeded()
+            if refreshSuccess {
+                return await performRequest(
+                    url: url, method: method, parameters: parameters, body: body, withToken: withToken, page: page, size: size
+                )
+            } else {
+                return .failure(NetworkError.unauthorized)
+            }
+        }
+        
+        return result
+    }
+    
+    private static func performRequest<T: Decodable>(
+        url: String,
+        method: HTTPMethod,
+        parameters: Parameters?,
+        body: Data? = nil,
+        withToken: Bool,
+        page: Int? = nil,
+        size: Int? = nil
+    ) async -> Result<T, Error> {
         guard let fullPath = buildURL(url: url, parameters: parameters, page: page, size: size) else {
             return .failure(NetworkError.invalidURL)
         }
-        
+
         let headers = buildHeaders(withToken: withToken)
-        
         let request: DataRequest
+
         if let body = body {
             var urlRequest = URLRequest(url: fullPath)
             urlRequest.method = method
@@ -60,17 +101,17 @@ final class Network {
         } else {
             request = AF.request(fullPath, method: method, encoding: parameters != nil ? URLEncoding.queryString : JSONEncoding.default, headers: headers)
         }
-        
-        
+
         let response = await request
             .serializingResponse(using: DecodableResponseSerializer<T>(emptyResponseCodes: [200]))
             .response
         let statusCode = response.response?.statusCode ?? -1
-        let result = handleStatusCode(statusCode, data: try? response.result.get())
-        
+        let responseData = try? response.result.get()
+        let result = handleStatusCode(statusCode, data: responseData, errorData: request.data)
+        dump(response)
         switch result {
         case .success(let res):
-            Log("네트워크 요청 성공: \(fullPath), \(request.request?.httpMethod ?? "")")
+            Log("네트워크 요청 성공: \(fullPath), \(method.rawValue)")
             return .success(res)
         case .failure(let error):
             Log("네트워크 요청 실패: \(fullPath), \(error.localizedDescription)")
@@ -84,11 +125,8 @@ final class Network {
         }
         
         let headers = buildHeaders(withToken: withToken)
-        
-        let request: DataRequest
-        request = AF.request(fullPath, method: .get, headers: headers)
-        
-        let response = await request.validate(statusCode: 200..<300)
+        let response = await AF.request(fullPath, method: .get, headers: headers)
+            .validate(statusCode: 200..<300)
             .serializingData()
             .response
         
@@ -164,7 +202,7 @@ final class Network {
         }
     }
     
-    private static func handleStatusCode<T>(_ statusCode: Int, data: T?) -> Result<T, Error> {
+    private static func handleStatusCode<T>(_ statusCode: Int, data: T?, errorData: Data? = nil) -> Result<T, Error> {
         switch statusCode {
         case 200..<300:
             if let data = data {
@@ -173,18 +211,23 @@ final class Network {
                 return .failure(NetworkError.unknownError)
             }
         case 401:
-            /// 세션 만료 → Notification 발송(로그아웃 처리)
-            DispatchQueue.main.async {
-                NotificationCenter.default.post(name: .sessionExpired, object: nil)
-            }
             return .failure(NetworkError.unauthorized)
         case 400..<500:
-            return .failure(NetworkError.clientError)
+            let message = extractErrorMessage(from: errorData) ?? "요청이 잘못되었습니다."
+            return .failure(NetworkError.clientError(message))
         case 500..<600:
-            return .failure(NetworkError.serverError)
+            let message = extractErrorMessage(from: errorData) ?? "서버에 오류가 발생했습니다."
+            return .failure(NetworkError.serverError(message))
         default:
             return .failure(NetworkError.unknownStatusCode(statusCode))
         }
+    }
+    
+    private static func extractErrorMessage(from data: Data?) -> String? {
+        guard let data = data,
+              let errorResponse = try? JSONDecoder().decode(ErrorResponse.self, from: data)
+        else { return nil }
+        return errorResponse.errMessage
     }
 }
 

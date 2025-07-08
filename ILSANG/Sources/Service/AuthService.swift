@@ -75,18 +75,6 @@ final class AuthService {
         return await performOAuthLogin(channel: .Google, idToken: idToken)
     }
     
-    // TODO: 구글 및 자동 로그인 구현 시 로직 재점검 필요
-    func refresh(accessToken: String, refreshToken: String) async -> Auth? {
-        let refreshResult = await authNetwork.refresh(accessToken: accessToken, refreshToken: refreshToken)
-        
-        switch refreshResult {
-        case .success(let auth):
-            return auth
-        case .failure(let error):
-            return nil
-        }
-    }
-    
     /// 공통된 OAuth 로그인 처리
     private func performOAuthLogin(
         channel: AuthChannel,
@@ -95,8 +83,7 @@ final class AuthService {
         let result = await authNetwork.login(idToken: idToken, channel: channel)
         switch result {
         case .success(let token):
-            dump(token)
-            Log("\(channel.stringValue) 로그인 성공")
+            Log("\(channel.stringValue) 로그인 성공: \(token)")
             return Auth(authorization: token.authorization, refreshToken: token.refreshToken)
         case .failure(let error):
             Log("\(channel.stringValue) 로그인 실패: \(error.localizedDescription)")
@@ -105,31 +92,23 @@ final class AuthService {
     }
     
     func logout() async -> Bool {
-        let result = await authNetwork.logout()
-        
-        switch result {
+        switch await authNetwork.logout() {
         case .success:
             return true
-        case .failure(let error):
-            Log(error.localizedDescription)
+        case .failure:
             return false
         }
     }
     
-    /// AuthChannel에 따라  자동로그인 시 사용
-    // TODO: 구글 및 자동 로그인 구현 시 로직 재점검 필요
-//    func loginWithChannel(user: AuthUser, channel: AuthChannel) async -> Result<AuthResponse, Error> {
-//        let idToken = UserService.shared.accessToken
-//        let result = await authNetwork.login(idToken: idToken, channel: channel)
-//        
-//        switch result {
-//        case .success(let authToken):
-//            return .success(AuthResponse(authToken: authToken, authUser: user))
-//        case .failure(let error):
-//            Log(error.localizedDescription)
-//            return .failure(error)
-//        }
-//    }
+    func refresh(accessToken: String, refreshToken: String) async -> Auth? {
+        let refreshResult = await authNetwork.refresh(accessToken: accessToken, refreshToken: refreshToken)
+        switch refreshResult {
+        case .success(let auth):
+            return auth
+        case .failure:
+            return nil
+        }
+    }
 }
 
 struct Auth: Codable {

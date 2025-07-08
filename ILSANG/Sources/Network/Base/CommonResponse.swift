@@ -53,3 +53,9 @@ struct ResponseWithEmpty: Decodable, EmptyResponse {
         return ResponseWithEmpty.init()
     }
 }
+
+struct ErrorResponse: Decodable {
+    let errMessage: String?
+    let status: String?
+    let message: String?
+}

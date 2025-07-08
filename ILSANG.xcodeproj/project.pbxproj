@@ -120,6 +120,7 @@
 		608EBFA12C39C5BB00B862CC /* String++.swift in Sources */ = {isa = PBXBuildFile; fileRef = 608EBFA02C39C5BB00B862CC /* String++.swift */; };
 		6090A5F52D53AC3300A01429 /* AppVersionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6090A5F42D53AC3300A01429 /* AppVersionManager.swift */; };
 		609169DE2DFD59C100A34D4F /* Notification++.swift in Sources */ = {isa = PBXBuildFile; fileRef = 609169DD2DFD59C100A34D4F /* Notification++.swift */; };
+		609169E22E01500900A34D4F /* TokenManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 609169E12E01500900A34D4F /* TokenManager.swift */; };
 		60924DC92C48C00E00221072 /* Quest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60924DC82C48C00E00221072 /* Quest.swift */; };
 		60943FE62C0A38FB00C8A714 /* ApprovalViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60943FE52C0A38FB00C8A714 /* ApprovalViewModel.swift */; };
 		609A76D92CFC50C7009F4567 /* QuestImageWithTagView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 609A76D82CFC50C7009F4567 /* QuestImageWithTagView.swift */; };
@@ -331,6 +332,7 @@
 		608EBFA02C39C5BB00B862CC /* String++.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String++.swift"; sourceTree = "<group>"; };
 		6090A5F42D53AC3300A01429 /* AppVersionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppVersionManager.swift; sourceTree = "<group>"; };
 		609169DD2DFD59C100A34D4F /* Notification++.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Notification++.swift"; sourceTree = "<group>"; };
+		609169E12E01500900A34D4F /* TokenManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenManager.swift; sourceTree = "<group>"; };
 		60924DC82C48C00E00221072 /* Quest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Quest.swift; sourceTree = "<group>"; };
 		60943FE52C0A38FB00C8A714 /* ApprovalViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApprovalViewModel.swift; sourceTree = "<group>"; };
 		609A76D82CFC50C7009F4567 /* QuestImageWithTagView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestImageWithTagView.swift; sourceTree = "<group>"; };
@@ -486,6 +488,7 @@
 		600D83A22C7B1F7E005C93E2 /* Manager */ = {
 			isa = PBXGroup;
 			children = (
+				609169E12E01500900A34D4F /* TokenManager.swift */,
 				6090A5F42D53AC3300A01429 /* AppVersionManager.swift */,
 				600D83A32C7B1FA4005C93E2 /* PaginationManager.swift */,
 				6053345B2D31182500599159 /* XpLevelCalculator.swift */,
@@ -1193,7 +1196,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "echo \"Source Root: ${SRCROOT}\"\n\ncase \"${CONFIGURATION}\" in\n  \"Debug\" )\ncp -r \"$SRCROOT/${PROJECT_NAME}/Resources/FirebaseConfig/Debug/GoogleService-Info-dev.plist\" \"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/GoogleService-Info.plist\" ;;\n  \"Staging\" )\ncp -r \"$SRCROOT/${PROJECT_NAME}/Resources/FirebaseConfig/Staging/GoogleService-Info-dev.plist\" \"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/GoogleService-Info.plist\" ;;\n  \"Release\" )\ncp -r \"$SRCROOT/${PROJECT_NAME}/Resources/FirebaseConfig/Release/GoogleService-Info.plist\" \"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/GoogleService-Info.plist\" ;;\n*)\n;;\nesac\n";
+			shellScript = "echo \"Source Root: ${SRCROOT}\"\n\ncase \"${CONFIGURATION}\" in\n  \"Debug\" )\ncp -r \"$SRCROOT/${PROJECT_NAME}/Resources/FirebaseConfig/Release/GoogleService-Info.plist\" \"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/GoogleService-Info.plist\" ;;\n  \"Staging\" )\ncp -r \"$SRCROOT/${PROJECT_NAME}/Resources/FirebaseConfig/Staging/GoogleService-Info-dev.plist\" \"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/GoogleService-Info.plist\" ;;\n  \"Release\" )\ncp -r \"$SRCROOT/${PROJECT_NAME}/Resources/FirebaseConfig/Release/GoogleService-Info.plist\" \"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/GoogleService-Info.plist\" ;;\n*)\n;;\nesac\n";
 		};
 		609169E02DFE976000A34D4F /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1364,6 +1367,7 @@
 				6029881E2D041D3900903806 /* QuestStatus.swift in Sources */,
 				609A76DB2CFC5E90009F4567 /* StatGridView.swift in Sources */,
 				60ADF8872D57B49B00556958 /* QuestEngageView.swift in Sources */,
+				609169E22E01500900A34D4F /* TokenManager.swift in Sources */,
 				605DA0CD2C070A0300CC9450 /* Camera.swift in Sources */,
 				600211EE2C1EEF91000CC02E /* EmojiNetwork.swift in Sources */,
 				600657E42DBD2DF50022D117 /* MyPageHonorManageView.swift in Sources */,

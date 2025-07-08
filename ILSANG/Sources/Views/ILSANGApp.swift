@@ -106,7 +106,7 @@ struct ILSANGApp: App {
             VStack(spacing: 20) {
                 showItems("Provider", UserService.shared.authChannel)
                 showItems("AuthToken", UserService.shared.accessToken)
-                showItems("IdentityToken", UserService.shared.accessToken)
+                showItems("RefreshToken", UserService.shared.refreshToken)
                 Button {
                     UserService.shared.accessToken = ""
                 } label: {
