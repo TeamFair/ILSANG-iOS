@@ -9,13 +9,9 @@ import Foundation
 import AuthenticationServices
 
 class LoginViewModel: ObservableObject {
-    
-    var kakaoButtonAction = {
-        //TODO: 로그인 기능 구현
-    }
-    
-    var googleButtonAction = {
-        //TODO: 로그인 기능 구현
+    func googleButtonAction() {
+        Task { await UserService.shared.loginWithGoogle() }
+        // TODO: 로그인 GA 연결
     }
     
     func loginWithApple(credential: ASAuthorizationCredential) {

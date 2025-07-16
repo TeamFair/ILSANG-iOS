@@ -13,36 +13,35 @@ final class UserService: ObservableObject {
     let authService: AuthService = AuthService()
     
     @AppStorage("isLogin") var isLogin = Bool()
-    
-    @AppStorage("authToken") var authToken: String = ""
-    @AppStorage("accessToken") var accessToken: String = ""
+    @AppStorage("accessToken") var accessToken: String = "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOiIxMDJhM2MwNC1jZTJlLTQ2ZTEtOGZmOC05ZTk5YTZiYjZhMWUiLCJ1c2VyVHlwZSI6IkNVU1RPTUVSIiwic2FsdCI6Nzk1fQ.a00LDp9nDnyUpzApojBdybDOqX0h1Ms18yevc_tPuJI"
     @AppStorage("refreshToken") var refreshToken: String = ""
-    // @AppStorage("userEmail") var userEmail: String = ""
     @AppStorage("authChannel") var authChannel = ""
-    
-    /// Apple Login은 1번만 emai을 제공하기 때문에 따로 관리
-    // @AppStorage("appleEmail") var appleEmail: String = ""
     
     @Published var currentUser: User?
     
-    static var shared = UserService()
+    static let shared = UserService()
     
     private init() { }
     
     // MARK: - 로그인
     /// 첫 애플 로그인하는 경우
-    @MainActor
     func login(appleCredential: ASAuthorizationAppleIDCredential) async {
-        guard let authResult = await authService.loginWithApple(credential: appleCredential) else {
-            return
-        }
-        
-        // TODO: 애플 로그인 - 백이랑 상의해서 리프레시토큰 받아야함
-        self.authChannel = AuthChannel.Apple.stringValue
-        self.authToken = authResult.authToken
-        self.accessToken = authResult.authUser.accessToken
-        self.refreshToken = authResult.authUser.refreshToken
-        
+        guard let authResult = await authService.loginWithApple(credential: appleCredential) else { return }
+        await handleLoginSuccess(authResult: authResult, channel: .Apple)
+    }
+    
+    /// 구글 로그인하는 경우
+    func loginWithGoogle() async {
+        guard let authResult = await authService.loginWithGoogle() else { return }
+        await handleLoginSuccess(authResult: authResult, channel: .Google)
+    }
+    
+    @MainActor
+    private func handleLoginSuccess(authResult: Auth, channel: AuthChannel) async {
+        self.accessToken = authResult.authorization
+        self.refreshToken = authResult.refreshToken
+        self.authChannel = channel.stringValue
+
         await fetchUserInfo()
         if self.currentUser != nil {
             self.isLogin = true
@@ -60,77 +59,27 @@ final class UserService: ObservableObject {
         }
     }
     
-    /// 갖고 있는 토큰으로 자동 로그인
-    /// do - catch로 logout 호출 필요
-    /// 현재 미사용
-//    func login() async throws {
-//        if authToken.isEmpty {
-//            throw LoginError.emptyToken
-//        }
-//        
-//        let authUser = AuthUser(email: userEmail, accessToken: accessToken, refreshToken: refreshToken)
-//        dump(authUser)
-//        let result = await authService.loginWithChannel(user: authUser, channel: AuthChannel.fromString(value: authChannel)!)
-//        
-//        switch result {
-//        case .success(let user):
-//            await updateLoginStatus(true, authToken: user.authToken)
-//            completeLogin(with: user.authToken)
-//            await fetchUserInfo()
-//        case .failure(let err):
-//            throw LoginError.loginFailed(err.localizedDescription)
-//        }
-//    }
-    
-    /// 새로 발급 받는 토큰으로 로그인하는 경우, 아직사용하지 않음
-//    func login(accessToken: String, refreshToken: String, channel: AuthChannel) async {
-//        let authUser = AuthUser(email: userEmail, accessToken: accessToken, refreshToken: refreshToken)
-//        
-//        guard let user = await authService.loginWithChannel(user: authUser, channel: channel) else {
-//            // try await logout()
-//            return
-//        }
-//        await completeLogin(with: user.authToken)
-//        await fetchUserInfo()
-//    }
-    
-
-    func logout() {
+    func logout() async -> Bool {
+        if !isLogin { return true }
+        let logoutSucc = await authService.logout()
         resetUserSession()
+        return logoutSucc
     }
     
-    // TODO: REVOKE
     func withdraw() {
+        // TODO: REVOKE
         resetUserSession()
     }
     
     private func resetUserSession() {
         isLogin = false
-        authToken = ""
         accessToken = ""
         refreshToken = ""
         currentUser = nil
     }
     
-    private func loginSucc(with authToken: String) {
-        self.isLogin = true
-        self.authToken = authToken
-    }
-}
-
-enum LoginError: Error, LocalizedError {
-    case emptyToken
-    case loginFailed(String)
-    case unknown
-
-    var errorDescription: String? {
-        switch self {
-        case .emptyToken:
-            return "토큰이 비어 있습니다."
-        case .loginFailed(let result):
-            return "로그인에 실패했습니다.\n\(result)"
-        case .unknown:
-            return "알 수 없는 오류가 발생했습니다."
-        }
+    func updateToken(accessToken: String, refreshToken: String) {
+        self.accessToken = accessToken
+        self.refreshToken = refreshToken
     }
 }

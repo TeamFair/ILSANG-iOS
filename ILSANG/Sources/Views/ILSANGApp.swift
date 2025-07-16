@@ -8,22 +8,27 @@
 import SwiftUI
 import FirebaseCore
 import FirebaseAnalytics
+import GoogleSignIn
 
 class AppDelegate: NSObject, UIApplicationDelegate {
     
     func application(_ application: UIApplication,
                      didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
-#if RELEASE
-         FirebaseApp.configure()
-#endif
+        FirebaseApp.configure()
         
         NotificationCenter.default.removeObserver(self, name: .sessionExpired, object: nil)
         NotificationCenter.default.addObserver(forName: .sessionExpired, object: nil, queue: .main) { _ in
             Task { @MainActor in
-                UserService.shared.logout()
+                await UserService.shared.logout()
             }
         }
         return true
+    }
+    
+    func application(_ app: UIApplication,
+                     open url: URL,
+                     options: [UIApplication.OpenURLOptionsKey: Any] = [:]) -> Bool {
+        return GIDSignIn.sharedInstance.handle(url)
     }
 }
 
@@ -100,10 +105,10 @@ struct ILSANGApp: App {
         ScrollView {
             VStack(spacing: 20) {
                 showItems("Provider", UserService.shared.authChannel)
-                showItems("AuthToken", UserService.shared.authToken)
-                showItems("IdentityToken", UserService.shared.accessToken)
+                showItems("AuthToken", UserService.shared.accessToken)
+                showItems("RefreshToken", UserService.shared.refreshToken)
                 Button {
-                    UserService.shared.authToken = ""
+                    UserService.shared.accessToken = ""
                 } label: {
                     Text("REMOVE AuthToken")
                 }
