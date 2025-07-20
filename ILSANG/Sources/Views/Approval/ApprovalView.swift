@@ -8,10 +8,11 @@
 import SwiftUI
 
 struct ApprovalView: View {
-    @State var vm = ApprovalViewModel(
-        emojiNetwork: EmojiNetwork(),
-        challengeNetwork: ChallengeNetwork()
-    )
+    @State private var vm: ApprovalViewModel
+    
+    init(viewModel: ApprovalViewModel) {
+        _vm = State(wrappedValue: viewModel)
+    }
     
     var body: some View {
         VStack(spacing: 0) {
@@ -64,7 +65,7 @@ struct ApprovalView: View {
                         .task { await vm.loadMoreData() }
                 }
             }
-            .padding(.top, 47)
+            .padding(.top, vm.approvalSource == .tab ? 47 : 0)
             .padding(.bottom, 72)
         }
         .refreshable {
@@ -154,5 +155,5 @@ struct ApprovalView: View {
 }
 
 #Preview {
-    ApprovalView()
+    ApprovalView(viewModel: ApprovalViewModel(approvalSource: .tab, emojiNetwork: EmojiNetwork(), challengeNetwork: ChallengeNetwork()))
 }

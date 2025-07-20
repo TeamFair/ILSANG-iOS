@@ -39,6 +39,7 @@ final class HomeViewModel {
     var paginatedPopularQuests: [[QuestViewModelItem]] {
         popularQuestList.chunks(of: popularChunkSize)
     }
+    var showChallengeImageView: Bool = false
     var showSubmitRouterView: Bool = false {
         didSet {
             // TODO: 해당 데이터가 포함되어있으면 제거 or 리로드하도록 수정
@@ -357,6 +358,11 @@ final class HomeViewModel {
         } else {
             showQuestEngageView = true
         }
+    }
+    
+    func onChallengeExImageTapped() {
+        showQuestSheet = false
+        showChallengeImageView = true
     }
     
     /// 즐겨찾기 상태를 UI에 즉시 반영하고,  서버 반영은 디바운싱 처리

@@ -27,7 +27,7 @@ struct NavigationTitleView: View {
                         }
                     }
                 }
-                .foregroundColor(.gray500)
+                .foregroundColor(.black)
                 .font(.system(size: 17, weight: .bold))
                 .padding(.horizontal, 20)
                 .frame(height: 45)

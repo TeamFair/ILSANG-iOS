@@ -61,10 +61,13 @@ struct QuestView: View {
                     questNetwork: QuestNetwork(),
                     onUpdate: { quest in
                         vm.toggleFavoriteStatus(quest: quest)
-                    })
-            ) {
-                vm.onQuestApprovalTapped()
-            }
+                    }
+                ), showQuestExImageAction: {
+                    vm.onChallengeExImageTapped()
+                }, questApproveAction: {
+                    vm.onQuestApprovalTapped()
+                }
+            )
             .presentationCornerRadius(24)
             .presentationDragIndicator(.hidden)
             .presentationDetents([tall ? .height(UISheetPresentationController.Detent.questDetailDetentHeightTall) : .height(UISheetPresentationController.Detent.questDetailDetentHeightShort)])
@@ -88,6 +91,9 @@ struct QuestView: View {
                     quizNetwork: quizNetwork
                 )
             )
+        }
+        .navigationDestination(isPresented: $vm.showChallengeImageView) {
+            ApprovalDetailView(questId: vm.selectedQuest.id)
         }
     }
 }

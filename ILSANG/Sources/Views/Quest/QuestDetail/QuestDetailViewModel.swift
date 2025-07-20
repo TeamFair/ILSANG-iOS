@@ -11,8 +11,6 @@ import SwiftUI
 class QuestDetailViewModel {
     var quest: QuestViewModelItem
     var isLoading: Bool = false
-    var showImageSheetView: Bool = false
-    var selectedImage: UIImage = .logo
     private let onUpdate: (QuestViewModelItem) -> Void
 
     var approvalDescription: String {
@@ -48,11 +46,6 @@ class QuestDetailViewModel {
         }
         
         isLoading = false
-    }
-    
-    func onImageTapped(image: UIImage) {
-        selectedImage = image
-        showImageSheetView.toggle()
     }
     
     func toggleFavorite() {

@@ -9,8 +9,9 @@ import SwiftUI
 
 struct QuestDetailView: View {
     @State var vm: QuestDetailViewModel
-    let action: () -> Void
-    
+    let showQuestExImageAction: () -> Void
+    let questApproveAction: () -> Void
+
     private let imageSpacing: CGFloat = 8
     private let horizontalPadding: CGFloat = 20
 
@@ -18,9 +19,14 @@ struct QuestDetailView: View {
         (.screenWidth - (horizontalPadding * 2) - (imageSpacing * 2)) / 3
     }
     
-    init(vm: QuestDetailViewModel, action: @escaping () -> Void) {
+    init(
+        vm: QuestDetailViewModel,
+        showQuestExImageAction: @escaping () -> (),
+        questApproveAction: @escaping () -> ()
+    ) {
         self._vm = State(wrappedValue: vm)
-        self.action = action
+        self.questApproveAction = questApproveAction
+        self.showQuestExImageAction = showQuestExImageAction
     }
     
     var body: some View {
@@ -35,8 +41,8 @@ struct QuestDetailView: View {
                         imageWidth: contentWidth,
                         imageSpacing: imageSpacing,
                         isLoading: vm.isLoading,
-                        onTap: { [weak vm] selectedImage in
-                            vm?.onImageTapped(image: selectedImage)
+                        onTap: {
+                            showQuestExImageAction()
                         }
                     )
                 }
@@ -60,11 +66,6 @@ struct QuestDetailView: View {
         .task {
             await vm.fetchQuestDetail()
         }
-        .sheet(isPresented: $vm.showImageSheetView, content: {
-            ImageFullScreenView(image: vm.selectedImage) {
-                vm.showImageSheetView.toggle()
-            }
-        })
         .scrollIndicators(.never)
         .foregroundStyle(.gray500)
         .safeAreaInset(
@@ -96,7 +97,7 @@ struct QuestDetailView: View {
             })
         .safeAreaInset(edge: .bottom) {
             PrimaryButton(title: "퀘스트 인증하기") {
-                action()
+                questApproveAction()
             }
             .padding(.bottom, 8)
         }
@@ -105,12 +106,12 @@ struct QuestDetailView: View {
 }
 
 #Preview {
-    QuestDetailView(vm: QuestDetailViewModel(quest: .mockData, questNetwork: QuestNetwork(), onUpdate: {_ in }), action: { })
+    QuestDetailView(vm: QuestDetailViewModel(quest: .mockData, questNetwork: QuestNetwork(), onUpdate: { _ in }), showQuestExImageAction: {  }, questApproveAction: { })
         .frame(height: 684)
 }
 
 
 #Preview {
-    QuestDetailView(vm: QuestDetailViewModel(quest: .mockRepeatData, questNetwork: QuestNetwork(), onUpdate: {_ in }), action: { })
+    QuestDetailView(vm: QuestDetailViewModel(quest: .mockRepeatData, questNetwork: QuestNetwork(), onUpdate: { _ in }), showQuestExImageAction: {  }, questApproveAction: { })
         .frame(height: 684)
 }

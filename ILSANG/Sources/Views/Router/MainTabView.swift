@@ -51,7 +51,7 @@ struct MainTabView: View {
         case .quest:
             QuestView(initialXpStat: sharedState.selectedXpStat)
         case .approval:
-            ApprovalView()
+            ApprovalView(viewModel: ApprovalViewModel(approvalSource: .tab, emojiNetwork: EmojiNetwork(), challengeNetwork: ChallengeNetwork()))
         case .ranking:
             RankingView()
         case .mypage:

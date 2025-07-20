@@ -17,6 +17,11 @@ import SwiftUI
 ✅ 리프레시
 */
 
+enum ApprovalSource: Equatable {
+    case tab
+    case detail(questId: String)
+}
+
 @Observable
 final class ApprovalViewModel {
     enum ViewStatus {
@@ -32,11 +37,13 @@ final class ApprovalViewModel {
     var selectedChallenge: ApprovalViewModelItem?
     
     var paginationManager: PaginationManager<ApprovalViewModelItem>?
-    
+    let approvalSource: ApprovalSource
+
     private let emojiNetwork: EmojiNetwork
     private let challengeNetwork: ChallengeNetwork
     
-    init(emojiNetwork: EmojiNetwork, challengeNetwork: ChallengeNetwork) {
+    init(approvalSource: ApprovalSource, emojiNetwork: EmojiNetwork, challengeNetwork: ChallengeNetwork) {
+        self.approvalSource = approvalSource
         self.emojiNetwork = emojiNetwork
         self.challengeNetwork = challengeNetwork
         
@@ -92,8 +99,14 @@ final class ApprovalViewModel {
     // MARK: 도전내역 조회 - Helper Methods
     /// 1. 챌린지 데이터 로드
     private func loadChallenges(page: Int) async -> ([ApprovalViewModelItem], Int) {
-        let result = await getRandomChallenges(page: page, size: paginationManager?.size ?? 10)
-        return (result.data, result.total)
+        switch approvalSource {
+        case .tab:
+            let result = await getRandomChallenges(page: page, size: paginationManager?.size ?? 10)
+            return (result.data, result.total)
+        case .detail(let id):
+            let result = await getRandomChallenges(page: page, size: paginationManager?.size ?? 10) // TODO: 퀘스트 id로 호출하도록 변경
+            return (result.data, result.total)
+        }
     }
 
     /// 2. 중복 제거: 동일한 ID를 가진 챌린지를 필터링하여 중복 제거

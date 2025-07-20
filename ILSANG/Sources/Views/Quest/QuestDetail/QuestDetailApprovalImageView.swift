@@ -13,7 +13,7 @@ struct QuestDetailApprovalImageView: View {
     let imageWidth: CGFloat
     let imageSpacing: CGFloat
     let isLoading: Bool
-    let onTap: (UIImage) -> Void
+    let onTap: () -> ()
     
     var body: some View {
         return VStack(alignment: .leading, spacing: 16) {
@@ -52,7 +52,7 @@ struct QuestDetailApprovalImageView: View {
                                 .frame(width: imageWidth, height: imageWidth)
                                 .clipShape(.rect(cornerRadius: 12))
                                 .onTapGesture {
-                                    onTap(images[idx])
+                                    onTap()
                                 }
                         }
                     }
