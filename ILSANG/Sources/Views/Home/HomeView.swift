@@ -137,8 +137,8 @@ struct HomeView: View {
     }
     
     private var mainBannerSection: some View {
-        let height: CGFloat = .screenWidth / 11 * 10
-        return TabView {
+        let height: CGFloat = .screenWidth / 3 * 2
+        return TabView(selection: $vm.currentBanner) {
             ForEach(Array(vm.mainBanners.enumerated()), id: \.offset) { idx, item in
                 if let bannerImage = item.image {
                     Image(uiImage: bannerImage)
@@ -146,7 +146,6 @@ struct HomeView: View {
                         .scaledToFill()
                         .frame(maxWidth: .infinity)
                         .frame(height: height)
-                        .clipShape(RoundedRectangle(cornerRadius: 12))
                         .onTapGesture {
                             AnalyticsService.logEvent(.homeBannerClick(bannerId: item.id))
                             if let tab = vm.getTabFromURL(from: item.description) { /// 해당하는 탭으로 이동
@@ -155,6 +154,24 @@ struct HomeView: View {
                         }
                 }
             }
+        }
+        .overlay(alignment: .bottomTrailing) {
+            HStack(alignment: .center, spacing: 5) {
+                Text("\(vm.currentBanner+1)")
+                    .styledFont(.badge2)
+                    .frame(minWidth: 7)
+                    .foregroundStyle(.white)
+                Rectangle()
+                    .frame(width: 1, height: 8)
+                Text("\(vm.mainBanners.count)")
+                    .styledFont(.badge2)
+                    .frame(minWidth: 7)
+            }
+            .foregroundStyle(.gray200)
+            .padding(.vertical, 4)
+            .padding(.horizontal, 10)
+            .roundedBackground(cornerRadius: 20, bgColor: .black.opacity(0.7))
+            .padding(20)
         }
         .frame(height: height)
         .tabViewStyle(.page(indexDisplayMode: .never))
