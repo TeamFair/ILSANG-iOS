@@ -30,6 +30,7 @@ final class HomeViewModel {
     var recommendQuestList: [QuestViewModelItem] = [] //QuestViewModelItem.mockQuestList // 10개
     var popularQuestList: [QuestViewModelItem] = QuestViewModelItem.mockQuestList // 4n개
     
+    var currentBanner: Int = 0
     var selectedXpStat: XpStat = .strength
     
     var showQuestSheet: Bool = false
