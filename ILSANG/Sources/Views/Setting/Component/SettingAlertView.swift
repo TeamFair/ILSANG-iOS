@@ -98,7 +98,6 @@ enum AlertType {
     case illsangZoneChangeNotAllowed
 
     case myRegionChangeSuccess
-    case myRegionChangeFailed
     
     var title: String {
         switch self {
@@ -120,7 +119,6 @@ enum AlertType {
         case .illsangZoneNotSelected: "일상존이 선택되지 않았어요"
         case .illsangZoneChangeNotAllowed: "내 일상존은 시즌 중에는\n변경이 불가합니다"
         case .myRegionChangeSuccess: "내 지역이 설정되었습니다"
-        case .myRegionChangeFailed: "내 지역 변경에 실패했습니다"
         }
     }
     
@@ -144,7 +142,6 @@ enum AlertType {
         case .illsangZoneNotSelected: "일상존을 선택하고 퀘스트를 수행하면\n기여도 포인트를 2배나 받을 수 있어요!"
         case .illsangZoneChangeNotAllowed: nil
         case .myRegionChangeSuccess: "퀘스트를 수행하러 가 볼까요?"
-        case .myRegionChangeFailed: "다시 한번 시도해 주세요"
         }
     }
     
@@ -179,7 +176,7 @@ enum AlertType {
     
     var icon: UIImage? {
         switch self {
-        case .illsangZoneSetFailed, .myRegionChangeFailed: .error
+        case .illsangZoneSetFailed: .error
         default: nil
         }
     }

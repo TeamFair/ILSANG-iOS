@@ -39,48 +39,22 @@ struct MyRegionAreaSelectionView: View {
             .safeAreaInset(edge: .bottom, alignment: .center) {
                 if viewModel.selectedArea != nil {
                     PrimaryButton(title: "내 지역 선택하기") {
-                        let succ = viewModel.setIllsangZone()
-                        if succ {
-                            if let selectedArea = viewModel.selectedArea {
-                                onSuccess?(selectedArea)
-                                dismiss()
-                            }
+                        if let selectedArea = viewModel.selectedArea {
+                            onSuccess?(selectedArea)
                         }
+                        dismiss()
                     }
                     .padding(.horizontal, 20)
                 }
             }
-            
-            if viewModel.showAlert {
-                SettingAlertView(
-                    alertType: .myRegionChangeFailed,
-                    onConfirm: { viewModel.showAlert = false }
-                )
-            }
         }
-        
     }
 }
 
 
 class MyRegionAreaSelectionViewModel: ObservableObject {
     let areas: [MetroArea] = MetroArea.mockData
-    
-    @Published var showAlert: Bool = false
     @Published var selectedArea: CommercialArea?
-    
-    func setIllsangZone() -> Bool {
-        // TODO: 네트워크 요청
-         let result: Result<Void, Error> = .success(())
-        // let result: Result<Void, Error> = .failure(NetworkError.emptyResponse)
-        switch result {
-        case .success:
-            return true
-        case .failure:
-            showAlert = true
-            return false
-        }
-    }
 }
 
 #Preview {
