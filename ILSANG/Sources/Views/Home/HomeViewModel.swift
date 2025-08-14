@@ -60,6 +60,24 @@ final class HomeViewModel {
             }
         }
     }
+    var showSelectMyRegionView: Bool = false
+    var showSelectIllsangZoneView: Bool = false
+
+    var myRegionCode: String? = nil // 초기값 서현역으로 설정
+    var myRegionName: String? = nil
+    var illsangZoneCode: String? = nil
+    var illsangZoneName: String? = nil
+    var alertType: AlertType? = nil
+    
+    var isNeverShowAlertSelected: Bool = false // 일상존미선택 알럿 - 토글버튼
+    var isQuestSheetPending: Bool = false // 퀘스트 시트를 다시 열어야 하는지 여부
+    
+    var shouldShowIllsangZoneWarning: Bool = false
+    
+    private let dontShowKey = "DontShowIllsangZoneWarning"
+    private let seasonKey = "IllsangZoneSeason"
+    
+    let currentSeason: Int = 1 // TODO: 서버에서 가져오도록 수정
     
     // 다른 유저 프로필 확인
     var showOtherUserProfileView = false
@@ -97,6 +115,7 @@ final class HomeViewModel {
         self.showRecommendRewardQuest = true
         self.showLargestRewardQuest = true
         self.showRankList = true
+        updateIllsangZoneWarningStatus()
 
         await withThrowingTaskGroup(of: Void.self) { group in
             group.addTask {
@@ -346,8 +365,13 @@ final class HomeViewModel {
     
     func onQuestTapped(quest: QuestViewModelItem) {
         selectedQuest = quest
-        DispatchQueue.main.asyncAfter(deadline: .now()+0.3) {
-            self.showQuestSheet.toggle()
+        if illsangZoneCode == nil && shouldShowIllsangZoneWarning {
+            isQuestSheetPending = true // 일상존 선택 후 다시 열기 위해 기록
+            alertType = .illsangZoneNotSelected
+        } else {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                self.showQuestSheet.toggle()
+            }
         }
     }
     
@@ -357,6 +381,50 @@ final class HomeViewModel {
             showSubmitRouterView = true
         } else {
             showQuestEngageView = true
+        }
+    }
+    
+    // 일상존 선택 완료 시
+    func handleIllsangZoneSelection(_ area: CommercialArea) {
+        self.illsangZoneCode = area.code
+        self.illsangZoneName = area.areaName
+        self.alertType = .illsangZoneSetSuccess
+    }
+    
+    // TODO: 함수명 변경
+    func finalizeIllsangZoneSelection() {
+        alertType = nil
+        if isQuestSheetPending {
+            isQuestSheetPending = false
+            showQuestSheet = true
+        }
+    }
+    
+    // 내 지역 선택 완료 시
+    func handleMyRegionSelection(_ area: CommercialArea) {
+        self.myRegionCode = area.code
+        self.myRegionName = area.areaName
+        self.alertType = .myRegionChangeSuccess
+        // TODO: 데이터 재로드
+    }
+    
+    /// "다시 보지 않기" 체크 여부 확인
+    private func updateIllsangZoneWarningStatus() {
+        let savedSeason = UserDefaults.standard.integer(forKey: seasonKey)
+        let dontShow = UserDefaults.standard.bool(forKey: dontShowKey)
+        
+        // 시즌이 바뀌었거나 "다시 보지 않기" 안 한 경우엔 보여주기
+        if savedSeason != currentSeason || !dontShow {
+            shouldShowIllsangZoneWarning = true
+        }
+    }
+    
+    /// "다시 보지 않기" 선택 시 저장
+    func saveDontShowPreferenceIfSelected() {
+        if isNeverShowAlertSelected {
+            UserDefaults.standard.set(true, forKey: dontShowKey)
+            UserDefaults.standard.set(currentSeason, forKey: seasonKey)
+            shouldShowIllsangZoneWarning = false
         }
     }
     
