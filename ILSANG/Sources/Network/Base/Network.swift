@@ -108,7 +108,7 @@ final class Network {
         let statusCode = response.response?.statusCode ?? -1
         let responseData = try? response.result.get()
         let result = handleStatusCode(statusCode, data: responseData, errorData: request.data)
-        dump(response)
+//        dump(response)
         switch result {
         case .success(let res):
             Log("네트워크 요청 성공: \(fullPath), \(method.rawValue)")
