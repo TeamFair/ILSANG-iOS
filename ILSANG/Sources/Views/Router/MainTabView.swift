@@ -10,6 +10,7 @@ import SwiftUI
 struct MainTabView: View {
     @StateObject var sharedState = SharedState()
     @StateObject var honorAcquisitionManager = HonorAcquisitionManager(honorNetwork: defaultHonorNetwork)
+    @StateObject var seasonManager = SeasonManager(seasonNetwork: defaultSeasonNetwork)
     let viewModel = HomeViewModel(
         questNetwork: QuestNetwork(),
         rankNetwork: RankNetwork(),
@@ -19,6 +20,10 @@ struct MainTabView: View {
     
     static var defaultHonorNetwork: HonorNetworkProtocol {
         return HonorNetwork() // MockHonorNetwork()
+    }
+    
+    static var defaultSeasonNetwork: SeasonNetworkProtocol {
+        return SeasonNetwork() // MockSeasonNetwork()
     }
     
     var body: some View {
@@ -38,9 +43,17 @@ struct MainTabView: View {
             .onChange(of: sharedState.selectedTab) { _, newTab in
                 AnalyticsService.logEvent(.bottomTabClick(tabName: sharedState.selectedTab.rawValue.uppercased()))
             }
+            .overlay(
+                Group {
+                    SeasonPopupContainerView {
+                        sharedState.selectedTab = .ranking
+                    }
+                }
+            )
         }
         .environmentObject(sharedState)
         .environmentObject(honorAcquisitionManager)
+        .environmentObject(seasonManager)
     }
     
     @ViewBuilder

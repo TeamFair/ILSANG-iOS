@@ -161,6 +161,11 @@
 		60DADF552C6B4EC7001A0B3A /* Data++.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60DADF542C6B4EC7001A0B3A /* Data++.swift */; };
 		60E258052D09CE1B0052C048 /* StatRank.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60E258042D09CE1B0052C048 /* StatRank.swift */; };
 		60FB50CD2D15CEAE00C55E82 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60FB50CC2D15CEAE00C55E82 /* HomeView.swift */; };
+		60FF5EC92E4BA59E007A5B40 /* SeasonPopupContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60FF5EC82E4BA59E007A5B40 /* SeasonPopupContainerView.swift */; };
+		60FF5ECB2E4BB4A6007A5B40 /* SeasonNetwork.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60FF5ECA2E4BB4A6007A5B40 /* SeasonNetwork.swift */; };
+		60FF5ECD2E4BCD6E007A5B40 /* GmarketSansBold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 60FF5ECC2E4BCD6E007A5B40 /* GmarketSansBold.otf */; };
+		60FF5ED12E4CDC2B007A5B40 /* Season.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60FF5ED02E4CDC2B007A5B40 /* Season.swift */; };
+		60FF5ED32E4CDC57007A5B40 /* SeasonOpenPopup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60FF5ED22E4CDC57007A5B40 /* SeasonOpenPopup.swift */; };
 		9FE63D6C2CB3A58800CA7940 /* RankingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FE63D6B2CB3A57B00CA7940 /* RankingView.swift */; };
 		9FE63D702CB3AAF100CA7940 /* RankingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FE63D6F2CB3AAE900CA7940 /* RankingViewModel.swift */; };
 		9FE63D722CB3AB4F00CA7940 /* RankingItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FE63D712CB3AB4100CA7940 /* RankingItemView.swift */; };
@@ -372,6 +377,11 @@
 		60DADF542C6B4EC7001A0B3A /* Data++.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Data++.swift"; sourceTree = "<group>"; };
 		60E258042D09CE1B0052C048 /* StatRank.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatRank.swift; sourceTree = "<group>"; };
 		60FB50CC2D15CEAE00C55E82 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		60FF5EC82E4BA59E007A5B40 /* SeasonPopupContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeasonPopupContainerView.swift; sourceTree = "<group>"; };
+		60FF5ECA2E4BB4A6007A5B40 /* SeasonNetwork.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeasonNetwork.swift; sourceTree = "<group>"; };
+		60FF5ECC2E4BCD6E007A5B40 /* GmarketSansBold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = GmarketSansBold.otf; sourceTree = "<group>"; };
+		60FF5ED02E4CDC2B007A5B40 /* Season.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Season.swift; sourceTree = "<group>"; };
+		60FF5ED22E4CDC57007A5B40 /* SeasonOpenPopup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeasonOpenPopup.swift; sourceTree = "<group>"; };
 		9FE63D6B2CB3A57B00CA7940 /* RankingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RankingView.swift; sourceTree = "<group>"; };
 		9FE63D6F2CB3AAE900CA7940 /* RankingViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RankingViewModel.swift; sourceTree = "<group>"; };
 		9FE63D712CB3AB4100CA7940 /* RankingItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RankingItemView.swift; sourceTree = "<group>"; };
@@ -456,6 +466,7 @@
 				60E258042D09CE1B0052C048 /* StatRank.swift */,
 				6028A94B2D39772F003FBC8C /* TopRank.swift */,
 				60004AD82D42373300CD2254 /* Banner.swift */,
+				60FF5ED02E4CDC2B007A5B40 /* Season.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -688,6 +699,7 @@
 				605736192D8AC6F000CF7051 /* QuizNetwork.swift */,
 				A1C642292C33F55A004954CA /* QuestNetwork.swift */,
 				605445C92DD36E440005742D /* HonorNetwork.swift */,
+				60FF5ECA2E4BB4A6007A5B40 /* SeasonNetwork.swift */,
 			);
 			path = Network;
 			sourceTree = "<group>";
@@ -996,6 +1008,8 @@
 			isa = PBXGroup;
 			children = (
 				606694F12DDA2B030000E368 /* HonorPopup */,
+				60FF5EC82E4BA59E007A5B40 /* SeasonPopupContainerView.swift */,
+				60FF5ED22E4CDC57007A5B40 /* SeasonOpenPopup.swift */,
 				606694EF2DDA29E40000E368 /* AnimatedPopup.swift */,
 				600657DF2DBCFEE20022D117 /* HonorView.swift */,
 				A1F0ADBF2CD738A20068E0A6 /* Polygon.swift */,
@@ -1028,6 +1042,7 @@
 			children = (
 				A1EB63392C132AC100B63F9C /* Roboto-Medium.ttf */,
 				A1EB633A2C132B0800B63F9C /* SFPRODISPLAYREGULAR.otf */,
+				60FF5ECC2E4BCD6E007A5B40 /* GmarketSansBold.otf */,
 			);
 			path = Fonts;
 			sourceTree = "<group>";
@@ -1155,6 +1170,7 @@
 				60ADF9C62D59D6C200556958 /* Roboto-Medium.ttf in Resources */,
 				60054F9E2D9316F800E7C5A6 /* 2503_PRIVACY_POLICY.pdf in Resources */,
 				60B8BA112BF9EF50005F6DE3 /* Launch Screen.storyboard in Resources */,
+				60FF5ECD2E4BCD6E007A5B40 /* GmarketSansBold.otf in Resources */,
 				60B8B9EE2BF9EEF3005F6DE3 /* Preview Assets.xcassets in Resources */,
 				606C87B12C0CC89B002D5C3E /* 2406_TERMS_OF_USE.pdf in Resources */,
 				60ADF9C72D59D6CB00556958 /* SFPRODISPLAYREGULAR.otf in Resources */,
@@ -1311,6 +1327,7 @@
 				60C6B4DC2C2D042700926C0E /* Image.swift in Sources */,
 				A18EB9B02C26B61C00405D56 /* WithdrawNetwork.swift in Sources */,
 				603CF4EF2D79A83600A2D19E /* SubmitStatus.swift in Sources */,
+				60FF5ECB2E4BB4A6007A5B40 /* SeasonNetwork.swift in Sources */,
 				60246FA82D91E57E007C05B3 /* AnalyticsService.swift in Sources */,
 				A1868C442C09B6C50020BF16 /* ChallengeDetailView.swift in Sources */,
 				600657DC2DBCCBAA0022D117 /* MyPageInfoCardBottomView.swift in Sources */,
@@ -1331,12 +1348,14 @@
 				60C6B4D72C2C569800926C0E /* Challenge.swift in Sources */,
 				60B8B9E72BF9EEF1005F6DE3 /* ILSANGApp.swift in Sources */,
 				608EBF9F2C39C17F00B862CC /* Dictionary++.swift in Sources */,
+				60FF5EC92E4BA59E007A5B40 /* SeasonPopupContainerView.swift in Sources */,
 				A1C6422A2C33F55A004954CA /* QuestNetwork.swift in Sources */,
 				60ADF9CB2D5A01BA00556958 /* UISheetPresentationController.swift in Sources */,
 				A1AB3D6C2C1142AA001EB9D8 /* LoginButton.swift in Sources */,
 				600D83A42C7B1FA4005C93E2 /* PaginationManager.swift in Sources */,
 				60DADF552C6B4EC7001A0B3A /* Data++.swift in Sources */,
 				60ADF9BF2D59D41E00556958 /* Font++.swift in Sources */,
+				60FF5ED12E4CDC2B007A5B40 /* Season.swift in Sources */,
 				60004AD92D42373300CD2254 /* Banner.swift in Sources */,
 				601BCF102D7B43F000138387 /* OtherUserProfileView.swift in Sources */,
 				60ADF8892D57B53100556958 /* QuestEngageViewModel.swift in Sources */,
@@ -1346,6 +1365,7 @@
 				A11D88F72C916DE500846122 /* Icon.swift in Sources */,
 				60505D702D941D0A00121C4C /* StandardScreenView.swift in Sources */,
 				602988222D041DDC00903806 /* RepeatType.swift in Sources */,
+				60FF5ED32E4CDC57007A5B40 /* SeasonOpenPopup.swift in Sources */,
 				A19628652C076D7B0037C53A /* SettingView.swift in Sources */,
 				605E814A2D9FEB2300ECDB15 /* QuestDetailStatView.swift in Sources */,
 				607FCC332C01AA7300BB2D04 /* SubmitAlertView.swift in Sources */,
@@ -1511,7 +1531,8 @@
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ILSANG/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "일상 DEV";
+				INFOPLIST_KEY_CFBundleDisplayName = "$(APP_NAME)";
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
 				INFOPLIST_KEY_NSCameraUsageDescription = "일상은 퀘스트 인증 사진을 촬영하기 위해 카메라 접근 권한이 필요합니다.\n계속하려면 카메라 접근 권한을 허용해주세요.";
 				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "일상은 촬영한 퀘스트 인증 사진을 저장하기 위해 앨범 접근 권한이 필요합니다.\n계속하려면 앨범 접근 권한을 허용해주세요.";
@@ -1721,7 +1742,8 @@
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ILSANG/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "일상 DEV";
+				INFOPLIST_KEY_CFBundleDisplayName = "$(APP_NAME)";
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
 				INFOPLIST_KEY_NSCameraUsageDescription = "일상은 퀘스트 인증 사진을 촬영하기 위해 카메라 접근 권한이 필요합니다.\n계속하려면 카메라 접근 권한을 허용해주세요.";
 				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "일상은 촬영한 퀘스트 인증 사진을 저장하기 위해 앨범 접근 권한이 필요합니다.\n계속하려면 앨범 접근 권한을 허용해주세요.";
@@ -1767,7 +1789,8 @@
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ILSANG/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "일상 DEV";
+				INFOPLIST_KEY_CFBundleDisplayName = "$(APP_NAME)";
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
 				INFOPLIST_KEY_NSCameraUsageDescription = "일상은 퀘스트 인증 사진을 촬영하기 위해 카메라 접근 권한이 필요합니다.\n계속하려면 카메라 접근 권한을 허용해주세요.";
 				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "일상은 촬영한 퀘스트 인증 사진을 저장하기 위해 앨범 접근 권한이 필요합니다.\n계속하려면 앨범 접근 권한을 허용해주세요.";
