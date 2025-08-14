@@ -31,7 +31,7 @@ struct HomeView: View {
             switch vm.viewStatus {
             case .loading, .loaded:
                 ScrollView {
-                    VStack(spacing: 23) {
+                    VStack(spacing: 0) {
                         header
                         content
                     }
@@ -54,6 +54,8 @@ struct HomeView: View {
             Group {
                 if let _ = honorAcquisitionManager.currentHonor {
                     HonorPopupContainerView()
+                } else if let alert = vm.alertType {
+                     alertView(alert)
                 }
             }
         )
@@ -80,6 +82,16 @@ struct HomeView: View {
         .fullScreenCover(isPresented: $vm.showSubmitRouterView) {
             SubmitRouterView(selectedQuest: vm.selectedQuest)
                 .interactiveDismissDisabled()
+        }
+        .navigationDestination(isPresented: $vm.showSelectMyRegionView) {
+            MyRegionAreaSelectionView { area in
+                vm.handleMyRegionSelection(area)
+            }
+        }
+        .navigationDestination(isPresented: $vm.showSelectIllsangZoneView) {
+            IllsangZoneSelectionView { area in
+                vm.handleIllsangZoneSelection(area)
+            }
         }
         .navigationDestination(isPresented: $vm.showQuestEngageView) {
             QuestEngageView(
@@ -114,26 +126,72 @@ struct HomeView: View {
     }
     
     private var content: some View {
-        LazyVStack(spacing: LayoutConstants.sectionSpacing) {
-            if vm.showMainBanners {
-                mainBannerSection
+        VStack(spacing: 0) {
+            regionAndZoneSelectionView
+            
+            LazyVStack(spacing: LayoutConstants.sectionSpacing) {
+                if vm.showMainBanners {
+                    mainBannerSection
+                }
+                if vm.showPopularRewardQuest {
+                    popularQuestSection
+                }
+                if vm.showRecommendRewardQuest {
+                    recommendQuestSection
+                }
+                if vm.showLargestRewardQuest {
+                    largestRewardQuestSection
+                }
+                if vm.showRankList {
+                    userRankingSection
+                }
             }
-            if vm.showPopularRewardQuest {
-                popularQuestSection
+            .padding(.bottom, 72)
+            .redacted(reason: vm.viewStatus == .loading ? .placeholder : [])
+            .foregroundStyle(redactionReasons.contains(.placeholder) ? .clear: Color.gray500)
+        }
+    }
+    
+    private var regionAndZoneSelectionView: some View {
+        HStack(spacing: 4) {
+            RegionPickerView(title: vm.myRegionName ?? "") {
+                vm.showSelectMyRegionView = true
             }
-            if vm.showRecommendRewardQuest {
-                recommendQuestSection
+            .onChange(of: vm.myRegionName) { _, newValue in
+                vm.alertType = .myRegionChangeSuccess
             }
-            if vm.showLargestRewardQuest {
-                largestRewardQuestSection
-            }
-            if vm.showRankList {
-                userRankingSection
+            
+            Spacer()
+            Text("내 일상존: ")
+                .styledFont(.caption2)
+                .foregroundStyle(.gray400)
+            Button {
+                if vm.illsangZoneName == nil {
+                    vm.isQuestSheetPending = false
+                    vm.showSelectIllsangZoneView = true
+                } else {
+                    vm.alertType = .illsangZoneChangeNotAllowed
+                }
+            } label: {
+                HStack(spacing: 0) {
+                    Text(vm.illsangZoneName ?? "선택하기")
+                        .styledFont(.caption1)
+                    if vm.illsangZoneName == nil {
+                        Image(.arrowUnder)
+                            .resizable()
+                            .scaledToFit()
+                            .frame(16)
+                            .rotationEffect(.degrees(-90))
+                    }
+                }
+                .foregroundStyle(.white)
+                .padding(.horizontal, 8)
+                .padding(.vertical, 4)
+                .roundedBackground(cornerRadius: 20, bgColor: .primaryPurple)
             }
         }
-        .padding(.bottom, 72)
-        .redacted(reason: vm.viewStatus == .loading ? .placeholder : [])
-        .foregroundStyle(redactionReasons.contains(.placeholder) ? .clear: Color.gray500)
+        .padding(.vertical, 16)
+        .padding(.horizontal, LayoutConstants.horizontalPadding)
     }
     
     private var mainBannerSection: some View {
@@ -338,6 +396,59 @@ struct HomeView: View {
                     }
                 }
         )
+    }
+    
+    @ViewBuilder
+    private func alertView(_ alertType: AlertType) -> some View {
+        if alertType == .illsangZoneNotSelected {
+            SettingAlertView(
+                alertType: alertType,
+                onCancel: {
+                    vm.alertType = nil
+                    vm.saveDontShowPreferenceIfSelected()
+                    vm.showQuestSheet = true
+                }, onConfirm: {
+                    vm.alertType = nil
+                    vm.saveDontShowPreferenceIfSelected()
+                    vm.showSelectIllsangZoneView = true
+                }) {
+                    Button {
+                        vm.isNeverShowAlertSelected.toggle()
+                    } label: {
+                        HStack(spacing: 4) {
+                            Image(.checkThin)
+                                .renderingMode(.template)
+                                .resizable()
+                                .scaledToFill()
+                                .frame(width: 9, height: 5.5)
+                                .frame(16)
+                                .foregroundStyle(vm.isNeverShowAlertSelected ? .white : .clear)
+                                .background(
+                                    RoundedRectangle(cornerRadius: 3)
+                                        .strokeBorder(
+                                            vm.isNeverShowAlertSelected ? .clear : .gray200,
+                                            style: StrokeStyle(lineWidth: 1)
+                                        )
+                                        .fill(vm.isNeverShowAlertSelected ? .primaryPurple : .clear)
+                                )
+                                .frame(24)
+                            Text("다시 보지 않기")
+                                .styledFont(.tabRegular)
+                                .foregroundStyle(.gray500)
+                        }
+                    }
+                }
+        } else if alertType == .illsangZoneSetSuccess {
+            SettingAlertView(
+                alertType: alertType,
+                onConfirm: { vm.finalizeIllsangZoneSelection() }
+            )
+        } else if [AlertType.illsangZoneChangeNotAllowed, AlertType.myRegionChangeSuccess].contains(alertType) {
+            SettingAlertView(
+                alertType: alertType,
+                onConfirm: { vm.alertType = nil }
+            )
+        }
     }
     
     private var networkErrorView: some View {
