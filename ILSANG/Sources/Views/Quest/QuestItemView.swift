@@ -11,7 +11,7 @@ import SwiftUI
 struct QuestCommonModel {
     let title: String
     let writer: String
-    let rewardDic: [XpStat: Int]
+    let rewardDic: [PointType: Int]
     let writerImage: UIImage?
     let image: UIImage?
     let type: String
@@ -199,5 +199,56 @@ struct RecommendQuestView<Style: QuestStyleProtocol>: View {
                 .fill(style.backgroundColor)
             )
         }
+    }
+}
+
+#Preview {
+    VStack {
+        let quest = QuestViewModelItem.mockRepeatData
+        Text("인기")
+        QuestItemView(
+            quest: quest,
+            style: PopularStyle(
+                type: quest.type,
+                repeatType: RepeatType(rawValue: quest.target.lowercased()) ?? .daily
+            ),
+            tagTitle: ""
+        ) { }
+        
+        Text("미완료")
+        QuestItemView(
+            quest: quest,
+            style: UncompletedStyle(),
+            tagTitle: String(quest.totalRewardPoint())+"P"
+        ) { } action: { }
+        
+        Text("반복 - 일간")
+        QuestItemView(
+            quest: quest,
+            style: RepeatStyle(repeatType: .daily),
+            tagTitle: "일간"//vm.repeatFilterState.selectedValue.description
+        ) { } action: { }
+        
+        Text("이벤트")
+        QuestItemView(
+            quest: quest,
+            style: EventStyle(),
+            tagTitle: "한정"
+        ) {
+        } action: { }
+        
+        Text("완료")
+        QuestItemView(
+            quest: quest,
+            style: CompletedStyle(),
+            tagTitle: ""
+        ) { } action: { }
+        
+        Text("배너 이벤트")
+        QuestItemView(
+            quest: quest,
+            style: BannerEventStyle(),
+            tagTitle: ""
+        ) { } action: { }
     }
 }

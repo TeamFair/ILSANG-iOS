@@ -12,18 +12,14 @@ struct QuestView: View {
     @StateObject var vm: QuestViewModel
     @EnvironmentObject var sharedState: SharedState
 
-    init(initialXpStat: XpStat) {
-        _vm = StateObject(wrappedValue: QuestViewModel(questNetwork: QuestNetwork(), favoriteService: FavoriteService(favoriteNetwork: FavoriteNetwork()), selectedXpStat: initialXpStat))
+    init() {
+        _vm = StateObject(wrappedValue: QuestViewModel(questNetwork: QuestNetwork(), favoriteService: FavoriteService(favoriteNetwork: FavoriteNetwork())))
     }
     
     var body: some View {
         VStack(spacing: 0) {
             headerView
                 
-            if vm.selectedHeader != .completed {
-                subHeaderView
-            }
-            
             switch vm.viewStatus {
             case .loading:
                 ProgressView().frame(maxHeight: .infinity)
@@ -40,17 +36,11 @@ struct QuestView: View {
         }
         .onReceive(
             vm.$selectedHeader
-                .combineLatest(vm.$selectedXpStat)
                 .combineLatest(vm.questFilterState.$selectedValue)
                 .combineLatest(vm.repeatFilterState.$selectedValue)
                 .combineLatest(vm.eventFilterState.$selectedValue)
         ) { _ in
             vm.closeFilterPicker()
-        }
-        .onReceive(sharedState.$selectedXpStat) { newValue in
-            // 외부에서 스탯 변경 시 기본 탭으로 변경
-            vm.selectedXpStat = newValue
-            vm.selectedHeader = .default
         }
         .sheet(isPresented: $vm.showQuestSheet) {
             let tall = vm.selectedQuest.isRepeatQuest || vm.selectedQuest.missionType == .image
@@ -112,17 +102,6 @@ extension QuestView {
         .padding(.horizontal, 20)
     }
     
-    // 서브헤더 - 5가지 스탯
-    private var subHeaderView: some View {
-        SelectableTabHeader(
-            selectedItem: $vm.selectedXpStat,
-            items: XpStat.allCases,
-            horizontalPadding: 0,
-            height: 44,
-            hasBottomLine: true
-        )
-    }
-    
     private var questListView: some View {
         ScrollViewReader { proxy in
             ScrollView {
@@ -141,7 +120,6 @@ extension QuestView {
             }
             .onReceive(
                 vm.$selectedHeader
-                        .combineLatest(vm.$selectedXpStat)
                         .combineLatest(vm.questFilterState.$selectedValue)
                         .combineLatest(vm.repeatFilterState.$selectedValue)
                         .combineLatest(vm.eventFilterState.$selectedValue)
@@ -162,7 +140,7 @@ extension QuestView {
                     QuestItemView(
                         quest: quest,
                         style: UncompletedStyle(),
-                        tagTitle: String(quest.totalRewardXP())+"XP") {
+                        tagTitle: String(quest.totalRewardPoint())+"P") {
                             vm.toggleFavoriteStatus(quest: quest)
                         } action: {
                             vm.onQuestTapped(quest: quest)
@@ -198,7 +176,7 @@ extension QuestView {
                     QuestItemView(
                         quest: quest,
                         style: CompletedStyle(),
-                        tagTitle: String(quest.totalRewardXP())+"XP"
+                        tagTitle: ""
                     ) { } action: { }
                 }
                 
@@ -280,5 +258,5 @@ extension QuestView {
 }
 
 #Preview {
-    QuestView(initialXpStat:  .charm)
+    QuestView()
 }

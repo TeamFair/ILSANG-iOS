@@ -43,5 +43,5 @@ struct MyPageChallengeList: View {
 }
 
 #Preview {
-    MyPageChallengeList(vm: MyPageViewModel(userNetwork: UserNetwork(), challengeNetwork: ChallengeNetwork(), imageNetwork: ImageNetwork(), xpNetwork: XPNetwork()))
+    MyPageChallengeList(vm: MyPageViewModel(userNetwork: UserNetwork(), challengeNetwork: ChallengeNetwork(), imageNetwork: ImageNetwork(), pointNetwork: PointNetwork()))
 }

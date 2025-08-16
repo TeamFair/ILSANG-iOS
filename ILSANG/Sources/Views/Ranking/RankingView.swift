@@ -29,11 +29,11 @@ struct RankingView: View {
         }
         .background(Color.background)
         .task {
-            await vm.loadRankIfNeeded(xpStat: vm.selectedXpStat)
+            await vm.loadRankIfNeeded(type: vm.selectedPointType)
         }
-        .onChange(of: vm.selectedXpStat) { _, newValue in
+        .onChange(of: vm.selectedPointType) { _, newValue in
             Task {
-                await vm.loadRankIfNeeded(xpStat: newValue)
+                await vm.loadRankIfNeeded(type: newValue)
             }
         }
     }
@@ -52,8 +52,8 @@ extension RankingView {
     
     private var subHeaderView: some View {
         SelectableTabHeader(
-            selectedItem: $vm.selectedXpStat,
-            items: XpStat.allCases,
+            selectedItem: $vm.selectedPointType,
+            items: PointType.allCases,
             horizontalPadding: 0,
             height: 44,
             hasBottomLine: true
@@ -63,7 +63,7 @@ extension RankingView {
     private var rankingListView: some View {
         ScrollView {
             LazyVStack(spacing: 12) {
-                if let ranks = vm.userRank[vm.selectedXpStat] {
+                if let ranks = vm.userRank[vm.selectedPointType] {
                     ForEach(Array(ranks.enumerated()), id: \.element.customerId) { idx, rank in
                         NavigationLink {
                             OtherUserProfileView(customerId: rank.customerId)
@@ -76,10 +76,10 @@ extension RankingView {
             .padding(.top, 24)
             .padding(.bottom, 72)
         }
-        .animation(nil, value: vm.selectedXpStat)
+        .animation(nil, value: vm.selectedPointType)
         .refreshable {
             Task {
-                await vm.fetchAndStoreUserRank(xpStat: vm.selectedXpStat)
+                await vm.fetchAndStoreUserRank(type: vm.selectedPointType)
             }
         }
     }
@@ -91,7 +91,7 @@ extension RankingView {
             subTitle: "네트워크 연결 상태가 좋지 않아\n랭킹을 불러올 수 없어요",
             emoticon: "🥲"
         ) {
-            Task { await vm.loadRankIfNeeded(xpStat: vm.selectedXpStat) }
+            Task { await vm.loadRankIfNeeded(type: vm.selectedPointType) }
         }
     }
 }

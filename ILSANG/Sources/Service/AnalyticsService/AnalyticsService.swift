@@ -18,7 +18,7 @@ enum AnalyticsEvent {
     case homeBannerClick(bannerId: Int)
     case homePopularQuestClick(questId: String)
     case homeRecommendQuestClick(questId: String)
-    case homeBigRewardQuestClick(questId: String, stat: String)
+    case homeBigRewardQuestClick(questId: String)
     case homeRankingClick(userId: String)
     case questFilterClick(filterOption: String)
     case questItemClick(questId: String, questType: String)
@@ -48,8 +48,8 @@ enum AnalyticsEvent {
             ["quest_id": questId]
         case .homeRecommendQuestClick(let questId):
             ["quest_id": questId]
-        case .homeBigRewardQuestClick(let questId, let stat):
-            ["quest_id": questId, "stat": stat]
+        case .homeBigRewardQuestClick(let questId):
+            ["quest_id": questId]
         case .homeRankingClick(let userId):
             ["user_id": userId]
         case .questFilterClick(let filterOption):

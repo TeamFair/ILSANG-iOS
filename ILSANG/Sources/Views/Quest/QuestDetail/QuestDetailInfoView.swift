@@ -49,14 +49,11 @@ struct QuestDetailInfoView: View {
             
             Spacer(minLength: 8)
             
-            Text(String(quest.totalRewardXP()) + "XP")
+            Text(String(quest.totalRewardPoint()) + "P")
                 .styledFont(.heading1)
                 .foregroundStyle(.primaryPurple)
                 .padding(10)
-                .background(
-                    RoundedRectangle(cornerRadius: 12)
-                        .foregroundStyle(Color.primary100)
-                )
+                .roundedBackground(cornerRadius: 12, bgColor: .primary100)
         }
         .foregroundStyle(.gray500)
         .frame(minHeight: 80, maxHeight: 88)

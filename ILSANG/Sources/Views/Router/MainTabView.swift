@@ -62,7 +62,7 @@ struct MainTabView: View {
         case .home:
             HomeView(vm: viewModel)
         case .quest:
-            QuestView(initialXpStat: sharedState.selectedXpStat)
+            QuestView()
         case .approval:
             ApprovalView()
         case .ranking:
@@ -75,5 +75,4 @@ struct MainTabView: View {
 
 class SharedState: ObservableObject {
     @Published var selectedTab: Tab = .home
-    @Published var selectedXpStat: XpStat = .strength
 }

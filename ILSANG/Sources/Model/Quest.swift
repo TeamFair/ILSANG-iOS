@@ -42,7 +42,6 @@ struct ChallengeImage: Codable, Hashable {
 }
 
 struct Reward: Codable {
-    let quantity: Int
-    let content: String?
-    let type: String
+    let point: Int
+    let pointType: String
 }

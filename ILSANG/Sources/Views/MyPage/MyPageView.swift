@@ -9,7 +9,7 @@ import SwiftUI
 
 struct MyPageView: View {
     
-    @StateObject var vm: MyPageViewModel = MyPageViewModel(userNetwork: UserNetwork(), challengeNetwork: ChallengeNetwork(), imageNetwork: ImageNetwork(), xpNetwork: XPNetwork())
+    @StateObject var vm: MyPageViewModel = MyPageViewModel(userNetwork: UserNetwork(), challengeNetwork: ChallengeNetwork(), imageNetwork: ImageNetwork(), pointNetwork: PointNetwork())
     
     var body: some View {
         VStack(spacing: 0) {
@@ -71,7 +71,7 @@ struct MyPageView: View {
                 case .quest:
                     MyPageChallengeList(vm: vm)
                 case .info:                    
-                    MyPageInfoView(xpPoint: vm.userData?.xpPoint, xpStats: vm.xpStats, honorTitle: vm.honorTitle)
+                    MyPageInfoView(totalPoint: vm.userData?.xpPoint, honorTitle: vm.honorTitle)
                 }
             }
             .padding(.bottom, 72)

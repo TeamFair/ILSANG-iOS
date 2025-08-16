@@ -26,12 +26,11 @@ final class HomeViewModel {
     }
     var mainBanners: [Banner] = []
     var userRankList: [TopRankViewModelItem] = [] // 10개
-    var largestRewardQuestList: [XpStat: [QuestViewModelItem]] = [:] // 3*5개
+    var largestRewardQuestList: [QuestViewModelItem] = [] // 3*5개
     var recommendQuestList: [QuestViewModelItem] = [] //QuestViewModelItem.mockQuestList // 10개
     var popularQuestList: [QuestViewModelItem] = QuestViewModelItem.mockQuestList // 4n개
     
     var currentBanner: Int = 0
-    var selectedXpStat: XpStat = .strength
     
     var showQuestSheet: Bool = false
     var selectedQuest: QuestViewModelItem = .mockData
@@ -241,14 +240,12 @@ final class HomeViewModel {
     
     @MainActor
     func loadLargeRewardQuestList() async throws {
-        let res = await questNetwork.getLargeRewardQuestsByAllXpStats()
+        let res = await questNetwork.getLargeRewardQuests()
         
         switch res {
-        case .success(let questByStat):
-            for (stat, quests) in questByStat {
-                self.largestRewardQuestList[stat] = quests.map { QuestViewModelItem(quest: $0) }
-                await cacheImages(for: &largestRewardQuestList[stat, default: []], getWriterImage: true)
-            }
+        case .success(let quests):
+            self.largestRewardQuestList = quests.data.map { QuestViewModelItem(quest: $0) }
+            await cacheImages(for: &largestRewardQuestList, getWriterImage: true)
         case .failure(let error):
             throw error
         }

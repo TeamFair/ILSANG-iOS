@@ -13,7 +13,7 @@ final class OtherUserProfileViewModel: ObservableObject {
     @Published var userData: User?
     @Published var userProfileIamge: UIImage?
     
-    @Published var xpStats: [XpStat: Int] = [:]
+    @Published var points: [PointType: Int] = [:]
     @Published var challengeList: [ChallengeViewModelItem] = []
     
     lazy var challengePaginationManager = PaginationManager<ChallengeViewModelItem>(
@@ -29,7 +29,7 @@ final class OtherUserProfileViewModel: ObservableObject {
     private let userNetwork: UserNetwork
     private let challengeNetwork: ChallengeNetwork
     private let imageNetwork: ImageNetwork
-    private let xpNetwork: XPNetwork
+    private let pointNetwork: PointNetwork
     
     var currentLv: Int {
         XpLevelCalculator.convertXPtoLv(xp: userData?.xpPoint)
@@ -39,13 +39,13 @@ final class OtherUserProfileViewModel: ObservableObject {
         return XpLevelCalculator.calculateProgress(currentValue: levelData.currentLevelXP, totalValue: levelData.requiredXPForNextLevel)
     }
     
-    init(customerId: String, userNetwork: UserNetwork, challengeNetwork: ChallengeNetwork, imageNetwork: ImageNetwork, xpNetwork: XPNetwork) {
+    init(customerId: String, userNetwork: UserNetwork, challengeNetwork: ChallengeNetwork, imageNetwork: ImageNetwork, pointNetwork: PointNetwork) {
         self.customerId = customerId
         
         self.userNetwork = userNetwork
         self.challengeNetwork = challengeNetwork
         self.imageNetwork = imageNetwork
-        self.xpNetwork = xpNetwork
+        self.pointNetwork = pointNetwork
     }
     
     func loadInitialData() async {
@@ -120,17 +120,15 @@ final class OtherUserProfileViewModel: ObservableObject {
     
     @MainActor
     func fetchXpStats(customerId: String) async {
-        let res = await xpNetwork.getXpStats(customerId: customerId)
+        let res = await pointNetwork.getPoints(customerId: customerId)
         
         switch res {
         case .success(let model):
             let xpData = model.data
-            self.xpStats = [
-                .strength: xpData.strengthStat,
-                .intellect: xpData.intellectStat,
-                .fun: xpData.funStat,
-                .charm: xpData.charmStat,
-                .sociability: xpData.sociabilityStat
+            self.points = [
+                .metro: model.data.metro,
+                .commercial: model.data.commercial,
+                .contribution: model.data.contribution
             ]
         case .failure(let error):
             Log("XP 스탯 조회 실패: \(error)")

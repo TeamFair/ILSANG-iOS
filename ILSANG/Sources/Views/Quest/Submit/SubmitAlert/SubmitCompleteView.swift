@@ -9,10 +9,11 @@ import SwiftUI
 
 /// 제출 완료 상태 화면
 struct SubmitCompleteView: View {
-    let totalXP: Int
-    let xpStats: [XpStat: Int]
+    let totalPoint: Int
+    let rewards: [PointType: Int]
     let action: () -> ()
     
+    private let innerSpacing: CGFloat = 24
     private let defaultSpacing: CGFloat = 16
     
     @StateObject private var viewModel = EffectViewModel()
@@ -22,31 +23,30 @@ struct SubmitCompleteView: View {
     @State var animateToggle2: Bool = false
     
     init(quest: QuestViewModelItem, action: @escaping ()->()) {
-        self.totalXP = quest.totalRewardXP()
-        self.xpStats  = quest.rewardDic
+        self.totalPoint = quest.totalRewardPoint()
+        self.rewards  = quest.rewardDic
         self.action = action
     }
     
     var body: some View {
-        VStack(spacing: defaultSpacing) {
+        VStack(spacing: 0) {
             arrowEffectView
+                .padding(.bottom, 8)
             
-            Text("\(totalXP)XP가 상승했어요")
+            Text("\(totalPoint)P가 상승했어요")
                 .font(.system(size: 17, weight: .bold))
                 .foregroundColor(.gray500)
             
-            xpStatSummaryView(statValues: xpStats)
+            rewardSummaryView(rewards: rewards)
+                .padding(.vertical, innerSpacing)
             
             PrimaryButton(title: "확인") {
                 action()
             }
         }
         .padding(defaultSpacing)
-        .frame(width: 260)
-        .background(
-            RoundedRectangle(cornerRadius: 16)
-                .foregroundStyle(.white)
-        )
+        .frame(minWidth: 260, idealWidth: 260, maxWidth: 280)
+        .roundedBackground(cornerRadius: 16, bgColor: .white)
         .onAppear {
             startEffectAnimation()
             
@@ -54,6 +54,38 @@ struct SubmitCompleteView: View {
                 animateToggle2.toggle()
             }
         }
+    }
+    
+    private func rewardSummaryView(rewards: [PointType: Int]) -> some View {
+        HStack(spacing: 8) {
+            ForEach(PointType.sorted, id: \.self) { type in
+                pointView(icon: type.image, point: rewards[type])
+            }
+        }
+        .padding(.vertical, 8)
+        .padding(.horizontal, 16)
+        .roundedBackground(cornerRadius: 12, bgColor: .background)
+    }
+    
+    private func pointView(icon: ImageResource, point: Int?) -> some View {
+        HStack(spacing: 0) {
+            Image(icon)
+                .resizable()
+                .scaledToFit()
+                .frame(25)
+            
+            Text("\(point ?? 0)P")
+                .font(.system(size: 13, weight: .semibold))
+                .foregroundColor(.primaryPurple)
+            
+            if let point = point, point > 0 {
+                Image(.arrowUp)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(height: 10)
+            }
+        }
+        .frame(height: 25)
     }
     
     private func startEffectAnimation() {
@@ -98,8 +130,7 @@ struct SubmitCompleteView: View {
             .offset(y: animateToggle ? -4 : 2.0)
             .scaleEffect(animateToggle ? 1.1 : 0.65)
         }
-        .frame(width:58, height: 45)
-        .padding(.bottom, -8)
+        .frame(width: 58, height: 45)
     }
     
     private func staticRectangle(x: CGFloat, y: CGFloat, randomSize: CGFloat, offset: CGFloat, cornerRadius: CGFloat, color: Color) -> some View {
@@ -121,57 +152,14 @@ struct SubmitCompleteView: View {
             .offset(x: x + offset, y: y + offset)
             .offset(y: animateToggle ? 1.5 + offset : 0.0)
     }
-    
-    private func xpStatSummaryView(statValues: [XpStat: Int]) -> some View {
-        let stats: [[XpStat]] = [[.strength, .intellect, .charm],
-                                 [.fun, .sociability]]
-        
-        return VStack(spacing: 0) {
-            ForEach(stats, id: \.self) { row in
-                HStack(spacing: 4) {
-                    ForEach(row, id: \.self) { stat in
-                        xpStatItemView(icon: stat.image, point: statValues[stat])
-                    }
-                }
-            }
-        }
-        .padding(8)
-        .frame(width: 228, height: 76)
-        .background(
-            RoundedRectangle(cornerRadius: 12)
-                .foregroundStyle(Color.background)
-        )
-    }
-    
-    private func xpStatItemView(icon: ImageResource, point: Int?) -> some View {
-        HStack(spacing: 0) {
-            Image(icon)
-                .resizable()
-                .scaledToFit()
-                .frame(width: 19, height: 19)
-                .frame(width: 30, height: 30)
-            
-            Text("\(point ?? 0)P")
-                .font(.system(size: 13, weight: .semibold))
-                .foregroundColor(.primaryPurple)
-            
-            if let point = point, point > 0 {
-                Image(.arrowUp)
-                    .resizable()
-                    .scaledToFit()
-                    .frame(height: 10)
-                    .padding(.leading, 2)
-            }
-        }
-        .padding(.horizontal, 2)
-        .frame(height: 30)
-    }
 }
 
 #Preview {
     SubmitCompleteView(quest: .mockData) {
         print("")
     }
+    .frame(maxWidth: .infinity, maxHeight: .infinity)
+    .background(Color.black.opacity(0.5))
 }
 
 struct EffectManager {

@@ -37,9 +37,8 @@ final class MyPageViewModel: ObservableObject {
     
     @Published var selectedTab: MyPageTab = .quest
     
-    @Published var xpStats: [XpStat: Int] = [:]
+    @Published var points: [PointType: Int] = [:]
     @Published var challengeList: [ChallengeViewModelItem] = []
-    @Published var xpLogList: [XpLog] = []
     
     @Published var challengeDelete = false
     
@@ -52,25 +51,16 @@ final class MyPageViewModel: ObservableObject {
         }
     )
     
-//    lazy var xpLogPaginationManager = PaginationManager<XpLog>(
-//        size: 10,
-//        threshold: 7,
-//        loadPage: { [weak self] page in
-//            guard let self = self else { return ([], 0) }
-//            return await loadXpLogList(page: page, size: 10)
-//        }
-//    )
-    
     private let userNetwork: UserNetwork
     private let challengeNetwork: ChallengeNetwork
     private let imageNetwork: ImageNetwork
-    private let xpNetwork: XPNetwork
+    private let pointNetwork: PointNetwork
     
-    init(userNetwork: UserNetwork, challengeNetwork: ChallengeNetwork, imageNetwork: ImageNetwork, xpNetwork: XPNetwork) {
+    init(userNetwork: UserNetwork, challengeNetwork: ChallengeNetwork, imageNetwork: ImageNetwork, pointNetwork: PointNetwork) {
         self.userNetwork = userNetwork
         self.challengeNetwork = challengeNetwork
         self.imageNetwork = imageNetwork
-        self.xpNetwork = xpNetwork
+        self.pointNetwork = pointNetwork
         
         self.userData = UserService.shared.currentUser
         self.xpStatus = XpStatus(currentXp: userData?.xpPoint ?? 0)
@@ -78,7 +68,7 @@ final class MyPageViewModel: ObservableObject {
     
     @MainActor
     func loadDataIfNeeded() async {
-        if challengeList.isEmpty || xpLogList.isEmpty {
+        if challengeList.isEmpty {
             await loadInitialData()
         }
     }
@@ -86,7 +76,6 @@ final class MyPageViewModel: ObservableObject {
     func loadInitialData() async {
         // TODO: 도전내역 등록했을 때 재호출하도록 수정
         await challengePaginationManager.loadData(isRefreshing: true)
-        // await xpLogPaginationManager.loadData(isRefreshing: true)
     }
     
     @discardableResult @MainActor
@@ -126,19 +115,6 @@ final class MyPageViewModel: ObservableObject {
         return (challengeList, getChallengeList.total)
     }
     
-//    @discardableResult @MainActor
-//    func loadXpLogList(page: Int, size: Int) async -> ([XpLog], Int) {
-//        let getXpLogList = await fetchXpLog(page: page, size: size)
-//        
-//        if page == 0 {
-//            self.xpLogList = getXpLogList.data
-//        } else {
-//            self.xpLogList += getXpLogList.data
-//        }
-//        
-//        return (xpLogList, getXpLogList.total)
-//    }
-    
     private func fetchChallenges(page: Int, size: Int) async -> (data: [ChallengeViewModelItem], total: Int) {
         let response = await challengeNetwork.getChallenges(page: page, size: size)
         
@@ -151,18 +127,6 @@ final class MyPageViewModel: ObservableObject {
             return ([], 0)
         }
     }
-    
-//    private func fetchXpLog(page: Int, size: Int) async -> (data: [XpLog], total: Int) {
-//        let res = await xpNetwork.getXpHistory(page: page, size: size)
-//        
-//        switch res {
-//        case .success(let model):
-//            return (model.data, model.total)
-//        case .failure(let error):
-//            Log("XP 로그 조회 실패: \(error)")
-//            return ([], 0)
-//        }
-//    }
     
     @MainActor
     func fetchUser() async {
@@ -187,20 +151,17 @@ final class MyPageViewModel: ObservableObject {
     
     @MainActor
     func fetchXpStats() async {
-        let res = await xpNetwork.getXpStats()
+        let res = await pointNetwork.getPoints()
         
         switch res {
         case .success(let model):
-            let xpData = model.data
-            self.xpStats = [
-                .strength: xpData.strengthStat,
-                .intellect: xpData.intellectStat,
-                .fun: xpData.funStat,
-                .charm: xpData.charmStat,
-                .sociability: xpData.sociabilityStat
+            self.points = [
+                .metro: model.data.metro,
+                .commercial: model.data.commercial,
+                .contribution: model.data.contribution
             ]
         case .failure(let error):
-            Log("XP 스탯 조회 실패: \(error)")
+            Log("포인트 조회 실패: \(error)")
         }
     }
     
@@ -222,13 +183,10 @@ final class MyPageViewModel: ObservableObject {
         switch type {
         case .challenge:
             return challengePaginationManager.canLoadMoreData()
-//        case .xpLog:
-//            return xpLogPaginationManager.canLoadMoreData()
-        }
+       }
     }
     
     enum PaginationDataType {
         case challenge
-//        case xpLog
     }
 }
