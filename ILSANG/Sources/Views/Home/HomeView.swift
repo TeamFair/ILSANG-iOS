@@ -83,6 +83,9 @@ struct HomeView: View {
             SubmitRouterView(selectedQuest: vm.selectedQuest)
                 .interactiveDismissDisabled()
         }
+        .navigationDestination(item: $vm.selectedBanner) { banner in
+            BannerDetailView(banner: banner, shouldShowIllsangZoneWarning: vm.shouldShowIllsangZoneWarning, currentSeason: vm.currentSeason)
+        }
         .navigationDestination(isPresented: $vm.showSelectMyRegionView) {
             MyRegionAreaSelectionView { area in
                 vm.handleMyRegionSelection(area)
@@ -208,6 +211,8 @@ struct HomeView: View {
                             AnalyticsService.logEvent(.homeBannerClick(bannerId: item.id))
                             if let tab = vm.getTabFromURL(from: item.description) { /// 해당하는 탭으로 이동
                                 sharedState.selectedTab = tab
+                            } else {
+                                vm.selectedBanner = item
                             }
                         }
                 }
@@ -342,8 +347,9 @@ struct HomeView: View {
             ),
             content:
                 Group {
-                    StatHeaderView(
-                        selectedXpStat: $vm.selectedXpStat,
+                    SelectableTabHeader(
+                        selectedItem: $vm.selectedXpStat,
+                        items: XpStat.allCases,
                         horizontalPadding: LayoutConstants.horizontalPadding,
                         height: 30,
                         hasBottomLine: false

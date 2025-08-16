@@ -7,7 +7,7 @@
 
 import UIKit
 
-enum XpStat: String, CaseIterable, Identifiable {
+enum XpStat: String, CaseIterable, Identifiable, SelectableTabItem {
     var id: String {
         self.rawValue
     }

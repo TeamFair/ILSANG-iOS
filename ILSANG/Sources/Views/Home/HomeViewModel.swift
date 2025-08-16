@@ -62,6 +62,7 @@ final class HomeViewModel {
     }
     var showSelectMyRegionView: Bool = false
     var showSelectIllsangZoneView: Bool = false
+    var selectedBanner: Banner? = nil
 
     var myRegionCode: String? = nil // 초기값 서현역으로 설정
     var myRegionName: String? = nil
