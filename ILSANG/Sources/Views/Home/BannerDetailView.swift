@@ -45,8 +45,8 @@ struct BannerDetailView: View {
                 .onChange(of: viewModel.eventFilterState.selectedValue) { _, _ in
                     viewModel.closeFilterPicker()
                 }
-                .padding(.top, 8)
             }
+            .padding(.top, 8)
         }
         .background(Color.background)
         .navigationBarBackButtonHidden()
