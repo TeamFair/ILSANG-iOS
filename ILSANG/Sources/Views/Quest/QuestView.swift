@@ -114,8 +114,9 @@ extension QuestView {
     
     // 서브헤더 - 5가지 스탯
     private var subHeaderView: some View {
-        StatHeaderView(
-            selectedXpStat: $vm.selectedXpStat,
+        SelectableTabHeader(
+            selectedItem: $vm.selectedXpStat,
+            items: XpStat.allCases,
             horizontalPadding: 0,
             height: 44,
             hasBottomLine: true

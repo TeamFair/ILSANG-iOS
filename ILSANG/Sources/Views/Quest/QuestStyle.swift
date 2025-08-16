@@ -140,6 +140,26 @@ struct RepeatStyle: DefaultQuestStyleProtocol {
     }
 }
 
+struct BannerEventStyle: DefaultQuestStyleProtocol {
+    var tagStyle: TagView.TagStyle? { .eventWithIcon }
+    var tagImage: ImageResource? { .event }
+    var tagOffset: (x: CGFloat, y: CGFloat) { (48, 5) }
+    var trailingPadding: CGFloat { 16 }
+        
+    func trailingView(for quest: QuestCommonModel) -> some View {
+        IconView(iconWidth: 6, size: .small, icon: .arrowRight, color: .gray)
+    }
+    
+    func overlayView() -> some View {
+        EmptyView()
+    }
+    
+    @ViewBuilder
+    func viewForQuest(quest: QuestCommonModel) -> some View {
+        DefaultQuestView(quest: quest, style: BannerEventStyle())
+    }
+}
+
 
 struct RecommendStyle: QuestStyleProtocol {
     var tagStyle: TagView.TagStyle? { nil }

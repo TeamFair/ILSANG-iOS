@@ -75,16 +75,18 @@ struct DefaultQuestView<Style: DefaultQuestStyleProtocol>: View {
                 .padding(.trailing, 20)
                 
                 // 텍스트 정보
-                VStack(alignment: .leading, spacing: 4) {
+                VStack(alignment: .leading, spacing: 0) {
                     Text(quest.title.forceCharWrapping)
+                        .styledFont(.bold, size: 15, lineHeight: 20)
                         .font(.system(size: 15, weight: .bold))
                         .foregroundColor(.black)
                         .lineLimit(2)
                         .multilineTextAlignment(.leading)
                     Text(quest.writer)
-                        .font(.system(size: 13, weight: .regular))
+                        .styledFont(.regular, size: 11, lineHeight: 16)
+                        .font(.system(size: 11, weight: .regular))
                         .foregroundColor(.gray400)
-                        .padding(.bottom, 4)
+                        .padding(.bottom, 8)
                     StatGridView(
                         rewardDic: quest.rewardDic,
                         expireDate: quest.type == "EVENT" ? quest.expireDate : nil,

@@ -51,8 +51,9 @@ extension RankingView {
     }
     
     private var subHeaderView: some View {
-        StatHeaderView(
-            selectedXpStat: $vm.selectedXpStat,
+        SelectableTabHeader(
+            selectedItem: $vm.selectedXpStat,
+            items: XpStat.allCases,
             horizontalPadding: 0,
             height: 44,
             hasBottomLine: true

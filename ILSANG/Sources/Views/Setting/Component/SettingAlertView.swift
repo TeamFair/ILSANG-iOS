@@ -10,14 +10,14 @@ import SwiftUI
 struct SettingAlertView<Content: View>: View {
     
     let alertType: AlertType
-    var onCancel: (() -> Void?)? = nil
-    var onConfirm: (() -> Void?)? = nil
+    var onCancel: (() -> Void)? = nil
+    var onConfirm: (() -> Void)? = nil
     let content: Content
     
     init(
         alertType: AlertType,
-        onCancel: (() -> Void?)? = nil,
-        onConfirm: (() -> Void?)? = nil,
+        onCancel: (() -> Void)? = nil,
+        onConfirm: (() -> Void)? = nil,
         @ViewBuilder content: () -> Content = { EmptyView() }
     ) {
         self.alertType = alertType
