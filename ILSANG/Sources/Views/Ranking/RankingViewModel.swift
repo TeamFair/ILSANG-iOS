@@ -18,8 +18,8 @@ class RankingViewModel: ObservableObject {
     }
     
     @Published var viewStatus: ViewStatus = .loading
-    @Published var selectedXpStat: XpStat = .strength
-    @Published var userRank: [XpStat: [StatRankViewModelItem]] = Dictionary(uniqueKeysWithValues: XpStat.allCases.map { ($0, []) })
+    @Published var selectedPointType: PointType = .metro
+    @Published var userRank: [PointType: [StatRankViewModelItem]] = Dictionary(uniqueKeysWithValues: PointType.allCases.map { ($0, []) })
     
     private let rankNetwork: RankNetwork
     
@@ -27,41 +27,41 @@ class RankingViewModel: ObservableObject {
         self.rankNetwork = rankNetwork
     }
     
-    func loadRankIfNeeded(xpStat: XpStat) async {
-        if let users = userRank[xpStat], users.count > 0 {
+    func loadRankIfNeeded(type: PointType) async {
+        if let users = userRank[type], users.count > 0 {
             return
         }
-        await fetchAndStoreUserRank(xpStat: xpStat)
+        await fetchAndStoreUserRank(type: type)
     }
     
     @MainActor
-    func fetchAndStoreUserRank(xpStat: XpStat) async {
-        changeViewStatus(.loading)
-        let res = await rankNetwork.getRankByStat(xpstat: xpStat.parameterText)
-        
-        switch res {
-        case .success(let response):
-            let items = await withTaskGroup(of: (Int, StatRankViewModelItem).self) { group in
-                for (index, rank) in response.data.enumerated() {
-                    group.addTask {
-                        let item = await StatRankViewModelItem(rank: rank)
-                        return (index, item)
-                    }
-                }
-                
-                var results = Array<StatRankViewModelItem?>(repeating: nil, count: response.data.count)
-                for await (index, item) in group {
-                    results[index] = item
-                }
-                
-                return results.compactMap { $0 } // nil 제거
-            }
-            self.userRank[xpStat] = items
-            changeViewStatus(.loaded)
-        case .failure:
-            changeViewStatus(.error)
-            Log(res)
-        }
+    func fetchAndStoreUserRank(type: PointType) async {
+//        changeViewStatus(.loading)
+//        let res = await rankNetwork.getRankByStat(xpstat: xpStat.parameterText)
+//        
+//        switch res {
+//        case .success(let response):
+//            let items = await withTaskGroup(of: (Int, StatRankViewModelItem).self) { group in
+//                for (index, rank) in response.data.enumerated() {
+//                    group.addTask {
+//                        let item = await StatRankViewModelItem(rank: rank)
+//                        return (index, item)
+//                    }
+//                }
+//                
+//                var results = Array<StatRankViewModelItem?>(repeating: nil, count: response.data.count)
+//                for await (index, item) in group {
+//                    results[index] = item
+//                }
+//                
+//                return results.compactMap { $0 } // nil 제거
+//            }
+//            self.userRank[xpStat] = items
+//            changeViewStatus(.loaded)
+//        case .failure:
+//            changeViewStatus(.error)
+//            Log(res)
+//        }
     }
     
     @MainActor

@@ -83,6 +83,7 @@ struct EventStyle: DefaultQuestStyleProtocol {
     }
 }
 
+// TODO: 퀘스트 타입 별로 태그디자인 수정
 struct CompletedStyle: DefaultQuestStyleProtocol {
     static let separatorOffset: CGFloat = 72.0
 

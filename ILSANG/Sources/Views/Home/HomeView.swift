@@ -262,7 +262,7 @@ struct HomeView: View {
                 QuestItemView(
                     quest: quest,
                     style: PopularStyle(type: quest.type, repeatType: RepeatType(rawValue: quest.target.lowercased()) ?? .daily),
-                    tagTitle: "\(quest.totalRewardXP())XP"
+                    tagTitle: ""
                 ) {
                     AnalyticsService.logEvent(.homePopularQuestClick(questId: quest.id))
                     vm.onQuestTapped(quest: quest)
@@ -281,7 +281,7 @@ struct HomeView: View {
                             QuestItemView(
                                 quest: quest,
                                 style: PopularStyle(type: quest.type, repeatType: RepeatType(rawValue: quest.target.lowercased()) ?? .daily),
-                                tagTitle: "\(quest.totalRewardXP())XP"
+                                tagTitle: ""
                             ) {
                                 AnalyticsService.logEvent(.homePopularQuestClick(questId: quest.id))
                                 vm.onQuestTapped(quest: quest)
@@ -341,29 +341,21 @@ struct HomeView: View {
             seeAll: (
                 .label("전체 보기"),
                 .bottomTrailing, {
-                    sharedState.selectedXpStat = vm.selectedXpStat
                     sharedState.selectedTab = .quest /// 퀘스트 탭(선택된 스탯)으로 이동
                 }
             ),
             content:
                 Group {
-                    SelectableTabHeader(
-                        selectedItem: $vm.selectedXpStat,
-                        items: XpStat.allCases,
-                        horizontalPadding: LayoutConstants.horizontalPadding,
-                        height: 30,
-                        hasBottomLine: false
-                    )
                     // TODO: (디자인 대기 중) 퀘스트 타입에 따라 다르게 보여줘야함
-                    ForEach(vm.largestRewardQuestList[vm.selectedXpStat, default: []].prefix(3), id: \.id) { quest in
+                    ForEach(vm.largestRewardQuestList.prefix(3), id: \.id) { quest in
                         QuestItemView(
                             quest: quest,
                             style: UncompletedStyle(),
-                            tagTitle: String(quest.totalRewardXP())+"XP"
+                            tagTitle: String(quest.totalRewardPoint())+"P"
                         ) {
                             vm.toggleFavoriteStatus(quest: quest)
                         } action: {
-                            AnalyticsService.logEvent(.homeBigRewardQuestClick(questId: quest.id, stat: vm.selectedXpStat.parameterText))
+                            AnalyticsService.logEvent(.homeBigRewardQuestClick(questId: quest.id))
                             vm.onQuestTapped(quest: quest)
                         }
                     }

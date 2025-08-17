@@ -59,9 +59,6 @@ struct SelectableTabHeader<Item: SelectableTabItem>: View {
 
 #Preview {
     VStack {
-        // 홈뷰
-        SelectableTabHeader(selectedItem: .constant(XpStat.fun), items: XpStat.allCases, horizontalPadding: 20, height: 30, hasBottomLine: false)
-        // 퀘스트뷰
-        SelectableTabHeader(selectedItem: .constant(XpStat.intellect), items: XpStat.allCases, horizontalPadding: 0, height: 44, hasBottomLine: true)
+        SelectableTabHeader(selectedItem: .constant(PointType.metro), items: PointType.allCases, horizontalPadding: 0, height: 44, hasBottomLine: true)
     }
 }

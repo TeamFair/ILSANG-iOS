@@ -12,7 +12,7 @@ struct OtherUserProfileView: View {
     @Environment(\.dismiss) var dismiss
     
     init(customerId: String) {
-        _vm = StateObject(wrappedValue: OtherUserProfileViewModel(customerId: customerId, userNetwork: UserNetwork(), challengeNetwork: ChallengeNetwork(), imageNetwork: ImageNetwork(), xpNetwork: XPNetwork()))
+        _vm = StateObject(wrappedValue: OtherUserProfileViewModel(customerId: customerId, userNetwork: UserNetwork(), challengeNetwork: ChallengeNetwork(), imageNetwork: ImageNetwork(), pointNetwork: PointNetwork()))
     }
     
     var body: some View {
@@ -38,7 +38,6 @@ struct OtherUserProfileView: View {
         ScrollView {
             VStack(spacing: 24) {
                 userProfileSection
-                xpStatPolygonSection
                 challengeSection
             }
             .padding(.top, 16)
@@ -89,18 +88,6 @@ struct OtherUserProfileView: View {
             RoundedRectangle(cornerRadius: 12)
                 .fill(.white)
         )
-    }
-    
-    private var xpStatPolygonSection: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Text("능력별 포인트")
-                .styledFont(.heading2)
-                .foregroundColor(.gray400)
-                .padding(.leading, 4)
-            
-            OtherUserXpStatView(xpPoint: vm.userData?.xpPoint, xpStats: vm.xpStats)
-                .zIndex(10)
-        }
     }
     
     private var challengeSection: some View {

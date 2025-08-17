@@ -17,7 +17,7 @@ final class QuestViewModelItemBuilder {
     private var missionType: QuestViewModelItem.MissionType = .image
     private var missionTitle: String = "기본 미션 제목"
     private var writer: String = "일상"
-    private var rewardDic: [XpStat: Int] = [:]
+    private var rewardDic: [PointType: Int] = [:]
     private var type: String = "NORMAL" // REPEAT
     private var target: String = "NONE" // DAILY, WEEKLY, MONTHLY
     private var expireDate: String = "2030-12-30T00:00:00"
@@ -75,7 +75,7 @@ final class QuestViewModelItemBuilder {
         return self
     }
     
-    func setRewardDic(_ rewardDic: [XpStat: Int]) -> Self {
+    func setRewardDic(_ rewardDic: [PointType: Int]) -> Self {
         self.rewardDic = rewardDic
         return self
     }

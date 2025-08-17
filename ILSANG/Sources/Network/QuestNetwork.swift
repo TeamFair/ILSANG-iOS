@@ -45,21 +45,8 @@ final class QuestNetwork {
     }
     
     /// 큰 보상 퀘스트 조회시 사용
-    func getLargeRewardQuestsByAllXpStats(page: Int = 0, size: Int = 3) async -> Result<[XpStat: [Quest]], Error> {
-        var questsByStat: [XpStat: [Quest]] = [:]
-        for xpStat in XpStat.allCases {
-            do {
-                let quests = try await getLargeRewardQuestsByXpStat(page: page, size: size, xpStat: xpStat).get().data
-                questsByStat[xpStat, default: []] += quests
-            } catch {
-                return .failure(error)
-            }
-        }
-        return .success(questsByStat)
-    }
-    
-    func getLargeRewardQuestsByXpStat(page: Int, size: Int, xpStat: XpStat) async -> Result<ResponseWithPage<[Quest]>, Error> {
-        let parameters: Parameters = ["page": page, "size": size, "rewardContent": xpStat.parameterText]
+    func getLargeRewardQuests(page: Int = 0, size: Int = 3) async -> Result<ResponseWithPage<[Quest]>, Error> {
+        let parameters: Parameters = ["page": page, "size": size]
         return await Network.requestData(url: questUrl+"largeRewardQuest", method: .get, parameters: parameters, withToken: true)
     }
     

@@ -194,7 +194,7 @@ struct ChallengeImageView: View {
                     userNetwork: UserNetwork(),
                     challengeNetwork: ChallengeNetwork(),
                     imageNetwork: ImageNetwork(),
-                    xpNetwork: XPNetwork()
+                    pointNetwork: PointNetwork()
                 ),
                 idx: 0
             )

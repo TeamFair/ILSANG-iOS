@@ -28,12 +28,12 @@ struct QuestDetailRepeatRankView: View {
                     }
                     Text("\(rank)위")
                 } else {
-                    Text("-위")
+                    Text("-")
                 }
             }
             .foregroundStyle(.primaryPurple)
             .styledFont(.bold, size: 24, lineHeight: 34)
-            .frame(height: contentWidth, alignment: .bottom)
+            .frame(height: contentWidth, alignment: .top)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(Color.white)

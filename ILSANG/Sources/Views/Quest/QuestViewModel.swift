@@ -19,7 +19,6 @@ class QuestViewModel: ObservableObject {
     
     // TODO: 바뀔 때 api 요청하도록 수정 (refresh, init 고려)
     @Published var selectedHeader: QuestStatus = .default
-    @Published var selectedXpStat: XpStat
 
     // 필터
     @Published var repeatFilterState: FilterPickerState<RepeatType>
@@ -53,51 +52,53 @@ class QuestViewModel: ObservableObject {
         .completed: []
     ]
     
-    @Published var defaultQuestListByXpStat: [XpStat: [QuestViewModelItem]] = Dictionary(uniqueKeysWithValues: XpStat.allCases.map { ($0, []) })
-    @Published var repeatQuestListByXpStat: [XpStat: [QuestViewModelItem]] = Dictionary(uniqueKeysWithValues: XpStat.allCases.map { ($0, []) })
-    @Published var eventQuestListByXpStat: [XpStat: [QuestViewModelItem]] = Dictionary(uniqueKeysWithValues: XpStat.allCases.map { ($0, []) })
+    @Published var defaultQuestListByXpStat: [QuestViewModelItem] = []
+    @Published var repeatQuestListByXpStat: [QuestViewModelItem] = []
+    @Published var eventQuestListByXpStat: [QuestViewModelItem] = []
 
     var filteredDefaultQuestListByXpStat: [QuestViewModelItem] {
         switch questFilterState.selectedValue {
         case .pointHighest:
-            return defaultQuestListByXpStat[selectedXpStat, default: []].sorted { $0.rewardDic[selectedXpStat, default: 0] > $1.rewardDic[selectedXpStat, default: 0] }
+            return defaultQuestListByXpStat
+                .sorted { $0.totalRewardPoint() > $1.totalRewardPoint() }
         case .pointLowest:
-            return defaultQuestListByXpStat[selectedXpStat, default: []].sorted { $0.rewardDic[selectedXpStat, default: 0] < $1.rewardDic[selectedXpStat, default: 0] }
+            return defaultQuestListByXpStat
+                .sorted { $0.totalRewardPoint() < $1.totalRewardPoint() }
         case .popular:
-            return defaultQuestListByXpStat[selectedXpStat, default: []]
+            return defaultQuestListByXpStat
         case .favorite:
-            return defaultQuestListByXpStat[selectedXpStat, default: []].filter { $0.favoriteYn }
+            return defaultQuestListByXpStat.filter { $0.favoriteYn }
         }
     }
     
     var filteredRepeatQuestListByXpStat: [QuestViewModelItem] {
         switch questFilterState.selectedValue  {
         case .pointHighest:
-            return repeatQuestListByXpStat[selectedXpStat, default: []].sorted { $0.rewardDic[selectedXpStat, default: 0] > $1.rewardDic[selectedXpStat, default: 0] }
+            return repeatQuestListByXpStat.sorted { $0.totalRewardPoint() > $1.totalRewardPoint() }
         case .pointLowest:
-            return repeatQuestListByXpStat[selectedXpStat, default: []].sorted { $0.rewardDic[selectedXpStat, default: 0] < $1.rewardDic[selectedXpStat, default: 0] }
+            return repeatQuestListByXpStat.sorted { $0.totalRewardPoint() < $1.totalRewardPoint() }
         case .popular:
-            return repeatQuestListByXpStat[selectedXpStat, default: []]
+            return repeatQuestListByXpStat
         case .favorite:
-            return repeatQuestListByXpStat[selectedXpStat, default: []].filter { $0.favoriteYn }
+            return repeatQuestListByXpStat.filter { $0.favoriteYn }
         }
     }
 
     var filteredEventQuestList: [QuestViewModelItem] {
         switch eventFilterState.selectedValue  {
         case .pointHighest:
-            return eventQuestListByXpStat[selectedXpStat, default: []].sorted { $0.rewardDic[selectedXpStat, default: 0] > $1.rewardDic[selectedXpStat, default: 0] }
+            return eventQuestListByXpStat.sorted { $0.totalRewardPoint() > $1.totalRewardPoint() }
         case .pointLowest:
-            return eventQuestListByXpStat[selectedXpStat, default: []].sorted { $0.rewardDic[selectedXpStat, default: 0] < $1.rewardDic[selectedXpStat, default: 0] }
+            return eventQuestListByXpStat.sorted { $0.totalRewardPoint() < $1.totalRewardPoint() }
         case .popular:
-            return eventQuestListByXpStat[selectedXpStat, default: []]
+            return eventQuestListByXpStat
         case .upcoming:
-            return eventQuestListByXpStat[selectedXpStat, default: []].sorted(by: {
+            return eventQuestListByXpStat.sorted(by: {
                 guard let date1 = $0.expireDate.toDate(), let date2 = $1.expireDate.toDate() else { return false }
                 return date1 < date2
             })
         case .favorite:
-            return eventQuestListByXpStat[selectedXpStat, default: []].filter { $0.favoriteYn }
+            return eventQuestListByXpStat.filter { $0.favoriteYn }
         }
     }
     
@@ -161,8 +162,7 @@ class QuestViewModel: ObservableObject {
     private let questNetwork: QuestNetwork
     private let favoriteService: FavoriteService
 
-    init(questNetwork: QuestNetwork, favoriteService: FavoriteService, selectedXpStat: XpStat) {
-        self.selectedXpStat = selectedXpStat
+    init(questNetwork: QuestNetwork, favoriteService: FavoriteService) {
         self.questNetwork = questNetwork
         self.favoriteService = favoriteService
 
@@ -286,36 +286,17 @@ class QuestViewModel: ObservableObject {
     /// uncompleted 상태의 기본 퀘스트 목록을 XpStat별로 분류하여 defaultQuestListByXpStat 딕셔너리에 매핑합니다.
     private func mapDefaultQuestByXpStat() {
         guard let uncompletedQuestList = itemListByStatus[.default] else { return }
-        self.defaultQuestListByXpStat = self.defaultQuestListByXpStat.mapValues { _ in [] } // 초기화
-        
-        for item in uncompletedQuestList {
-            for reward in item.rewardDic {
-                defaultQuestListByXpStat[reward.key]?.append(item)
-            }
-        }
+        self.defaultQuestListByXpStat = uncompletedQuestList
     }
     
     private func mapRepeatQuestByXpStat() {
         guard let repeatQuestList = itemListByStatus[.repeat] else { return }
-        self.repeatQuestListByXpStat = self.repeatQuestListByXpStat.mapValues { _ in [] } // 초기화
-        
-        for item in repeatQuestList {
-            for reward in item.rewardDic {
-                repeatQuestListByXpStat[reward.key]?.append(item)
-            }
-        }
+        self.repeatQuestListByXpStat = repeatQuestList
     }
     
     private func mapEventQuestByXpStat() {
         guard let eventQuestList = itemListByStatus[.event] else { return }
-        dump(itemListByStatus[.event])
-        self.eventQuestListByXpStat = self.eventQuestListByXpStat.mapValues { _ in [] } // 초기화
-        
-        for item in eventQuestList {
-            for reward in item.rewardDic {
-                eventQuestListByXpStat[reward.key]?.append(item)
-            }
-        }
+        self.eventQuestListByXpStat = eventQuestList
     }
     
     private func getQuestList(page: Int, size: Int, status: QuestStatus) async -> (data: [QuestViewModelItem], total: Int) {

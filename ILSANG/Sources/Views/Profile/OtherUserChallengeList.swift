@@ -44,5 +44,5 @@ struct OtherUserChallengeList: View {
 }
 
 #Preview {
-    OtherUserChallengeList(vm: OtherUserProfileViewModel(customerId: "CUS00000000", userNetwork: UserNetwork(), challengeNetwork: ChallengeNetwork(), imageNetwork: ImageNetwork(), xpNetwork: XPNetwork()))
+    OtherUserChallengeList(vm: OtherUserProfileViewModel(customerId: "CUS00000000", userNetwork: UserNetwork(), challengeNetwork: ChallengeNetwork(), imageNetwork: ImageNetwork(), pointNetwork: PointNetwork()))
 }

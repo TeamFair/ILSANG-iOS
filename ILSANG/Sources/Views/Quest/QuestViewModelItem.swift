@@ -26,7 +26,7 @@ class QuestViewModelItem: Hashable, Identifiable {
     let missionType: MissionType
     let missionTitle: String
     let writer: String
-    var rewardDic: [XpStat: Int]
+    var rewardDic: [PointType: Int]
     let type: String
     let target: String
     let expireDate: String
@@ -45,7 +45,7 @@ class QuestViewModelItem: Hashable, Identifiable {
         missionType: MissionType,
         missionTitle: String,
         writer: String,
-        rewardDic: [XpStat: Int],
+        rewardDic: [PointType: Int],
         type: String,
         target: String,
         expireDate: String,
@@ -92,9 +92,9 @@ class QuestViewModelItem: Hashable, Identifiable {
         self.customerRank = 0
         self.favoriteYn = quest.favoriteYn
         
-        for reward in quest.rewardList where reward.quantity > 0 && reward.type == "XP" {
-            if let content = reward.content, let stat = XpStat(rawValue: content.lowercased()) {
-                rewardDic[stat] = reward.quantity
+        for reward in quest.rewardList where reward.point > 0 {
+            if let stat = PointType(rawValue: reward.pointType.lowercased()) {
+                rewardDic[stat] = reward.point
             }
         }
     }
@@ -125,7 +125,6 @@ class QuestViewModelItem: Hashable, Identifiable {
     }
     
     enum MissionType: Equatable, Hashable {
-        
         case quiz(QuizType), image
         
         init?(rawValue: String) {
@@ -148,7 +147,7 @@ class QuestViewModelItem: Hashable, Identifiable {
         }
     }
     
-    func totalRewardXP() -> Int {
+    func totalRewardPoint() -> Int {
         self.rewardDic.values.reduce(0, +)
     }
     
@@ -181,7 +180,7 @@ extension QuestViewModelItem {
     
     static let mockData: QuestViewModelItem = QuestViewModelItemBuilder()
         .setMissionTitle("러닝 30분하기")
-        .setRewardDic([.fun: 15, .strength: 5])
+        .setRewardDic([.metro: 115, .commercial: 5, .contribution: 10])
         .setFavoriteYn(true)
         .setChallengeImageIds([.init(challengeId: "CH001", receiptImage: "", status: "")])
         .build()
@@ -189,7 +188,7 @@ extension QuestViewModelItem {
     static let mockRepeatData: QuestViewModelItem = QuestViewModelItemBuilder()
         .setMissionTitle("러닝 30분하기")
         .setRepeatType(.daily)
-        .setRewardDic([.fun: 15, .strength: 5])
+        .setRewardDic([.metro: 15, .commercial: 5, .contribution: 10])
         .setFavoriteYn(true)
         .setChallengeImageIds([.init(challengeId: "CH001", receiptImage: "", status: "")])
         .setCustomerRank(2)
@@ -199,7 +198,7 @@ extension QuestViewModelItem {
         QuestViewModelItemBuilder()
             .setMissionTitle("미라클모닝 실천하기")
             .setRepeatType(.daily)
-            .setRewardDic([.strength: 15, .intellect: 5])
+            .setRewardDic([.metro: 15, .commercial: 5, .contribution: 10])
             .setFavoriteYn(true)
             .setChallengeImageIds([.init(challengeId: "CH001", receiptImage: "", status: "")])
             .setCustomerRank(2)
@@ -209,13 +208,13 @@ extension QuestViewModelItem {
             .setMissionTitle("가족 사랑 지킴이")
             .setRepeatType(.weekly)
             .setMissionType(.quiz(.ox))
-            .setRewardDic([.sociability: 20, .charm: 10])
+            .setRewardDic([.metro: 10, .commercial: 20, .contribution: 100])
             .setCustomerRank(3)
             .build(),
         
         QuestViewModelItemBuilder()
             .setMissionTitle("감정 코칭 마스터")
-            .setRewardDic([.intellect: 15, .charm: 5])
+            .setRewardDic([.metro: 15, .commercial: 15, .contribution: 10])
             .setFavoriteYn(true)
             .setMainImage(.logo)
             .setMissionType(.quiz(.text))
@@ -225,7 +224,7 @@ extension QuestViewModelItem {
             .setMissionTitle("미션 타이틀")
             .setWriter("루틴디자이너")
             .setRepeatType(.weekly)
-            .setRewardDic([.intellect: 20])
+            .setRewardDic([.metro: 15, .commercial: 10, .contribution: 10])
             .setFavoriteYn(true)
             .setCustomerRank(2)
             .build(),
@@ -235,7 +234,7 @@ extension QuestViewModelItem {
             .setMissionTitle("🎨 취미탐험가")
             .setWriter("취미부스터")
             .setRepeatType(.monthly)
-            .setRewardDic([.fun: 30, .intellect: 5])
+            .setRewardDic([.metro: 15, .commercial: 5, .contribution: 10])
             .setFavoriteYn(true)
             .setCustomerRank(3)
             .build(),
@@ -245,21 +244,21 @@ extension QuestViewModelItem {
             .setMissionTitle("📚 가계부 전략가")
             .setWriter("절약미학자")
             .setRepeatType(.weekly)
-            .setRewardDic([.intellect: 25])
+            .setRewardDic([.metro: 15, .commercial: 5, .contribution: 10])
             .setCustomerRank(5)
             .build(),
         
         QuestViewModelItemBuilder()
             .setMissionTitle("운동 30분하기")
             .setRepeatType(.daily)
-            .setRewardDic([.fun: 15, .strength: 15])
+            .setRewardDic([.metro: 15, .commercial: 5, .contribution: 10])
             .setFavoriteYn(true)
             .setCustomerRank(1)
             .build(),
         
         QuestViewModelItemBuilder()
             .setMissionTitle("카페라떼 마시기")
-            .setRewardDic([.fun: 20])
+            .setRewardDic([.metro: 15, .commercial: 5, .contribution: 10])
             .setFavoriteYn(true)
             .build()
     ]

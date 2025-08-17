@@ -52,7 +52,7 @@ struct QuestEngageInfoView: View {
             
             Spacer(minLength: 8)
             
-            Text(String(quest.totalRewardXP()) + "XP")
+            Text(String(quest.totalRewardPoint()) + "XP")
                 .styledFont(.heading1)
                 .foregroundStyle(.primaryPurple)
                 .padding(10)

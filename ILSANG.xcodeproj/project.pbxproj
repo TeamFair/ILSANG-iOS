@@ -30,7 +30,6 @@
 		601189292C3F022D0070F2AD /* LoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 601189282C3F022D0070F2AD /* LoginViewModel.swift */; };
 		601BCF102D7B43F000138387 /* OtherUserProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 601BCF0F2D7B43F000138387 /* OtherUserProfileView.swift */; };
 		601BCF122D7B449C00138387 /* OtherUserProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 601BCF112D7B449C00138387 /* OtherUserProfileViewModel.swift */; };
-		601BCF142D7B502400138387 /* OtherUserXpStatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 601BCF132D7B502400138387 /* OtherUserXpStatView.swift */; };
 		601BCF162D7B502B00138387 /* OtherUserChallengeList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 601BCF152D7B502B00138387 /* OtherUserChallengeList.swift */; };
 		601BCF182D7C0C1400138387 /* ChallengeListItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 601BCF172D7C0C1400138387 /* ChallengeListItemView.swift */; };
 		601BCF1A2D7C134500138387 /* ProgressBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 601BCF192D7C134500138387 /* ProgressBar.swift */; };
@@ -42,7 +41,7 @@
 		6028A94A2D39721F003FBC8C /* RankNetwork.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6028A9492D39721F003FBC8C /* RankNetwork.swift */; };
 		6028A94C2D397730003FBC8C /* TopRank.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6028A94B2D39772F003FBC8C /* TopRank.swift */; };
 		6029881E2D041D3900903806 /* QuestStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6029881D2D041D3900903806 /* QuestStatus.swift */; };
-		602988202D041D4700903806 /* XpStat.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6029881F2D041D4700903806 /* XpStat.swift */; };
+		602988202D041D4700903806 /* PointType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6029881F2D041D4700903806 /* PointType.swift */; };
 		602988222D041DDC00903806 /* RepeatType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 602988212D041DDC00903806 /* RepeatType.swift */; };
 		60299E312CBFFF160039663F /* TransferableUIImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60299E302CBFFF160039663F /* TransferableUIImage.swift */; };
 		60299E392CC13DEC0039663F /* ImageCacheService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60299E382CC13DEC0039663F /* ImageCacheService.swift */; };
@@ -178,11 +177,8 @@
 		9FE63D722CB3AB4F00CA7940 /* RankingItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FE63D712CB3AB4100CA7940 /* RankingItemView.swift */; };
 		A10EF9392C87292C003D78A2 /* OpenSourceInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10EF9382C87292C003D78A2 /* OpenSourceInfoView.swift */; };
 		A11D88F72C916DE500846122 /* Icon.swift in Sources */ = {isa = PBXBuildFile; fileRef = A11D88F62C916DE500846122 /* Icon.swift */; };
-		A13BD3932CA182A0003FF9BE /* XpStats.swift in Sources */ = {isa = PBXBuildFile; fileRef = A13BD3922CA1829A003FF9BE /* XpStats.swift */; };
 		A142E0312C2D9F37004395F8 /* SettingAlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A142E0302C2D9F37004395F8 /* SettingAlertView.swift */; };
-		A1501B082C48C3C6001410E1 /* MyPageActiveList.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1501B072C48C3C6001410E1 /* MyPageActiveList.swift */; };
 		A1501B0A2C48C3E5001410E1 /* MyPageInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1501B092C48C3E5001410E1 /* MyPageInfoView.swift */; };
-		A1678CCE2CF4C59C00843854 /* MyPageShareImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1678CCD2CF4C58900843854 /* MyPageShareImage.swift */; };
 		A1868C442C09B6C50020BF16 /* ChallengeDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1868C432C09B6C50020BF16 /* ChallengeDetailView.swift */; };
 		A18EB9B02C26B61C00405D56 /* WithdrawNetwork.swift in Sources */ = {isa = PBXBuildFile; fileRef = A18EB9AF2C26B61C00405D56 /* WithdrawNetwork.swift */; };
 		A19628622C0763F90037C53A /* ProfileEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A19628612C0763F90037C53A /* ProfileEditView.swift */; };
@@ -201,10 +197,9 @@
 		A1BB60282BFE129000AAADD4 /* MyPageChallengeList.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1BB60272BFE129000AAADD4 /* MyPageChallengeList.swift */; };
 		A1BB602C2BFF145100AAADD4 /* MyPageProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1BB602B2BFF145100AAADD4 /* MyPageProfile.swift */; };
 		A1C6422A2C33F55A004954CA /* QuestNetwork.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1C642292C33F55A004954CA /* QuestNetwork.swift */; };
-		A1F0ADC02CD738C30068E0A6 /* Polygon.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1F0ADBF2CD738A20068E0A6 /* Polygon.swift */; };
 		A1F770642C2AABCE00DB24A0 /* MyPageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1F770632C2AABCE00DB24A0 /* MyPageViewModel.swift */; };
 		A1FF916E2C250C3B00F03E4B /* UserNetwork.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1FF916D2C250C3B00F03E4B /* UserNetwork.swift */; };
-		A1FF91702C25119200F03E4B /* XPNetwork.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1FF916F2C25119200F03E4B /* XPNetwork.swift */; };
+		A1FF91702C25119200F03E4B /* PointNetwork.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1FF916F2C25119200F03E4B /* PointNetwork.swift */; };
 		A1FF91722C257E9A00F03E4B /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1FF91712C257E9A00F03E4B /* User.swift */; };
 		A1FF91742C257F6400F03E4B /* XpLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1FF91732C257F6400F03E4B /* XpLog.swift */; };
 /* End PBXBuildFile section */
@@ -251,7 +246,6 @@
 		601189282C3F022D0070F2AD /* LoginViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewModel.swift; sourceTree = "<group>"; };
 		601BCF0F2D7B43F000138387 /* OtherUserProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OtherUserProfileView.swift; sourceTree = "<group>"; };
 		601BCF112D7B449C00138387 /* OtherUserProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OtherUserProfileViewModel.swift; sourceTree = "<group>"; };
-		601BCF132D7B502400138387 /* OtherUserXpStatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OtherUserXpStatView.swift; sourceTree = "<group>"; };
 		601BCF152D7B502B00138387 /* OtherUserChallengeList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OtherUserChallengeList.swift; sourceTree = "<group>"; };
 		601BCF172D7C0C1400138387 /* ChallengeListItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChallengeListItemView.swift; sourceTree = "<group>"; };
 		601BCF192D7C134500138387 /* ProgressBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressBar.swift; sourceTree = "<group>"; };
@@ -263,7 +257,7 @@
 		6028A9492D39721F003FBC8C /* RankNetwork.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RankNetwork.swift; sourceTree = "<group>"; };
 		6028A94B2D39772F003FBC8C /* TopRank.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopRank.swift; sourceTree = "<group>"; };
 		6029881D2D041D3900903806 /* QuestStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestStatus.swift; sourceTree = "<group>"; };
-		6029881F2D041D4700903806 /* XpStat.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XpStat.swift; sourceTree = "<group>"; };
+		6029881F2D041D4700903806 /* PointType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PointType.swift; sourceTree = "<group>"; };
 		602988212D041DDC00903806 /* RepeatType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepeatType.swift; sourceTree = "<group>"; };
 		60299E302CBFFF160039663F /* TransferableUIImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferableUIImage.swift; sourceTree = "<group>"; };
 		60299E382CC13DEC0039663F /* ImageCacheService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCacheService.swift; sourceTree = "<group>"; };
@@ -401,11 +395,8 @@
 		9FE63D712CB3AB4100CA7940 /* RankingItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RankingItemView.swift; sourceTree = "<group>"; };
 		A10EF9382C87292C003D78A2 /* OpenSourceInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenSourceInfoView.swift; sourceTree = "<group>"; };
 		A11D88F62C916DE500846122 /* Icon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Icon.swift; sourceTree = "<group>"; };
-		A13BD3922CA1829A003FF9BE /* XpStats.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XpStats.swift; sourceTree = "<group>"; };
 		A142E0302C2D9F37004395F8 /* SettingAlertView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingAlertView.swift; sourceTree = "<group>"; };
-		A1501B072C48C3C6001410E1 /* MyPageActiveList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPageActiveList.swift; sourceTree = "<group>"; };
 		A1501B092C48C3E5001410E1 /* MyPageInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPageInfoView.swift; sourceTree = "<group>"; };
-		A1678CCD2CF4C58900843854 /* MyPageShareImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPageShareImage.swift; sourceTree = "<group>"; };
 		A1868C432C09B6C50020BF16 /* ChallengeDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChallengeDetailView.swift; sourceTree = "<group>"; };
 		A18EB9AF2C26B61C00405D56 /* WithdrawNetwork.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WithdrawNetwork.swift; sourceTree = "<group>"; };
 		A19628612C0763F90037C53A /* ProfileEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileEditView.swift; sourceTree = "<group>"; };
@@ -426,10 +417,9 @@
 		A1C642292C33F55A004954CA /* QuestNetwork.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestNetwork.swift; sourceTree = "<group>"; };
 		A1EB63392C132AC100B63F9C /* Roboto-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Roboto-Medium.ttf"; sourceTree = "<group>"; };
 		A1EB633A2C132B0800B63F9C /* SFPRODISPLAYREGULAR.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = SFPRODISPLAYREGULAR.otf; sourceTree = "<group>"; };
-		A1F0ADBF2CD738A20068E0A6 /* Polygon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Polygon.swift; sourceTree = "<group>"; };
 		A1F770632C2AABCE00DB24A0 /* MyPageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPageViewModel.swift; sourceTree = "<group>"; };
 		A1FF916D2C250C3B00F03E4B /* UserNetwork.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserNetwork.swift; sourceTree = "<group>"; };
-		A1FF916F2C25119200F03E4B /* XPNetwork.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XPNetwork.swift; sourceTree = "<group>"; };
+		A1FF916F2C25119200F03E4B /* PointNetwork.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PointNetwork.swift; sourceTree = "<group>"; };
 		A1FF91712C257E9A00F03E4B /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		A1FF91732C257F6400F03E4B /* XpLog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XpLog.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -469,7 +459,6 @@
 			isa = PBXGroup;
 			children = (
 				600D63972E48E5A9009FE14F /* MetroArea.swift */,
-				A13BD3922CA1829A003FF9BE /* XpStats.swift */,
 				60C6B4DB2C2D042700926C0E /* Image.swift */,
 				600211E72C1EED40000CC02E /* Emoji.swift */,
 				A1FF91712C257E9A00F03E4B /* User.swift */,
@@ -549,7 +538,6 @@
 			isa = PBXGroup;
 			children = (
 				601BCF0F2D7B43F000138387 /* OtherUserProfileView.swift */,
-				601BCF132D7B502400138387 /* OtherUserXpStatView.swift */,
 				601BCF152D7B502B00138387 /* OtherUserChallengeList.swift */,
 				601BCF1B2D7C150700138387 /* OtherUserChallengeDetailView.swift */,
 				601BCF112D7B449C00138387 /* OtherUserProfileViewModel.swift */,
@@ -603,7 +591,7 @@
 			isa = PBXGroup;
 			children = (
 				6029881D2D041D3900903806 /* QuestStatus.swift */,
-				6029881F2D041D4700903806 /* XpStat.swift */,
+				6029881F2D041D4700903806 /* PointType.swift */,
 				602988212D041DDC00903806 /* RepeatType.swift */,
 			);
 			path = Enum;
@@ -646,7 +634,6 @@
 				A1501B092C48C3E5001410E1 /* MyPageInfoView.swift */,
 				6053345E2D31272B00599159 /* MyPageInfoCardView.swift */,
 				600657DB2DBCCBAA0022D117 /* MyPageInfoCardBottomView.swift */,
-				A1678CCD2CF4C58900843854 /* MyPageShareImage.swift */,
 			);
 			path = MyPageInfo;
 			sourceTree = "<group>";
@@ -717,7 +704,7 @@
 				600211ED2C1EEF91000CC02E /* EmojiNetwork.swift */,
 				6028A9492D39721F003FBC8C /* RankNetwork.swift */,
 				A1FF916D2C250C3B00F03E4B /* UserNetwork.swift */,
-				A1FF916F2C25119200F03E4B /* XPNetwork.swift */,
+				A1FF916F2C25119200F03E4B /* PointNetwork.swift */,
 				A18EB9AF2C26B61C00405D56 /* WithdrawNetwork.swift */,
 				603F040A2C2416D2008A2332 /* ImageNetwork.swift */,
 				60C6B4D42C2C565700926C0E /* ChallengeNetwork.swift */,
@@ -787,7 +774,6 @@
 				60299E2F2CBFF8D20039663F /* MyPageChallenge */,
 				6053345D2D3126F900599159 /* MyPageInfo */,
 				600657E22DBD2DD10022D117 /* MyPageHonor */,
-				A1501B072C48C3C6001410E1 /* MyPageActiveList.swift */,
 			);
 			path = MyPage;
 			sourceTree = "<group>";
@@ -1040,7 +1026,6 @@
 				606694EF2DDA29E40000E368 /* AnimatedPopup.swift */,
 				604687AB2D213B890056E394 /* SelectableTabHeader.swift */,
 				600657DF2DBCFEE20022D117 /* HonorView.swift */,
-				A1F0ADBF2CD738A20068E0A6 /* Polygon.swift */,
 				601BCF192D7C134500138387 /* ProgressBar.swift */,
 				607FCBE12BFA6A8300BB2D04 /* Buttons.swift */,
 				6061327A2CDB33FD00830948 /* FilterPicker.swift */,
@@ -1289,16 +1274,14 @@
 				A1BB60262BFE05B000AAADD4 /* MyPageTabView.swift in Sources */,
 				603CF4F12D79A85500A2D19E /* SubmitFailView.swift in Sources */,
 				9FE63D6C2CB3A58800CA7940 /* RankingView.swift in Sources */,
-				602988202D041D4700903806 /* XpStat.swift in Sources */,
+				602988202D041D4700903806 /* PointType.swift in Sources */,
 				9FE63D722CB3AB4F00CA7940 /* RankingItemView.swift in Sources */,
 				9FE63D702CB3AAF100CA7940 /* RankingViewModel.swift in Sources */,
 				600D639C2E48E83F009FE14F /* AreaSelectionView.swift in Sources */,
 				6057361C2D8AC8A800CF7051 /* Quiz.swift in Sources */,
 				6053345F2D31272B00599159 /* MyPageInfoCardView.swift in Sources */,
 				60054FA02D931AA300E7C5A6 /* PDFKitView.swift in Sources */,
-				601BCF142D7B502400138387 /* OtherUserXpStatView.swift in Sources */,
 				605DA0D62C07123400CC9450 /* View++.swift in Sources */,
-				A1678CCE2CF4C59C00843854 /* MyPageShareImage.swift in Sources */,
 				60299E392CC13DEC0039663F /* ImageCacheService.swift in Sources */,
 				605445D42DD73F910005742D /* Rank.swift in Sources */,
 				6061327B2CDB33FD00830948 /* FilterPicker.swift in Sources */,
@@ -1326,8 +1309,6 @@
 				A1FF916E2C250C3B00F03E4B /* UserNetwork.swift in Sources */,
 				60004AD52D3B799700CD2254 /* Constants.swift in Sources */,
 				A1AB3D6E2C117569001EB9D8 /* Color.swift in Sources */,
-				A1501B082C48C3C6001410E1 /* MyPageActiveList.swift in Sources */,
-				A13BD3932CA182A0003FF9BE /* XpStats.swift in Sources */,
 				60ADF9CD2D5DD3D000556958 /* RoundedBackground.swift in Sources */,
 				A1AB3D682C1141B3001EB9D8 /* LoginButtonView.swift in Sources */,
 				606F18152DA3E1F800ABEA84 /* FavoriteNetwork.swift in Sources */,
@@ -1348,7 +1329,6 @@
 				600D63982E48E5BC009FE14F /* MetroArea.swift in Sources */,
 				605DA0D32C0711E900CC9450 /* CameraViewModel.swift in Sources */,
 				6060B2EA2C08947B0083944D /* Image++.swift in Sources */,
-				A1F0ADC02CD738C30068E0A6 /* Polygon.swift in Sources */,
 				606694F52DDB25D00000E368 /* QuestViewModelItemBuilder.swift in Sources */,
 				605445C82DD36D5E0005742D /* MyPageHonorManageViewModel.swift in Sources */,
 				603F04132C26ADC6008A2332 /* CommonResponse.swift in Sources */,
@@ -1435,7 +1415,7 @@
 				603CF4F52D79A90100A2D19E /* SubmitCompleteView.swift in Sources */,
 				6028A94A2D39721F003FBC8C /* RankNetwork.swift in Sources */,
 				605DA0D12C0711CA00CC9450 /* CameraView.swift in Sources */,
-				A1FF91702C25119200F03E4B /* XPNetwork.swift in Sources */,
+				A1FF91702C25119200F03E4B /* PointNetwork.swift in Sources */,
 				600657E02DBCFEE80022D117 /* HonorView.swift in Sources */,
 				A1BB602C2BFF145100AAADD4 /* MyPageProfile.swift in Sources */,
 				607FCBE92BFE418600BB2D04 /* QuestViewModel.swift in Sources */,

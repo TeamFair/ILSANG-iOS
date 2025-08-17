@@ -336,9 +336,9 @@ struct QuestSortHelper {
     ) -> [QuestViewModelItem] {
         switch filter {
         case .pointHighest:
-            return quests.sorted { $0.totalRewardXP() > $1.totalRewardXP() }
+            return quests.sorted { $0.totalRewardPoint() > $1.totalRewardPoint() }
         case .pointLowest:
-            return quests.sorted { $0.totalRewardXP() < $1.totalRewardXP() }
+            return quests.sorted { $0.totalRewardPoint() < $1.totalRewardPoint() }
         case .popular:
             return quests // TODO: 인기순 로직 필요 시 구현
         case .upcoming:
