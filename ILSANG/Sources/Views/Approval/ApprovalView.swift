@@ -10,7 +10,7 @@ import SwiftUI
 struct ApprovalView: View {
     @State var vm = ApprovalViewModel(
         emojiNetwork: EmojiNetwork(),
-        challengeNetwork: ChallengeNetwork()
+        missionHistoryRepository: MissionHistoryRepository(network: MissionHistoryNetwork())
     )
     
     var body: some View {
@@ -72,7 +72,7 @@ struct ApprovalView: View {
         }
     }
     
-    private func trailingButton(for item: ApprovalViewModelItem) -> some View {
+    private func trailingButton(for item: ApprovalMissionHistoryItem) -> some View {
         Menu {
             ShareLink(item: photo, preview: SharePreview(photo.caption, image: photo.image)) {
                 Label("공유하기", image: "share")

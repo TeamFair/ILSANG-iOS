@@ -26,21 +26,21 @@ final class ApprovalViewModel {
     }
     
     var viewStatus: ViewStatus = .loading
-    var itemList: [ApprovalViewModelItem] = []
+    var itemList: [ApprovalMissionHistoryItem] = []
     
     var showReportAlert = false
-    var selectedChallenge: ApprovalViewModelItem?
+    var selectedChallenge: ApprovalMissionHistoryItem?
     
-    var paginationManager: PaginationManager<ApprovalViewModelItem>?
+    var paginationManager: PaginationManager<ApprovalMissionHistoryItem>?
     
     private let emojiNetwork: EmojiNetwork
-    private let challengeNetwork: ChallengeNetwork
+    private let missionHistoryRepository: MissionHistoryRepository
     
-    init(emojiNetwork: EmojiNetwork, challengeNetwork: ChallengeNetwork) {
+    init(emojiNetwork: EmojiNetwork, missionHistoryRepository: MissionHistoryRepository) {
         self.emojiNetwork = emojiNetwork
-        self.challengeNetwork = challengeNetwork
+        self.missionHistoryRepository = missionHistoryRepository
         
-        self.paginationManager = PaginationManager<ApprovalViewModelItem>(
+        self.paginationManager = PaginationManager<ApprovalMissionHistoryItem>(
             size: 10,
             threshold: 3,
             loadPage: { [weak self] page in
@@ -73,7 +73,7 @@ final class ApprovalViewModel {
     // MARK: - 도전내역 랜덤 조회
     /// 페이지 번호를 받아 해당 페이지의 도전 내역 데이터를 로드 및 가공
     @MainActor
-    func getChallengesWithImage(page: Int) async -> ([ApprovalViewModelItem], Int) {
+    func getChallengesWithImage(page: Int) async -> ([ApprovalMissionHistoryItem], Int) {
         // 1. 챌린지 데이터 로드
         let (challenges, total) = await loadChallenges(page: page)
         
@@ -91,14 +91,14 @@ final class ApprovalViewModel {
 
     // MARK: 도전내역 조회 - Helper Methods
     /// 1. 챌린지 데이터 로드
-    private func loadChallenges(page: Int) async -> ([ApprovalViewModelItem], Int) {
+    private func loadChallenges(page: Int) async -> ([ApprovalMissionHistoryItem], Int) {
         let result = await getRandomChallenges(page: page, size: paginationManager?.size ?? 10)
         return (result.data, result.total)
     }
 
     /// 2. 중복 제거: 동일한 ID를 가진 챌린지를 필터링하여 중복 제거
-    private func removeDuplicateChallenges(_ challenges: [ApprovalViewModelItem]) -> [ApprovalViewModelItem] {
-        var seenIDs = Set<String>()
+    private func removeDuplicateChallenges(_ challenges: [ApprovalMissionHistoryItem]) -> [ApprovalMissionHistoryItem] {
+        var seenIDs = Set<Int>()
         return challenges.filter { challenge in
             if seenIDs.contains(challenge.id) {
                 return false
@@ -111,17 +111,17 @@ final class ApprovalViewModel {
 
     /// 3. 이미지 및 이모지 병합: 각 챌린지에 이미지와 이모지 정보를 추가
     private func enrichChallengesWithImageAndEmoji(
-        _ challenges: [ApprovalViewModelItem]
-    ) async -> [ApprovalViewModelItem] {
+        _ challenges: [ApprovalMissionHistoryItem]
+    ) async -> [ApprovalMissionHistoryItem] {
         return await withTaskGroup(of: (Int, UIImage?, UIImage?, Emoji?).self) { group in
             for (index, challenge) in challenges.enumerated() {
                 group.addTask {
-                    async let challengeImage = ImageCacheService.shared.loadImageAsync(imageId: challenge.imageId ?? "")
+                    async let challengeImage = ImageCacheService.shared.loadImageAsync(imageId: challenge.imageId)
                     async let profileImage: UIImage? = {
                         guard let profileImageId = challenge.profileImageId else { return nil }
                         return await ImageCacheService.shared.loadImageAsync(imageId: profileImageId)
                     }()
-                    async let emoji = self.getEmoji(challengeId: challenge.id)
+                    async let emoji = self.getEmoji(missionHistoryId: challenge.id)
                     
                     return (index, await challengeImage, await profileImage, await emoji)
                 }
@@ -145,7 +145,7 @@ final class ApprovalViewModel {
 
     /// 4. itemList 업데이트
     @MainActor
-    private func updateItemList(for page: Int, with challenges: [ApprovalViewModelItem]) {
+    private func updateItemList(for page: Int, with challenges: [ApprovalMissionHistoryItem]) {
         if page == 0 {
             itemList = challenges
         } else {
@@ -196,7 +196,7 @@ final class ApprovalViewModel {
         
         // 서버에 상태 업데이트 요청을 보냅니다.
         let challengeId = itemList[idx].id
-        let isServerUpdateSuccessful = await updateEmojiStatus(challengeId: challengeId, emojiType: emojiType, emojiId: emojiId, prevEmojiActive: wasPrevEmojiActive, idx: idx)
+        let isServerUpdateSuccessful = await updateEmojiStatus(missionHistoryId: challengeId, emojiType: emojiType, emojiId: emojiId, prevEmojiActive: wasPrevEmojiActive, idx: idx)
         
         // 서버 업데이트 성공 시 로컬 상태를 반영합니다.
         if isServerUpdateSuccessful {
@@ -205,19 +205,19 @@ final class ApprovalViewModel {
                 self.itemList[idx].emoji?.isLike.toggle()
                 if let emoji = self.itemList[idx].emoji, !emoji.isLike {
                     self.itemList[idx].emoji?.likeId = nil
-                    self.itemList[idx].likeCnt -= 1
-                    self.itemList[idx].likeCnt = max(self.itemList[idx].likeCnt, 0)
+                    self.itemList[idx].likeCount -= 1
+                    self.itemList[idx].likeCount = max(self.itemList[idx].likeCount, 0)
                 } else {
-                    self.itemList[idx].likeCnt += 1
+                    self.itemList[idx].likeCount += 1
                 }
             case .hate:
                 self.itemList[idx].emoji?.isHate.toggle()
                 if let emoji = self.itemList[idx].emoji, !emoji.isHate {
                     self.itemList[idx].emoji?.hateId = nil
-                    self.itemList[idx].hateCnt -= 1
-                    self.itemList[idx].hateCnt = max(self.itemList[idx].hateCnt, 0)
+                    self.itemList[idx].hateCount -= 1
+                    self.itemList[idx].hateCount = max(self.itemList[idx].hateCount, 0)
                 } else {
-                    self.itemList[idx].hateCnt += 1
+                    self.itemList[idx].hateCount += 1
                 }
             }
         }
@@ -233,7 +233,7 @@ final class ApprovalViewModel {
     ///   - idx: 업데이트할 항목의 인덱스.
     /// - Returns: 서버 업데이트 성공 여부를 반환합니다.
     @MainActor
-    private func updateEmojiStatus(challengeId: String, emojiType: EmojiType, emojiId: String?, prevEmojiActive: Bool, idx: Int) async -> Bool {
+    private func updateEmojiStatus(missionHistoryId: Int, emojiType: EmojiType, emojiId: String?, prevEmojiActive: Bool, idx: Int) async -> Bool {
         var updateSucceeded = false
         if prevEmojiActive {
             // 이전 이모지가 활성화 상태라면, 삭제 요청을 보냅니다.
@@ -241,7 +241,7 @@ final class ApprovalViewModel {
             updateSucceeded = await emojiNetwork.deleteEmoji(emojiId: emojiId)
         } else {
             // 이전 이모지가 비활성화 상태라면, 생성 요청을 보냅니다.
-            let res = await emojiNetwork.postEmoji(challengeId: challengeId, emojiType: emojiType)
+            let res = await emojiNetwork.postEmoji(missionHistoryId: missionHistoryId, emojiType: emojiType)
             switch res {
             case .success(let emojiId):
                 // 서버로부터 받은 emojiId를 로컬 데이터에 저장합니다.
@@ -253,7 +253,7 @@ final class ApprovalViewModel {
                 }
                 updateSucceeded = true
             case .failure:
-                print(idx, challengeId, "이모지 업데이트 상태 포스트 실패")
+                print(idx, missionHistoryId, "이모지 업데이트 상태 포스트 실패")
                 updateSucceeded = false
             }
         }
@@ -281,121 +281,36 @@ final class ApprovalViewModel {
     }
     
     // MARK: - API 호출부
-    private func getRandomChallenges(page: Int, size: Int) async -> (data: [ApprovalViewModelItem], total: Int) {
-        let res = await challengeNetwork.getRandomChallenges(page: page, size: size)
+    private func getRandomChallenges(page: Int, size: Int) async -> (data: [ApprovalMissionHistoryItem], total: Int) {
+        let res = await missionHistoryRepository.getRandomMissionHistories(page: page, size: size)
         switch res {
         case .success(let response):
-            return (response.data.map { ApprovalViewModelItem.init(challenge: $0) }, response.total)
+            return (response.data.map {$0.toApprovalItem()}, response.total)
         case .failure(let err):
             Log("도전내역랜덤 조회 실패 \(err.localizedDescription)")
             return ([], 0)
         }
     }
     
-    private func getEmoji(challengeId: String) async -> Emoji? {
-        let getEmojiResult = await emojiNetwork.getEmoji(challengeId: challengeId)
+    private func getEmoji(missionHistoryId: Int) async -> Emoji? {
+        let getEmojiResult = await emojiNetwork.getEmoji(missionHistoryId: missionHistoryId)
         switch getEmojiResult {
         case .success(let response):
             return response.data
         case .failure(let err):
-            Log("이모지 조회 실패 \(challengeId) \(err.localizedDescription)")
+            Log("이모지 조회 실패 \(missionHistoryId) \(err.localizedDescription)")
             return nil
         }
     }
     
     private func reportChallenge() async {
-        guard let challengeId = self.selectedChallenge?.id else { return }
-        let result = await challengeNetwork.patchChallenge(challengeId: challengeId)
+        guard let missionHistoryId = self.selectedChallenge?.id else { return }
+        let result = await missionHistoryRepository.patchMissionHistory(missionHistoryId: missionHistoryId)
         switch result {
         case .success:
-            await loadInitialData()
+            await loadInitialData() // TODO: 해당 챌린지를 목록에서 지우기
         case .failure(let err):
-            Log("챌린지 신고 실패 \(challengeId) \(err.localizedDescription)")
+            Log("도전내역 신고 실패 \(missionHistoryId) \(err.localizedDescription)")
         }
     }
-}
-
-struct ApprovalViewModelItem: Identifiable {
-    let id: String
-    let customerId: String
-    let title: String
-    var profileImageId: String?
-    var profileImage: UIImage?
-    var image: UIImage?
-    var imageId: String?
-    var nickname: String
-    var time: String
-    var likeCnt: Int
-    var hateCnt: Int
-    var emoji: Emoji?
-    let honor: Title?
-    
-    init(
-        id: String = UUID().uuidString,
-        customerId: String,
-        title: String,
-        profileImageId:String?,
-        profileImage: UIImage?,
-        image: UIImage? = nil,
-        imageId: String,
-        nickname: String,
-        time: String,
-        likeCnt: Int,
-        hateCnt: Int,
-        emoji: Emoji?,
-        honor: Title?
-    ) {
-        self.id = id
-        self.customerId = customerId
-        self.title = title
-        self.profileImageId = profileImageId
-        self.profileImage = profileImage
-        self.image = image
-        self.imageId = imageId
-        self.nickname = nickname
-        self.time = time
-        self.likeCnt = likeCnt
-        self.hateCnt = hateCnt
-        self.emoji = emoji
-        self.honor = honor
-    }
-    
-    init(challenge: Challenge) {
-        self.id = challenge.challengeId
-        self.customerId = challenge.customerId ?? ""
-        self.title = challenge.missionTitle ?? ""
-        self.profileImage = nil
-        self.profileImageId = challenge.userProfileImageId
-        self.image = nil
-        self.imageId = challenge.receiptImageId ?? nil
-        // TODO: nickname 옵셔널 해제
-        self.nickname = challenge.userNickName ?? "일상"
-        self.time = challenge.createdAt.timeAgoSinceDate()
-        self.likeCnt = challenge.likeCnt
-        self.hateCnt = challenge.hateCnt
-        self.emoji = nil // Emoji(isLike: false, isHate: false) // TODO: 수정
-        self.honor = challenge.honor
-    }
-    
-    static var failedData = ApprovalViewModelItem(
-        customerId: "",
-        title: "불러올 수 없습니다",
-        profileImageId: nil,
-        profileImage: nil,
-        image: nil,
-        imageId: "",
-        nickname: "",
-        time: "",
-        likeCnt: 0,
-        hateCnt: 0,
-        emoji: nil,
-        honor: nil
-    )
-    
-    static var mockDataList = [
-        ApprovalViewModelItem(customerId: "0000000", title: "바닐라라떼마시기", profileImageId: nil, profileImage: nil, imageId: "IMRE2024061314275774", nickname: "일상1", time: "3시간 전", likeCnt: 0, hateCnt: 0, emoji: Emoji(isLike: false, isHate: false), honor: nil),
-        ApprovalViewModelItem(customerId: "0000000", title: "바닐라라떼마시기", profileImageId: nil, profileImage: nil, imageId: "IMRE2024061314275774", nickname: "일상2", time: "1시간 전", likeCnt: 0, hateCnt: 0, emoji: Emoji(isLike: false, isHate: false), honor: nil),
-        ApprovalViewModelItem(customerId: "0000000", title: "바닐라라떼마시기", profileImageId: nil, profileImage: nil, imageId: "IMRE2024061314275774", nickname: "일상3", time: "2시간 전", likeCnt: 0, hateCnt: 0, emoji: Emoji(isLike: false, isHate: false), honor: nil),
-        ApprovalViewModelItem(customerId: "0000000", title: "바닐라라떼마시기", profileImageId: nil, profileImage: nil, imageId: "IMRE2024061314275774", nickname: "일상4", time: "2시간 전", likeCnt: 0, hateCnt: 0, emoji: Emoji(isLike: false, isHate: false), honor: nil)
-    ]
 }
