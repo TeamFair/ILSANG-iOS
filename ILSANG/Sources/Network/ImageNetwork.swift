@@ -9,7 +9,7 @@ import Alamofire
 import UIKit
 
 final class ImageNetwork {
-    private let url = APIManager.makeURL(CustomerTarget(path: "image"))
+    private let url = APIManager.makeURL(NoTarget(path: "image", version: 1))
     
     func getImage(imageId: String) async -> Result<UIImage, Error> {
         let url = url + "/" + imageId
@@ -21,10 +21,9 @@ final class ImageNetwork {
         return await Network.postImage(url: url, image: image, withToken: true, parameters: parameters)
     }
     
+    // TODO: 지역시스템 > 삭제/유지 결정 필요
     func deleteImage(imageId: String) async -> Bool {
-        let deleteUrl = APIManager.makeURL(CustomerTarget(path: "image/\(imageId)"))
-        
-        let res: Result<ResponseWithoutData, Error> = await Network.requestData(url: deleteUrl, method: .delete, parameters: nil, withToken: true)
+        let res: Result<ResponseWithoutData, Error> = await Network.requestData(url: url, method: .delete, parameters: nil, withToken: true)
         switch res {
         case .success:
             Log(res)

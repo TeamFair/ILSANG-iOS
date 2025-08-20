@@ -8,8 +8,8 @@
 import Foundation
 
 final class AuthNetwork {
-    private let url = APIManager.makeURL(OpenTarget(path: "login"))
-    private let logoutUrl = APIManager.makeURL(CustomerTarget(path: "logout"))
+    private let url = APIManager.makeURL(OpenTarget(path: "login", version: 1))
+    private let logoutUrl = APIManager.makeURL(NoTarget(path: "logout", version: 1))
     
     /// Apple 또는 Google에서 받은 idToken을 백엔드로 전송해 로그인 요청을 보내고, 성공 시 authorization 토큰을 반환합니다.
     func login(idToken: String, channel: AuthChannel) async -> Result<Auth, NetworkError> {

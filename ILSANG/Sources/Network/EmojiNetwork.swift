@@ -8,12 +8,9 @@
 import Alamofire
 
 final class EmojiNetwork {
-    private let url: String
-    
-    init(url: String = APIManager.makeURL(CustomerTarget(path: "emoji"))) {
-        self.url = url
-    }
+    private let url: String = APIManager.makeURL(UserTarget(path: "mission", version: 1))
         
+    // TODO: 지역시스템 > 미사용 예정
     func getEmoji(missionHistoryId: Int) async -> Result<Response<Emoji>,Error> {
         let parameters: Parameters = ["missionHistoryId": missionHistoryId]
         return await Network.requestData(url: url, method: .get, parameters: parameters, withToken: true)
@@ -22,8 +19,7 @@ final class EmojiNetwork {
     func postEmoji(missionHistoryId: Int, emojiType: EmojiType) async -> Result<String, Error> {
         let body = ["emojiType": emojiType.rawValue]
         let bodyData = body.convertToJsonData()
-        // TODO: 지역시스템 > missionHistoryId 활용해서 URL 구성
-        let res: Result<Response<EmojiResponseData>, Error> = await Network.requestData(url: url, method: .post, parameters: nil, body: bodyData, withToken: true)
+        let res: Result<Response<EmojiResponseData>, Error> = await Network.requestData(url: url+"/history/\(missionHistoryId)/emoji", method: .post, parameters: nil, body: bodyData, withToken: true)
         switch res {
         case .success(let model):
             return .success(model.data.emojiId)
@@ -32,9 +28,10 @@ final class EmojiNetwork {
         }
     }
     
-    func deleteEmoji(emojiId: String) async -> Bool {
-        let parameters: Parameters = ["emojiId": emojiId]
-        let res: Result<ResponseWithoutData, Error> = await Network.requestData(url: url, method: .delete, parameters: parameters, withToken: true)
+    // TODO: 파라미터 변경(임시상태)
+    func deleteEmoji(emojiId missionHistoryId: String) async -> Bool {
+        let parameters: Parameters = ["missionHistoryId": missionHistoryId]
+        let res: Result<ResponseWithoutData, Error> = await Network.requestData(url: url+"/history/\(missionHistoryId)/emoji", method: .delete, parameters: parameters, withToken: true)
         switch res {
         case .success:
             return true

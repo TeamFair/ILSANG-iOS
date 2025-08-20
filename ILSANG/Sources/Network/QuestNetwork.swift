@@ -10,7 +10,7 @@ import Alamofire
 
 final class QuestNetwork {
     
-    private let questUrl: String = APIManager.makeURL(CustomerTarget(path: ""))
+    private let questUrl: String = APIManager.makeURL(UserTarget(path: "quest", version: 1))
     
     func getDefaultQuest(page: Int, size: Int) async -> Result<ResponseWithPage<[Quest]>, Error> {
         let parameters: Parameters = ["page": page, "size": size]
