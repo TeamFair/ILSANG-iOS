@@ -84,7 +84,7 @@ final class AuthService {
         switch result {
         case .success(let token):
             Log("\(channel.stringValue) 로그인 성공: \(token)")
-            return Auth(authorization: token.authorization, refreshToken: token.refreshToken)
+            return Auth(accessToken: token.accessToken, refreshToken: token.refreshToken)
         case .failure(let error):
             Log("\(channel.stringValue) 로그인 실패: \(error.localizedDescription)")
             return nil
@@ -112,6 +112,6 @@ final class AuthService {
 }
 
 struct Auth: Codable {
-    let authorization: String
+    let accessToken: String
     let refreshToken: String
 }

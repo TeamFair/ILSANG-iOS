@@ -32,10 +32,10 @@ final class OtherUserProfileViewModel: ObservableObject {
     private let pointNetwork: PointNetwork
     
     var currentLv: Int {
-        XpLevelCalculator.convertXPtoLv(xp: userData?.xpPoint)
+        XpLevelCalculator.convertXPtoLv(xp: /*userData?.xpPoint*/ 0)
     }
     var progress: Double {
-        let levelData = XpLevelCalculator.xpProgressInCurrentLevel(xp: userData?.xpPoint ?? 0, level: currentLv)
+        let levelData = XpLevelCalculator.xpProgressInCurrentLevel(xp: /*userData?.xpPoint ??*/ 0, level: currentLv)
         return XpLevelCalculator.calculateProgress(currentValue: levelData.currentLevelXP, totalValue: levelData.requiredXPForNextLevel)
     }
     
@@ -111,7 +111,7 @@ final class OtherUserProfileViewModel: ObservableObject {
         switch res {
         case .success(let model):
             self.userData = model.data
-            self.userProfileIamge = await ImageCacheService.shared.loadImageAsync(imageId: model.data.profileImage ?? "")
+            self.userProfileIamge = await ImageCacheService.shared.loadImageAsync(imageId: model.data.profileImageId ?? "")
         case .failure(let error):
             self.userData = nil
             Log("사용자 정보 조회 실패: \(error)")

@@ -174,8 +174,8 @@ final class HomeViewModel {
             self.showPopularRewardQuest = true
         }
 
-        if let userProfileImage = UserService.shared.currentUser?.profileImage {
-            self.userProfileImage = await ImageCacheService.shared.loadImageAsync(imageId: userProfileImage)
+        if let userProfileImageId = UserService.shared.currentUser?.profileImageId {
+            self.userProfileImage = await ImageCacheService.shared.loadImageAsync(imageId: userProfileImageId)
         }
 
         changeViewStatus(.loaded)

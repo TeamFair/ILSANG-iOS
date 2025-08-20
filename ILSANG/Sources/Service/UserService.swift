@@ -38,7 +38,7 @@ final class UserService: ObservableObject {
     
     @MainActor
     private func handleLoginSuccess(authResult: Auth, channel: AuthChannel) async {
-        self.accessToken = authResult.authorization
+        self.accessToken = authResult.accessToken
         self.refreshToken = authResult.refreshToken
         self.authChannel = channel.stringValue
 
@@ -53,7 +53,7 @@ final class UserService: ObservableObject {
         let userInfo = await userNetwork.getUser()
         switch userInfo {
         case .success(let res):
-            self.currentUser = res.data
+            self.currentUser = res
         case .failure:
             self.currentUser = nil
         }

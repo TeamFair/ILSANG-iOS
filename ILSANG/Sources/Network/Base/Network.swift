@@ -38,7 +38,7 @@ final class Network {
         var headers: HTTPHeaders = ["accept": "application/json", "Content-Type": contentType.toString]
         if withToken {
             let token = UserService.shared.accessToken
-            headers.add(.authorization(token))
+            headers.add(.authorization(bearerToken: token))
         }
         return headers
     }

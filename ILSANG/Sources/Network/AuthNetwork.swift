@@ -16,16 +16,16 @@ final class AuthNetwork {
         let body = [
             "provider": channel.stringValue, /// OAuth 공급 기관 (GOOGLE, APPLE)
             "osType": "IOS", /// 기기 OS
-            "idToken": idToken, /// OAuth 공급 기간에서 받은 토큰 정보
-            "pushToken": "", /// FCM을 위한 기기 push token
-            "deviceUuid": Utils.getDeviceUUID() /// 기기 식별번호
+            "idToken": idToken  /// OAuth 공급 기간에서 받은 토큰 정보
+            // "pushToken": "", /// FCM을 위한 기기 push token
+            // "deviceUuid": Utils.getDeviceUUID() /// 기기 식별번호
         ]
         
         let bodyData = body.convertToJsonData()
-        let result: Result<Response<Auth>, Error> = await Network.requestData(url: url+"/oauth", method: .post, parameters: nil, body: bodyData, withToken: false, retryOnAuthFail: false)
+        let result: Result<Auth, Error> = await Network.requestData(url: url+"/oauth", method: .post, parameters: nil, body: bodyData, withToken: false, retryOnAuthFail: false)
         switch result {
         case .success(let res):
-            return .success(res.data)
+            return .success(res)
         case .failure(let error):
             return .failure(.requestFailed(error.localizedDescription))
         }
@@ -38,10 +38,10 @@ final class AuthNetwork {
             "refreshToken": refreshToken
         ]
         let bodyData = body.convertToJsonData()
-        let result: Result<Response<Auth>, Error> = await Network.requestData(url: url+"/oauth/refresh", method: .post, parameters: nil, body: bodyData, withToken: false, retryOnAuthFail: false)
+        let result: Result<Auth, Error> = await Network.requestData(url: url+"/refresh", method: .post, parameters: nil, body: bodyData, withToken: false, retryOnAuthFail: false)
         switch result {
         case .success(let res):
-            return .success(res.data)
+            return .success(res)
         case .failure(let error):
             return .failure(.requestFailed(error.localizedDescription))
         }

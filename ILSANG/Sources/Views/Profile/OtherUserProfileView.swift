@@ -76,9 +76,9 @@ struct OtherUserProfileView: View {
                     ProgressBar(progress: vm.progress)
                         .frame(height: 8)
 
-                    Text("\(vm.userData?.xpPoint ?? 0)XP")
-                        .styledFont(.bold, size: 13, lineHeight: 13, tracking: 0)
-                        .foregroundStyle(.primaryPurple)
+//                    Text("\(vm.userData?.xpPoint ?? 0)XP")
+//                        .styledFont(.bold, size: 13, lineHeight: 13, tracking: 0)
+//                        .foregroundStyle(.primaryPurple)
                 }
             }
         }
