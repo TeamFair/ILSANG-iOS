@@ -15,11 +15,6 @@ final class ChallengeNetwork {
         self.url = url
     }
     
-    func getRandomChallenges(page: Int, size: Int = 10) async -> Result<ResponseWithPage<[Challenge]>, Error> {
-        let parameters: Parameters = ["page": page, "size": size]
-        return await Network.requestData(url: url+"randomChallenge", method: .get, parameters: parameters, withToken: true)
-    }
-    
     func getChallenges(page: Int, size: Int) async -> Result<ResponseWithPage<[Challenge]>, Error> {
         let parameters: Parameters = ["userDataOnly": true, "page": page, "size": size]
         return await Network.requestData(url: url+"challenge", method: .get, parameters: parameters, withToken: true)
@@ -40,11 +35,6 @@ final class ChallengeNetwork {
             return .failure(NetworkError.requestFailed("Fail to convert data"))
         }
         return await Network.requestData(url: url+"challenge", method: .post, parameters: nil, body: jsonData, withToken: true)
-    }
-    
-    func patchChallenge(challengeId: String) async -> Result<ResponseWithEmpty, Error> {
-        let parameters: Parameters = ["challengeId": challengeId, "status": "REPORTED"]
-        return await Network.requestData(url: url+"status", method: .patch, parameters: parameters, withToken: true)
     }
     
     func deleteChallenge(challengeId: String) async -> Bool {

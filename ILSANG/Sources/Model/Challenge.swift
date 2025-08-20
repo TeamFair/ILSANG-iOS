@@ -7,6 +7,7 @@
 
 import Foundation
 
+// TODO: 지역시스템 완료 후 제거
 struct Challenge: Decodable, Hashable {
     let challengeId: String
     let customerId: String?

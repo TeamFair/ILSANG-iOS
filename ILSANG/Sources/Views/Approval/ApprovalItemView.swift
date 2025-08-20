@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ApprovalItemView: View {
-    let item: ApprovalViewModelItem
+    let item: ApprovalMissionHistoryItem
     
     let width: CGFloat
     let height: CGFloat

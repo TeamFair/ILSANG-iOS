@@ -162,6 +162,14 @@
 		60C6B4D72C2C569800926C0E /* Challenge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60C6B4D62C2C569800926C0E /* Challenge.swift */; };
 		60C6B4DC2C2D042700926C0E /* Image.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60C6B4DB2C2D042700926C0E /* Image.swift */; };
 		60C6B4DF2C2D053600926C0E /* SubmitRouterViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60C6B4DE2C2D053600926C0E /* SubmitRouterViewModel.swift */; };
+		60D897122E536D2C006A8480 /* MissionHistoryResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60D897112E536D2C006A8480 /* MissionHistoryResponse.swift */; };
+		60D8971A2E537188006A8480 /* MissionHistory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60D897182E537188006A8480 /* MissionHistory.swift */; };
+		60D8971E2E5372B3006A8480 /* MissionHistoryRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60D8971D2E5372B3006A8480 /* MissionHistoryRepository.swift */; };
+		60D897202E5372BE006A8480 /* MissionHistoryResponse+Mapping.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60D8971F2E5372BE006A8480 /* MissionHistoryResponse+Mapping.swift */; };
+		60D897232E537421006A8480 /* MIssionHistory+UIMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60D897222E537421006A8480 /* MIssionHistory+UIMapper.swift */; };
+		60D897272E5374F8006A8480 /* UserTitleResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60D897262E5374F8006A8480 /* UserTitleResponse.swift */; };
+		60D897292E537653006A8480 /* ApprovalMissionHistoryItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60D897282E537653006A8480 /* ApprovalMissionHistoryItem.swift */; };
+		60D8972B2E53B5AE006A8480 /* MissionHistoryNetwork.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60D8972A2E53B5AE006A8480 /* MissionHistoryNetwork.swift */; };
 		60DADF552C6B4EC7001A0B3A /* Data++.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60DADF542C6B4EC7001A0B3A /* Data++.swift */; };
 		60E258052D09CE1B0052C048 /* StatRank.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60E258042D09CE1B0052C048 /* StatRank.swift */; };
 		60FB50CD2D15CEAE00C55E82 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60FB50CC2D15CEAE00C55E82 /* HomeView.swift */; };
@@ -380,6 +388,14 @@
 		60C6B4D62C2C569800926C0E /* Challenge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Challenge.swift; sourceTree = "<group>"; };
 		60C6B4DB2C2D042700926C0E /* Image.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Image.swift; sourceTree = "<group>"; };
 		60C6B4DE2C2D053600926C0E /* SubmitRouterViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubmitRouterViewModel.swift; sourceTree = "<group>"; };
+		60D897112E536D2C006A8480 /* MissionHistoryResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionHistoryResponse.swift; sourceTree = "<group>"; };
+		60D897182E537188006A8480 /* MissionHistory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionHistory.swift; sourceTree = "<group>"; };
+		60D8971D2E5372B3006A8480 /* MissionHistoryRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionHistoryRepository.swift; sourceTree = "<group>"; };
+		60D8971F2E5372BE006A8480 /* MissionHistoryResponse+Mapping.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MissionHistoryResponse+Mapping.swift"; sourceTree = "<group>"; };
+		60D897222E537421006A8480 /* MIssionHistory+UIMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MIssionHistory+UIMapper.swift"; sourceTree = "<group>"; };
+		60D897262E5374F8006A8480 /* UserTitleResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserTitleResponse.swift; sourceTree = "<group>"; };
+		60D897282E537653006A8480 /* ApprovalMissionHistoryItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApprovalMissionHistoryItem.swift; sourceTree = "<group>"; };
+		60D8972A2E53B5AE006A8480 /* MissionHistoryNetwork.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionHistoryNetwork.swift; sourceTree = "<group>"; };
 		60DADF542C6B4EC7001A0B3A /* Data++.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Data++.swift"; sourceTree = "<group>"; };
 		60E258042D09CE1B0052C048 /* StatRank.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatRank.swift; sourceTree = "<group>"; };
 		60FB50CC2D15CEAE00C55E82 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
@@ -698,6 +714,7 @@
 			isa = PBXGroup;
 			children = (
 				600211EF2C1EF3F5000CC02E /* Base */,
+				60D897102E536D0C006A8480 /* Response */,
 				601189222C3E95D40070F2AD /* AuthNetwork.swift */,
 				60004AD62D4221F500CD2254 /* BannerNetwork.swift */,
 				606F18142DA3E1F800ABEA84 /* FavoriteNetwork.swift */,
@@ -708,6 +725,7 @@
 				A18EB9AF2C26B61C00405D56 /* WithdrawNetwork.swift */,
 				603F040A2C2416D2008A2332 /* ImageNetwork.swift */,
 				60C6B4D42C2C565700926C0E /* ChallengeNetwork.swift */,
+				60D8972A2E53B5AE006A8480 /* MissionHistoryNetwork.swift */,
 				605736192D8AC6F000CF7051 /* QuizNetwork.swift */,
 				A1C642292C33F55A004954CA /* QuestNetwork.swift */,
 				605445C92DD36E440005742D /* HonorNetwork.swift */,
@@ -760,6 +778,7 @@
 				603CF4E22D732DA100A2D19E /* ApprovalItemContentView.swift */,
 				603CF4E42D732DD800A2D19E /* ImageFullScreenView.swift */,
 				60943FE52C0A38FB00C8A714 /* ApprovalViewModel.swift */,
+				60D897282E537653006A8480 /* ApprovalMissionHistoryItem.swift */,
 			);
 			path = Approval;
 			sourceTree = "<group>";
@@ -804,6 +823,7 @@
 				A19628732C08647F0037C53A /* View */,
 				60ADF9C52D59D5D600556958 /* ViewModifier */,
 				607FCBE52BFD129E00BB2D04 /* Model */,
+				60D897212E537404006A8480 /* Mapper */,
 			);
 			path = Global;
 			sourceTree = "<group>";
@@ -944,6 +964,7 @@
 				6011891B2C3E8B2B0070F2AD /* Service */,
 				600211E62C1EED2B000CC02E /* Model */,
 				606292D62C19E6C00098B6D2 /* Network */,
+				60D897142E536F02006A8480 /* Domain */,
 				605DA0D42C07122200CC9450 /* Extension */,
 				607FCBDF2BFA69E600BB2D04 /* Global */,
 				607FCBDE2BFA693F00BB2D04 /* Views */,
@@ -960,6 +981,57 @@
 				603CF4ED2D79A80F00A2D19E /* SubmitAlert */,
 			);
 			path = Submit;
+			sourceTree = "<group>";
+		};
+		60D897102E536D0C006A8480 /* Response */ = {
+			isa = PBXGroup;
+			children = (
+				60D897112E536D2C006A8480 /* MissionHistoryResponse.swift */,
+				60D897262E5374F8006A8480 /* UserTitleResponse.swift */,
+			);
+			path = Response;
+			sourceTree = "<group>";
+		};
+		60D897142E536F02006A8480 /* Domain */ = {
+			isa = PBXGroup;
+			children = (
+				60D897192E537188006A8480 /* Entity */,
+				60D8971B2E537289006A8480 /* Repository */,
+				60D8971C2E537299006A8480 /* Mapper */,
+			);
+			path = Domain;
+			sourceTree = "<group>";
+		};
+		60D897192E537188006A8480 /* Entity */ = {
+			isa = PBXGroup;
+			children = (
+				60D897182E537188006A8480 /* MissionHistory.swift */,
+			);
+			path = Entity;
+			sourceTree = "<group>";
+		};
+		60D8971B2E537289006A8480 /* Repository */ = {
+			isa = PBXGroup;
+			children = (
+				60D8971D2E5372B3006A8480 /* MissionHistoryRepository.swift */,
+			);
+			path = Repository;
+			sourceTree = "<group>";
+		};
+		60D8971C2E537299006A8480 /* Mapper */ = {
+			isa = PBXGroup;
+			children = (
+				60D8971F2E5372BE006A8480 /* MissionHistoryResponse+Mapping.swift */,
+			);
+			path = Mapper;
+			sourceTree = "<group>";
+		};
+		60D897212E537404006A8480 /* Mapper */ = {
+			isa = PBXGroup;
+			children = (
+				60D897222E537421006A8480 /* MIssionHistory+UIMapper.swift */,
+			);
+			path = Mapper;
 			sourceTree = "<group>";
 		};
 		60FB50CB2D15CE9D00C55E82 /* Home */ = {
@@ -1259,6 +1331,7 @@
 				60A2ADF82DAE6B68007AC375 /* FAQView.swift in Sources */,
 				604687A32D1FC32E0056E394 /* HomeViewModel.swift in Sources */,
 				605445CA2DD36E440005742D /* HonorNetwork.swift in Sources */,
+				60D8971A2E537188006A8480 /* MissionHistory.swift in Sources */,
 				606F18172DA650DE00ABEA84 /* FavoriteService.swift in Sources */,
 				A196286B2C0859730037C53A /* CustomerServiceView.swift in Sources */,
 				607FCBE22BFA6A8300BB2D04 /* Buttons.swift in Sources */,
@@ -1303,6 +1376,7 @@
 				605F28522CF1B2C5007EA739 /* QuestDetailView.swift in Sources */,
 				60A2ADF52DAE66BD007AC375 /* SettingToggleItemView.swift in Sources */,
 				A1AB3D6A2C1141B3001EB9D8 /* AppleLoginButtonView.swift in Sources */,
+				60D8972B2E53B5AE006A8480 /* MissionHistoryNetwork.swift in Sources */,
 				600211EC2C1EEED7000CC02E /* APIManager.swift in Sources */,
 				60FB50CD2D15CEAE00C55E82 /* HomeView.swift in Sources */,
 				601BCF202D7C2DC100138387 /* UINavigationController.swift in Sources */,
@@ -1332,10 +1406,12 @@
 				606694F52DDB25D00000E368 /* QuestViewModelItemBuilder.swift in Sources */,
 				605445C82DD36D5E0005742D /* MyPageHonorManageViewModel.swift in Sources */,
 				603F04132C26ADC6008A2332 /* CommonResponse.swift in Sources */,
+				60D897202E5372BE006A8480 /* MissionHistoryResponse+Mapping.swift in Sources */,
 				607FCBE42BFD124900BB2D04 /* QuestItemView.swift in Sources */,
 				605E81442D9FE56000ECDB15 /* QuestDetailTitleView.swift in Sources */,
 				60FF5EC32E4937A6007A5B40 /* MyRegionAreaSelectionView.swift in Sources */,
 				606C87AF2C0B9B8C002D5C3E /* ApprovalItemView.swift in Sources */,
+				60D897292E537653006A8480 /* ApprovalMissionHistoryItem.swift in Sources */,
 				60943FE62C0A38FB00C8A714 /* ApprovalViewModel.swift in Sources */,
 				60C6B4DC2C2D042700926C0E /* Image.swift in Sources */,
 				6048D5252E4E632C00CC74F5 /* BannerDetailView.swift in Sources */,
@@ -1371,6 +1447,7 @@
 				60ADF9BF2D59D41E00556958 /* Font++.swift in Sources */,
 				60FF5ED12E4CDC2B007A5B40 /* Season.swift in Sources */,
 				60004AD92D42373300CD2254 /* Banner.swift in Sources */,
+				60D8971E2E5372B3006A8480 /* MissionHistoryRepository.swift in Sources */,
 				601BCF102D7B43F000138387 /* OtherUserProfileView.swift in Sources */,
 				60ADF8892D57B53100556958 /* QuestEngageViewModel.swift in Sources */,
 				6048D5272E50259600CC74F5 /* BannerDetailViewModel.swift in Sources */,
@@ -1380,6 +1457,8 @@
 				A11D88F72C916DE500846122 /* Icon.swift in Sources */,
 				60505D702D941D0A00121C4C /* StandardScreenView.swift in Sources */,
 				602988222D041DDC00903806 /* RepeatType.swift in Sources */,
+				60D897272E5374F8006A8480 /* UserTitleResponse.swift in Sources */,
+				60D897122E536D2C006A8480 /* MissionHistoryResponse.swift in Sources */,
 				60FF5ED32E4CDC57007A5B40 /* SeasonOpenPopup.swift in Sources */,
 				A19628652C076D7B0037C53A /* SettingView.swift in Sources */,
 				605E814A2D9FEB2300ECDB15 /* QuestDetailStatView.swift in Sources */,
@@ -1428,6 +1507,7 @@
 				A10EF9392C87292C003D78A2 /* OpenSourceInfoView.swift in Sources */,
 				604687AC2D213B890056E394 /* SelectableTabHeader.swift in Sources */,
 				607FCBDD2BFA686700BB2D04 /* MyPageView.swift in Sources */,
+				60D897232E537421006A8480 /* MIssionHistory+UIMapper.swift in Sources */,
 				60004AD72D4221F500CD2254 /* BannerNetwork.swift in Sources */,
 				607FCBEB2BFE44D900BB2D04 /* IconView.swift in Sources */,
 			);
