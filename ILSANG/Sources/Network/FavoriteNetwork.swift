@@ -8,14 +8,12 @@
 import Foundation
 
 final class FavoriteNetwork {
-    private let url: String
-    
-    init(url: String = APIManager.makeURL(CustomerTarget(path: "quest"))) {
-        self.url = url
-    }
+    private let url: String = APIManager.makeURL(UserTarget(path: "quest", version: 1))
         
     func post(questId: String) async -> Bool {
-        let res: Result<ResponseWithoutData, Error> = await Network.requestData(url: url+"/\(questId)/favorite", method: .post, parameters: nil, body: nil, withToken: true)
+        let body = ["questId": "\(questId)"]
+        let bodyData = body.convertToJsonData()
+        let res: Result<ResponseWithoutData, Error> = await Network.requestData(url: url+"/favorite", method: .post, parameters: nil, body: bodyData, withToken: true)
         switch res {
         case .success:
             return true
@@ -25,7 +23,9 @@ final class FavoriteNetwork {
     }
     
     func delete(questId: String) async -> Bool {
-        let res: Result<ResponseWithoutData, Error> = await Network.requestData(url: url+"/\(questId)/favorite", method: .delete, parameters: nil, withToken: true)
+        let body = ["questId": "\(questId)"]
+        let bodyData = body.convertToJsonData()
+        let res: Result<ResponseWithoutData, Error> = await Network.requestData(url: url+"/favorite", method: .delete, parameters: nil, body: bodyData, withToken: true)
         switch res {
         case .success:
             return true

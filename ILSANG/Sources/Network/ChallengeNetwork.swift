@@ -8,12 +8,9 @@
 import Alamofire
 import Foundation
 
+// TODO: 지역시스템 >> mission history로 이동 필요, url 확인 필요
 final class ChallengeNetwork {
-    private let url: String
-
-    init(url: String =  APIManager.makeURL(CustomerTarget(path: ""))) {
-        self.url = url
-    }
+    private let url: String = APIManager.makeURL(NoTarget(path: "challenge", version: 1))
     
     func getChallenges(page: Int, size: Int) async -> Result<ResponseWithPage<[Challenge]>, Error> {
         let parameters: Parameters = ["userDataOnly": true, "page": page, "size": size]
@@ -38,7 +35,7 @@ final class ChallengeNetwork {
     }
     
     func deleteChallenge(challengeId: String) async -> Bool {
-        let deleteUrl = APIManager.makeURL(CustomerTarget(path: challengeId))
+        let deleteUrl = APIManager.makeURL(UserTarget(path: challengeId, version: 1))
         
         let res: Result<ResponseWithoutData, Error> = await Network.requestData(url: deleteUrl, method: .delete, parameters: nil, withToken: true)
         

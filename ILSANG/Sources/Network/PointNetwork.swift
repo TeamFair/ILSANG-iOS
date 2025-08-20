@@ -9,7 +9,7 @@ import Foundation
 import Alamofire
 
 final class PointNetwork {
-    private let url = APIManager.makeURL(CustomerTarget(path: "xpStats"))
+    private let url = APIManager.makeURL(NoTarget(path: "user/point", version: 1))
     
     func getPoints() async -> Result<Response<Point>,Error> {
         return await Network.requestData(url: url, method: .get, parameters: nil, withToken: true)

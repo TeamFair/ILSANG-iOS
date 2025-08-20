@@ -18,7 +18,7 @@ struct MockSeasonNetwork: SeasonNetworkProtocol {
 }
 
 final class SeasonNetwork: SeasonNetworkProtocol {
-    private let url = APIManager.makeURL(CustomerTarget(path: "season"))
+    private let url = APIManager.makeURL(NoTarget(path: "season", version: 1))
     
     func getSeasons() async -> Result<Response<[Season]>, Error> {
         return await Network.requestData(url: url, method: .get, parameters: nil, withToken: true)
