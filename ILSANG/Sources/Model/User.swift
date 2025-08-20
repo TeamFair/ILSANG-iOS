@@ -8,11 +8,12 @@
 import Foundation
 
 struct User: Decodable {
+    let email: String
+    let channel: String
     let status: String
     let nickname: String
-    let completeChallengeCount: Int
-    let xpPoint: Int
-    let profileImage: String?
+    let profileImageId: String?
+    let commercialAreaCode: String
     let title: Title?
 }
 

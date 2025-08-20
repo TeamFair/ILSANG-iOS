@@ -63,7 +63,7 @@ final class MyPageViewModel: ObservableObject {
         self.pointNetwork = pointNetwork
         
         self.userData = UserService.shared.currentUser
-        self.xpStatus = XpStatus(currentXp: userData?.xpPoint ?? 0)
+        self.xpStatus = XpStatus(currentXp: /*userData?.xpPoint ??*/ 0)
     }
     
     @MainActor
@@ -134,15 +134,15 @@ final class MyPageViewModel: ObservableObject {
         
         switch res {
         case .success(let model):
-            self.userData = model.data
-            if let profileImage = userData?.profileImage {
+            self.userData = model
+            if let profileImage = userData?.profileImageId {
                 self.userProfileImage = await getImage(imageId: profileImage) /// 프로필 이미지 불러오기
             } else {
                 self.userProfileImage = nil
             }
             self.honorTitle = userData?.title?.name
             self.honorType = HonorGrade(rawValue: userData?.title?.type ?? "")
-            UserService.shared.currentUser = model.data
+            UserService.shared.currentUser = model
         case .failure(let err):
             self.userData = nil
             Log(err)

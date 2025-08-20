@@ -54,7 +54,7 @@ struct MyPageView: View {
                 MyPageProfile(
                     nickName: vm.userData?.nickname,
                     profileImage: vm.userProfileImage,
-                    profileImageId: vm.userData?.profileImage,
+                    profileImageId: vm.userData?.profileImageId,
                     level: vm.xpStatus.currentLv,
                     progress: vm.xpStatus.progress,
                     honorTitle: vm.honorTitle,
@@ -71,7 +71,7 @@ struct MyPageView: View {
                 case .quest:
                     MyPageChallengeList(vm: vm)
                 case .info:                    
-                    MyPageInfoView(totalPoint: vm.userData?.xpPoint, honorTitle: vm.honorTitle)
+                    MyPageInfoView(totalPoint: /*vm.userData?.xpPoint*/ 0, honorTitle: vm.honorTitle)
                 }
             }
             .padding(.bottom, 72)

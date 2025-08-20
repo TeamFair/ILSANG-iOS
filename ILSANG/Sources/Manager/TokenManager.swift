@@ -33,7 +33,7 @@ actor TokenManager {
         let success: Bool
         switch result {
         case .success(let newToken):
-            UserService.shared.updateToken(accessToken: newToken.authorization, refreshToken: newToken.refreshToken)
+            UserService.shared.updateToken(accessToken: newToken.accessToken, refreshToken: newToken.refreshToken)
             success = true
         case .failure:
             // 로그아웃하도록 이벤트 처리
