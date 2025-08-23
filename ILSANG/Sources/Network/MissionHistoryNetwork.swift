@@ -13,11 +13,11 @@ final class MissionHistoryNetwork {
     
     func getRandomMissionHistories(page: Int, size: Int = 10) async -> Result<ResponseWithPage<[MissionHistoryResponse]>, Error> {
         let parameters: Parameters = ["page": page, "size": size]
-        return await Network.requestData(url: url+"history/random", method: .get, parameters: parameters, withToken: true)
+        return await Network.requestData(url: url+"/history/random", method: .get, parameters: parameters)
     }
     
-    func patchMissionHistory(missionHistoryId: Int) async -> Result<ResponseWithEmpty, Error> {
-        let parameters: Parameters = ["missionHistoryId": "\(missionHistoryId)", "status": "REPORTED"]
-        return await Network.requestData(url: url+"history/status", method: .patch, parameters: parameters, withToken: true)
+    /// 신고하기
+    func putMissionHistory(missionHistoryId: Int) async -> Result<ResponseWithEmpty, Error> {
+        return await Network.requestData(url: url+"/history/\(missionHistoryId)", method: .put)
     }
 }

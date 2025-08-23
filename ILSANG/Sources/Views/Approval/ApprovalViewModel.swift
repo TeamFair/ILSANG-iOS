@@ -305,7 +305,7 @@ final class ApprovalViewModel {
     
     private func reportChallenge() async {
         guard let missionHistoryId = self.selectedChallenge?.id else { return }
-        let result = await missionHistoryRepository.patchMissionHistory(missionHistoryId: missionHistoryId)
+        let result = await missionHistoryRepository.putMissionHistory(missionHistoryId: missionHistoryId)
         switch result {
         case .success:
             await loadInitialData() // TODO: 해당 챌린지를 목록에서 지우기
