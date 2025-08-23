@@ -12,45 +12,93 @@ final class QuestNetwork {
     
     private let questUrl: String = APIManager.makeURL(UserTarget(path: "quest", version: 1))
     
-    func getDefaultQuest(page: Int, size: Int) async -> Result<ResponseWithPage<[Quest]>, Error> {
-        let parameters: Parameters = ["page": page, "size": size]
-        return await Network.requestData(url: questUrl+"uncompletedQuest", method: .get, parameters: parameters, withToken: true)
-    } 
-    
-    func getRepeatQuest(status: RepeatType, page: Int, size: Int) async -> Result<ResponseWithPage<[Quest]>, Error> {
-        let parameters: Parameters = ["status": status.toParam(), "page": page, "size": size]
-        return await Network.requestData(url: questUrl+"uncompletedRepeatQuest", method: .get, parameters: parameters, withToken: true)
-    }
-    
-    func getEventQuest(page: Int, size: Int) async -> Result<ResponseWithPage<[Quest]>, Error> {
-        let parameters: Parameters = ["page": page, "size": size]
-        return await Network.requestData(url: questUrl+"uncompletedEventQuest", method: .get, parameters: parameters, withToken: true)
-    }
-    
-    func getCompletedQuest(page: Int, size: Int) async -> Result<ResponseWithPage<[Quest]>, Error> {
-        let parameters: Parameters = ["page": page, "size": size]
-        return await Network.requestData(url: questUrl+"completedQuest", method: .get, parameters: parameters, withToken: true)
-    }
-    
-    /// 추천퀘스트 조회시 사용
-    func getUncompletedTotalQuest(page: Int = 0, size: Int = 10) async -> Result<ResponseWithPage<[Quest]>, Error> {
-        let parameters: Parameters = ["page": page, "size": size]
-        return await Network.requestData(url: questUrl+"uncompletedTotalQuest", method: .get, parameters: parameters, withToken: true)
-    }
+    /// 기본 퀘스트 조회
+    func getDefaultQuests(commercialAreaCode: String, orderRewardDesc: Bool?, page: Int, size: Int) async -> Result<ResponseWithPage<[BaseQuestResponse]>, Error> {
+        var parameters: Parameters = [
+            "questType": "NORMAL",
+            "completedYn": false,
+            "commercialAreaCode": commercialAreaCode,
+            "page": page,
+            "size": size
+        ]
+        
+        if let orderRewardDesc = orderRewardDesc {
+            parameters["orderRewardDesc"] = orderRewardDesc
+        }
 
-    /// 인기퀘스트 조회시 사용
-    func getPopularQuest(page: Int = 0, size: Int = 8) async -> Result<ResponseWithPage<[Quest]>, Error> {
-        let parameters: Parameters = ["page": page, "size": size, "popularYn": true]
-        return await Network.requestData(url: questUrl+"uncompletedTotalQuest", method: .get, parameters: parameters, withToken: true)
+        return await getQuests(parameters: parameters)
     }
     
-    /// 큰 보상 퀘스트 조회시 사용
-    func getLargeRewardQuests(page: Int = 0, size: Int = 3) async -> Result<ResponseWithPage<[Quest]>, Error> {
-        let parameters: Parameters = ["page": page, "size": size]
-        return await Network.requestData(url: questUrl+"largeRewardQuest", method: .get, parameters: parameters, withToken: true)
+    /// 반복 퀘스트 조회
+    func getRepeatQuests(commercialAreaCode: String, repeatFrequency: RepeatType, orderRewardDesc: Bool?, page: Int, size: Int) async -> Result<ResponseWithPage<[BaseQuestResponse]>, Error> {
+        var parameters: Parameters = [
+            "questType": "REPEAT",
+            "completedYn": false,
+            "commercialAreaCode": commercialAreaCode,
+            "repeatFrequency": repeatFrequency.toParam(),
+            "page": page,
+            "size": size
+        ]
+        
+        if let orderRewardDesc = orderRewardDesc {
+            parameters["orderRewardDesc"] = orderRewardDesc
+        }
+
+        return await getQuests(parameters: parameters)
     }
     
-    func getQuestDetail(questId: String) async -> Result<Response<QuestDetail>, Error> {
-        return await Network.requestData(url: questUrl+"quest/"+questId, method: .get, parameters: nil, withToken: true)
+    /// 이벤트 퀘스트 조회
+    func getEventQuests(commercialAreaCode: String, orderRewardDesc: Bool?, page: Int, size: Int) async -> Result<ResponseWithPage<[BaseQuestResponse]>, Error> {
+        var parameters: Parameters = [
+            "questType": "EVENT",
+            "completedYn": false,
+            "commercialAreaCode": commercialAreaCode,
+            "page": page,
+            "size": size
+        ]
+        if let orderRewardDesc = orderRewardDesc {
+            parameters["orderRewardDesc"] = orderRewardDesc
+        }
+
+        return await getQuests(parameters: parameters)
+    }
+    
+    /// 완료 퀘스트 조회
+    func getCompletedQuests(commercialAreaCode: String, page: Int, size: Int) async -> Result<ResponseWithPage<[BaseQuestResponse]>, Error> {
+        let parameters: Parameters = [
+            "completedYn": true,
+            "commercialAreaCode": commercialAreaCode,
+            "page": page,
+            "size": size
+        ]
+        return await getQuests(parameters: parameters)
+    }
+    
+    /// 퀘스트 유형별 조회
+    private func getQuests(parameters: Parameters) async -> Result<ResponseWithPage<[BaseQuestResponse]>, Error> {
+        return await Network.requestData(url: questUrl+"/search/type", method: .get, parameters: parameters)
+    }
+    
+    /// 추천 퀘스트 조회
+    func getRecommendQuests(commercialAreaCode: String, page: Int, size: Int) async -> Result<ResponseWithPage<[RecommendQuestResponse]>, Error> {
+        let parameters: Parameters = ["commercialAreaCode": commercialAreaCode, "page": page, "size": size]
+        return await Network.requestData(url: questUrl+"/search/recommend", method: .get, parameters: parameters)
+    }
+    
+    /// 인기 퀘스트 조회
+    func getPopularQuests(commercialAreaCode: String, page: Int, size: Int) async -> Result<ResponseWithPage<[PopularQuestResponse]>, Error> {
+        let parameters: Parameters = ["commercialAreaCode": commercialAreaCode, "page": page, "size": size]
+        return await Network.requestData(url: questUrl+"/search/popular", method: .get, parameters: parameters)
+    }
+    
+    /// 큰 보상 퀘스트 조회
+    func getLargeRewardQuests(commercialAreaCode: String, page: Int, size: Int) async -> Result<ResponseWithPage<[LargeRewardQuestResponse]>, Error> {
+        let parameters: Parameters = ["commercialAreaCode": commercialAreaCode, "page": page, "size": size]
+        return await Network.requestData(url: questUrl+"/search/reward", method: .get, parameters: parameters)
+    }
+    
+    /// 퀘스트 상제 정보 조회
+    func getQuestDetail(questId: Int) async -> Result<QuestDetailResponse, Error> {
+        return await Network.requestData(url: questUrl+"/\(questId)", method: .get)
     }
 }

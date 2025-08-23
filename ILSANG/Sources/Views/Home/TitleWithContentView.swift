@@ -14,7 +14,7 @@ struct TitleWithContentView<Content: View>: View {
 
     enum SeeAllAlignment {
         case topTrailing
-        case bottomTrailing
+        case bottom
     }
     
     enum SeeAllType {
@@ -39,8 +39,16 @@ struct TitleWithContentView<Content: View>: View {
                         .frame(width: 7)
                         .frame(width: 20, height: 20)
                 }
-                .font(.system(size: 15, weight: .regular))
+                .padding(.vertical, 16)
+                .frame(maxWidth: .infinity)
                 .foregroundStyle(.gray500)
+                .background(
+                    RoundedRectangle(cornerRadius: 5)
+                        .fill(.white)
+                        .strokeBorder(lineWidth: 1)
+                        .foregroundStyle(Color.gray100)
+                )
+                .styledFont(.body)
             }
         }
     }
@@ -63,17 +71,15 @@ struct TitleWithContentView<Content: View>: View {
             
             content
             
-            HStack {
-                Spacer(minLength: 0)
-                if seeAll?.alignment == .bottomTrailing {
-                    Button {
-                        seeAll?.action()
-                    } label: {
-                        seeAll?.type.view
-                    }
+            if seeAll?.alignment == .bottom {
+                Button {
+                    seeAll?.action()
+                } label: {
+                    seeAll?.type.view
                 }
+                .padding(.top, 12)
+                .padding(.horizontal, 20)
             }
-            .padding(.horizontal, 20)
         }
     }
     

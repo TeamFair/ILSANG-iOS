@@ -18,8 +18,8 @@ final class MissionHistoryRepository {
         let res = await network.getRandomMissionHistories(page: page, size: size)
         switch res {
         case .success(let response):
-            let domainModels = response.data.map { $0.toDomain() }
-            return .success((domainModels, response.total))
+            let domainModels = response.content.map { $0.toDomain() }
+            return .success((domainModels, response.totalElements))
         case .failure(let error):
             return .failure(error)
         }

@@ -13,8 +13,15 @@ struct User: Decodable {
     let status: String
     let nickname: String
     let profileImageId: String?
-    let commercialAreaCode: String
-    let title: Title?
+    let commercialAreaCode: String?
+    let title: TitleResponse?
+}
+
+struct TitleResponse: Decodable {
+    let id: String? // TODO: 제거
+    let name: String
+    let grade: String
+    let type: String
 }
 
 struct Title: Decodable, Hashable {

@@ -18,7 +18,7 @@ final class ImageChallengeSubmitService {
     }
     
     /// 도전 과제 제출 실행
-    func execute(questId: String, image: UIImage?) async -> Bool {
+    func execute(questId: Int, image: UIImage?) async -> Bool {
         guard let image = image else { return false }
         
         // 1. 이미지 업로드
@@ -39,7 +39,7 @@ final class ImageChallengeSubmitService {
     }
     
     /// 챌린지 제출
-    private func postChallenge(questId: String, imageId: String) async -> Bool {
+    private func postChallenge(questId: Int, imageId: String) async -> Bool {
         let result = await challengeNetwork.postChallenge(questId: questId, imageId: imageId)
         switch result {
         case .success:

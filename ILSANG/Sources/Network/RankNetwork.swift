@@ -9,7 +9,7 @@ import Alamofire
 
 // TODO: 지역시스템 > 랭킹 수정 필요
 final class RankNetwork {
-    private let openRankUrl = APIManager.makeURL(OpenTarget(path: "v1/rank/top-users", version: 1))
+    private let openRankUrl = APIManager.makeURL(OpenTarget(path: "rank/top-users", version: 1))
     private let statRankUrl = APIManager.makeURL(UserTarget(path: "rank", version: 1))
     
     func getTopUserRank() async -> Result<Response<[TopRank]>, Error> {

@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct QuizView: View, KeyboardReadable {
-    let missionType: QuestViewModelItem.MissionType
+    let missionType: MissionType
     let quiz: Quiz
     @Binding var selectedAnswer: String
     @Binding var isKeyboardVisible: Bool

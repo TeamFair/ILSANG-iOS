@@ -24,7 +24,13 @@ struct SubmitCompleteView: View {
     
     init(quest: QuestViewModelItem, action: @escaping ()->()) {
         self.totalPoint = quest.totalRewardPoint()
-        self.rewards  = quest.rewardDic
+        var rewardDict: [PointType: Int] = [:]
+        if let rewards = quest.rewards {
+            for reward in rewards {
+                rewardDict[reward.pointType] = rewardDict[reward.pointType, default: 0] + reward.point
+            }
+        }
+        self.rewards = rewardDict
         self.action = action
     }
     

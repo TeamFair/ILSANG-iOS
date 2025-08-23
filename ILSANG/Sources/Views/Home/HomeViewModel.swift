@@ -28,7 +28,7 @@ final class HomeViewModel {
     var userRankList: [TopRankViewModelItem] = [] // 10개
     var largestRewardQuestList: [QuestViewModelItem] = [] // 3*5개
     var recommendQuestList: [QuestViewModelItem] = [] //QuestViewModelItem.mockQuestList // 10개
-    var popularQuestList: [QuestViewModelItem] = QuestViewModelItem.mockQuestList // 4n개
+    var popularQuestList: [QuestViewModelItem] = [QuestViewModelItem.mockData] // 4n개
     
     var currentBanner: Int = 0
     
@@ -63,7 +63,7 @@ final class HomeViewModel {
     var showSelectIllsangZoneView: Bool = false
     var selectedBanner: Banner? = nil
 
-    var myRegionCode: String? = nil // 초기값 서현역으로 설정
+    var myRegionCode: String = "R100" // TODO: 초기값 서현역으로 설정
     var myRegionName: String? = nil
     var illsangZoneCode: String? = nil
     var illsangZoneName: String? = nil
@@ -90,13 +90,13 @@ final class HomeViewModel {
     var showPopularRewardQuest: Bool = true
     var showRankList = true
     
-    private let questNetwork: QuestNetwork
+    private let questRepository: QuestRepositoryInterface
     private let rankNetwork: RankNetwork
     private let bannerNetwork: BannerNetwork
     private let favoriteService: FavoriteService
     
-    init(questNetwork: QuestNetwork, rankNetwork: RankNetwork, bannerNetwork: BannerNetwork, favoriteService: FavoriteService) {
-        self.questNetwork = questNetwork
+    init(questRepository: QuestRepositoryInterface, rankNetwork: RankNetwork, bannerNetwork: BannerNetwork, favoriteService: FavoriteService) {
+        self.questRepository = questRepository
         self.rankNetwork = rankNetwork
         self.bannerNetwork = bannerNetwork
         self.favoriteService = favoriteService
@@ -167,11 +167,8 @@ final class HomeViewModel {
         }
         
         if errorCnt >= 3 {
-            // changeViewStatus(.error) // v1.3.0 이후 적용
-            // return
-            try? await loadUncompleteQuestList()
-            self.showRecommendRewardQuest = true
-            self.showPopularRewardQuest = true
+             changeViewStatus(.error)
+             return
         }
 
         if let userProfileImageId = UserService.shared.currentUser?.profileImageId {
@@ -188,7 +185,7 @@ final class HomeViewModel {
         switch res {
         case .success(let res):
             // 활성화된 배너만 필터링 및 매핑
-            var updatedBanners = res.data.filter { $0.activeYn == "Y" }.map { Banner(from: $0) }
+            var updatedBanners = res.content.filter { $0.activeYn == "Y" }.map { Banner(from: $0) }
             
             // 비동기 이미지 로드 처리
             await withTaskGroup(of: Void.self) { group in
@@ -214,11 +211,11 @@ final class HomeViewModel {
     
     @MainActor
     func loadPopularQuestList() async throws {
-        let res = await questNetwork.getPopularQuest()
+        let res = await questRepository.getPopularQuests(commercialAreaCode: myRegionCode, page: 0, size: 8)
         
         switch res {
         case .success(let response):
-            self.popularQuestList = response.data.map { QuestViewModelItem(quest: $0) }
+            self.popularQuestList = response.content.map { $0.toQuestItem() }
             await cacheImages(for: &popularQuestList, getMainImage: true)
         case .failure(let error):
             throw error
@@ -227,11 +224,11 @@ final class HomeViewModel {
     
     @MainActor
     func loadRecommendQuestList() async throws {
-        let res = await questNetwork.getUncompletedTotalQuest()
+        let res = await questRepository.getRecommendQuests(commercialAreaCode: myRegionCode, page: 0, size: 10)
         
         switch res {
         case .success(let response):
-            self.recommendQuestList = response.data.map { QuestViewModelItem(quest: $0) }
+            self.recommendQuestList = response.content.map { $0.toQuestItem() }
             await cacheImages(for: &recommendQuestList, getWriterImage: true)
         case .failure(let error):
             throw error
@@ -240,11 +237,11 @@ final class HomeViewModel {
     
     @MainActor
     func loadLargeRewardQuestList() async throws {
-        let res = await questNetwork.getLargeRewardQuests()
-        
+        let res = await questRepository.getLargeRewardQuests(commercialAreaCode: myRegionCode, page: 0, size: 3)
+
         switch res {
         case .success(let quests):
-            self.largestRewardQuestList = quests.data.map { QuestViewModelItem(quest: $0) }
+            self.largestRewardQuestList = quests.content.map { $0.toQuestItem() }
             await cacheImages(for: &largestRewardQuestList, getWriterImage: true)
         case .failure(let error):
             throw error
@@ -277,26 +274,6 @@ final class HomeViewModel {
             }
             
         case .failure(let error):
-            throw error
-        }
-    }
-    
-    @MainActor
-    func loadUncompleteQuestList() async throws {
-        let res = await questNetwork.getDefaultQuest(page: 0, size: 20)
-        
-        switch res {
-        case .success(let response):
-            if response.data.count >= 9 {
-                self.popularQuestList = Array(response.data.map { QuestViewModelItem(quest: $0) }[0..<9])
-                await cacheImages(for: &popularQuestList, getWriterImage: true)
-            }
-            if response.data.count >= 20 {
-                self.recommendQuestList = Array(response.data.map { QuestViewModelItem(quest: $0) }[10..<20])
-                await cacheImages(for: &recommendQuestList, getWriterImage: true)
-            }
-        case .failure(let error):
-            self.changeViewStatus(.error) // v1.3.0 이후 제거
             throw error
         }
     }
@@ -375,7 +352,7 @@ final class HomeViewModel {
     
     func onQuestApprovalTapped() {
         showQuestSheet = false
-        if selectedQuest.missionType == .image { // TODO: 사진/ox 구분
+        if selectedQuest.missionType == .photo {
             showSubmitRouterView = true
         } else {
             showQuestEngageView = true

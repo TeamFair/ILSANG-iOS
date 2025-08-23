@@ -12,8 +12,8 @@ protocol FavoriteServiceInterface {
 }
 
 final class FavoriteService: FavoriteServiceInterface {
-    private var debounceTasks: [String: Task<Void, Never>] = [:]
-    private var originalState: [String: Bool] = [:]
+    private var debounceTasks: [Int: Task<Void, Never>] = [:]
+    private var originalState: [Int: Bool] = [:]
     
     private let debounceDelay: TimeInterval = 1.0
     private let favoriteNetwork: FavoriteNetwork

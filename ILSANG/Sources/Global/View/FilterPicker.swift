@@ -96,7 +96,6 @@ enum QuestFilterType: String, Hashable, CustomStringConvertible, CaseIterable {
     case pointHighest = "포인트 높은 순"
     case pointLowest = "포인트 낮은 순"
     case popular = "인기순"
-    case favorite = "즐겨찾기만"
     
     var description: String {
         return self.rawValue
@@ -108,7 +107,6 @@ enum EventQuestFilterType: String, Hashable, CustomStringConvertible, CaseIterab
     case pointHighest = "포인트 높은 순"
     case pointLowest = "포인트 낮은 순"
     case popular = "인기순"
-    case favorite = "즐겨찾기만"
 
     var description: String {
         return self.rawValue

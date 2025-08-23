@@ -12,6 +12,11 @@ enum RepeatType: String, Hashable, CustomStringConvertible, CaseIterable {
     case weekly
     case monthly
     
+    init?(param: String) {
+        print(param)
+        self.init(rawValue: param.lowercased())
+    }
+    
     var description: String {
         switch self {
         case .daily:

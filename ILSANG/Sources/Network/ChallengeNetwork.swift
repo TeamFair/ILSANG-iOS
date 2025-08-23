@@ -22,9 +22,9 @@ final class ChallengeNetwork {
         return await Network.requestData(url: url+"challenge", method: .get, parameters: parameters, withToken: true)
     }
     
-    func postChallenge(questId: String, imageId: String) async -> Result<ResponseWithEmpty, Error> {
+    func postChallenge(questId: Int, imageId: String) async -> Result<ResponseWithEmpty, Error> {
         let bodyData: [String: Any] = [
-            "questId": questId,
+            "questId": "\(questId)",
             "receiptImageId": imageId
         ]
         

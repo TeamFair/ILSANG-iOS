@@ -8,8 +8,8 @@
 import Foundation
 
 final class AuthNetwork {
-    private let url = APIManager.makeURL(OpenTarget(path: "login", version: 1))
-    private let logoutUrl = APIManager.makeURL(NoTarget(path: "logout", version: 1))
+    private let url = APIManager.makeURL(NoTarget(path: "", version: 1))
+    private let logoutUrl = APIManager.makeURL(NoTarget(path: "", version: 1))
     
     /// Apple 또는 Google에서 받은 idToken을 백엔드로 전송해 로그인 요청을 보내고, 성공 시 authorization 토큰을 반환합니다.
     func login(idToken: String, channel: AuthChannel) async -> Result<Auth, NetworkError> {
@@ -22,7 +22,7 @@ final class AuthNetwork {
         ]
         
         let bodyData = body.convertToJsonData()
-        let result: Result<Auth, Error> = await Network.requestData(url: url+"/oauth", method: .post, parameters: nil, body: bodyData, withToken: false, retryOnAuthFail: false)
+        let result: Result<Auth, Error> = await Network.requestData(url: url+"open/login/oauth", method: .post, parameters: nil, body: bodyData, withToken: false, retryOnAuthFail: false)
         switch result {
         case .success(let res):
             return .success(res)
@@ -38,7 +38,7 @@ final class AuthNetwork {
             "refreshToken": refreshToken
         ]
         let bodyData = body.convertToJsonData()
-        let result: Result<Auth, Error> = await Network.requestData(url: url+"/refresh", method: .post, parameters: nil, body: bodyData, withToken: false, retryOnAuthFail: false)
+        let result: Result<Auth, Error> = await Network.requestData(url: url+"open/login/refresh", method: .post, parameters: nil, body: bodyData, withToken: false, retryOnAuthFail: false)
         switch result {
         case .success(let res):
             return .success(res)

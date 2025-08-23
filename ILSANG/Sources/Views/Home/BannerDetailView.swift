@@ -81,12 +81,12 @@ struct BannerDetailView: View {
         }
         .sheet(isPresented: $viewModel.showQuestSheet) {
             if let quest = viewModel.selectedQuest {
-                let tall = quest.isRepeatQuest || viewModel.selectedQuest?.missionType == .image
+                let tall = quest.questType == .repeat || viewModel.selectedQuest?.missionType == .photo
                 
                 QuestDetailView(
                     vm: QuestDetailViewModel(
                         quest: quest,
-                        questNetwork: QuestNetwork(),
+                        questRepository: QuestRepository(network: QuestNetwork()),
                         onUpdate: { quest in
                             viewModel.toggleQuestFavorite(quest: quest)
                         })
@@ -159,11 +159,11 @@ struct BannerDetailView: View {
                     .padding(.horizontal, 20)
                     .padding(.vertical, 24)
                 
-                if viewModel.isCurrentListEmpty {
-                    questListEmptyView
-                } else {
-                    questListView
-                }
+//                if viewModel.isCurrentListEmpty {
+//                    questListEmptyView
+//                } else {
+//                    questListView
+//                }
             } header: {
                 SelectableTabHeader(
                     selectedItem: $viewModel.selectedHeader,
@@ -178,34 +178,26 @@ struct BannerDetailView: View {
         }
     }
     
-    private var questListView: some View {
-        LazyVStack(alignment: .leading, spacing: 12) {
-            switch viewModel.selectedHeader {
-            case .uncomplete:
-                ForEach(viewModel.filteredEventQuestList, id: \.id) { quest in
-                    QuestItemView(
-                        quest: quest,
-                        style: BannerEventStyle(),
-                        tagTitle: "한정"
-                    ) {
-                        viewModel.selectQuest(quest)
-                    }
-                }
-                
-            case .complete:
-                ForEach(viewModel.filteredEventQuestList, id: \.id) { quest in
-                    QuestItemView(
-                        quest: quest,
-                        style: CompletedStyle(),
-                        tagTitle: ""
-                    ) { }
-                }
-            }
-        }
-        .zIndex(-1)
-        .frame(minHeight: 600, alignment: .top)
-        .padding(.bottom ,72)
-    }
+//    private var questListView: some View {
+//        LazyVStack(alignment: .leading, spacing: 12) {
+//            switch viewModel.selectedHeader {
+//            case .uncomplete:
+//                ForEach(viewModel.filteredEventQuestList, id: \.id) { quest in
+//                    UncompletedBannerQuestItemView(quest: quest) {
+//                        viewModel.selectQuest(quest)
+//                    }
+//                }
+//                
+//            case .complete:
+//                ForEach(viewModel.filteredEventQuestList, id: \.id) { quest in
+//                    CompletedQuestItemView(quest: quest)
+//                }
+//            }
+//        }
+//        .zIndex(-1)
+//        .frame(minHeight: 600, alignment: .top)
+//        .padding(.bottom ,72)
+//    }
     
     private var filterPickerEventView: some View {
         PickerView<BannerEventQuestFilterType>(
@@ -343,8 +335,8 @@ struct QuestSortHelper {
             return quests // TODO: 인기순 로직 필요 시 구현
         case .upcoming:
             return quests.sorted {
-                guard let date1 = $0.expireDate.toDate(),
-                      let date2 = $1.expireDate.toDate() else { return false }
+                guard let date1 = $0.expireDate,
+                      let date2 = $1.expireDate else { return false }
                 return date1 < date2
             }
         }

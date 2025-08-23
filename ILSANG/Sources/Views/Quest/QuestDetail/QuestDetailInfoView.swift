@@ -22,12 +22,12 @@ struct QuestDetailInfoView: View {
             VStack(alignment: .leading, spacing: 8) {
                 HStack(spacing: 4) {
                     // 이벤트 퀘스트 태그
-                    if quest.isEventQuest {
+                    if quest.questType == .event {
                         TagView(title: "한정", image: .event, tagStyle: .eventWithIcon)
                     }
                     
                     // 반복 퀘스트 태그
-                    if quest.isRepeatQuest, let repeatType = quest.repeatType {
+                    if quest.questType == .repeat, let repeatType = quest.repeatType {
                         TagView(
                             title: repeatType.description,
                             tagStyle: .repeat(repeatType)
@@ -41,10 +41,17 @@ struct QuestDetailInfoView: View {
                     )
                 }
                 
-                Text(quest.missionTitle.forceCharWrapping)
-                    .styledFont(.bold, size: CGFloat.isSmallDevice ? 16 : 18, lineHeight: CGFloat.isSmallDevice ? 24 : 26)
-                    .kerning(-0.2)
+                Text(quest.title.forceCharWrapping)
+                    .styledFont(.title2)
                     .lineLimit(2)
+                
+                if quest.questType == .event, let date = quest.expireDate {
+                    Text(date.toDisplayFormat(.short)+"까지")
+                        .styledFont(.caption2)
+                        .padding(.top, -6)
+                        .padding(.bottom, 2)
+                        .foregroundStyle(.gray400)
+                }
             }
             
             Spacer(minLength: 8)
@@ -56,8 +63,8 @@ struct QuestDetailInfoView: View {
                 .roundedBackground(cornerRadius: 12, bgColor: .primary100)
         }
         .foregroundStyle(.gray500)
-        .frame(minHeight: 80, maxHeight: 88)
-        .padding(.vertical, 14)
+        .frame(minHeight: 80, maxHeight: 92)
+        .padding(.vertical, 16)
     }
 }
 

@@ -13,7 +13,21 @@ struct QuestView: View {
     @EnvironmentObject var sharedState: SharedState
 
     init() {
-        _vm = StateObject(wrappedValue: QuestViewModel(questNetwork: QuestNetwork(), favoriteService: FavoriteService(favoriteNetwork: FavoriteNetwork())))
+        #if DEBUG
+        _vm = StateObject(
+            wrappedValue: QuestViewModel(
+                questRepository: MockQuestRepository(),
+                favoriteService: FavoriteService(favoriteNetwork: FavoriteNetwork())
+            )
+        )
+        #else
+        _vm = StateObject(
+            wrappedValue: QuestViewModel(
+                questRepository: QuestRepository(network: QuestNetwork()),
+                favoriteService: FavoriteService(favoriteNetwork: FavoriteNetwork())
+            )
+        )
+        #endif
     }
     
     var body: some View {
@@ -43,12 +57,12 @@ struct QuestView: View {
             vm.closeFilterPicker()
         }
         .sheet(isPresented: $vm.showQuestSheet) {
-            let tall = vm.selectedQuest.isRepeatQuest || vm.selectedQuest.missionType == .image
+            let tall = vm.selectedQuest.questType == .repeat || vm.selectedQuest.missionType == .photo
             
             QuestDetailView(
                 vm: QuestDetailViewModel(
                     quest: vm.selectedQuest,
-                    questNetwork: QuestNetwork(),
+                    questRepository: QuestRepository(network: QuestNetwork()),
                     onUpdate: { quest in
                         vm.toggleFavoriteStatus(quest: quest)
                     })
@@ -136,48 +150,32 @@ extension QuestView {
         LazyVStack(spacing: 12) {
             switch vm.selectedHeader {
             case .default: // 미완료 퀘스트
-                ForEach(vm.filteredDefaultQuestListByXpStat, id: \.id) { quest in
-                    QuestItemView(
+                ForEach(vm.currentQuests, id: \.id) { quest in
+                    DefaultQuestItemView(
                         quest: quest,
-                        style: UncompletedStyle(),
-                        tagTitle: String(quest.totalRewardPoint())+"P") {
-                            vm.toggleFavoriteStatus(quest: quest)
-                        } action: {
-                            vm.onQuestTapped(quest: quest)
-                        }
-                   
+                        action: { vm.onQuestTapped(quest: quest) },
+                        favoriteAction: { vm.toggleFavoriteStatus(quest: quest) }
+                    )
                 }
             case .repeat: // 미완료 반복 퀘스트
-                ForEach(vm.filteredRepeatQuestListByXpStat, id: \.id) { quest in
-                    QuestItemView(
+                ForEach(vm.currentQuests, id: \.id) { quest in
+                    RepeatQuestItemView(
                         quest: quest,
-                        style: RepeatStyle(repeatType: vm.repeatFilterState.selectedValue),
-                        tagTitle: vm.repeatFilterState.selectedValue.description
-                    ) {
-                        vm.toggleFavoriteStatus(quest: quest)
-                    } action: {
-                        vm.onQuestTapped(quest: quest)
-                    }
+                        action: { vm.onQuestTapped(quest: quest) },
+                        favoriteAction: { vm.toggleFavoriteStatus(quest: quest) }
+                    )
                 }
             case .event: // 미완료 이벤트 퀘스트
-                ForEach(vm.filteredEventQuestList, id: \.id) { quest in
-                    QuestItemView(
+                ForEach(vm.currentQuests, id: \.id) { quest in
+                    EventQuestItemView(
                         quest: quest,
-                        style: EventStyle(),
-                        tagTitle: "한정"
-                    ) {
-                        vm.toggleFavoriteStatus(quest: quest)
-                    } action: {
-                        vm.onQuestTapped(quest: quest)
-                    }
+                        action: { vm.onQuestTapped(quest: quest) },
+                        favoriteAction: { vm.toggleFavoriteStatus(quest: quest) }
+                    )
                 }
             case .completed: // 완료 퀘스트
-                ForEach(vm.itemListByStatus[.completed, default: []], id: \.id) { quest in
-                    QuestItemView(
-                        quest: quest,
-                        style: CompletedStyle(),
-                        tagTitle: ""
-                    ) { } action: { }
+                ForEach(vm.currentQuests, id: \.id) { quest in
+                   CompletedQuestItemView(quest: quest)
                 }
                 
                 if vm.hasMorePage(status: .completed) {

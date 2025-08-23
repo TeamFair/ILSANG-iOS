@@ -31,19 +31,16 @@ extension MissionHistory {
 
 // TODO: 지역 시스템 >서버 스펙 확인해서 재수정
 extension Date {
-    func toDisplayFormat() -> String {
+    enum DisplayFormat: String {
+        case full = "yyyy.MM.dd HH:mm"
+        case short = "yyyy.MM.dd"
+    }
+    
+    func toDisplayFormat(_ format: DisplayFormat = .full) -> String {
         let formatter = DateFormatter()
         formatter.locale = Locale(identifier: "ko_KR")
         formatter.timeZone = TimeZone(identifier: "Asia/Seoul")
-        formatter.dateFormat = "yyyy.MM.dd HH:mm"
+        formatter.dateFormat = format.rawValue
         return formatter.string(from: self)
     }
 }
-
-//extension String {
-//    func toDateFromServer() -> Date? {
-//        let formatter = ISO8601DateFormatter()
-//        formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
-//        return formatter.date(from: self)
-//    }
-//}

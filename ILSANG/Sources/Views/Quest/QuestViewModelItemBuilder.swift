@@ -8,29 +8,23 @@
 import UIKit
 
 final class QuestViewModelItemBuilder {
-    private var id: String = UUID().uuidString
+    private var id: Int = 0
     private var image: UIImage? = nil
     private var imageId: String = QuestViewModelItem.mockImageId
     private var mainImage: UIImage? = nil
     private var mainImageId: String = "default_main_image_id"
-    private var missionId: String = UUID().uuidString
-    private var missionType: QuestViewModelItem.MissionType = .image
-    private var missionTitle: String = "기본 미션 제목"
+    private var missions: [Mission] = [Mission(id: 0, type: .photo, exampleImageIds: [])]
+    private var title: String = "기본 미션 제목"
     private var writer: String = "일상"
-    private var rewardDic: [PointType: Int] = [:]
-    private var type: String = "NORMAL" // REPEAT
-    private var target: String = "NONE" // DAILY, WEEKLY, MONTHLY
-    private var expireDate: String = "2030-12-30T00:00:00"
-    private var challengeImageIds: [ChallengeImage] = []
-    private var challengeImages: [UIImage] = []
-    private var customerRank: Int = 0
+    private var rewards: [Reward] = []
+    private var questType: QuestType = .normal
+    private var repeatType: RepeatType? = .daily
+    private var expireDate: Date = .now
+    // private var challengeImages: [UIImage] = []
+    private var userRank: Int = 0
     private var favoriteYn: Bool = false
     
-    enum MissionTarget: String {
-        case none = "NONE", daily = "DAILY", weekly = "WEEKLY", monthly = "MONTHLY"
-    }
-    
-    func setId(_ id: String) -> Self {
+    func setId(_ id: Int) -> Self {
         self.id = id
         return self
     }
@@ -55,18 +49,13 @@ final class QuestViewModelItemBuilder {
         return self
     }
     
-    func setMissionId(_ missionId: String) -> Self {
-        self.missionId = missionId
+    func setMission(_ mission: Mission) -> Self {
+        self.missions = [mission]
         return self
     }
     
-    func setMissionType(_ missionType: QuestViewModelItem.MissionType) -> Self {
-        self.missionType = missionType
-        return self
-    }
-    
-    func setMissionTitle(_ missionTitle: String) -> Self {
-        self.missionTitle = missionTitle
+    func setTitle(_ title: String) -> Self {
+        self.title = title
         return self
     }
     
@@ -75,44 +64,49 @@ final class QuestViewModelItemBuilder {
         return self
     }
     
-    func setRewardDic(_ rewardDic: [PointType: Int]) -> Self {
-        self.rewardDic = rewardDic
+    func setReward(_ rewards: [Reward]) -> Self {
+        self.rewards = rewards
         return self
     }
     
     func setNormalType() -> Self {
-        self.type = "NORMAL"
-        self.target = "NONE"
+        self.questType = .normal
+        self.repeatType = nil
         return self
     }
     
-    func setRepeatType(_ target: MissionTarget) -> Self {
-        self.type = "REPEAT"
-        self.target = target.rawValue
+    func setRepeatType(_ repeatType: RepeatType) -> Self {
+        self.questType = .repeat
+        self.repeatType = repeatType
         return self
     }
     
-    func setExpireDate(_ expireDate: String) -> Self {
+    func setExpireDate(_ expireDate: Date) -> Self {
         self.expireDate = expireDate
         return self
     }
     
-    func setChallengeImageIds(_ challengeImageIds: [ChallengeImage]) -> Self {
-        self.challengeImageIds = challengeImageIds
-        return self
-    }
-    
-    func setChallengeImages(_ challengeImages: [UIImage]) -> Self {
-        self.challengeImages = challengeImages
+    func setChallengeImageIds(_ challengeImageIds: [String]) -> Self {
+        if let firstMission = self.missions.first {
+            let updatedMission = Mission(
+                id: firstMission.id,
+                type: firstMission.type,
+                exampleImageIds: challengeImageIds
+            )
+            self.missions = [updatedMission]
+        } else {
+            let newMission = Mission(id: 1, type: .photo, exampleImageIds: challengeImageIds)
+            self.missions = [newMission]
+        }
         return self
     }
     
     func setCustomerRank(_ customerRank: Int) -> Self {
-        if self.type != "REPEAT" {
+        if self.questType != .repeat {
             Log("Warning: customerRank는 REPEAT 퀘스트에만 적용됩니다.")
             return self
         }
-        self.customerRank = customerRank
+        self.userRank = userRank
         return self
     }
     
@@ -124,21 +118,18 @@ final class QuestViewModelItemBuilder {
     func build() -> QuestViewModelItem {
         return QuestViewModelItem(
             id: id,
-            image: image,
-            imageId: imageId,
-            mainImage: mainImage,
-            mainImageId: mainImageId,
-            missionId: missionId,
-            missionType: missionType,
-            missionTitle: missionTitle,
+            title: title,
             writer: writer,
-            rewardDic: rewardDic,
-            type: type,
-            target: target,
+            questType: questType,
+            repeatType: repeatType,
+            rewards: rewards,
+            missions: missions,
             expireDate: expireDate,
-            challengeImageIds: challengeImageIds,
-            challengeImages: challengeImages,
-            customerRank: customerRank,
+            imageId: imageId,
+            image: image,
+            mainImageId: mainImageId,
+            mainImage: mainImage,
+            userRank: userRank,
             favoriteYn: favoriteYn
         )
     }

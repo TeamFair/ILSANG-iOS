@@ -17,8 +17,9 @@ struct QuestDetailStatView: View {
             
             HStack(spacing: 20) {
                 ForEach(PointType.sorted, id: \.rawValue) { type in
-                    let point = quest.rewardDic[type, default: 0]
-                    pointTagView(type: type, point: point)
+                    if let point = quest.rewards?.first(where: { $0.pointType == type }) {
+                        pointTagView(type: type, point: point.point)
+                    }
                 }
             }
         }
