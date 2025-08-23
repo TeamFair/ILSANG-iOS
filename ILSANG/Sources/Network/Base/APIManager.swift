@@ -12,7 +12,7 @@ final class APIManager {
     
     static func makeURL(_ target: APITarget) -> String {
         if let prefix = target.type {
-            return "\(baseURL)/api/v\(target.version)/\(prefix)/\(target.path)"
+            return "\(baseURL)/api/v\(target.version)/\(target.path)/\(prefix)"
         } else {
             return "\(baseURL)/api/v\(target.version)/\(target.path)"
         }

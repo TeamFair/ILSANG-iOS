@@ -36,13 +36,15 @@ class SubmitRouterViewModel: ObservableObject {
     private func startSubmitTask(userAnswer: String?, quizId: String?) {
         if submitTask == nil || submitTask?.isCancelled == true {
             submitTask = Task {
-                switch selectedQuest.missionType {
-                case .quiz(let quizType):
+                switch selectedQuest.missions?.first?.type {
+                case .quiz:
                     if let userAnswer, let quizId {
                         await self.postChallengeWithQuiz(userAnswer: userAnswer, quizId: quizId)
                     }
-                case .image:
+                case .photo:
                     await self.postChallengeWithImage()
+                case .none:
+                    return
                 }
             }
         }
@@ -74,7 +76,7 @@ class SubmitRouterViewModel: ObservableObject {
         let isSuccess = await submitService.execute(questId: selectedQuest.id, image: selectedImage)
         
         if isSuccess {
-            AnalyticsService.logEvent(.questSubmitClick(questId: selectedQuest.id, questType: selectedQuest.type.uppercased()))
+            AnalyticsService.logEvent(.questSubmitClick(questId: selectedQuest.id, questType: selectedQuest.questType?.rawValue.uppercased() ?? ""))
             submitStatus = .complete
         } else {
             submitStatus = .fail
@@ -87,7 +89,7 @@ class SubmitRouterViewModel: ObservableObject {
         
         switch response {
         case .success:
-            AnalyticsService.logEvent(.questSubmitClick(questId: selectedQuest.id, questType: selectedQuest.type.uppercased()))
+            AnalyticsService.logEvent(.questSubmitClick(questId: selectedQuest.id, questType: selectedQuest.questType?.rawValue.uppercased() ?? ""))
             submitStatus = .complete
         case .failure:
             submitStatus = .fail

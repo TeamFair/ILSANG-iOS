@@ -74,8 +74,8 @@ final class SeasonManager: ObservableObject {
         let result = await seasonNetwork.getSeasons()
         switch result {
         case .success(let res):
-            self.seasons = res.data
-            self.currentSeason = res.data.first(where: { $0.containsToday() })
+            self.seasons = res
+            self.currentSeason = res.first(where: { $0.containsToday() })
         case .failure(let err):
             Log(err)
         }

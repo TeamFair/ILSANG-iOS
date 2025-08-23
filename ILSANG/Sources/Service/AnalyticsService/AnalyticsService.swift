@@ -16,13 +16,13 @@ final class AnalyticsService {
 enum AnalyticsEvent {
     case bottomTabClick(tabName: String)
     case homeBannerClick(bannerId: Int)
-    case homePopularQuestClick(questId: String)
-    case homeRecommendQuestClick(questId: String)
-    case homeBigRewardQuestClick(questId: String)
+    case homePopularQuestClick(questId: Int)
+    case homeRecommendQuestClick(questId: Int)
+    case homeBigRewardQuestClick(questId: Int)
     case homeRankingClick(userId: String)
     case questFilterClick(filterOption: String)
-    case questItemClick(questId: String, questType: String)
-    case questSubmitClick(questId: String, questType: String)
+    case questItemClick(questId: Int, questType: String)
+    case questSubmitClick(questId: Int, questType: String)
     
     var name: String {
         switch self {

@@ -19,6 +19,7 @@ class QuestViewModel: ObservableObject {
     
     // TODO: 바뀔 때 api 요청하도록 수정 (refresh, init 고려)
     @Published var selectedHeader: QuestStatus = .default
+    @Published var commercialAreaCode: String = "R100" // TODO: 현재 지역 코드
 
     // 필터
     @Published var repeatFilterState: FilterPickerState<RepeatType>
@@ -45,74 +46,29 @@ class QuestViewModel: ObservableObject {
         }
     }
     
-    @Published var itemListByStatus: [QuestStatus: [QuestViewModelItem]] = [
-        .default: [],
-        .repeat: [],
-        .event: [],
-        .completed: []
-    ]
-    
-    @Published var defaultQuestListByXpStat: [QuestViewModelItem] = []
-    @Published var repeatQuestListByXpStat: [QuestViewModelItem] = []
-    @Published var eventQuestListByXpStat: [QuestViewModelItem] = []
+    @Published var defaultQuestListByFilter: [QuestFilterType: [QuestViewModelItem]] = [:]
+    @Published var repeatQuestListByFilter: [RepeatType: [QuestFilterType: [QuestViewModelItem]]] = [:]
+    @Published var eventQuestListByFilter: [EventQuestFilterType: [QuestViewModelItem]] = [:]
+    @Published var completedQuestList: [QuestViewModelItem] = []
 
-    var filteredDefaultQuestListByXpStat: [QuestViewModelItem] {
-        switch questFilterState.selectedValue {
-        case .pointHighest:
-            return defaultQuestListByXpStat
-                .sorted { $0.totalRewardPoint() > $1.totalRewardPoint() }
-        case .pointLowest:
-            return defaultQuestListByXpStat
-                .sorted { $0.totalRewardPoint() < $1.totalRewardPoint() }
-        case .popular:
-            return defaultQuestListByXpStat
-        case .favorite:
-            return defaultQuestListByXpStat.filter { $0.favoriteYn }
-        }
-    }
     
-    var filteredRepeatQuestListByXpStat: [QuestViewModelItem] {
-        switch questFilterState.selectedValue  {
-        case .pointHighest:
-            return repeatQuestListByXpStat.sorted { $0.totalRewardPoint() > $1.totalRewardPoint() }
-        case .pointLowest:
-            return repeatQuestListByXpStat.sorted { $0.totalRewardPoint() < $1.totalRewardPoint() }
-        case .popular:
-            return repeatQuestListByXpStat
-        case .favorite:
-            return repeatQuestListByXpStat.filter { $0.favoriteYn }
-        }
-    }
-
-    var filteredEventQuestList: [QuestViewModelItem] {
-        switch eventFilterState.selectedValue  {
-        case .pointHighest:
-            return eventQuestListByXpStat.sorted { $0.totalRewardPoint() > $1.totalRewardPoint() }
-        case .pointLowest:
-            return eventQuestListByXpStat.sorted { $0.totalRewardPoint() < $1.totalRewardPoint() }
-        case .popular:
-            return eventQuestListByXpStat
-        case .upcoming:
-            return eventQuestListByXpStat.sorted(by: {
-                guard let date1 = $0.expireDate.toDate(), let date2 = $1.expireDate.toDate() else { return false }
-                return date1 < date2
-            })
-        case .favorite:
-            return eventQuestListByXpStat.filter { $0.favoriteYn }
+    var currentQuests: [QuestViewModelItem] {
+        switch selectedHeader {
+        case .default:
+            return defaultQuestListByFilter[questFilterState.selectedValue] ?? []
+        case .repeat:
+            return repeatQuestListByFilter[repeatFilterState.selectedValue]?[questFilterState.selectedValue] ?? []
+            
+        case .event:
+            return eventQuestListByFilter[eventFilterState.selectedValue] ?? []
+            
+        case .completed:
+            return completedQuestList
         }
     }
     
     var isCurrentListEmpty: Bool {
-        switch selectedHeader {
-        case .default:
-            return itemListByStatus[.default, default: []].isEmpty || filteredDefaultQuestListByXpStat.isEmpty
-        case .repeat:
-            return itemListByStatus[.repeat, default: []].isEmpty || filteredRepeatQuestListByXpStat.isEmpty
-        case .event:
-            return itemListByStatus[.event, default: []].isEmpty || filteredEventQuestList.isEmpty
-        case .completed:
-            return itemListByStatus[.completed, default: []].isEmpty
-        }
+        currentQuests.isEmpty
     }
     
     // TODO: 퀘스트 갯수 확인 필요
@@ -159,17 +115,25 @@ class QuestViewModel: ObservableObject {
     let throttleInterval: TimeInterval = 2.0
     var lastRefreshTime: Date? = nil
     
-    private let questNetwork: QuestNetwork
+    private let questRepository: QuestRepositoryInterface
     private let favoriteService: FavoriteService
 
-    init(questNetwork: QuestNetwork, favoriteService: FavoriteService) {
-        self.questNetwork = questNetwork
+    init(questRepository: QuestRepositoryInterface, favoriteService: FavoriteService) {
+        self.questRepository = questRepository
         self.favoriteService = favoriteService
-
+        
         // 필터 설정
         questFilterState = FilterPickerState(initialValue: QuestFilterType.popular)
         eventFilterState = FilterPickerState(initialValue: EventQuestFilterType.popular)
         repeatFilterState = FilterPickerState(initialValue: RepeatType.daily)
+        questFilterState.onSelectionChange = { [weak self] _ in
+            guard let self = self else { return }
+            Task { await self.defaultPaginationManager.loadData(isRefreshing: true) }
+        }
+        eventFilterState.onSelectionChange = { [weak self] _ in
+            guard let self = self else { return }
+            Task { await self.eventPaginationManager.loadData(isRefreshing: true) }
+        }
         repeatFilterState.onSelectionChange = { [weak self] _ in
             guard let self = self else { return }
             Task { await self.repeatPaginationManager.loadData(isRefreshing: true) }
@@ -221,18 +185,34 @@ class QuestViewModel: ObservableObject {
     }
     
     @discardableResult @MainActor
-    func loadQuestListWithImage(page: Int, size: Int, status: QuestStatus) async -> ([QuestViewModelItem], Int) {
+    func loadQuestListWithImage(
+        page: Int,
+        size: Int,
+        status: QuestStatus,
+    ) async -> ([QuestViewModelItem], Int) {
         let getQuestList = await getQuestList(page: page, size: size, status: status)
-        
         var newQuestList = getQuestList.data
-        var currentQuestList = itemListByStatus[status, default: []]
         
-        // 중복된 항목 제거 로직
-        let currentQuestIds = Set(currentQuestList.map { $0.id }) // 현재 리스트의 ID 집합 (page 1이상일 경우만 고려됨)
-        var seenIds = Set<String>() // 추가될 퀘스트에서 확인된 ID를 저장할 집합
+        // 현재 필터별 existingList 가져오기
+        let existingList: [QuestViewModelItem]
+        switch status {
+        case .default:
+            existingList = defaultQuestListByFilter[questFilterState.selectedValue] ?? []
+        case .repeat:
+            let rFilter = repeatFilterState.selectedValue
+            let qFilter = questFilterState.selectedValue
+            existingList = repeatQuestListByFilter[rFilter]?[qFilter] ?? []
+        case .event:
+            let filter = eventFilterState.selectedValue
+            existingList = eventQuestListByFilter[filter] ?? []
+        case .completed:
+            existingList = completedQuestList
+        }
         
+        // 중복된 항목 제거
+        let currentQuestIds = Set(existingList.map { $0.id })
+        var seenIds = Set<Int>()
         newQuestList = newQuestList.filter { quest in
-            // ID가 집합에 없으면 true를 반환하고, 집합에 추가
             if seenIds.contains(quest.id) || (currentQuestIds.contains(quest.id) && page > 0) {
                 return false
             } else {
@@ -241,10 +221,11 @@ class QuestViewModel: ObservableObject {
             }
         }
         
+        var mergedList: [QuestViewModelItem]
         if page == 0 {
-            currentQuestList = newQuestList
+            mergedList = newQuestList
         } else {
-            currentQuestList += newQuestList
+            mergedList = existingList + newQuestList
         }
         
         await withTaskGroup(of: (Int, UIImage?).self) { group in
@@ -261,61 +242,108 @@ class QuestViewModel: ObservableObject {
             for await (index, image) in group {
                 if let image = image {
                     if page == 0 {
-                        currentQuestList[index].image = image
+                        mergedList[index].image = image
                     } else {
-                        currentQuestList[currentQuestList.count - newQuestList.count + index].image = image
+                        mergedList[mergedList.count - newQuestList.count + index].image = image
                     }
                 }
             }
         }
-        itemListByStatus[status] = currentQuestList
         
+        // 상태별 필터 매핑
         switch status {
         case .default:
-            mapDefaultQuestByXpStat()
+            let questFilter = questFilterState.selectedValue
+            mapDefaultQuestByFilter(list: mergedList, filter: questFilter)
         case .repeat:
-            mapRepeatQuestByXpStat()
+            mapRepeatQuestByFilter(list: mergedList, repeatType: repeatFilterState.selectedValue, filter: questFilterState.selectedValue)
         case .event:
-            mapEventQuestByXpStat()
+            mapEventQuestByFilter(list: mergedList, filter: eventFilterState.selectedValue)
         case .completed:
-            break
+            completedQuestList = mergedList
         }
-        return (itemListByStatus[status, default: []], getQuestList.total)
+        
+        return (mergedList, getQuestList.total)
     }
     
     /// uncompleted 상태의 기본 퀘스트 목록을 XpStat별로 분류하여 defaultQuestListByXpStat 딕셔너리에 매핑합니다.
-    private func mapDefaultQuestByXpStat() {
-        guard let uncompletedQuestList = itemListByStatus[.default] else { return }
-        self.defaultQuestListByXpStat = uncompletedQuestList
+    private func mapDefaultQuestByFilter(list: [QuestViewModelItem], filter: QuestFilterType) {
+        var mapped = defaultQuestListByFilter
+        mapped[filter] = list
+        self.defaultQuestListByFilter = mapped
     }
     
-    private func mapRepeatQuestByXpStat() {
-        guard let repeatQuestList = itemListByStatus[.repeat] else { return }
-        self.repeatQuestListByXpStat = repeatQuestList
+    private func mapRepeatQuestByFilter(list: [QuestViewModelItem], repeatType: RepeatType, filter: QuestFilterType) {
+        var mapped = repeatQuestListByFilter
+        var subMapped = mapped[repeatType] ?? [:]
+        subMapped[filter] = list
+        mapped[repeatType] = subMapped
+        self.repeatQuestListByFilter = mapped
     }
     
-    private func mapEventQuestByXpStat() {
-        guard let eventQuestList = itemListByStatus[.event] else { return }
-        self.eventQuestListByXpStat = eventQuestList
+    private func mapEventQuestByFilter(list: [QuestViewModelItem], filter: EventQuestFilterType) {
+        var mapped = eventQuestListByFilter
+        mapped[filter] = list
+        self.eventQuestListByFilter = mapped
     }
     
     private func getQuestList(page: Int, size: Int, status: QuestStatus) async -> (data: [QuestViewModelItem], total: Int) {
         let result: Result<ResponseWithPage<[Quest]>, Error>
         
+        // TODO: orderRewardDesc 확인하기
         switch status {
         case .default:
-            result = await questNetwork.getDefaultQuest(page: page, size: size)
+            switch questFilterState.selectedValue {
+            case .pointHighest:
+                result = await questRepository.getDefaultQuests(commercialAreaCode: commercialAreaCode, orderRewardDesc: false, page: page, size: size)
+            case .pointLowest:
+                result = await questRepository.getDefaultQuests(commercialAreaCode: commercialAreaCode, orderRewardDesc: true, page: page, size: size)
+            case .popular:
+                result = await questRepository.getDefaultQuests(commercialAreaCode: commercialAreaCode, orderRewardDesc: nil, page: page, size: size)
+            }
         case .repeat:
-            result = await questNetwork.getRepeatQuest(status: self.repeatFilterState.selectedValue, page: page, size: size)
+            switch questFilterState.selectedValue {
+            case .pointHighest:
+                result = await questRepository.getRepeatQuests(
+                    commercialAreaCode: commercialAreaCode,
+                    repeatFrequency: self.repeatFilterState.selectedValue,
+                    orderRewardDesc: false,
+                    page: page,
+                    size: size
+                )
+            case .pointLowest:
+                result = await questRepository.getRepeatQuests(
+                    commercialAreaCode: commercialAreaCode,
+                    repeatFrequency: self.repeatFilterState.selectedValue,
+                    orderRewardDesc: true,
+                    page: page,
+                    size: size
+                )
+            case .popular:
+                result = await questRepository.getRepeatQuests(
+                    commercialAreaCode: commercialAreaCode,
+                    repeatFrequency: self.repeatFilterState.selectedValue,
+                    orderRewardDesc: nil,
+                    page: page,
+                    size: size
+                )
+            }
         case .event:
-            result = await questNetwork.getEventQuest(page: page, size: size)
+            switch eventFilterState.selectedValue {
+            case .pointHighest:
+                result = await questRepository.getEventQuests(commercialAreaCode: commercialAreaCode, orderRewardDesc: false, page: page, size: size)
+            case .pointLowest:
+                result = await questRepository.getEventQuests(commercialAreaCode: commercialAreaCode, orderRewardDesc: true, page: page, size: size)
+            case .popular, .upcoming:
+                result = await questRepository.getEventQuests(commercialAreaCode: commercialAreaCode, orderRewardDesc: nil, page: page, size: size)
+            }
         case .completed:
-            result = await questNetwork.getCompletedQuest(page: page, size: size)
+            result = await questRepository.getCompletedQuests(commercialAreaCode: commercialAreaCode, page: page, size: size)
         }
         
         switch result {
         case .success(let response):
-            return (response.data.map { QuestViewModelItem(quest: $0) }, response.total)
+            return (response.content.map { $0.toQuestItem() }, response.totalElements)
         case .failure:
             return ([], 0)
         }
@@ -335,7 +363,7 @@ class QuestViewModel: ObservableObject {
     }
     
     func onQuestTapped(quest: QuestViewModelItem) {
-        AnalyticsService.logEvent(.questItemClick(questId: quest.id, questType: quest.type.uppercased()))
+        AnalyticsService.logEvent(.questItemClick(questId: quest.id, questType: quest.questType?.rawValue.uppercased() ?? ""))
         selectedQuest = quest
         DispatchQueue.main.asyncAfter(deadline: .now()+0.3) {
             self.showQuestSheet = true
@@ -349,7 +377,7 @@ class QuestViewModel: ObservableObject {
     
     func onQuestApprovalTapped() {
         showQuestSheet = false
-        if selectedQuest.missionType == .image {
+        if selectedQuest.missionType == .photo {
             showSubmitRouterView = true
         } else {
             showQuestEngageView = true

@@ -12,7 +12,7 @@ struct MainTabView: View {
     @StateObject var honorAcquisitionManager = HonorAcquisitionManager(honorNetwork: defaultHonorNetwork)
     @StateObject var seasonManager = SeasonManager(seasonNetwork: defaultSeasonNetwork)
     let viewModel = HomeViewModel(
-        questNetwork: QuestNetwork(),
+        questRepository: QuestRepository(network: QuestNetwork()),
         rankNetwork: RankNetwork(),
         bannerNetwork: BannerNetwork(),
         favoriteService: FavoriteService(favoriteNetwork: FavoriteNetwork())

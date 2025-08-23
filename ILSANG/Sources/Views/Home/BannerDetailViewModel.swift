@@ -87,8 +87,8 @@ class BannerDetailViewModel {
         isLoading = true
         
         do {
-            uncompletedQuest = QuestViewModelItem.mockQuestList
-            // completedQuest = [QuestViewModelItem.mockData]
+            uncompletedQuest = [QuestViewModelItem.mockData]
+            completedQuest = [QuestViewModelItem.mockData]
             // let quests = try await questNetwork.getQuests(bannerId: banner.id)
         } catch {
             Log("퀘스트 정보 불러오기 실패")
@@ -111,7 +111,7 @@ class BannerDetailViewModel {
     
     func onQuestApprovalTapped() {
         showQuestSheet = false
-        if selectedQuest?.missionType == .image {
+        if selectedQuest?.missionType == .photo {
             showSubmitRouterView = true
         } else {
             showQuestEngageView = true

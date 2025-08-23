@@ -60,11 +60,11 @@ struct HomeView: View {
             }
         )
         .sheet(isPresented: $vm.showQuestSheet) {
-            let tall = vm.selectedQuest.isRepeatQuest || vm.selectedQuest.missionType == .image
+            let tall = vm.selectedQuest.questType == .repeat || vm.selectedQuest.missionType == .photo
             QuestDetailView(
                 vm: QuestDetailViewModel(
                     quest: vm.selectedQuest,
-                    questNetwork: QuestNetwork(),
+                    questRepository: QuestRepository(network: QuestNetwork()),
                     onUpdate: { quest in
                         vm.toggleFavoriteStatus(quest: quest)
                     }
@@ -259,10 +259,9 @@ struct HomeView: View {
     private var singlePageContent: some View {
         LazyHGrid(rows: gridItem, alignment: .top, spacing: LayoutConstants.lazyHGridSpacing) {
             ForEach(vm.popularQuestList) { quest in
-                QuestItemView(
+                PopularQuestItemView(
                     quest: quest,
-                    style: PopularStyle(type: quest.type, repeatType: RepeatType(rawValue: quest.target.lowercased()) ?? .daily),
-                    tagTitle: ""
+                    imageSize: CGSize(width: (UIScreen.main.bounds.width - 40 - 2) / 2, height: 137)
                 ) {
                     AnalyticsService.logEvent(.homePopularQuestClick(questId: quest.id))
                     vm.onQuestTapped(quest: quest)
@@ -278,10 +277,9 @@ struct HomeView: View {
                 ForEach(vm.paginatedPopularQuests.indices, id: \.self) { pageIndex in
                     LazyHGrid(rows: gridItem, alignment: .top, spacing: LayoutConstants.lazyHGridSpacing) {
                         ForEach(vm.paginatedPopularQuests[pageIndex]) { quest in
-                            QuestItemView(
+                            PopularQuestItemView(
                                 quest: quest,
-                                style: PopularStyle(type: quest.type, repeatType: RepeatType(rawValue: quest.target.lowercased()) ?? .daily),
-                                tagTitle: ""
+                                imageSize: CGSize(width: (UIScreen.main.bounds.width - 40 - 2) / 2, height: 137)
                             ) {
                                 AnalyticsService.logEvent(.homePopularQuestClick(questId: quest.id))
                                 vm.onQuestTapped(quest: quest)
@@ -320,10 +318,7 @@ struct HomeView: View {
                 ScrollView(.horizontal) {
                     HStack(spacing: 12) {
                         ForEach(vm.recommendQuestList, id: \.id) { quest in
-                            QuestItemView(
-                                quest: quest,
-                                style: RecommendStyle()
-                            ) {
+                            RecommendQuestItemView(quest: quest) {
                                 AnalyticsService.logEvent(.homeRecommendQuestClick(questId: quest.id))
                                 vm.onQuestTapped(quest: quest)
                             }
@@ -339,22 +334,15 @@ struct HomeView: View {
         TitleWithContentView(
             title: "큰 보상 퀘스트",
             seeAll: (
-                .label("전체 보기"),
-                .bottomTrailing, {
+                .label("더 많은 퀘스트 보기"),
+                .bottom, {
                     sharedState.selectedTab = .quest /// 퀘스트 탭(선택된 스탯)으로 이동
                 }
             ),
             content:
                 Group {
-                    // TODO: (디자인 대기 중) 퀘스트 타입에 따라 다르게 보여줘야함
                     ForEach(vm.largestRewardQuestList.prefix(3), id: \.id) { quest in
-                        QuestItemView(
-                            quest: quest,
-                            style: UncompletedStyle(),
-                            tagTitle: String(quest.totalRewardPoint())+"P"
-                        ) {
-                            vm.toggleFavoriteStatus(quest: quest)
-                        } action: {
+                        LargeRewardQuestItemView(quest: quest) {
                             AnalyticsService.logEvent(.homeBigRewardQuestClick(questId: quest.id))
                             vm.onQuestTapped(quest: quest)
                         }
@@ -463,7 +451,7 @@ struct HomeView: View {
 
 #Preview {
     let viewModel = HomeViewModel(
-        questNetwork: QuestNetwork(),
+        questRepository: QuestRepository(network: QuestNetwork()),
         rankNetwork: RankNetwork(),
         bannerNetwork: BannerNetwork(),
         favoriteService: FavoriteService(favoriteNetwork: FavoriteNetwork())

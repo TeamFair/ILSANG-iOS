@@ -23,19 +23,20 @@ struct QuestEngageInfoView: View {
                 Text(quest.writer)
                     .styledFont(.regular, size: 15, lineHeight: 26)
                 
-                Text(quest.missionTitle.forceCharWrapping)
+                Text(quest.title.forceCharWrapping)
                     .styledFont(.bold, size: 18, lineHeight: 28)
                     .kerning(-0.2)
                     .lineLimit(2)
                 
                 HStack(spacing: 4) {
                     // 이벤트 퀘스트 태그
-                    if quest.isEventQuest {
-                        TagView(title: "~"+quest.expireDate.timeAgoSinceDate(withYear: false), image: .event, tagStyle: .eventWithIcon)
+                    // TODO: 지역시스템 >> 변경
+                    if quest.questType == .event {
+                        TagView(title: "한정", image: .event, tagStyle: .eventWithIcon)
                     }
                     
                     // 반복 퀘스트 태그
-                    if quest.isRepeatQuest, let repeatType = quest.repeatType {
+                    if quest.questType == .repeat, let repeatType = quest.repeatType {
                         TagView(
                             title: repeatType.description,
                             tagStyle: .repeat(repeatType)

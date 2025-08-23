@@ -14,13 +14,13 @@ import Foundation
 final class QuizNetwork {
     private let url = APIManager.makeURL(NoTarget(path: "", version: 1))
     
-    func getRandomQuiz(missionId: String) async -> Result<Response<Quiz>, Error> {
+    func getRandomQuiz(missionId: Int) async -> Result<Response<Quiz>, Error> {
         return await Network.requestData(url: url+"mission/\(missionId)/quiz/random", method: .get, parameters: nil, withToken: true)
     }
     
-    func postQuizChallenge(questId: String, quizId: String, answer: String) async -> Result<ResponseWithoutData, Error> {
+    func postQuizChallenge(questId: Int, quizId: String, answer: String) async -> Result<ResponseWithoutData, Error> {
         let bodyData: [String: Any] = [
-            "questId": questId,
+            "questId": "\(questId)",
             "answers": [
                 [
                     "quizId": quizId,

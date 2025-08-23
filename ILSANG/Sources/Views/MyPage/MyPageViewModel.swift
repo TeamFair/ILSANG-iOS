@@ -121,7 +121,7 @@ final class MyPageViewModel: ObservableObject {
         switch response {
         case .success(let res):
             // 데이터 초기화: 이미지가 없는 상태로 미리 표시
-            return (res.data.map {ChallengeViewModelItem.init(challenge: $0)}, res.total)
+            return (res.content.map {ChallengeViewModelItem.init(challenge: $0)}, res.totalElements)
         case .failure(let error):
             Log("챌린지 조회 실패: \(error)")
             return ([], 0)
