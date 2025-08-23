@@ -25,8 +25,9 @@ final class MissionHistoryRepository {
         }
     }
     
-    func patchMissionHistory(missionHistoryId: Int) async -> Result<Void, Error> {
-        let res = await network.patchMissionHistory(missionHistoryId: missionHistoryId)
+    // 신고하기
+    func putMissionHistory(missionHistoryId: Int) async -> Result<Void, Error> {
+        let res = await network.putMissionHistory(missionHistoryId: missionHistoryId)
         switch res {
         case .success:
             return .success(Void())
