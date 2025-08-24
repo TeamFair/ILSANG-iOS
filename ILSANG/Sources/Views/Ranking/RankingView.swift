@@ -40,7 +40,7 @@ struct RankingView: View {
             }
             .background(alignment: .bottom) {
                 Color.background
-                    .frame(height: 100)
+                    .frame(height: 200)
             }
         }
         .overlay(alignment: .bottom) {
