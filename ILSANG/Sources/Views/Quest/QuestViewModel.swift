@@ -19,8 +19,10 @@ class QuestViewModel: ObservableObject {
     
     // TODO: 바뀔 때 api 요청하도록 수정 (refresh, init 고려)
     @Published var selectedHeader: QuestStatus = .default
-    @Published var commercialAreaCode: String = "R100" // TODO: 현재 지역 코드
-
+    
+    @Published var showSelectMyRegionView: Bool = false
+    @Published var alertType: AlertType? = nil
+    
     // 필터
     @Published var repeatFilterState: FilterPickerState<RepeatType>
     @Published var questFilterState: FilterPickerState<QuestFilterType>
@@ -117,8 +119,9 @@ class QuestViewModel: ObservableObject {
     
     private let questRepository: QuestRepositoryInterface
     private let favoriteService: FavoriteService
-
-    init(questRepository: QuestRepositoryInterface, favoriteService: FavoriteService) {
+    let sharedState: SharedState
+    
+    init(questRepository: QuestRepositoryInterface, favoriteService: FavoriteService, sharedState: SharedState) {
         self.questRepository = questRepository
         self.favoriteService = favoriteService
         
@@ -126,6 +129,9 @@ class QuestViewModel: ObservableObject {
         questFilterState = FilterPickerState(initialValue: QuestFilterType.popular)
         eventFilterState = FilterPickerState(initialValue: EventQuestFilterType.popular)
         repeatFilterState = FilterPickerState(initialValue: RepeatType.daily)
+                
+        self.sharedState = sharedState
+
         questFilterState.onSelectionChange = { [weak self] _ in
             guard let self = self else { return }
             Task { await self.defaultPaginationManager.loadData(isRefreshing: true) }
@@ -290,22 +296,21 @@ class QuestViewModel: ObservableObject {
     private func getQuestList(page: Int, size: Int, status: QuestStatus) async -> (data: [QuestViewModelItem], total: Int) {
         let result: Result<ResponseWithPage<[Quest]>, Error>
         
-        // TODO: orderRewardDesc 확인하기
         switch status {
         case .default:
             switch questFilterState.selectedValue {
             case .pointHighest:
-                result = await questRepository.getDefaultQuests(commercialAreaCode: commercialAreaCode, orderRewardDesc: false, page: page, size: size)
+                result = await questRepository.getDefaultQuests(commercialAreaCode: sharedState.selectedCommercialArea.code, orderRewardDesc: false, page: page, size: size)
             case .pointLowest:
-                result = await questRepository.getDefaultQuests(commercialAreaCode: commercialAreaCode, orderRewardDesc: true, page: page, size: size)
+                result = await questRepository.getDefaultQuests(commercialAreaCode: sharedState.selectedCommercialArea.code, orderRewardDesc: true, page: page, size: size)
             case .popular:
-                result = await questRepository.getDefaultQuests(commercialAreaCode: commercialAreaCode, orderRewardDesc: nil, page: page, size: size)
+                result = await questRepository.getDefaultQuests(commercialAreaCode: sharedState.selectedCommercialArea.code, orderRewardDesc: nil, page: page, size: size)
             }
         case .repeat:
             switch questFilterState.selectedValue {
             case .pointHighest:
                 result = await questRepository.getRepeatQuests(
-                    commercialAreaCode: commercialAreaCode,
+                    commercialAreaCode: sharedState.selectedCommercialArea.code,
                     repeatFrequency: self.repeatFilterState.selectedValue,
                     orderRewardDesc: false,
                     page: page,
@@ -313,7 +318,7 @@ class QuestViewModel: ObservableObject {
                 )
             case .pointLowest:
                 result = await questRepository.getRepeatQuests(
-                    commercialAreaCode: commercialAreaCode,
+                    commercialAreaCode: sharedState.selectedCommercialArea.code,
                     repeatFrequency: self.repeatFilterState.selectedValue,
                     orderRewardDesc: true,
                     page: page,
@@ -321,7 +326,7 @@ class QuestViewModel: ObservableObject {
                 )
             case .popular:
                 result = await questRepository.getRepeatQuests(
-                    commercialAreaCode: commercialAreaCode,
+                    commercialAreaCode: sharedState.selectedCommercialArea.code,
                     repeatFrequency: self.repeatFilterState.selectedValue,
                     orderRewardDesc: nil,
                     page: page,
@@ -331,14 +336,14 @@ class QuestViewModel: ObservableObject {
         case .event:
             switch eventFilterState.selectedValue {
             case .pointHighest:
-                result = await questRepository.getEventQuests(commercialAreaCode: commercialAreaCode, orderRewardDesc: false, page: page, size: size)
+                result = await questRepository.getEventQuests(commercialAreaCode: sharedState.selectedCommercialArea.code, orderRewardDesc: false, page: page, size: size)
             case .pointLowest:
-                result = await questRepository.getEventQuests(commercialAreaCode: commercialAreaCode, orderRewardDesc: true, page: page, size: size)
+                result = await questRepository.getEventQuests(commercialAreaCode: sharedState.selectedCommercialArea.code, orderRewardDesc: true, page: page, size: size)
             case .popular, .upcoming:
-                result = await questRepository.getEventQuests(commercialAreaCode: commercialAreaCode, orderRewardDesc: nil, page: page, size: size)
+                result = await questRepository.getEventQuests(commercialAreaCode: sharedState.selectedCommercialArea.code, orderRewardDesc: nil, page: page, size: size)
             }
         case .completed:
-            result = await questRepository.getCompletedQuests(commercialAreaCode: commercialAreaCode, page: page, size: size)
+            result = await questRepository.getCompletedQuests(commercialAreaCode: sharedState.selectedCommercialArea.code, page: page, size: size)
         }
         
         switch result {
@@ -376,6 +381,13 @@ class QuestViewModel: ObservableObject {
             self.showQuestSheet = true
         }
     }
+    
+    func handleMyRegionSelection(_ area: CommercialArea) {
+        sharedState.selectedCommercialArea = area
+        self.alertType = .myRegionChangeSuccess
+        Task { await self.loadInitialData() }
+    }
+    
     
     /// 즐겨찾기 상태를 UI에 즉시 반영하고,  서버 반영은 디바운싱 처리
     func toggleFavoriteStatus(quest: QuestViewModelItem) {

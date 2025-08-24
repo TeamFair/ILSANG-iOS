@@ -53,7 +53,7 @@ struct MyRegionAreaSelectionView: View {
 
 
 class MyRegionAreaSelectionViewModel: ObservableObject {
-    let areas: [MetroArea] = MetroArea.mockData
+    let areas: [MetroAreaResponse] = MetroAreaResponse.mockData
     @Published var selectedArea: CommercialArea?
 }
 

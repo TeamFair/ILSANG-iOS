@@ -11,12 +11,9 @@ struct MainTabView: View {
     @StateObject var sharedState = SharedState()
     @StateObject var honorAcquisitionManager = HonorAcquisitionManager(honorNetwork: defaultHonorNetwork)
     @StateObject var seasonManager = SeasonManager(seasonNetwork: defaultSeasonNetwork)
-    let viewModel = HomeViewModel(
-        questRepository: QuestRepository(network: QuestNetwork()),
-        rankNetwork: RankNetwork(),
-        bannerNetwork: BannerNetwork(),
-        favoriteService: FavoriteService(favoriteNetwork: FavoriteNetwork())
-    )
+   
+    var homeViewModel: HomeViewModel
+    @StateObject var questViewModel: QuestViewModel
     
     static var defaultHonorNetwork: HonorNetworkProtocol {
         return HonorNetwork() // MockHonorNetwork()
@@ -25,6 +22,33 @@ struct MainTabView: View {
     static var defaultSeasonNetwork: SeasonNetworkProtocol {
         return SeasonNetwork() // MockSeasonNetwork()
     }
+    
+    init() {
+        let sharedState = SharedState()
+        _sharedState = StateObject(wrappedValue: sharedState)
+        
+        self.homeViewModel =  HomeViewModel(
+            questRepository: QuestRepository(network: QuestNetwork()),
+            rankNetwork: RankNetwork(),
+            bannerNetwork: BannerNetwork(),
+            favoriteService: FavoriteService(favoriteNetwork: FavoriteNetwork()),
+            sharedState: sharedState
+        )
+        
+#if DEBUG
+           self._questViewModel = StateObject(wrappedValue: QuestViewModel(
+            questRepository: MockQuestRepository(),
+            favoriteService: FavoriteService(favoriteNetwork: FavoriteNetwork()), sharedState: sharedState)
+           )
+           
+#else
+           self._questViewModel = StateObject(wrappedValue: QuestViewModel(
+            questRepository: QuestRepository(network: QuestNetwork()),
+            favoriteService: FavoriteService(favoriteNetwork: FavoriteNetwork()), sharedState: sharedState)
+           )
+#endif
+          
+       }
     
     var body: some View {
         NavigationStack {
@@ -60,9 +84,9 @@ struct MainTabView: View {
     func createTabView(for tab: Tab) -> some View {
         switch tab {
         case .home:
-            HomeView(vm: viewModel)
+            HomeView(vm: homeViewModel)
         case .quest:
-            QuestView()
+            QuestView(vm: questViewModel)
         case .approval:
             ApprovalView()
         case .ranking:
@@ -75,4 +99,34 @@ struct MainTabView: View {
 
 class SharedState: ObservableObject {
     @Published var selectedTab: Tab = .home
+    @Published var selectedCommercialArea: CommercialArea {
+        didSet {
+            UserDefaults.standard.saveCommercialArea(selectedCommercialArea)
+        }
+    }
+    
+    init() {
+        self.selectedCommercialArea = UserDefaults.standard.loadCommercialArea()
+        ?? CommercialArea(code: "R100", areaName: "서현", description: "", metroAreaCode: "G01")
+    }
+}
+
+extension UserDefaults {
+    private enum Keys {
+        static let selectedCommercialArea = "selectedCommercialArea"
+    }
+
+    func saveCommercialArea(_ area: CommercialArea) {
+        if let data = try? JSONEncoder().encode(area) {
+            set(data, forKey: Keys.selectedCommercialArea)
+        }
+    }
+
+    func loadCommercialArea() -> CommercialArea? {
+        guard let data = data(forKey: Keys.selectedCommercialArea),
+              let area = try? JSONDecoder().decode(CommercialArea.self, from: data) else {
+            return nil
+        }
+        return area
+    }
 }

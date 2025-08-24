@@ -5,29 +5,30 @@
 //  Created by Lee Jinhee on 8/10/25.
 //
 
-struct MetroArea: Equatable {
-    static func == (lhs: MetroArea, rhs: MetroArea) -> Bool {
+struct MetroAreaResponse: Decodable, Equatable {
+    static func == (lhs: MetroAreaResponse, rhs: MetroAreaResponse) -> Bool {
         lhs.code == rhs.code
     }
     
     let code: String
     let areaName: String
-    let commercialAreaModel: [CommercialArea]
+    let commercialAreas: [CommercialArea]
     
-    static let mockData: [MetroArea] = [
-        MetroArea(
+    static let mockData: [MetroAreaResponse] = [
+        MetroAreaResponse(
             code: "G01",
             areaName: "경기남부",
-            commercialAreaModel: CommercialArea.mockDataList1
-        ), MetroArea(
+            commercialAreas: CommercialArea.mockDataList1
+        ), MetroAreaResponse(
             code: "G02",
             areaName: "경기북부",
-            commercialAreaModel: CommercialArea.mockDataList2
+            commercialAreas: CommercialArea.mockDataList2
         )
     ]
 }
 
-struct CommercialArea: Equatable {
+// TODO: CommercialAreaResponse로 변경
+struct CommercialArea: Equatable, Codable {
     let code: String
     let areaName: String
     let description: String

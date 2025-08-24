@@ -12,21 +12,22 @@ struct RegionPickerView: View {
     let onTap: () -> Void
     
     var body: some View {
-        HStack(spacing: 4) {
-            Image(.illsangRegion)
-                .resizable()
-                .scaledToFit()
-                .frame(width: 16)
-                .frame(30)
-            Button {
-                onTap()
-            } label: {
+        Button {
+            onTap()
+        } label: {
+            HStack(spacing: 4) {
+                Image(.illsangRegion)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 16)
+                    .frame(30)
                 Text(title)
-                    .styledFont(.tabBold)                
+                    .styledFont(.tabBold)
+                    .foregroundStyle(.gray500)
                 Image(.arrowUnder)
                     .frame(18)
+                    .foregroundStyle(.gray500)
             }
-            .foregroundStyle(.gray500)
         }
     }
 }

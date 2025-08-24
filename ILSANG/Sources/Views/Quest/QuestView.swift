@@ -9,31 +9,13 @@ import SwiftUI
 import Combine
 
 struct QuestView: View {
-    @StateObject var vm: QuestViewModel
     @EnvironmentObject var sharedState: SharedState
-
-    init() {
-        #if DEBUG
-        _vm = StateObject(
-            wrappedValue: QuestViewModel(
-                questRepository: MockQuestRepository(),
-                favoriteService: FavoriteService(favoriteNetwork: FavoriteNetwork())
-            )
-        )
-        #else
-        _vm = StateObject(
-            wrappedValue: QuestViewModel(
-                questRepository: QuestRepository(network: QuestNetwork()),
-                favoriteService: FavoriteService(favoriteNetwork: FavoriteNetwork())
-            )
-        )
-        #endif
-    }
+    @ObservedObject var vm: QuestViewModel
     
     var body: some View {
         VStack(spacing: 0) {
             headerView
-                
+            
             switch vm.viewStatus {
             case .loading:
                 ProgressView().frame(maxHeight: .infinity)
@@ -56,6 +38,13 @@ struct QuestView: View {
         ) { _ in
             vm.closeFilterPicker()
         }
+        .overlay(
+            Group {
+                if let alert = vm.alertType {
+                    alertView(alert)
+                }
+            }
+        )
         .sheet(isPresented: $vm.showQuestSheet) {
             let tall = vm.selectedQuest.questType == .repeat || vm.selectedQuest.missionType == .photo
             
@@ -79,6 +68,11 @@ struct QuestView: View {
         .fullScreenCover(isPresented: $vm.showSubmitRouterView) {
             SubmitRouterView(selectedQuest: vm.selectedQuest)
                 .interactiveDismissDisabled()
+        }
+        .navigationDestination(isPresented: $vm.showSelectMyRegionView) {
+            MyRegionAreaSelectionView { area in
+                vm.handleMyRegionSelection(area)
+            }
         }
         .navigationDestination(isPresented: $vm.showQuestEngageView) {
             let challengeNetwork = ChallengeNetwork()
@@ -134,9 +128,9 @@ extension QuestView {
             }
             .onReceive(
                 vm.$selectedHeader
-                        .combineLatest(vm.questFilterState.$selectedValue)
-                        .combineLatest(vm.repeatFilterState.$selectedValue)
-                        .combineLatest(vm.eventFilterState.$selectedValue)
+                    .combineLatest(vm.questFilterState.$selectedValue)
+                    .combineLatest(vm.repeatFilterState.$selectedValue)
+                    .combineLatest(vm.eventFilterState.$selectedValue)
             ) { _ in
                 vm.closeFilterPicker()
                 withAnimation {
@@ -175,7 +169,7 @@ extension QuestView {
                 }
             case .completed: // 완료 퀘스트
                 ForEach(vm.currentQuests, id: \.id) { quest in
-                   CompletedQuestItemView(quest: quest)
+                    CompletedQuestItemView(quest: quest)
                 }
                 
                 if vm.hasMorePage(status: .completed) {
@@ -186,24 +180,35 @@ extension QuestView {
                 }
             }
         }
-        .padding(.top, vm.selectedHeader != .completed ? 70 : 0)
+        .padding(.top, vm.selectedHeader != .completed ? 100 : 0)
         .overlay(alignment: .top) {
-            Group {
-                if (vm.selectedHeader == .default) {
-                    filterPickerDefaultView
-                } else if (vm.selectedHeader == .repeat) {
-                    HStack(alignment: .top, spacing: 8) {
-                        filterPickerRepeatView
-                        filterPickerDefaultView
-                    }
-                } else if (vm.selectedHeader == .event) {
-                    filterPickerEventView
+            VStack(spacing: 16) {
+                RegionPickerView(title: sharedState.selectedCommercialArea.areaName) {
+                    vm.showSelectMyRegionView = true
                 }
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .onChange(of: sharedState.selectedCommercialArea.areaName) { _, _ in
+                    vm.alertType = .myRegionChangeSuccess
+                }
+                
+                Group {
+                    if (vm.selectedHeader == .default) {
+                        filterPickerDefaultView
+                    } else if (vm.selectedHeader == .repeat) {
+                        HStack(alignment: .top, spacing: 8) {
+                            filterPickerRepeatView
+                            filterPickerDefaultView
+                        }
+                    } else if (vm.selectedHeader == .event) {
+                        filterPickerEventView
+                    }
+                }
+                .frame(maxWidth: .infinity, alignment: .trailing)
             }
-            .padding(.top, 13)
-            .padding(.bottom, 16)
-            .padding(.trailing, 20)
-            .frame(maxWidth: .infinity, alignment: .trailing)
+            .padding(.horizontal, 20)
+//            .padding(.top, 16)
+            .padding(.top, 2)
+            .padding(.bottom, 12)
         }
         .padding(.bottom, 72)
     }
@@ -235,6 +240,18 @@ extension QuestView {
         )
     }
     
+    @ViewBuilder
+    private func alertView(_ alertType: AlertType) -> some View {
+        if alertType == .myRegionChangeSuccess {
+            SettingAlertView(
+                alertType: alertType,
+                onConfirm: {
+                    vm.alertType = nil
+                }
+            )
+        }
+    }
+    
     private var questListEmptyView: some View {
         ErrorView(
             title: vm.selectedHeader.emptyTitle,
@@ -256,5 +273,8 @@ extension QuestView {
 }
 
 #Preview {
-    QuestView()
+    QuestView(vm: QuestViewModel(
+        questRepository: MockQuestRepository(),
+        favoriteService: FavoriteService(favoriteNetwork: FavoriteNetwork()), sharedState: SharedState()
+    ))
 }
