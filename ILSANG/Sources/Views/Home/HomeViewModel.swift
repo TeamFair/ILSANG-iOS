@@ -118,15 +118,15 @@ final class HomeViewModel {
         updateIllsangZoneWarningStatus()
 
         await withThrowingTaskGroup(of: Void.self) { group in
-            group.addTask {
-                do {
-                    try await self.loadMainBanners()
-                } catch {
-                    Log("Failed to load banners: \(error.localizedDescription)")
-                    self.errorCnt += 1
-                    self.showMainBanners = false
-                }
-            }
+//            group.addTask {
+//                do {
+//                    try await self.loadMainBanners()
+//                } catch {
+//                    Log("Failed to load banners: \(error.localizedDescription)")
+//                    self.errorCnt += 1
+//                    self.showMainBanners = false
+//                }
+//            }
             group.addTask {
                 do {
                     try await self.loadPopularQuestList()
