@@ -57,6 +57,53 @@ struct SelectableTabHeader<Item: SelectableTabItem>: View {
     }
 }
 
+
+struct ScopeHeaderView: View {
+    @Binding var selectedScope: PointType
+    let horizontalPadding: CGFloat
+    let height: CGFloat
+    let hasBottomLine: Bool
+    
+    @Namespace private var namespace
+    
+    var body: some View {
+        ZStack(alignment: .bottom) {
+            if hasBottomLine {
+                Rectangle()
+                    .frame(height: 1)
+                    .foregroundStyle(.gray100)
+            }
+            HStack(spacing: 0) {
+                ForEach(PointType.allCases) { scope in
+                    let isSelected = scope == selectedScope
+                    
+                    Button {
+                        selectedScope = scope
+                    } label: {
+                        Text(scope.headerText)
+                            .foregroundColor(isSelected ? .gray500 : .gray300)
+                            .font(.system(size: 14, weight: isSelected ? .semibold : .medium))
+                            .frame(height: height)
+                    }
+                    .padding(.horizontal, 7)
+                    .overlay(alignment: .bottom) {
+                        if isSelected {
+                            Rectangle()
+                                .frame(height: 3)
+                                .foregroundStyle(.primaryPurple)
+                                .matchedGeometryEffect(id: "Scope", in: namespace)
+                        }
+                    }
+                    .animation(.easeInOut, value: selectedScope)
+                    .frame(maxWidth: .infinity)
+                }
+            }
+            .padding(.horizontal, horizontalPadding)
+        }
+    }
+}
+
+
 #Preview {
     VStack {
         SelectableTabHeader(selectedItem: .constant(PointType.metro), items: PointType.allCases, horizontalPadding: 0, height: 44, hasBottomLine: true)

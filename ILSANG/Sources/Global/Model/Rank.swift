@@ -128,7 +128,6 @@ extension StatRankViewModelItem {
             )
             .setXp(xpPoint)
             .setXpTotal(xpTotalPoint)
-            .setXpType(xpType)
             .setTitle(title?.name, type: HonorGrade(rawValue: title?.type ?? ""))
             .build()
     }

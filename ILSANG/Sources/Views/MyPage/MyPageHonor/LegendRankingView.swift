@@ -40,7 +40,7 @@ struct LegendRankingView: View {
                 ScrollView {
                     LazyVStack(spacing: 12) {
                         ForEach(Array(vm.historyRanks.enumerated()), id: \.offset) { idx, rank in
-                            RankingItemView(rank: rank.toRank(idx: idx+1), style: .horizontal)
+                            RankingItemView(rank: rank.toRank(idx: idx+1), style: .horizontal(case : .legend))
                         }
                     }
                     .padding(.top, 16)
