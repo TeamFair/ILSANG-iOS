@@ -6,7 +6,8 @@
 //
 
 struct Quiz: Decodable {
-    let quizId, question, hint: String
+    let quizId: Int
+    let question, hint: String
     let answers: [Answer]
 }
 

@@ -16,7 +16,7 @@ extension RecommendQuestResponse: DomainConvertible {
             questType: nil,
             repeatFrequency: nil,
             rewards: nil,
-            missions: nil,
+            missions: [],
             expireDate: nil,
             imageId: imageId,
             mainImageId: mainImageId,

@@ -340,6 +340,13 @@ final class HomeViewModel {
     
     func onQuestTapped(quest: QuestViewModelItem) {
         selectedQuest = quest
+        Task {
+            let questDetail = try await questRepository.getQuestDetail(questId: quest.id)
+                .get()
+                .toQuestItem()
+            self.selectedQuest = questDetail
+        }
+        
         if illsangZoneCode == nil && shouldShowIllsangZoneWarning {
             isQuestSheetPending = true // 일상존 선택 후 다시 열기 위해 기록
             alertType = .illsangZoneNotSelected

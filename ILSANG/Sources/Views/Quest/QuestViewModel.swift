@@ -365,6 +365,13 @@ class QuestViewModel: ObservableObject {
     func onQuestTapped(quest: QuestViewModelItem) {
         AnalyticsService.logEvent(.questItemClick(questId: quest.id, questType: quest.questType?.rawValue.uppercased() ?? ""))
         selectedQuest = quest
+        Task {
+            let questDetail = try await questRepository.getQuestDetail(questId: quest.id)
+                .get()
+                .toQuestItem()
+            self.selectedQuest = questDetail
+        }
+        
         DispatchQueue.main.asyncAfter(deadline: .now()+0.3) {
             self.showQuestSheet = true
         }

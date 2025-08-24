@@ -14,7 +14,7 @@ struct Quest {
     let questType: QuestType?
     let repeatFrequency: RepeatType?
     let rewards: [Reward]?
-    let missions: [Mission]?
+    let missions: [Mission]
     let expireDate: Date?
     let imageId: String
     let mainImageId: String?

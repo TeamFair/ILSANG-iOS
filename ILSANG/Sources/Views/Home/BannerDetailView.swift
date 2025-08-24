@@ -67,14 +67,15 @@ struct BannerDetailView: View {
         .fullScreenCover(isPresented: $viewModel.showQuestEngageView) {
             if let selectedQuest = viewModel.selectedQuest {
                 let quizNetwork = QuizNetwork()
-
+                let challengeNetwork = ChallengeNetwork()
+                
                 QuestEngageView(
                     vm: QuestEngageViewModel(quest: selectedQuest, quizNetwork: quizNetwork),
                     submitVM: SubmitRouterViewModel(
                         selectedImage: nil,
                         selectedQuest: selectedQuest,
-                        submitService: ImageChallengeSubmitService(imageNetwork: ImageNetwork(), challengeNetwork: ChallengeNetwork()),
-                        quizNetwork: quizNetwork
+                        submitService: ImageChallengeSubmitService(imageNetwork: ImageNetwork(), challengeNetwork: challengeNetwork),
+                        challengeNetwork: challengeNetwork
                     )
                 )
             }

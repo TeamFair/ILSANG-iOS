@@ -35,17 +35,9 @@ extension ResponseWithPage: Decodable where T: Decodable {}
 
 struct ResponseWithoutData: Decodable {
     let data: [String: String]?
-    let errorStatus: String?
-    let errMessage: String?
-    let status: String
-    let message: String
-    
-    init(data: [String: String], errorStatus: String?, errMessage: String?, status: String, message: String) {
+   
+    init(data: [String: String]) {
         self.data = data
-        self.errorStatus = errorStatus
-        self.errMessage = errMessage
-        self.status = status
-        self.message = message
     }
 }
 

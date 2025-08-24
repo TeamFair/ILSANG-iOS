@@ -97,6 +97,7 @@ struct HomeView: View {
             }
         }
         .navigationDestination(isPresented: $vm.showQuestEngageView) {
+            let challengeNetwork = ChallengeNetwork()
             QuestEngageView(
                 vm: QuestEngageViewModel(
                     quest: vm.selectedQuest,
@@ -105,8 +106,8 @@ struct HomeView: View {
                 submitVM: SubmitRouterViewModel(
                     selectedImage: nil,
                     selectedQuest: vm.selectedQuest,
-                    submitService: ImageChallengeSubmitService(imageNetwork: ImageNetwork(), challengeNetwork: ChallengeNetwork()),
-                    quizNetwork: QuizNetwork()
+                    submitService: ImageChallengeSubmitService(imageNetwork: ImageNetwork(), challengeNetwork: challengeNetwork),
+                    challengeNetwork: challengeNetwork
                 )
             )
         }

@@ -124,8 +124,8 @@ struct QuizView: View, KeyboardReadable {
 
 #Preview {
     VStack {
-        QuizView(missionType: .quiz(.ox), quiz: Quiz(quizId: "1", question: "질문", hint: "힌드", answers: [.init(content: "답")]), selectedAnswer: .constant("answer"), isKeyboardVisible: .constant(true))
-        QuizView(missionType: .quiz(.text), quiz: Quiz(quizId: "1", question: "질문", hint: "힌드", answers: [.init(content: "답")]), selectedAnswer: .constant("answer"), isKeyboardVisible: .constant(true))
+        QuizView(missionType: .quiz(.ox), quiz: Quiz(quizId: 1, question: "질문", hint: "힌드", answers: [.init(content: "답")]), selectedAnswer: .constant("answer"), isKeyboardVisible: .constant(true))
+        QuizView(missionType: .quiz(.text), quiz: Quiz(quizId: 1, question: "질문", hint: "힌드", answers: [.init(content: "답")]), selectedAnswer: .constant("answer"), isKeyboardVisible: .constant(true))
     }
     .padding()
     .background(Color.background)
