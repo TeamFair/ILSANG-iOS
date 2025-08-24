@@ -31,7 +31,7 @@ class QuestViewModelItem: Hashable, Identifiable {
     let questType: QuestType?
     let repeatType: RepeatType?
     let rewards: [Reward]?
-    var missions: [Mission]?
+    var missions: [Mission]
     let expireDate: Date?
     let imageId: String?
     var image: UIImage?
@@ -47,7 +47,7 @@ class QuestViewModelItem: Hashable, Identifiable {
         questType: QuestType?,
         repeatType: RepeatType?,
         rewards: [Reward]?,
-        missions: [Mission]?,
+        missions: [Mission],
         expireDate: Date?,
         imageId: String?,
         image: UIImage?,
@@ -72,12 +72,12 @@ class QuestViewModelItem: Hashable, Identifiable {
         self.favoriteYn = favoriteYn
     }
     
-    var missionType: MissionType { missions?.first?.type ?? .photo }
+    var missionType: MissionType { missions.first?.type ?? .photo }
     var challengeImages: [UIImage] = []
-    var missionId: Int { missions?.first?.id ?? 0}
+    var missionId: Int { missions.first?.id ?? 0}
     
     func updateChallengeImages() async {
-        guard let missions else { return }
+//        guard let missions else { return }
         
         let challengeImageIds = missions
             .compactMap { $0.exampleImageIds }

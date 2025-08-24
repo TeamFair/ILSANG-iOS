@@ -14,37 +14,35 @@ class SubmitRouterViewModel: ObservableObject {
     @Published var submitStatus: SubmitStatus = .inProgress
     
     private let submitService: ImageChallengeSubmitService
-    private let quizNetwork: QuizNetwork
+    private let challengeNetwork: ChallengeNetwork
 
     let selectedQuest: QuestViewModelItem
     private var submitTask: Task<Void, Never>?
     
-    init(selectedImage: UIImage? = nil, selectedQuest: QuestViewModelItem, submitService: ImageChallengeSubmitService, quizNetwork: QuizNetwork) {
+    init(selectedImage: UIImage? = nil, selectedQuest: QuestViewModelItem, submitService: ImageChallengeSubmitService, challengeNetwork: ChallengeNetwork) {
         self.selectedImage = selectedImage
         self.selectedQuest = selectedQuest
         self.submitService = submitService
-        self.quizNetwork = quizNetwork
+        self.challengeNetwork = challengeNetwork
     }
     
     /// 제출 요청
-    func submit(userAnswer: String? = nil, quizId: String? = nil) {
+    func submit(userAnswer: String? = nil, quizId: Int? = nil) {
         self.showSubmitAlertView = true
         self.startSubmitTask(userAnswer: userAnswer, quizId: quizId)
     }
     
     /// 제출 작업 시작
-    private func startSubmitTask(userAnswer: String?, quizId: String?) {
+    private func startSubmitTask(userAnswer: String?, quizId: Int?) {
         if submitTask == nil || submitTask?.isCancelled == true {
             submitTask = Task {
-                switch selectedQuest.missions?.first?.type {
+                switch selectedQuest.missionType {
                 case .quiz:
                     if let userAnswer, let quizId {
                         await self.postChallengeWithQuiz(userAnswer: userAnswer, quizId: quizId)
                     }
                 case .photo:
                     await self.postChallengeWithImage()
-                case .none:
-                    return
                 }
             }
         }
@@ -73,7 +71,7 @@ class SubmitRouterViewModel: ObservableObject {
     func postChallengeWithImage() async {
         submitStatus = .inProgress
         
-        let isSuccess = await submitService.execute(questId: selectedQuest.id, image: selectedImage)
+        let isSuccess = await submitService.execute(missionId: selectedQuest.missionId, image: selectedImage)
         
         if isSuccess {
             AnalyticsService.logEvent(.questSubmitClick(questId: selectedQuest.id, questType: selectedQuest.questType?.rawValue.uppercased() ?? ""))
@@ -84,8 +82,8 @@ class SubmitRouterViewModel: ObservableObject {
     }
     
     @MainActor
-    func postChallengeWithQuiz(userAnswer: String, quizId: String) async {
-        let response = await quizNetwork.postQuizChallenge(questId: selectedQuest.id, quizId: quizId, answer: userAnswer)
+    func postChallengeWithQuiz(userAnswer: String, quizId: Int) async {
+        let response = await challengeNetwork.postQuizChallenge(missionId: selectedQuest.missionId, quizId: quizId, answer: userAnswer)
         
         switch response {
         case .success:

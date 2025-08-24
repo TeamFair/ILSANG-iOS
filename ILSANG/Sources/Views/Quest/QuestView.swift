@@ -81,15 +81,15 @@ struct QuestView: View {
                 .interactiveDismissDisabled()
         }
         .navigationDestination(isPresented: $vm.showQuestEngageView) {
-            let quizNetwork = QuizNetwork()
+            let challengeNetwork = ChallengeNetwork()
             
-            return QuestEngageView(
-                vm: QuestEngageViewModel(quest: vm.selectedQuest, quizNetwork: quizNetwork),
+            QuestEngageView(
+                vm: QuestEngageViewModel(quest: vm.selectedQuest, quizNetwork: QuizNetwork()),
                 submitVM: SubmitRouterViewModel(
                     selectedImage: nil,
                     selectedQuest: vm.selectedQuest,
-                    submitService: ImageChallengeSubmitService(imageNetwork: ImageNetwork(), challengeNetwork: ChallengeNetwork()),
-                    quizNetwork: quizNetwork
+                    submitService: ImageChallengeSubmitService(imageNetwork: ImageNetwork(), challengeNetwork: challengeNetwork),
+                    challengeNetwork: challengeNetwork
                 )
             )
         }

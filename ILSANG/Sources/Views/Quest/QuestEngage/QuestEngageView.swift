@@ -95,7 +95,7 @@ struct QuestEngageView: View {
             submitService: ImageChallengeSubmitService(
                 imageNetwork: ImageNetwork(),
                 challengeNetwork: ChallengeNetwork()
-            ), quizNetwork: QuizNetwork()
+            ), challengeNetwork: ChallengeNetwork()
         )
     )
     // QuestEngageView(vm: QuestEngageViewModel(quest: .mockRepeatData, questNetwork: QuestNetwork()))

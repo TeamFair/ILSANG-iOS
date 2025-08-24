@@ -121,5 +121,7 @@ struct CameraPreviewView: UIViewRepresentable {
 }
 
 #Preview {
-    CameraView(submitViewModel: SubmitRouterViewModel(selectedQuest: .mockData, submitService: ImageChallengeSubmitService(imageNetwork: ImageNetwork(), challengeNetwork: ChallengeNetwork()), quizNetwork: QuizNetwork()))
+    let challengeNetwork = ChallengeNetwork()
+    
+    CameraView(submitViewModel: SubmitRouterViewModel(selectedQuest: .mockData, submitService: ImageChallengeSubmitService(imageNetwork: ImageNetwork(), challengeNetwork: challengeNetwork), challengeNetwork:challengeNetwork))
 }

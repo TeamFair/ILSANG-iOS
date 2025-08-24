@@ -19,7 +19,7 @@ struct MockHonorNetwork: HonorNetworkProtocol {
     }
     
     func readHonorHistory(historyId: String) async -> Result<ResponseWithoutData, Error> {
-        .success(.init(data: [:], errorStatus: "", errMessage: "", status: "", message: ""))
+        .success(.init(data: [:]))
     }
 }
 

@@ -18,14 +18,14 @@ final class ImageChallengeSubmitService {
     }
     
     /// 도전 과제 제출 실행
-    func execute(questId: Int, image: UIImage?) async -> Bool {
+    func execute(missionId: Int, image: UIImage?) async -> Bool {
         guard let image = image else { return false }
         
         // 1. 이미지 업로드
         guard let imageId = await postImage(image) else { return false }
         
         // 2. 챌린지 제출
-        return await postChallenge(questId: questId, imageId: imageId)
+        return await postChallenge(missionId: missionId, imageId: imageId)
     }
     
     /// 이미지 업로드
@@ -39,8 +39,8 @@ final class ImageChallengeSubmitService {
     }
     
     /// 챌린지 제출
-    private func postChallenge(questId: Int, imageId: String) async -> Bool {
-        let result = await challengeNetwork.postChallenge(questId: questId, imageId: imageId)
+    private func postChallenge(missionId: Int, imageId: String) async -> Bool {
+        let result = await challengeNetwork.postPhotoChallenge(missionId: missionId, imageId: imageId)
         switch result {
         case .success:
             await cleanUpImages(except: imageId)

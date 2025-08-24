@@ -58,7 +58,7 @@ struct QuestDetailView: View {
                 .padding(.bottom, CGFloat.isSmallDevice ? 8 : 16)
         }
         .task {
-            await vm.fetchQuestDetail()
+            await vm.updateChallengeImages()
         }
         .sheet(isPresented: $vm.showImageSheetView, content: {
             ImageFullScreenView(image: vm.selectedImage) {

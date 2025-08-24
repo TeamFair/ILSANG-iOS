@@ -25,21 +25,9 @@ class QuestDetailViewModel {
         self.onUpdate = onUpdate
     }
     
-    func fetchQuestDetail() async {
+    func updateChallengeImages() async {
         isLoading = true
-        
-        do {
-            await quest.updateChallengeImages()
-
-            let questDetail = try await questRepository.getQuestDetail(questId: quest.id)
-                .get()
-                .toQuestItem()
-            await questDetail.updateChallengeImages()
-            self.quest = questDetail
-        } catch {
-            Log("퀘스트 상세정보 불러오기 실패")
-        }
-        
+        await quest.updateChallengeImages()
         isLoading = false
     }
     
