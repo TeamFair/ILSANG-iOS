@@ -84,7 +84,7 @@ struct IllsangZoneSelectionView: View {
 
 
 class IllsangZoneSelectionViewModel: ObservableObject {
-    let areas: [MetroArea] = MetroArea.mockData
+    let areas: [MetroAreaResponse] = MetroAreaResponse.mockData
 
     @Published var showAlert: Bool = false
     @Published var alertType: AlertType = .illsangZoneSetWarning

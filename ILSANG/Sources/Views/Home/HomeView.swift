@@ -158,11 +158,8 @@ struct HomeView: View {
     
     private var regionAndZoneSelectionView: some View {
         HStack(spacing: 4) {
-            RegionPickerView(title: vm.myRegionName ?? "") {
+            RegionPickerView(title: sharedState.selectedCommercialArea.areaName) {
                 vm.showSelectMyRegionView = true
-            }
-            .onChange(of: vm.myRegionName) { _, newValue in
-                vm.alertType = .myRegionChangeSuccess
             }
             
             Spacer()
@@ -455,7 +452,7 @@ struct HomeView: View {
         questRepository: QuestRepository(network: QuestNetwork()),
         rankNetwork: RankNetwork(),
         bannerNetwork: BannerNetwork(),
-        favoriteService: FavoriteService(favoriteNetwork: FavoriteNetwork())
+        favoriteService: FavoriteService(favoriteNetwork: FavoriteNetwork()), sharedState: SharedState()
     )
     HomeView(vm: viewModel)
 }

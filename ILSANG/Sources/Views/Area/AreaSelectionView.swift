@@ -9,13 +9,13 @@ import SwiftUI
 
 struct AreaSelectionView: View {
     
-    let areas: [MetroArea]
-    
+    @State var areas: [MetroAreaResponse]
     @State var selectedMetroIdx: Int = 0
     @State var selectedCommercialArea: CommercialArea?
     
     var onChangeSelectedCommercial: ((CommercialArea) -> ())
-    
+    let areaNetwork = AreaNetwork()
+
     var body: some View {
         HStack(spacing: 0) {
             // 일상지역
@@ -27,9 +27,18 @@ struct AreaSelectionView: View {
             VStack(spacing: 0) {
                 commercialAreaHeader(title: areas[selectedMetroIdx].areaName)
                 horizontalDivider
-                commercialAreaList(areas[selectedMetroIdx].commercialAreaModel)
+                commercialAreaList(areas[selectedMetroIdx].commercialAreas)
             }
             .padding(.leading, 8)
+        }
+        .task {
+            let result = await areaNetwork.getMetroArea()
+            switch result {
+            case .success(let res):
+                areas = res
+            case .failure:
+                Log("지역 조회 실패")
+            }
         }
         .background(.white)
     }
@@ -46,7 +55,7 @@ struct AreaSelectionView: View {
         .background(Color.background)
     }
     
-    private func metroAreaButton(_ area: MetroArea, isSelected: Bool) -> some View {
+    private func metroAreaButton(_ area: MetroAreaResponse, isSelected: Bool) -> some View {
         Button {
             if let idx = areas.firstIndex(of: area) {
                 selectedMetroIdx = idx
@@ -130,5 +139,5 @@ struct AreaSelectionView: View {
 }
 
 #Preview {
-    AreaSelectionView(areas: MetroArea.mockData, selectedCommercialArea: nil, onChangeSelectedCommercial: {_ in })
+    AreaSelectionView(areas: MetroAreaResponse.mockData, selectedCommercialArea: nil, onChangeSelectedCommercial: {_ in })
 }

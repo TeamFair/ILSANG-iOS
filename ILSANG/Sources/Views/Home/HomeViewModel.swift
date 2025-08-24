@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Combine
 
 enum ViewStatus {
     case error
@@ -62,9 +63,7 @@ final class HomeViewModel {
     var showSelectMyRegionView: Bool = false
     var showSelectIllsangZoneView: Bool = false
     var selectedBanner: Banner? = nil
-
-    var myRegionCode: String = "R100" // TODO: 초기값 서현역으로 설정
-    var myRegionName: String? = nil
+    
     var illsangZoneCode: String? = nil
     var illsangZoneName: String? = nil
     var alertType: AlertType? = nil
@@ -94,12 +93,23 @@ final class HomeViewModel {
     private let rankNetwork: RankNetwork
     private let bannerNetwork: BannerNetwork
     private let favoriteService: FavoriteService
+    private let sharedState: SharedState
     
-    init(questRepository: QuestRepositoryInterface, rankNetwork: RankNetwork, bannerNetwork: BannerNetwork, favoriteService: FavoriteService) {
+    private var cancellables = Set<AnyCancellable>()
+    
+    init(questRepository: QuestRepositoryInterface, rankNetwork: RankNetwork, bannerNetwork: BannerNetwork, favoriteService: FavoriteService, sharedState: SharedState) {
         self.questRepository = questRepository
         self.rankNetwork = rankNetwork
         self.bannerNetwork = bannerNetwork
         self.favoriteService = favoriteService
+        self.sharedState = sharedState
+        
+        sharedState.$selectedCommercialArea
+            .removeDuplicates()
+            .sink { [weak self] _ in
+                Task { await self?.loadInitialData() } // TODO: 배너 제외 데이터 재로드
+            }
+            .store(in: &cancellables)
         
         Task {
             await loadInitialData()
@@ -211,7 +221,7 @@ final class HomeViewModel {
     
     @MainActor
     func loadPopularQuestList() async throws {
-        let res = await questRepository.getPopularQuests(commercialAreaCode: myRegionCode, page: 0, size: 8)
+        let res = await questRepository.getPopularQuests(commercialAreaCode: sharedState.selectedCommercialArea.code, page: 0, size: 8)
         
         switch res {
         case .success(let response):
@@ -224,7 +234,7 @@ final class HomeViewModel {
     
     @MainActor
     func loadRecommendQuestList() async throws {
-        let res = await questRepository.getRecommendQuests(commercialAreaCode: myRegionCode, page: 0, size: 10)
+        let res = await questRepository.getRecommendQuests(commercialAreaCode: sharedState.selectedCommercialArea.code, page: 0, size: 10)
         
         switch res {
         case .success(let response):
@@ -237,7 +247,7 @@ final class HomeViewModel {
     
     @MainActor
     func loadLargeRewardQuestList() async throws {
-        let res = await questRepository.getLargeRewardQuests(commercialAreaCode: myRegionCode, page: 0, size: 3)
+        let res = await questRepository.getLargeRewardQuests(commercialAreaCode: sharedState.selectedCommercialArea.code, page: 0, size: 3)
 
         switch res {
         case .success(let quests):
@@ -384,10 +394,8 @@ final class HomeViewModel {
     
     // 내 지역 선택 완료 시
     func handleMyRegionSelection(_ area: CommercialArea) {
-        self.myRegionCode = area.code
-        self.myRegionName = area.areaName
+        sharedState.selectedCommercialArea = area
         self.alertType = .myRegionChangeSuccess
-        // TODO: 데이터 재로드
     }
     
     /// "다시 보지 않기" 체크 여부 확인
