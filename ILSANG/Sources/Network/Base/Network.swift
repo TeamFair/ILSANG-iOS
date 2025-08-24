@@ -137,12 +137,13 @@ final class Network {
             }
             return .success(image)
         case .failure(let error):
+            print("이미지 로드 ERROR", fullPath, error.localizedDescription)
             return .failure(error)
         }
     }
     
-    static func postImage(url: String, image: UIImage, withToken: Bool, parameters: Parameters) async -> Result<ImageEntity, Error> {
-        guard let fullPath = buildURL(url: url, parameters: parameters) else {
+    static func postImage(url: String, image: UIImage, withToken: Bool, type: PostImageType) async -> Result<ImageEntity, Error> {
+        guard let fullPath = buildURL(url: url) else {
             return .failure(NetworkError.invalidURL)
         }
         
@@ -185,19 +186,23 @@ final class Network {
                                      withName: "file",
                                      fileName: "image.png",
                                      mimeType: "image/jpeg")
+            if let typeData = type.parameter.data(using: .utf8) {
+                multipartFormData.append(typeData, withName: "type")
+            }
         }, with: urlRequest)
-            .serializingDecodable(Response<ImageEntity>.self)
+            .serializingDecodable(ImageEntity.self)
             .response
         
         switch response.result {
         case .success(let res):
             if let statusCode = response.response?.statusCode {
-                Log("네트워크 요청 성공: \(fullPath), \(urlRequest.urlRequest?.httpMethod ?? "")")
-                return handleStatusCode(statusCode, data: res.data)
+                Log("네트워크 요청 성공: 이미지 등록 \(fullPath), \(urlRequest.urlRequest?.httpMethod ?? "")")
+                return handleStatusCode(statusCode, data: res)
             } else {
                 return .failure(NetworkError.unknownError)
             }
         case .failure(let error):
+            Log("네트워크 요청 실패: 이미지 등록 \(fullPath), \(urlRequest.urlRequest?.httpMethod ?? ""), \(error.localizedDescription)")
             return .failure(NetworkError.requestFailed(error.localizedDescription))
         }
     }
