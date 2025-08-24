@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Combine
 
 class QuestViewModel: ObservableObject {
     // TODO: API 요청 실패 시 에러상태로 변경하기
@@ -120,7 +121,8 @@ class QuestViewModel: ObservableObject {
     private let questRepository: QuestRepositoryInterface
     private let favoriteService: FavoriteService
     let sharedState: SharedState
-    
+    private var cancellables = Set<AnyCancellable>()
+
     init(questRepository: QuestRepositoryInterface, favoriteService: FavoriteService, sharedState: SharedState) {
         self.questRepository = questRepository
         self.favoriteService = favoriteService
@@ -144,6 +146,13 @@ class QuestViewModel: ObservableObject {
             guard let self = self else { return }
             Task { await self.repeatPaginationManager.loadData(isRefreshing: true) }
         }
+        
+        sharedState.$selectedCommercialArea
+            .removeDuplicates()
+            .sink { [weak self] _ in
+                Task { await self?.loadInitialData() }
+            }
+            .store(in: &cancellables)
     }
     
     func loadDataIfNeeded() async {
@@ -385,7 +394,6 @@ class QuestViewModel: ObservableObject {
     func handleMyRegionSelection(_ area: CommercialArea) {
         sharedState.selectedCommercialArea = area
         self.alertType = .myRegionChangeSuccess
-        Task { await self.loadInitialData() }
     }
     
     

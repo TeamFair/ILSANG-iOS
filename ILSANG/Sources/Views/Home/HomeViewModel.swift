@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Combine
 
 enum ViewStatus {
     case error
@@ -93,13 +94,22 @@ final class HomeViewModel {
     private let bannerNetwork: BannerNetwork
     private let favoriteService: FavoriteService
     private let sharedState: SharedState
-
+    
+    private var cancellables = Set<AnyCancellable>()
+    
     init(questRepository: QuestRepositoryInterface, rankNetwork: RankNetwork, bannerNetwork: BannerNetwork, favoriteService: FavoriteService, sharedState: SharedState) {
         self.questRepository = questRepository
         self.rankNetwork = rankNetwork
         self.bannerNetwork = bannerNetwork
         self.favoriteService = favoriteService
         self.sharedState = sharedState
+        
+        sharedState.$selectedCommercialArea
+            .removeDuplicates()
+            .sink { [weak self] _ in
+                Task { await self?.loadInitialData() } // TODO: 배너 제외 데이터 재로드
+            }
+            .store(in: &cancellables)
         
         Task {
             await loadInitialData()
@@ -386,8 +396,6 @@ final class HomeViewModel {
     func handleMyRegionSelection(_ area: CommercialArea) {
         sharedState.selectedCommercialArea = area
         self.alertType = .myRegionChangeSuccess
-        Task { await self.loadInitialData() }
-        // TODO: 배너 제외 데이터 재로드
     }
     
     /// "다시 보지 않기" 체크 여부 확인

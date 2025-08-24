@@ -161,9 +161,6 @@ struct HomeView: View {
             RegionPickerView(title: sharedState.selectedCommercialArea.areaName) {
                 vm.showSelectMyRegionView = true
             }
-            .onChange(of: sharedState.selectedCommercialArea.areaName) { _, newValue in
-                vm.alertType = .myRegionChangeSuccess
-            }
             
             Spacer()
             Text("내 일상존: ")

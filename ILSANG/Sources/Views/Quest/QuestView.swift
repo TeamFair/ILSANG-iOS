@@ -187,9 +187,6 @@ extension QuestView {
                     vm.showSelectMyRegionView = true
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
-                .onChange(of: sharedState.selectedCommercialArea.areaName) { _, _ in
-                    vm.alertType = .myRegionChangeSuccess
-                }
                 
                 Group {
                     if (vm.selectedHeader == .default) {
