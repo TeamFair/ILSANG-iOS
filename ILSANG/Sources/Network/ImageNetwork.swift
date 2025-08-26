@@ -12,8 +12,8 @@ final class ImageNetwork {
     private let url = APIManager.makeURL(NoTarget(path: "image", version: 1))
     
     func getImage(imageId: String) async -> Result<UIImage, Error> {
-        let url = url + "/" + imageId
-        return await Network.requestImage(url: url, withToken: true)
+        let parameters: Parameters = ["id": imageId]
+        return await Network.requestImage(url: url, parameters: parameters, withToken: true)
     }
     
     func postImage(image: UIImage, type: PostImageType) async -> Result<ImageEntity, Error> {
