@@ -10,10 +10,11 @@ import SwiftUI
 struct MainTabView: View {
     @StateObject var sharedState = SharedState()
     @StateObject var honorAcquisitionManager = HonorAcquisitionManager(honorNetwork: defaultHonorNetwork)
-    @StateObject var seasonManager = SeasonManager(seasonNetwork: defaultSeasonNetwork)
-   
+    @StateObject var seasonManager: SeasonManager
+
     var homeViewModel: HomeViewModel
     @StateObject var questViewModel: QuestViewModel
+    @StateObject var rankViewModel: RankingViewModel
     
     static var defaultHonorNetwork: HonorNetworkProtocol {
         return HonorNetwork() // MockHonorNetwork()
@@ -27,9 +28,14 @@ struct MainTabView: View {
         let sharedState = SharedState()
         _sharedState = StateObject(wrappedValue: sharedState)
         
-        self.homeViewModel =  HomeViewModel(
+        let seasonManager = SeasonManager(seasonNetwork: MainTabView.defaultSeasonNetwork)
+        _seasonManager = StateObject(wrappedValue: seasonManager)
+        
+        let rankRespository = RankRepository(network: RankNetwork())
+        
+        self.homeViewModel = HomeViewModel(
             questRepository: QuestRepository(network: QuestNetwork()),
-            rankNetwork: RankNetwork(),
+            rankRepository: rankRespository,
             bannerNetwork: BannerNetwork(),
             favoriteService: FavoriteService(favoriteNetwork: FavoriteNetwork()),
             sharedState: sharedState
@@ -47,8 +53,14 @@ struct MainTabView: View {
             favoriteService: FavoriteService(favoriteNetwork: FavoriteNetwork()), sharedState: sharedState)
            )
 #endif
-          
-       }
+        self._rankViewModel = StateObject(
+            wrappedValue:
+                RankingViewModel(
+                    rankRepository: rankRespository,
+                    seasonManager: seasonManager
+                )
+        )
+    }
     
     var body: some View {
         NavigationStack {
@@ -90,7 +102,7 @@ struct MainTabView: View {
         case .approval:
             ApprovalView()
         case .ranking:
-            RankingView()
+            RankingView(vm: rankViewModel)
         case .mypage:
             MyPageView()
         }

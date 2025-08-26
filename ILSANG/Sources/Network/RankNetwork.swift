@@ -7,18 +7,60 @@
 
 import Alamofire
 
-// TODO: 지역시스템 > 랭킹 수정 필요
 final class RankNetwork {
-    private let openRankUrl = APIManager.makeURL(OpenTarget(path: "rank/top-users", version: 1))
-    private let statRankUrl = APIManager.makeURL(UserTarget(path: "rank", version: 1))
+    private let areaRankUrl = APIManager.makeURL(NoTarget(path: "rank", version: 1))
+    private let userRankUrl = APIManager.makeURL(UserTarget(path: "rank", version: 1))
     
-    func getTopUserRank() async -> Result<Response<[TopRank]>, Error> {
-        let parameters: Parameters = ["limit": 10]
-        return await Network.requestData(url: openRankUrl, method: .get, parameters: parameters, withToken: false)
+    // MARK: - 일상지역 / 일상존 랭킹
+    /// 일상지역 종합 랭킹
+    func getMetroAreaRank(seasonId: Int?) async -> Result<[MetroAreaRankResponse], Error> {
+        var parameters: Parameters = [:]
+        if let seasonId = seasonId {
+            parameters["seasonId"] = seasonId
+        }
+        return await Network.requestData(url: areaRankUrl+"/area/metro", method: .get, parameters: parameters)
     }
     
-    func getRankByStat(xpstat: String) async -> Result<Response<[StatRank]>, Error> {
-        let parameters: Parameters = ["xpType":xpstat, "size": 20]
-        return await Network.requestData(url: statRankUrl, method: .get, parameters: parameters, withToken: true)
+    /// 일상존 종합 랭킹
+    func getCommercialAreaRank(seasonId: Int?) async -> Result<[CommercialAreaRankResponse], Error> {
+        var parameters: Parameters = [:]
+        if let seasonId = seasonId {
+            parameters["seasonId"] = seasonId
+        }
+        return await Network.requestData(url: areaRankUrl+"/area/commercial", method: .get, parameters: parameters)
+    }
+    
+    // MARK: - 사용자 랭킹
+    /// 포인트 합산 랭킹 (일상지역+일상존+기여도)
+    func getTotalUserRank(commercialAreaCode: String) async -> Result<[UserRankResponse], Error> {
+        let parameters: Parameters = ["commercialAreaCode": commercialAreaCode]
+        return await Network.requestData(url: userRankUrl+"/total", method: .get, parameters: parameters)
+    }
+    
+    /// 일상지역 사용자 전체 랭킹
+    func getTopUserRank(metroAreaCode: String, seasonId: Int?) async -> Result<AreaUserRankResponse, Error> {
+        var parameters: Parameters = ["metroAreaCode": metroAreaCode]
+        if let seasonId = seasonId {
+            parameters["seasonId"] = seasonId
+        }
+        return await Network.requestData(url: userRankUrl+"/metro", method: .get, parameters: parameters)
+    }
+    
+    /// 일상존 사용자 전체 랭킹
+    func getTopUserRank(commercialAreaCode: String, seasonId: Int?) async -> Result<AreaUserRankResponse, Error> {
+        var parameters: Parameters = ["commercialAreaCode": commercialAreaCode]
+        if let seasonId = seasonId {
+            parameters["seasonId"] = seasonId
+        }
+        return await Network.requestData(url: userRankUrl+"/commercial", method: .get, parameters: parameters)
+    }
+    
+    /// 기여도 종합 랭킹
+    func getTopUserRank(seasonId: Int?) async -> Result<[UserRankResponse], Error> {
+        var parameters: Parameters = [:]
+        if let seasonId = seasonId {
+            parameters["seasonId"] = seasonId
+        }
+        return await Network.requestData(url: userRankUrl+"/contribution", method: .get, parameters: parameters)
     }
 }

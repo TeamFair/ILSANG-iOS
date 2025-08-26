@@ -19,7 +19,7 @@ struct SeasonTimerView: View {
         self.season = season
         
         let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd"
+        formatter.dateFormat = "yyyy.MM.dd"
         formatter.timeZone = TimeZone(identifier: "Asia/Seoul")
         self.targetDate = formatter.date(from: targetDateString) ?? Date()
     }

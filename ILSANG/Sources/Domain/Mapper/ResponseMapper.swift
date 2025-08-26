@@ -40,4 +40,15 @@ enum ResponseMapper {
             return .failure(error)
         }
     }
+    
+    static func mapArrayResponse<DTO: DomainConvertible>(
+        _ result: Result<[DTO], Error>
+    ) -> Result<[DTO.Domain], Error> {
+        switch result {
+        case .success(let response):
+            return .success(response.map { $0.toDomain() })
+        case .failure(let error):
+            return .failure(error)
+        }
+    }
 }

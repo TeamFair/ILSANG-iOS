@@ -15,33 +15,116 @@ class RankingDetailViewModel: ObservableObject {
         case loaded
     }
     
-    @Published var viewStatus: ViewStatus = .loaded // 변경
-    @Published var userRank: [StatRankViewModelItem] = []
+    enum AreaType {
+        case metro
+        case commercial
+    }
+    @Published var viewStatus: ViewStatus = .loaded // TODO: 변경
+    @Published var areaUserRank: AreaUserRankViewModelItem = .init(ranks: [], user: .mockData1)  // TODO: 변경
     @Published var imageList: [UIImage] = []
     @Published var imageIdx = 0
-    let regionTitle = "야탑"
-    let regionRank: Int = 1
-    let regionPoint: Int = 100
     
+    let seasonId: Int?
+    let areaName: String
+    let areaRank: Int
+    let areaPoint: Int
+    let areaImageIds: [String]
+    
+    let areaCode: String
+    let areaType: AreaType
+    private let rankRepository: RankRepositoryInterface
+    
+    init(
+        seasonId: Int?,
+        areaName: String,
+        areaRank: Int,
+        areaPoint: Int,
+        areaImageIds: [String],
+        areaCode: String,
+        areaType: AreaType,
+        rankRepository: RankRepositoryInterface
+    ) {
+        self.seasonId = seasonId
+        self.areaName = areaName
+        self.areaRank = areaRank
+        self.areaPoint = areaPoint
+        self.areaImageIds = areaImageIds
+        self.areaCode = areaCode
+        self.areaType = areaType
+        self.rankRepository = rankRepository
+    }
+    
+    @MainActor
     func getRankDetail() async {
-        // try await rankNetwork.getRankDetail
-       
-        self.userRank.append(
-            .init(
-                xpPoint: 10,
-                xpTotalPoint: 100,
-                title: .mockLegend,
-                customerId: "133",
-                nickname: "유저124",
-                profileImageId: "",
-                profileImage: nil
-            )
-        )
+        viewStatus = .loading
+        
+        let res: Result<AreaUserRank, Error>
+        switch areaType {
+        case .metro:
+            res = await rankRepository.getTopUserRank(metroAreaCode: areaCode, seasonId: seasonId)
+        case .commercial:
+            res = await rankRepository.getTopUserRank(commercialAreaCode: areaCode, seasonId: seasonId)
+        }
+        
+        switch res {
+        case .success(let data):
+            self.areaUserRank = data.toRankItem()
+            await getCurrentUserProfileImage()
+            await getProfileImages()
+            viewStatus = .loaded
+        case .failure:
+            viewStatus = .error
+        }
     }
     
+    @MainActor
     func getImages() async {
-        // try await rankNetwork.getImages()
-       
-        self.imageList = [.img0, .img1, .img2, .img0]
+        await withTaskGroup(of: UIImage?.self) { group in
+            for id in areaImageIds {
+                group.addTask {
+                    await ImageCacheService.shared.loadImageAsync(imageId: id)
+                }
+            }
+            
+            var results: [UIImage] = []
+            for await image in group {
+                if let image = image {
+                    results.append(image)
+                }
+            }
+            
+            // 메인 스레드에서 반영
+            self.imageList = results
+        }
     }
+    
+    func getCurrentUserProfileImage() async {
+        if let imageId = areaUserRank.user?.profileImageId {
+            self.areaUserRank.user?.profileImage = await ImageCacheService.shared.loadImageAsync(imageId: imageId)
+        }
+    }
+    
+    @MainActor
+    func getProfileImages() async {
+        await withTaskGroup(of: (Int, UIImage?).self) { group in
+            for (index, user) in areaUserRank.ranks.enumerated() {
+                group.addTask {
+                    guard let imageId = user.profileImageId else {
+                        return (index, nil)
+                    }
+                    let image = await ImageCacheService.shared.loadImageAsync(imageId: imageId)
+                    return (index, image)
+                }
+            }
+            
+            for await (index, image) in group {
+                if let image {
+                    self.areaUserRank.ranks[index].profileImage = image
+                }
+            }
+        }
+        dump(areaUserRank.ranks)
+
+    }
+    
 }

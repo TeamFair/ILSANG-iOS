@@ -8,8 +8,11 @@
 import SwiftUI
 
 struct RankingView: View {
-    @StateObject var vm = RankingViewModel(rankNetwork: RankNetwork())
+    @ObservedObject var vm: RankingViewModel
     @EnvironmentObject var sharedState: SharedState
+    @EnvironmentObject private var seasonManager: SeasonManager
+    
+    @State private var isRefreshing = false
     
     var body: some View {
         VStack(spacing: 0) {
@@ -17,36 +20,46 @@ struct RankingView: View {
             
             ScrollView {
                 VStack(spacing: 0) {
-                    seasonBannerView
+                    if let currentSeason = seasonManager.currentSeason {
+                        seasonBannerView(season: currentSeason)
+                    }
                     
                     LazyVStack(spacing: 0, pinnedViews: [.sectionHeaders]) {
                         Section(header: selectScopeView) {
                             switch vm.viewStatus {
                             case .loading:
-                                ProgressView().frame(maxHeight: .infinity)
+                                ProgressView()
+                                    .frame(maxWidth: .infinity, maxHeight: .infinity)
                             case .loaded:
                                 rankingListView
                             case .error:
                                 networkErrorView
+                                    .frame(minHeight: 600, maxHeight: .infinity)
                             }
                         }
                         .background(Color.background)
                     }
                 }
             }
+            .scrollClipDisabled()
+            .scrollDisabled(vm.viewStatus != .loaded)
+            .refreshable {
+                if isRefreshing || vm.viewStatus == .loading { return }
+                isRefreshing = true
+                defer { isRefreshing = false }
+                await vm.loadRank(type: vm.selectedPointType)
+            }
             .background(alignment: .top) {
                 Color.white
-                    .frame(height: 400)
-            }
-            .background(alignment: .bottom) {
-                Color.background
                     .frame(height: 200)
             }
         }
         .overlay(alignment: .bottom) {
-            SeasonTimerView(season: 1, targetDateString: "2025-09-01")
-                .padding(.horizontal, 20)
-                .padding(.bottom, 20)
+            if let currentSeason = seasonManager.currentSeason {
+                SeasonTimerView(season: currentSeason.seasonNumber, targetDateString: currentSeason.endDate.formatDateOnly())
+                    .padding(.horizontal, 20)
+                    .padding(.bottom, 20)
+            }
         }
         .overlay {
             if vm.showSelectSeasonView {
@@ -61,11 +74,11 @@ struct RankingView: View {
         }
         .background(Color.background)
         .task {
-            await vm.loadRankIfNeeded(scope: vm.selectedPointType)
+            await vm.loadRankIfNeeded(type: vm.selectedPointType)
         }
         .onChange(of: vm.selectedPointType) { _, newValue in
             Task {
-                await vm.loadRankIfNeeded(scope: newValue)
+                await vm.loadRankIfNeeded(type: vm.selectedPointType)
             }
         }
     }
@@ -89,8 +102,13 @@ extension RankingView {
                 vm.showSelectSeasonView.toggle()
             } label: {
                 HStack(spacing: 4) {
-                    Text("시즌 1")
-                        .styledFont(.heading1)
+                    if let seasonNumber = vm.selectedSeason?.seasonNumber {
+                        Text("시즌 \(seasonNumber)")
+                            .styledFont(.heading1)
+                    } else {
+                        Text("전체")
+                            .styledFont(.heading1)
+                    }
                     Image(.arrowRight)
                         .resizable()
                         .renderingMode(.template)
@@ -110,24 +128,26 @@ extension RankingView {
                 ScrollView {
                     LazyVStack(spacing: 0) {
                         Button {
-                            // TODO: 전체 시즌 데이터 불러오기
+                            vm.selectedSeason = nil
                             vm.showSelectSeasonView.toggle()
+                            vm.reset()
                         } label: {
                             seasonListItemView(title: "전체")
                         }
-                        ForEach(1..<3) { i in // TODO: 시즌 데이터 연결
+                        ForEach(vm.seasons, id: \.id) { season in
                             Button {
-                                // TODO: 해당 시즌 데이터 불러오기
                                 vm.showSelectSeasonView.toggle()
+                                vm.selectedSeason = season
+                                vm.reset()
                             } label: {
-                                seasonListItemView(title: "시즌 \(i)")
+                                seasonListItemView(title: "시즌 \(season.id)")
                             }
                         }
                     }
                     .padding(.horizontal, 20)
-                    .background(Color.white)
                 }
                 .frame(maxHeight: 170)
+                .fixedSize(horizontal: false, vertical: true) // 콘텐츠 크기만큼 늘어나도록
                 .background(.white)
                 .cornerRadius(8, corners: [.bottomLeft, .bottomRight])
             }
@@ -142,12 +162,12 @@ extension RankingView {
             .frame(height: 56)
     }
     
-    private var seasonBannerView: some View {
+    private func seasonBannerView(season: Season) -> some View {
         HStack(spacing: 0) {
             VStack(alignment: .leading, spacing: 8) {
-                Text("일상 특별 시즌 1")
+                Text("일상 특별 시즌 \(season.seasonNumber)")
                     .font(.custom("payboocOTFExtraBold", size: 20))
-                Text("2025.05.04~2025.05.20")
+                Text("\(season.startDate.formatDateOnly()) ~ \(season.endDate.formatDateOnly())")
                     .styledFont(.medium, size: 13, lineHeight: 17)
                     .foregroundStyle(.white.opacity(0.8))
                     .padding(.bottom, 5)
@@ -212,38 +232,60 @@ extension RankingView {
     }
     
     private var rankingListView: some View {
-        ScrollView {
-            LazyVStack(spacing: 12) {
-                if let ranks = vm.userRank[vm.selectedPointType] {
-                    ForEach(Array(ranks.enumerated()), id: \.element.customerId) { idx, rank in
-                        switch vm.selectedPointType {
-                        case .metro, .commercial:
-                            NavigationLink {
-                                // TODO: 데이터 연결
-                                RankingDetailView(vm: RankingDetailViewModel())
-                            } label: {
-                                RankingItemView(rank: rank.toRank(idx: idx+1), style: .horizontal(case: .locationPoint))
-                            }
-                        case .contribution:
-                            NavigationLink {
-                                OtherUserProfileView(customerId: rank.customerId)
-                            } label: {
-                                RankingItemView(rank: rank.toRank(idx: idx+1), style: .horizontal(case: .userPoint))
-                            }
-                        }
+        LazyVStack(spacing: 12) {
+            switch vm.selectedPointType {
+            case .metro:
+                ForEach(vm.metroRank) { rank in
+                    NavigationLink {
+                        RankingDetailView(
+                            vm: RankingDetailViewModel(
+                                seasonId: vm.selectedSeasonId,
+                                areaName: rank.areaName,
+                                areaRank: rank.rank,
+                                areaPoint: rank.point,
+                                areaImageIds: rank.imageIds,
+                                areaCode: rank.areaCode,
+                                areaType: .metro,
+                                rankRepository: vm.rankRepository
+                            )
+                        )
+                    } label: {
+                        RankingItemView(style: .areaRank(rank))
+                    }
+                }
+            case .commercial:
+                ForEach(vm.commercialRank) { rank in
+                    NavigationLink {
+                        RankingDetailView(
+                            vm: RankingDetailViewModel(
+                                seasonId: vm.selectedSeasonId,
+                                areaName: rank.areaName,
+                                areaRank: rank.rank,
+                                areaPoint: rank.point,
+                                areaImageIds: rank.imageIds,
+                                areaCode: rank.areaCode,
+                                areaType: .commercial,
+                                rankRepository: vm.rankRepository
+                            )
+                        )
+                    } label: {
+                        RankingItemView(style: .areaRank(rank))
+                    }
+                }
+            case .contribution:
+                ForEach(vm.contributionRank, id: \.userId) { rank in
+                    NavigationLink {
+                        OtherUserProfileView(userId: rank.userId)
+                    } label: {
+                        RankingItemView(style: .userRank(rank))
                     }
                 }
             }
-            .padding(.top, 16)
-            .padding(.bottom, 120)
         }
+        .padding(.top, 16)
+        .padding(.bottom, 170)
         .background(Color.background)
         .animation(nil, value: vm.selectedPointType)
-        .refreshable {
-            Task {
-                await vm.fetchAndStoreUserRank(scope: vm.selectedPointType)
-            }
-        }
     }
     
     private var networkErrorView: some View {
@@ -253,11 +295,18 @@ extension RankingView {
             subTitle: "네트워크 연결 상태가 좋지 않아\n랭킹을 불러올 수 없어요",
             emoticon: "🥲"
         ) {
-            Task { await vm.loadRankIfNeeded(scope: vm.selectedPointType) }
+            Task { await vm.loadRank(type: vm.selectedPointType) }
         }
     }
 }
 
 #Preview {
-    RankingView()
+    RankingView(
+        vm: RankingViewModel(
+            rankRepository: RankRepository(network: RankNetwork()),
+            seasonManager: SeasonManager(
+                seasonNetwork: SeasonNetwork()
+            )
+        )
+    )
 }

@@ -23,7 +23,7 @@ struct ApprovalItemContentView: View {
         NavigationStack {
             VStack(alignment: .leading, spacing: 16) {
                 NavigationLink {
-                    OtherUserProfileView(customerId: item.userId)
+                    OtherUserProfileView(userId: item.userId)
                 } label: {
                     profileView(nickname: item.nickname, honor: item.userTitle)
                 }

@@ -60,7 +60,7 @@ struct SeasonOpenPopup: View {
                 .foregroundColor(.white)
                 .padding(.bottom, 7)
             
-            Text("\(formatDateOnly(seasonStartDate)) ~ \(formatDateOnly(seasonEndDate))")
+            Text("\(seasonStartDate.formatDateOnly()) ~ \(seasonEndDate.formatDateOnly())")
                 .styledFont(.subTitle1)
                 .foregroundColor(.gray100)
                 .padding(.horizontal, 10)
@@ -93,11 +93,5 @@ struct SeasonOpenPopup: View {
         .frame(height: 394)
         .roundedBackground(cornerRadius: 12, bgColor: .primaryPurple)
         .padding(.horizontal, 20)
-    }
-    
-    func formatDateOnly(_ isoString: String) -> String {
-        // "T" 앞까지만 자르기
-        let datePart = isoString.split(separator: "T").first ?? ""
-        return datePart.replacingOccurrences(of: "-", with: ".")
     }
 }

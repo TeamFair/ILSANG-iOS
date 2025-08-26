@@ -95,6 +95,12 @@ extension String {
         return numberFormatter.string(from: NSNumber(value: num)) ?? ""
     }
     
+    func formatDateOnly() -> String {
+        // "T" 앞까지만 자르기
+        let datePart = self.split(separator: "T").first ?? ""
+        return datePart.replacingOccurrences(of: "-", with: ".")
+    }
+    
     /// 텍스트가 임의로 줄바꿈 되는 현상을 방지하기 위한 프로퍼티
     var forceCharWrapping: Self {
         self.map({ String($0) }).joined(separator: "\u{200B}") /// 200B: 가로폭 없는 공백문자

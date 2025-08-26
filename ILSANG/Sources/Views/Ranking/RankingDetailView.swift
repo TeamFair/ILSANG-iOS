@@ -9,6 +9,7 @@ import SwiftUI
 
 struct RankingDetailView: View {
     @StateObject var vm: RankingDetailViewModel
+    @EnvironmentObject private var seasonManager: SeasonManager
     @Environment(\.dismiss) var dismiss
     
     init(vm: RankingDetailViewModel) {
@@ -31,17 +32,27 @@ struct RankingDetailView: View {
                     .padding(.bottom, 16)
                 
                 LazyVStack(spacing: 12) {
-                    ForEach(Array(vm.userRank.enumerated()), id: \.element.customerId) { idx, rank in
+                    if let user = vm.areaUserRank.user  {
+                        RankingItemView(style: .currentUserRank(user))
+                    }
+                    ForEach(vm.areaUserRank.ranks, id: \.userId) { rank in
                         NavigationLink {
-                            OtherUserProfileView(customerId: rank.customerId)
+                            OtherUserProfileView(userId: rank.userId)
                         } label: {
-                            RankingItemView(rank: rank.toRank(idx: idx+1), style: .horizontal(case: .userPoint))
+                            RankingItemView(style: .userRank(rank))
                         }
                     }
-                    .padding(.bottom, 72)
                 }
+                .padding(.bottom, 170)
             }
             .padding(.top, 8)
+        }
+        .overlay(alignment: .bottom) {
+            if let currentSeason = seasonManager.currentSeason {
+                SeasonTimerView(season: currentSeason.seasonNumber, targetDateString: currentSeason.endDate.formatDateOnly())
+                    .padding(.horizontal, 20)
+                    .padding(.bottom, 20)
+            }
         }
         .background(Color.background)
         .navigationBarBackButtonHidden()
@@ -64,9 +75,9 @@ struct RankingDetailView: View {
                         .tag(idx)
                 }
             }
-            
             .frame(height: height)
             .tabViewStyle(.page(indexDisplayMode: .never))
+            .background(Color.gray100)
             
             VStack(alignment: .leading, spacing: 4) {
                 HStack(spacing: 4) {
@@ -80,21 +91,21 @@ struct RankingDetailView: View {
                 .padding(.top, 4)
                 .padding(.bottom, 12)
                 HStack {
-                    Text(vm.regionTitle)
+                    Text(vm.areaName)
                         .styledFont(.heading3)
                         .foregroundStyle(.black)
-                    Image("rank\(vm.regionRank)")
+                    Image("rank\(vm.areaRank)")
                         .resizable()
                         .frame(22)
                 }
                 HStack(spacing: 8) {
-                    Text("실시간 랭킹: \(vm.regionRank)위")
+                    Text("실시간 랭킹: \(vm.areaRank)위")
                         .styledFont(.caption2)
                         .foregroundStyle(.gray500)
                     Rectangle()
                         .frame(width: 1, height: 10)
                         .foregroundStyle(.gray300)
-                    Text("누적 점수: \(vm.regionPoint)p")
+                    Text("누적 점수: \(vm.areaPoint)p")
                         .styledFont(.caption2)
                         .foregroundStyle(.gray500)
                     Spacer(minLength: 0)
@@ -116,5 +127,16 @@ struct RankingDetailView: View {
 }
 
 #Preview {
-    RankingDetailView(vm: RankingDetailViewModel())
+    RankingDetailView(
+        vm: RankingDetailViewModel(
+            seasonId: 1,
+            areaName: "서현",
+            areaRank: 1,
+            areaPoint: 1000,
+            areaImageIds: [""],
+            areaCode: "",
+            areaType: .commercial,
+            rankRepository: RankRepository(network: RankNetwork())
+        )
+    )
 }

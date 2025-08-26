@@ -26,7 +26,7 @@ final class HomeViewModel {
         }
     }
     var mainBanners: [Banner] = []
-    var userRankList: [TopRankViewModelItem] = [] // 10개
+    var userRankList: [UserRankViewModelItem] = [] // 10개
     var largestRewardQuestList: [QuestViewModelItem] = [] // 3*5개
     var recommendQuestList: [QuestViewModelItem] = [] //QuestViewModelItem.mockQuestList // 10개
     var popularQuestList: [QuestViewModelItem] = [QuestViewModelItem.mockData] // 4n개
@@ -80,7 +80,7 @@ final class HomeViewModel {
     
     // 다른 유저 프로필 확인
     var showOtherUserProfileView = false
-    var selectedCustomerId: String? = nil
+    var selectedUserId: String? = nil
     
     var errorCnt = 0
     var showMainBanners: Bool = true
@@ -90,16 +90,16 @@ final class HomeViewModel {
     var showRankList = true
     
     private let questRepository: QuestRepositoryInterface
-    private let rankNetwork: RankNetwork
+    private let rankRepository: RankRepositoryInterface
     private let bannerNetwork: BannerNetwork
     private let favoriteService: FavoriteService
     private let sharedState: SharedState
     
     private var cancellables = Set<AnyCancellable>()
     
-    init(questRepository: QuestRepositoryInterface, rankNetwork: RankNetwork, bannerNetwork: BannerNetwork, favoriteService: FavoriteService, sharedState: SharedState) {
+    init(questRepository: QuestRepositoryInterface, rankRepository: RankRepositoryInterface, bannerNetwork: BannerNetwork, favoriteService: FavoriteService, sharedState: SharedState) {
         self.questRepository = questRepository
-        self.rankNetwork = rankNetwork
+        self.rankRepository = rankRepository
         self.bannerNetwork = bannerNetwork
         self.favoriteService = favoriteService
         self.sharedState = sharedState
@@ -260,11 +260,11 @@ final class HomeViewModel {
     
     @MainActor
     func loadRankList() async throws {
-        let res = await rankNetwork.getTopUserRank()
+        let res = await rankRepository.getTotalUserRank(commercialAreaCode: sharedState.selectedCommercialArea.code)
         
         switch res {
         case .success(let rank):
-            self.userRankList = rank.data.map({ TopRankViewModelItem(rank: $0) })
+            self.userRankList = rank.map { $0.toRankItem() }
             // TODO: 유틸 함수로 만들기
             await withTaskGroup(of: (Int, UIImage?).self) { group in
                 for (index, rank) in userRankList.enumerated() {
@@ -421,32 +421,5 @@ final class HomeViewModel {
     /// 즐겨찾기 상태를 UI에 즉시 반영하고,  서버 반영은 디바운싱 처리
     func toggleFavoriteStatus(quest: QuestViewModelItem) {
         favoriteService.toggle(quest: quest)
-    }
-}
-
-struct TopRankViewModelItem {
-    let customerId: String
-    let lank: Int
-    let xpSum: Int
-    let nickname: String
-    let profileImageId: String?
-    var profileImage: UIImage?
-    
-    init(customerId: String, lank: Int, xpSum: Int, nickname: String, profileImageId: String?, profileImage: UIImage?) {
-        self.customerId = customerId
-        self.lank = lank
-        self.xpSum = xpSum
-        self.nickname = nickname
-        self.profileImageId = profileImageId
-        self.profileImage = profileImage
-    }
-    
-    init(rank: TopRank) {
-        self.customerId = rank.customerId
-        self.lank = rank.lank
-        self.xpSum = rank.xpSum
-        self.nickname = rank.nickname
-        self.profileImageId = rank.profileImageId
-        self.profileImage = nil
     }
 }
