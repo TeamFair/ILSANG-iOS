@@ -9,7 +9,7 @@ import Foundation
 
 final class AuthNetwork {
     private let url = APIManager.makeURL(NoTarget(path: "", version: 1))
-    private let logoutUrl = APIManager.makeURL(NoTarget(path: "", version: 1))
+    private let logoutUrl = APIManager.makeURL(NoTarget(path: "logout", version: 1))
     
     /// Apple 또는 Google에서 받은 idToken을 백엔드로 전송해 로그인 요청을 보내고, 성공 시 authorization 토큰을 반환합니다.
     func login(idToken: String, channel: AuthChannel) async -> Result<Auth, NetworkError> {
@@ -47,8 +47,8 @@ final class AuthNetwork {
         }
     }
     
-    func logout() async -> Result<ResponseWithoutData, Error> {
-        await Network.requestData(url: logoutUrl, method: .get, parameters: nil, withToken: true, retryOnAuthFail: false)
+    func logout() async -> Result<ResponseWithEmpty, Error> {
+        await Network.requestData(url: logoutUrl, method: .get, retryOnAuthFail: false)
     }
 }
 

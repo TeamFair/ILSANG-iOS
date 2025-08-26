@@ -11,8 +11,8 @@ struct OtherUserProfileView: View {
     @StateObject var vm: OtherUserProfileViewModel
     @Environment(\.dismiss) var dismiss
     
-    init(customerId: String) {
-        _vm = StateObject(wrappedValue: OtherUserProfileViewModel(customerId: customerId, userNetwork: UserNetwork(), challengeNetwork: ChallengeNetwork(), imageNetwork: ImageNetwork(), pointNetwork: PointNetwork()))
+    init(userId: String) {
+        _vm = StateObject(wrappedValue: OtherUserProfileViewModel(customerId: userId, userNetwork: UserNetwork(), challengeNetwork: ChallengeNetwork(), imageNetwork: ImageNetwork(), pointNetwork: PointNetwork()))
     }
     
     var body: some View {
@@ -104,6 +104,6 @@ struct OtherUserProfileView: View {
 }
 
 #Preview {
-    OtherUserProfileView(customerId: "IUS0000000")
+    OtherUserProfileView(userId: "IUS0000000")
 }
 

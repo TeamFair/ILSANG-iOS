@@ -5,8 +5,10 @@
 //  Created by Kim Andrew on 10/7/24.
 //
 
-import Foundation
+import Combine
+import UIKit
 
+@MainActor
 class RankingViewModel: ObservableObject {
     enum ViewStatus {
         case error
@@ -14,189 +16,169 @@ class RankingViewModel: ObservableObject {
         case loaded
     }
     
-    @Published var viewStatus: ViewStatus = .loaded // 변경
+    @Published var viewStatus: ViewStatus = .loaded
     @Published var selectedPointType: PointType = .metro
+    
+    @Published var selectedSeason: Season?
+    var selectedSeasonId: Int? {
+        selectedSeason?.id
+    }
     @Published var showSelectSeasonView = false
-
-    @Published var userRank: [PointType: [StatRankViewModelItem]] = Dictionary(uniqueKeysWithValues: PointType.allCases.map { ($0, []) })
     
-    private let rankNetwork: RankNetwork
+    @Published var metroRank: [AreaRankViewModelItem] = []
+    @Published var commercialRank: [AreaRankViewModelItem] = []
+    @Published var contributionRank: [UserRankViewModelItem] = []
     
-    init(rankNetwork: RankNetwork)  {
-        self.rankNetwork = rankNetwork
+    @Published var seasons: [Season] = []
+    
+    let rankRepository: RankRepositoryInterface
+    private let seasonManager: SeasonManager
+    
+    private var currentLoadTask: Task<Void, Never>?
+    private var cancellables = Set<AnyCancellable>()
+    
+    init(rankRepository: RankRepositoryInterface, seasonManager: SeasonManager)  {
+        self.rankRepository = rankRepository
+        self.seasonManager = seasonManager
+        
+        selectedSeason = seasonManager.currentSeason ?? nil // 현재시즌으로 초기화
+        seasonManager.$seasons
+            .sink { [weak self] seasons in
+                guard let self else { return }
+                self.seasons = seasons
+            }
+            .store(in: &cancellables)
+        
+        seasonManager.$currentSeason
+            .sink { [weak self] season in
+                guard let self else { return }
+                self.selectedSeason = season
+            }
+            .store(in: &cancellables)
     }
     
-    func loadRankIfNeeded(scope: PointType) async {
-        if let users = userRank[scope], users.count > 0 {
+    func reset() {
+        currentLoadTask?.cancel()
+        self.metroRank = []
+        self.commercialRank = []
+        self.contributionRank = []
+        currentLoadTask = Task {
+            await self.loadRankInternal(type: self.selectedPointType)
+        }
+    }
+    
+    func loadRankIfNeeded(type: PointType) async {
+        switch type {
+        case .metro:
+            if !metroRank.isEmpty { return }
+        case .commercial:
+            if !commercialRank.isEmpty { return }
+        case .contribution:
+            if !contributionRank.isEmpty { return }
+        }
+        
+        await loadRank(type: type)
+    }
+    
+    func loadRank(type: PointType) async {
+        // 기존 Task가 있으면 취소
+        currentLoadTask?.cancel()
+        
+        // 새로운 Task 생성
+        currentLoadTask = Task {
+            await loadRankInternal(type: type)
+        }
+        
+        // Task 완료 대기
+        await currentLoadTask?.value
+    }
+    
+    // 실제 로드 로직
+    private func loadRankInternal(type: PointType) async {
+        if Task.isCancelled {
+            Log("Task 취소됨 - 로드 중단")
             return
         }
-        await fetchAndStoreUserRank(scope: scope)
+        
+        changeViewStatus(.loading)
+        
+        switch type {
+        case .metro:
+            let res = await rankRepository.getMetroAreaRank(seasonId: selectedSeasonId)
+            if Task.isCancelled { return }
+            handleAreaRankResult(res, assignTo: \.metroRank)
+            
+        case .commercial:
+            let res = await rankRepository.getCommercialAreaRank(seasonId: selectedSeasonId)
+            if Task.isCancelled { return }
+            handleAreaRankResult(res, assignTo: \.commercialRank)
+            
+        case .contribution:
+            let res = await rankRepository.getTopUserRank(seasonId: selectedSeasonId)
+            if Task.isCancelled { return }
+            handleUserRankResult(res, assignTo: \.contributionRank)
+            await getProfileImages()
+        }
     }
     
-    @MainActor
-    func fetchAndStoreUserRank(scope: PointType) async {
-        // 변경
-        userRank[.contribution]?.append(
-            .init(
-                xpPoint: 10,
-                xpTotalPoint: 100,
-                title: .mockLegend,
-                customerId: "112333",
-                nickname: "유저124",
-                profileImageId: "",
-                profileImage: nil
-            )
-        )
-        userRank[.commercial]?.append(
-            .init(
-                xpPoint: 10,
-                xpTotalPoint: 100,
-                title: .mockLegend,
-                customerId: "133",
-                nickname: "유저124",
-                profileImageId: "",
-                profileImage: nil
-            )
-        )
-        userRank[.commercial]?.append(
-            .init(
-                xpPoint: 10,
-                xpTotalPoint: 100,
-                title: .mockLegend,
-                customerId: "112333",
-                nickname: "유저11224",
-                profileImageId: "",
-                profileImage: nil
-            )
-        )
-        userRank[.metro]?.append(
-            .init(
-                xpPoint: 10,
-                xpTotalPoint: 100,
-                title: .mockLegend,
-                customerId: "33",
-                nickname: "유저124",
-                profileImageId: "",
-                profileImage: nil
-            )
-        )
-        userRank[.metro]?.append(
-            .init(
-                xpPoint: 120,
-                xpTotalPoint: 1001,
-                title: .mockLegend,
-                customerId: "123",
-                nickname: "유저456",
-                profileImageId: "",
-                profileImage: nil
-            )
-        )
-        userRank[.metro]?.append(
-            .init(
-                xpPoint: 120,
-                xpTotalPoint: 1001,
-                title: .mockLegend,
-                customerId: "1235",
-                nickname: "유저2345",
-                profileImageId: "",
-                profileImage: nil
-            )
-        )
-        userRank[.metro]?.append(
-            .init(
-                xpPoint: 120,
-                xpTotalPoint: 1001,
-                title: .mockLegend,
-                customerId: "12323",
-                nickname: "유저542",
-                profileImageId: "",
-                profileImage: nil
-            )
-        )
-        userRank[.metro]?.append(
-            .init(
-                xpPoint: 120,
-                xpTotalPoint: 1001,
-                title: .mockLegend,
-                customerId: "12333323",
-                nickname: "유저52242",
-                profileImageId: "",
-                profileImage: nil
-            )
-        )
-        userRank[.metro]?.append(
-            .init(
-                xpPoint: 1420,
-                xpTotalPoint: 1001,
-                title: .mockLegend,
-                customerId: "123321233323",
-                nickname: "유저52242",
-                profileImageId: "",
-                profileImage: nil
-            )
-        )
-//        changeViewStatus(.loading)
-//        let res = await rankNetwork.getRankByStat(xpstat: xpStat.parameterText)
-//
-//        switch res {
-//        case .success(let response):
-//            let items = await withTaskGroup(of: (Int, StatRankViewModelItem).self) { group in
-//                for (index, rank) in response.data.enumerated() {
-//                    group.addTask {
-//                        let item = await StatRankViewModelItem(rank: rank)
-//                        return (index, item)
-//                    }
-//                }
-//
-//                var results = Array<StatRankViewModelItem?>(repeating: nil, count: response.data.count)
-//                for await (index, item) in group {
-//                    results[index] = item
-//                }
-//
-//                return results.compactMap { $0 } // nil 제거
-//            }
-//            self.userRank[xpStat] = items
-//            changeViewStatus(.loaded)
-//        case .failure:
-//            changeViewStatus(.error)
-//            Log(res)
-//        }
+    func getProfileImages() async {
+        await withTaskGroup(of: (Int, UIImage?).self) { group in
+            for (index, user) in contributionRank.enumerated() {
+                group.addTask {
+                    guard let imageId = user.profileImageId else {
+                        return (index, nil)
+                    }
+                    let image = await ImageCacheService.shared.loadImageAsync(imageId: imageId)
+                    return (index, image)
+                }
+            }
+            
+            for await (index, image) in group {
+                if let image {
+                    self.contributionRank[index].profileImage = image
+                }
+            }
+        }
     }
     
-    @MainActor
+    // MARK: - 헬퍼
+    private func handleAreaRankResult(
+        _ result: Result<[AreaRank], Error>,
+        assignTo keyPath: ReferenceWritableKeyPath<RankingViewModel, [AreaRankViewModelItem]>
+    ) {
+        switch result {
+        case .success(let response):
+            self[keyPath: keyPath] = response.map { $0.toRankItem() }
+            changeViewStatus(.loaded)
+        case .failure(let error):
+            Log("지역 랭킹 로드 실패: \(error)")
+            if let networkError = error as? NetworkError, networkError == .unknownStatusCode(-1) || networkError == .unknownError {
+                changeViewStatus(.loaded)
+                return
+            }
+            changeViewStatus(.error)
+        }
+    }
+    
+    private func handleUserRankResult(
+        _ result: Result<[UserRank], Error>,
+        assignTo keyPath: ReferenceWritableKeyPath<RankingViewModel, [UserRankViewModelItem]>
+    ) {
+        switch result {
+        case .success(let response):
+            self[keyPath: keyPath] = response.map { $0.toRankItem() }
+            changeViewStatus(.loaded)
+        case .failure(let error):
+            Log("유저 랭킹 로드 실패: \(error)")
+            if let networkError = error as? NetworkError, networkError == .unknownStatusCode(-1) || networkError == .unknownError {
+                changeViewStatus(.loaded)
+                return
+            }
+            changeViewStatus(.error)
+        }
+    }
+    
     func changeViewStatus(_ viewStatus: ViewStatus) {
         self.viewStatus = viewStatus
-    }
-}
-
-import UIKit
-
-struct StatRankViewModelItem {
-    let xpPoint: Int
-    let xpTotalPoint: Int
-    let title: Title?
-    let customerId: String
-    let nickname: String
-    let profileImageId: String?
-    let profileImage: UIImage?
-    
-    init(xpPoint: Int, xpTotalPoint: Int, title: Title?, customerId: String, nickname: String, profileImageId: String?, profileImage: UIImage?) {
-        self.xpPoint = xpPoint
-        self.xpTotalPoint = xpTotalPoint
-        self.title = title
-        self.customerId = customerId
-        self.nickname = nickname
-        self.profileImageId = profileImageId
-        self.profileImage = profileImage
-    }
-    
-    init(rank: StatRank) async {
-        self.xpPoint = rank.xpPoint
-        self.xpTotalPoint = rank.xpTotalPoint
-        self.title = rank.title
-        self.customerId = rank.customerId
-        self.nickname = rank.nickname
-        self.profileImageId = rank.profileImageId
-        self.profileImage = await ImageCacheService.shared.loadImageAsync(imageId: rank.profileImageId ?? "")
     }
 }

@@ -40,6 +40,7 @@ struct HomeView: View {
                     await honorAcquisitionManager.fetchUnreadHonorHistory()
                 }
                 .refreshable {
+                    // TODO: 태스크 {} 제거
                     Task {
                         await vm.loadInitialData()
                     }
@@ -361,13 +362,13 @@ struct HomeView: View {
             content:
                 ScrollView(.horizontal) {
                     HStack(spacing: 8) {
-                        ForEach(Array(vm.userRankList.enumerated()), id: \.offset) { idx, rank in
+                        ForEach(vm.userRankList, id: \.userId) { rank in
                             Button {
-                                AnalyticsService.logEvent(.homeRankingClick(userId: rank.customerId))
-                                vm.selectedCustomerId = rank.customerId
+                                AnalyticsService.logEvent(.homeRankingClick(userId: rank.userId))
+                                vm.selectedUserId = rank.userId
                                 vm.showOtherUserProfileView = true
                             } label: {
-                                RankingItemView(rank: rank.toRank(), style: .vertical)
+                                RankingItemView(style: .totalRank(rank))
                             }
                         }
                     }
@@ -375,8 +376,8 @@ struct HomeView: View {
                 }
                 .scrollIndicators(.never)
                 .navigationDestination(isPresented: $vm.showOtherUserProfileView) {
-                    if let customerId = vm.selectedCustomerId {
-                        OtherUserProfileView(customerId: customerId)
+                    if let userId = vm.selectedUserId {
+                        OtherUserProfileView(userId: userId)
                     }
                 }
         )
@@ -450,7 +451,7 @@ struct HomeView: View {
 #Preview {
     let viewModel = HomeViewModel(
         questRepository: QuestRepository(network: QuestNetwork()),
-        rankNetwork: RankNetwork(),
+        rankRepository: RankRepository(network: RankNetwork()),
         bannerNetwork: BannerNetwork(),
         favoriteService: FavoriteService(favoriteNetwork: FavoriteNetwork()), sharedState: SharedState()
     )
