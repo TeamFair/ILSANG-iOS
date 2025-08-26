@@ -119,8 +119,8 @@ final class Network {
         }
     }
     
-    static func requestImage(url: String, withToken: Bool) async -> Result<UIImage, Error> {
-        guard let fullPath = buildURL(url: url) else {
+    static func requestImage(url: String, parameters: Parameters, withToken: Bool) async -> Result<UIImage, Error> {
+        guard let fullPath = buildURL(url: url, parameters: parameters) else {
             return .failure(NetworkError.invalidURL)
         }
         
