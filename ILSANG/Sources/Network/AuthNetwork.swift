@@ -48,7 +48,7 @@ final class AuthNetwork {
     }
     
     func logout() async -> Result<ResponseWithEmpty, Error> {
-        await Network.requestData(url: logoutUrl, method: .get, retryOnAuthFail: false)
+        await Network.requestData(url: logoutUrl, method: .post, retryOnAuthFail: false)
     }
 }
 
