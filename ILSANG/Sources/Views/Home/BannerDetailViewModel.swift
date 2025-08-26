@@ -10,7 +10,7 @@ import UIKit
 
 @Observable
 class BannerDetailViewModel {
-    var banner: Banner
+    var banner: BannerViewModelItem
     private var uncompletedQuest: [QuestViewModelItem] = []
     private var completedQuest: [QuestViewModelItem] = []
     
@@ -71,7 +71,7 @@ class BannerDetailViewModel {
     private let questNetwork: QuestNetwork
     private let favoriteService: FavoriteService
     
-    init(banner: Banner, shouldShowIllsangZoneWarning: Bool, currentSeason: Int, questNetwork: QuestNetwork, favoriteService: FavoriteService) {
+    init(banner: BannerViewModelItem, shouldShowIllsangZoneWarning: Bool, currentSeason: Int, questNetwork: QuestNetwork, favoriteService: FavoriteService) {
         self.banner = banner
         self.questNetwork = questNetwork
         self.favoriteService = favoriteService
