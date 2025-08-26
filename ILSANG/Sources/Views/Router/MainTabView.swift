@@ -36,7 +36,7 @@ struct MainTabView: View {
         self.homeViewModel = HomeViewModel(
             questRepository: QuestRepository(network: QuestNetwork()),
             rankRepository: rankRespository,
-            bannerNetwork: BannerNetwork(),
+            bannerRepository: BannerRepository(network: BannerNetwork()),
             favoriteService: FavoriteService(favoriteNetwork: FavoriteNetwork()),
             sharedState: sharedState
         )

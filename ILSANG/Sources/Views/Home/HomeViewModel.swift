@@ -25,7 +25,7 @@ final class HomeViewModel {
             return "추천 퀘스트"
         }
     }
-    var mainBanners: [Banner] = []
+    var mainBanners: [BannerViewModelItem] = []
     var userRankList: [UserRankViewModelItem] = [] // 10개
     var largestRewardQuestList: [QuestViewModelItem] = [] // 3*5개
     var recommendQuestList: [QuestViewModelItem] = [] //QuestViewModelItem.mockQuestList // 10개
@@ -62,7 +62,7 @@ final class HomeViewModel {
     }
     var showSelectMyRegionView: Bool = false
     var showSelectIllsangZoneView: Bool = false
-    var selectedBanner: Banner? = nil
+    var selectedBanner: BannerViewModelItem? = nil
     
     var illsangZoneCode: String? = nil
     var illsangZoneName: String? = nil
@@ -91,16 +91,16 @@ final class HomeViewModel {
     
     private let questRepository: QuestRepositoryInterface
     private let rankRepository: RankRepositoryInterface
-    private let bannerNetwork: BannerNetwork
+    private let bannerRepository: BannerRepositoryInterface
     private let favoriteService: FavoriteService
     private let sharedState: SharedState
     
     private var cancellables = Set<AnyCancellable>()
     
-    init(questRepository: QuestRepositoryInterface, rankRepository: RankRepositoryInterface, bannerNetwork: BannerNetwork, favoriteService: FavoriteService, sharedState: SharedState) {
+    init(questRepository: QuestRepositoryInterface, rankRepository: RankRepositoryInterface, bannerRepository: BannerRepositoryInterface, favoriteService: FavoriteService, sharedState: SharedState) {
         self.questRepository = questRepository
         self.rankRepository = rankRepository
-        self.bannerNetwork = bannerNetwork
+        self.bannerRepository = bannerRepository
         self.favoriteService = favoriteService
         self.sharedState = sharedState
         
@@ -126,17 +126,17 @@ final class HomeViewModel {
         self.showLargestRewardQuest = true
         self.showRankList = true
         updateIllsangZoneWarningStatus()
-
+        
         await withThrowingTaskGroup(of: Void.self) { group in
-//            group.addTask {
-//                do {
-//                    try await self.loadMainBanners()
-//                } catch {
-//                    Log("Failed to load banners: \(error.localizedDescription)")
-//                    self.errorCnt += 1
-//                    self.showMainBanners = false
-//                }
-//            }
+            group.addTask {
+                do {
+                    try await self.loadMainBanners()
+                } catch {
+                    Log("Failed to load banners: \(error.localizedDescription)")
+                    self.errorCnt += 1
+                    self.showMainBanners = false
+                }
+            }
             group.addTask {
                 do {
                     try await self.loadPopularQuestList()
@@ -190,12 +190,11 @@ final class HomeViewModel {
     
     @MainActor
     func loadMainBanners() async throws {
-        let res = await bannerNetwork.getMainBanners()
+        let res = await bannerRepository.getBanner()
         
         switch res {
         case .success(let res):
-            // 활성화된 배너만 필터링 및 매핑
-            var updatedBanners = res.content.filter { $0.activeYn == "Y" }.map { Banner(from: $0) }
+            let updatedBanners = res.map { $0.toBanner() }
             
             // 비동기 이미지 로드 처리
             await withTaskGroup(of: Void.self) { group in

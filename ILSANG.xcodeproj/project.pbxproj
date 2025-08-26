@@ -153,6 +153,11 @@
 		609197552E5C364E00F1D81B /* Rank+UIMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 609197542E5C364600F1D81B /* Rank+UIMapper.swift */; };
 		609197572E5C399000F1D81B /* AreaUserRankViewModelItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 609197562E5C398200F1D81B /* AreaUserRankViewModelItem.swift */; };
 		609197592E5C957700F1D81B /* SeasonManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 609197582E5C950B00F1D81B /* SeasonManager.swift */; };
+		6091975B2E5DE8F600F1D81B /* BannerResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6091975A2E5DE8C800F1D81B /* BannerResponse.swift */; };
+		6091975D2E5DE9C100F1D81B /* BannerResponse+Mapping.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6091975C2E5DE9C100F1D81B /* BannerResponse+Mapping.swift */; };
+		6091975F2E5DEA2B00F1D81B /* BannerRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6091975E2E5DEA2B00F1D81B /* BannerRepository.swift */; };
+		609197612E5DEB5600F1D81B /* BannerViewModelItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 609197602E5DEB5600F1D81B /* BannerViewModelItem.swift */; };
+		609197632E5DEC0F00F1D81B /* Banner+UIMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 609197622E5DEC0F00F1D81B /* Banner+UIMapper.swift */; };
 		60924DC92C48C00E00221072 /* Quest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60924DC82C48C00E00221072 /* Quest.swift */; };
 		60943FE62C0A38FB00C8A714 /* ApprovalViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60943FE52C0A38FB00C8A714 /* ApprovalViewModel.swift */; };
 		609A76D92CFC50C7009F4567 /* QuestImageWithTagView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 609A76D82CFC50C7009F4567 /* QuestImageWithTagView.swift */; };
@@ -423,6 +428,11 @@
 		609197542E5C364600F1D81B /* Rank+UIMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Rank+UIMapper.swift"; sourceTree = "<group>"; };
 		609197562E5C398200F1D81B /* AreaUserRankViewModelItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AreaUserRankViewModelItem.swift; sourceTree = "<group>"; };
 		609197582E5C950B00F1D81B /* SeasonManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeasonManager.swift; sourceTree = "<group>"; };
+		6091975A2E5DE8C800F1D81B /* BannerResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BannerResponse.swift; sourceTree = "<group>"; };
+		6091975C2E5DE9C100F1D81B /* BannerResponse+Mapping.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BannerResponse+Mapping.swift"; sourceTree = "<group>"; };
+		6091975E2E5DEA2B00F1D81B /* BannerRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BannerRepository.swift; sourceTree = "<group>"; };
+		609197602E5DEB5600F1D81B /* BannerViewModelItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BannerViewModelItem.swift; sourceTree = "<group>"; };
+		609197622E5DEC0F00F1D81B /* Banner+UIMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Banner+UIMapper.swift"; sourceTree = "<group>"; };
 		60924DC82C48C00E00221072 /* Quest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Quest.swift; sourceTree = "<group>"; };
 		60943FE52C0A38FB00C8A714 /* ApprovalViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApprovalViewModel.swift; sourceTree = "<group>"; };
 		609A76D82CFC50C7009F4567 /* QuestImageWithTagView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestImageWithTagView.swift; sourceTree = "<group>"; };
@@ -567,7 +577,6 @@
 				60C6B4D62C2C569800926C0E /* Challenge.swift */,
 				6057361B2D8AC8A800CF7051 /* Quiz.swift */,
 				605445CB2DD36E9E0005742D /* TitleHistory.swift */,
-				60004AD82D42373300CD2254 /* Banner.swift */,
 				60FF5ED02E4CDC2B007A5B40 /* Season.swift */,
 			);
 			path = Model;
@@ -1113,6 +1122,7 @@
 				60D897382E575038006A8480 /* RewardResponse.swift */,
 				600D63972E48E5A9009FE14F /* MetroAreaResponse.swift */,
 				60D897262E5374F8006A8480 /* UserTitleResponse.swift */,
+				6091975A2E5DE8C800F1D81B /* BannerResponse.swift */,
 				6091974D2E5C27D000F1D81B /* Rank */,
 			);
 			path = Response;
@@ -1136,6 +1146,7 @@
 				60D8974A2E57645D006A8480 /* Reward.swift */,
 				60D897482E576302006A8480 /* Mission.swift */,
 				60D897182E537188006A8480 /* MissionHistory.swift */,
+				60004AD82D42373300CD2254 /* Banner.swift */,
 				6091973C2E5C268500F1D81B /* Rank */,
 			);
 			path = Entity;
@@ -1147,6 +1158,7 @@
 				60D8974C2E5766D7006A8480 /* QuestRepository.swift */,
 				60D8971D2E5372B3006A8480 /* MissionHistoryRepository.swift */,
 				609197522E5C2E0500F1D81B /* RankRepository.swift */,
+				6091975E2E5DEA2B00F1D81B /* BannerRepository.swift */,
 			);
 			path = Repository;
 			sourceTree = "<group>";
@@ -1163,6 +1175,7 @@
 				609197252E59EC5F00F1D81B /* MissionResponse+Mapping.swift */,
 				609197272E59EC7100F1D81B /* RewardResponse+Mapping.swift */,
 				60D8971F2E5372BE006A8480 /* MissionHistoryResponse+Mapping.swift */,
+				6091975C2E5DE9C100F1D81B /* BannerResponse+Mapping.swift */,
 				609197392E5C263900F1D81B /* Rank */,
 			);
 			path = Mapper;
@@ -1174,6 +1187,7 @@
 				60D897222E537421006A8480 /* MIssionHistory+UIMapper.swift */,
 				60D897522E578003006A8480 /* Quest+UIMapper.swift */,
 				609197542E5C364600F1D81B /* Rank+UIMapper.swift */,
+				609197622E5DEC0F00F1D81B /* Banner+UIMapper.swift */,
 			);
 			path = Mapper;
 			sourceTree = "<group>";
@@ -1186,6 +1200,7 @@
 				604687A42D1FC36A0056E394 /* TitleWithContentView.swift */,
 				6048D5242E4E632C00CC74F5 /* BannerDetailView.swift */,
 				6048D5262E50259500CC74F5 /* BannerDetailViewModel.swift */,
+				609197602E5DEB5600F1D81B /* BannerViewModelItem.swift */,
 			);
 			path = Home;
 			sourceTree = "<group>";
@@ -1479,12 +1494,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				60D897472E576052006A8480 /* QuizType.swift in Sources */,
+				6091975D2E5DE9C100F1D81B /* BannerResponse+Mapping.swift in Sources */,
 				60ADF9C92D5A019B00556958 /* UIApplication.swift in Sources */,
 				6091973B2E5C267B00F1D81B /* AreaRank.swift in Sources */,
 				605445C62DD36D1F0005742D /* HonorItem.swift in Sources */,
 				609197342E5B2AA500F1D81B /* AreaNetwork.swift in Sources */,
 				605445D02DD4366D0005742D /* HonorInfoPopupView.swift in Sources */,
 				60924DC92C48C00E00221072 /* Quest.swift in Sources */,
+				6091975B2E5DE8F600F1D81B /* BannerResponse.swift in Sources */,
 				60A2ADF82DAE6B68007AC375 /* FAQView.swift in Sources */,
 				604687A32D1FC32E0056E394 /* HomeViewModel.swift in Sources */,
 				605445CA2DD36E440005742D /* HonorNetwork.swift in Sources */,
@@ -1575,6 +1592,7 @@
 				60D897532E578003006A8480 /* Quest+UIMapper.swift in Sources */,
 				6091972E2E5A22A800F1D81B /* SeasonTimerView.swift in Sources */,
 				603F04132C26ADC6008A2332 /* CommonResponse.swift in Sources */,
+				609197632E5DEC0F00F1D81B /* Banner+UIMapper.swift in Sources */,
 				6091974F2E5C292F00F1D81B /* AreaRankViewModelItem.swift in Sources */,
 				60D897202E5372BE006A8480 /* MissionHistoryResponse+Mapping.swift in Sources */,
 				607FCBE42BFD124900BB2D04 /* QuestItemView.swift in Sources */,
@@ -1605,6 +1623,7 @@
 				601BCF3B2D7F13E900138387 /* ProfileEditViewModel.swift in Sources */,
 				60ADF9D42D5DDD2000556958 /* QuestEngageInfoView.swift in Sources */,
 				A1FF91722C257E9A00F03E4B /* User.swift in Sources */,
+				6091975F2E5DEA2B00F1D81B /* BannerRepository.swift in Sources */,
 				60ADF9D22D5DDC5B00556958 /* QuizView.swift in Sources */,
 				605445D22DD7169A0005742D /* LegendRankingView.swift in Sources */,
 				6057361A2D8AC6F000CF7051 /* QuizNetwork.swift in Sources */,
@@ -1696,6 +1715,7 @@
 				604687A82D1FD9E70056E394 /* CGFloat++.swift in Sources */,
 				603CF4E32D732DA100A2D19E /* ApprovalItemContentView.swift in Sources */,
 				60D897412E575056006A8480 /* LargeRewardQuestResponse.swift in Sources */,
+				609197612E5DEB5600F1D81B /* BannerViewModelItem.swift in Sources */,
 				609197512E5C295100F1D81B /* UserRankViewModelItem.swift in Sources */,
 				A10EF9392C87292C003D78A2 /* OpenSourceInfoView.swift in Sources */,
 				609197462E5C272E00F1D81B /* CommercialAreaRankResponse.swift in Sources */,

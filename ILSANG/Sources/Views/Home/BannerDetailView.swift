@@ -13,7 +13,7 @@ struct BannerDetailView: View {
     @State var viewModel: BannerDetailViewModel
     @Environment(\.dismiss) var dismiss
     
-    init(banner: Banner, shouldShowIllsangZoneWarning: Bool, currentSeason: Int, viewModel: BannerDetailViewModel? = nil) {
+    init(banner: BannerViewModelItem, shouldShowIllsangZoneWarning: Bool, currentSeason: Int, viewModel: BannerDetailViewModel? = nil) {
         if let viewModel = viewModel {
             self._viewModel = State(wrappedValue: viewModel)
         } else {
@@ -29,7 +29,7 @@ struct BannerDetailView: View {
     
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
-            NavigationTitleView(title: viewModel.banner.navTitle ?? "배너", isSeparatorHidden: true, background: .background) {
+            NavigationTitleView(title: viewModel.banner.navigationTitle, isSeparatorHidden: true, background: .background) {
                 dismiss()
             }
             
@@ -346,5 +346,16 @@ struct QuestSortHelper {
 
 
 #Preview {
-    BannerDetailView(banner: Banner.init(id: 0, title: "타이틀", description: "설명설명입니다", navTitle: "일상", imageId: "", image: .img0), shouldShowIllsangZoneWarning: true, currentSeason: 1)
+    BannerDetailView(
+        banner: BannerViewModelItem.init(
+            id: 1,
+            title: "TITLE",
+            navigationTitle: "내비게이션타이틀",
+            imageId: "",
+            description: "description",
+            image: .img0
+        ),
+        shouldShowIllsangZoneWarning: true,
+        currentSeason: 1
+    )
 }
