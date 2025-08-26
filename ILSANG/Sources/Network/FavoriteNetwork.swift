@@ -13,7 +13,7 @@ final class FavoriteNetwork {
     func post(questId: Int) async -> Bool {
         let body = ["questId": "\(questId)"]
         let bodyData = body.convertToJsonData()
-        let res: Result<ResponseWithoutData, Error> = await Network.requestData(url: url+"/favorite", method: .post, parameters: nil, body: bodyData, withToken: true)
+        let res: Result<ResponseWithEmpty, Error> = await Network.requestData(url: url+"/favorite", method: .post, body: bodyData)
         switch res {
         case .success:
             return true
@@ -25,7 +25,7 @@ final class FavoriteNetwork {
     func delete(questId: Int) async -> Bool {
         let body = ["questId": "\(questId)"]
         let bodyData = body.convertToJsonData()
-        let res: Result<ResponseWithoutData, Error> = await Network.requestData(url: url+"/favorite", method: .delete, parameters: nil, body: bodyData, withToken: true)
+        let res: Result<ResponseWithEmpty, Error> = await Network.requestData(url: url+"/favorite", method: .delete, body: bodyData)
         switch res {
         case .success:
             return true
