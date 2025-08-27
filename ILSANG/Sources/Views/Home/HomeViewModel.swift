@@ -89,18 +89,27 @@ final class HomeViewModel {
     var showPopularRewardQuest: Bool = true
     var showRankList = true
     
-    private let questRepository: QuestRepositoryInterface
+    let questRepository: QuestRepositoryInterface
     private let rankRepository: RankRepositoryInterface
     private let bannerRepository: BannerRepositoryInterface
-    private let favoriteService: FavoriteService
+    let areaRepository: AreaRepositoryInterface
+    let favoriteService: FavoriteService
     private let sharedState: SharedState
     
     private var cancellables = Set<AnyCancellable>()
     
-    init(questRepository: QuestRepositoryInterface, rankRepository: RankRepositoryInterface, bannerRepository: BannerRepositoryInterface, favoriteService: FavoriteService, sharedState: SharedState) {
+    init(
+        questRepository: QuestRepositoryInterface,
+        rankRepository: RankRepositoryInterface,
+        bannerRepository: BannerRepositoryInterface,
+        areaRepository: AreaRepositoryInterface,
+        favoriteService: FavoriteService,
+        sharedState: SharedState
+    ) {
         self.questRepository = questRepository
         self.rankRepository = rankRepository
         self.bannerRepository = bannerRepository
+        self.areaRepository = areaRepository
         self.favoriteService = favoriteService
         self.sharedState = sharedState
         

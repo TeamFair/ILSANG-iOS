@@ -9,13 +9,11 @@ import SwiftUI
 
 struct AreaSelectionView: View {
     
-    @State var areas: [MetroAreaResponse]
-    @State var selectedMetroIdx: Int = 0
-    @State var selectedCommercialArea: CommercialArea?
+    let areas: [MetroArea]
+    @Binding var selectedMetroIdx: Int
+    @Binding var selectedCommercialArea: CommercialArea?
+    var onChangeSelectedCommercial: (CommercialArea) -> Void
     
-    var onChangeSelectedCommercial: ((CommercialArea) -> ())
-    let areaNetwork = AreaNetwork()
-
     var body: some View {
         HStack(spacing: 0) {
             // 일상지역
@@ -30,15 +28,6 @@ struct AreaSelectionView: View {
                 commercialAreaList(areas[selectedMetroIdx].commercialAreas)
             }
             .padding(.leading, 8)
-        }
-        .task {
-            let result = await areaNetwork.getMetroArea()
-            switch result {
-            case .success(let res):
-                areas = res
-            case .failure:
-                Log("지역 조회 실패")
-            }
         }
         .background(.white)
     }
@@ -55,7 +44,7 @@ struct AreaSelectionView: View {
         .background(Color.background)
     }
     
-    private func metroAreaButton(_ area: MetroAreaResponse, isSelected: Bool) -> some View {
+    private func metroAreaButton(_ area: MetroArea, isSelected: Bool) -> some View {
         Button {
             if let idx = areas.firstIndex(of: area) {
                 selectedMetroIdx = idx
@@ -139,5 +128,10 @@ struct AreaSelectionView: View {
 }
 
 #Preview {
-    AreaSelectionView(areas: MetroAreaResponse.mockData, selectedCommercialArea: nil, onChangeSelectedCommercial: {_ in })
+    AreaSelectionView(
+        areas: [MetroArea(code: "G01", areaName: "경기남부", commercialAreas: [.init(code: "S01", areaName: "서현", metroAreaCode: "S01")])],
+        selectedMetroIdx: .constant(0),
+        selectedCommercialArea: .constant(nil),
+        onChangeSelectedCommercial: { _ in }
+    )
 }

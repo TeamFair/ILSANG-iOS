@@ -31,12 +31,14 @@ struct MainTabView: View {
         let seasonManager = SeasonManager(seasonNetwork: MainTabView.defaultSeasonNetwork)
         _seasonManager = StateObject(wrappedValue: seasonManager)
         
-        let rankRespository = RankRepository(network: RankNetwork())
+        let rankRepository = RankRepository(network: RankNetwork())
+        let areaRepository = AreaRepository(network: AreaNetwork())
         
         self.homeViewModel = HomeViewModel(
             questRepository: QuestRepository(network: QuestNetwork()),
-            rankRepository: rankRespository,
+            rankRepository: rankRepository,
             bannerRepository: BannerRepository(network: BannerNetwork()),
+            areaRepository: areaRepository,
             favoriteService: FavoriteService(favoriteNetwork: FavoriteNetwork()),
             sharedState: sharedState
         )
@@ -44,19 +46,21 @@ struct MainTabView: View {
 #if DEBUG
            self._questViewModel = StateObject(wrappedValue: QuestViewModel(
             questRepository: MockQuestRepository(),
+            areaRepository: areaRepository,
             favoriteService: FavoriteService(favoriteNetwork: FavoriteNetwork()), sharedState: sharedState)
            )
            
 #else
            self._questViewModel = StateObject(wrappedValue: QuestViewModel(
             questRepository: QuestRepository(network: QuestNetwork()),
+            areaRepository: areaRepository,
             favoriteService: FavoriteService(favoriteNetwork: FavoriteNetwork()), sharedState: sharedState)
            )
 #endif
         self._rankViewModel = StateObject(
             wrappedValue:
                 RankingViewModel(
-                    rankRepository: rankRespository,
+                    rankRepository: rankRepository,
                     seasonManager: seasonManager
                 )
         )
@@ -119,7 +123,7 @@ class SharedState: ObservableObject {
     
     init() {
         self.selectedCommercialArea = UserDefaults.standard.loadCommercialArea()
-        ?? CommercialArea(code: "R100", areaName: "서현", description: "", metroAreaCode: "G01")
+        ?? CommercialArea(code: "R100", areaName: "서현", metroAreaCode: "G01")
     }
 }
 

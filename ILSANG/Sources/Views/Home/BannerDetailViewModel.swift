@@ -68,12 +68,21 @@ class BannerDetailViewModel {
         }
     }
     
-    private let questNetwork: QuestNetwork
+    private let questRepository: QuestRepositoryInterface
+    let areaRepository: AreaRepositoryInterface
     private let favoriteService: FavoriteService
     
-    init(banner: BannerViewModelItem, shouldShowIllsangZoneWarning: Bool, currentSeason: Int, questNetwork: QuestNetwork, favoriteService: FavoriteService) {
+    init(
+        banner: BannerViewModelItem,
+        shouldShowIllsangZoneWarning: Bool,
+        currentSeason: Int,
+        questRepository: QuestRepositoryInterface,
+        areaRepository: AreaRepositoryInterface,
+        favoriteService: FavoriteService
+    ) {
         self.banner = banner
-        self.questNetwork = questNetwork
+        self.questRepository = questRepository
+        self.areaRepository = areaRepository
         self.favoriteService = favoriteService
         
         eventFilterState = FilterPickerState(initialValue: BannerEventQuestFilterType.popular)
