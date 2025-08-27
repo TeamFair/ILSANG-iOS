@@ -56,11 +56,11 @@ struct BannerDetailView: View {
         // TODO: navigation으로 변경
         .fullScreenCover(isPresented: $viewModel.showQuestEngageView) {
             if let selectedQuest = viewModel.selectedQuest {
-                let quizNetwork = QuizNetwork()
                 let challengeNetwork = ChallengeNetwork()
                 
                 QuestEngageView(
-                    vm: QuestEngageViewModel(quest: selectedQuest, quizNetwork: quizNetwork),
+                    vm: QuestEngageViewModel(quest: selectedQuest,
+                                             challengeNetwork: challengeNetwork),
                     submitVM: SubmitRouterViewModel(
                         selectedImage: nil,
                         selectedQuest: selectedQuest,

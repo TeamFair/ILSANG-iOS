@@ -111,8 +111,7 @@ struct HomeView: View {
             let challengeNetwork = ChallengeNetwork()
             QuestEngageView(
                 vm: QuestEngageViewModel(
-                    quest: vm.selectedQuest,
-                    quizNetwork: QuizNetwork()
+                    quest: vm.selectedQuest, challengeNetwork: challengeNetwork
                 ),
                 submitVM: SubmitRouterViewModel(
                     selectedImage: nil,

@@ -77,7 +77,6 @@
 		605445D22DD7169A0005742D /* LegendRankingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605445D12DD7137A0005742D /* LegendRankingView.swift */; };
 		605445D62DD78EE50005742D /* LegendRankingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605445D52DD78EE50005742D /* LegendRankingViewModel.swift */; };
 		605445D82DD8BD120005742D /* HonorPopupContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605445D72DD8BD120005742D /* HonorPopupContainerView.swift */; };
-		6057361A2D8AC6F000CF7051 /* QuizNetwork.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605736192D8AC6F000CF7051 /* QuizNetwork.swift */; };
 		6057361C2D8AC8A800CF7051 /* Quiz.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6057361B2D8AC8A800CF7051 /* Quiz.swift */; };
 		605DA0C92C07097F00CC9450 /* ImagePreviewButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605DA0C82C07097F00CC9450 /* ImagePreviewButton.swift */; };
 		605DA0CD2C070A0300CC9450 /* Camera.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605DA0CC2C070A0300CC9450 /* Camera.swift */; };
@@ -352,7 +351,6 @@
 		605445D12DD7137A0005742D /* LegendRankingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LegendRankingView.swift; sourceTree = "<group>"; };
 		605445D52DD78EE50005742D /* LegendRankingViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LegendRankingViewModel.swift; sourceTree = "<group>"; };
 		605445D72DD8BD120005742D /* HonorPopupContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HonorPopupContainerView.swift; sourceTree = "<group>"; };
-		605736192D8AC6F000CF7051 /* QuizNetwork.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuizNetwork.swift; sourceTree = "<group>"; };
 		6057361B2D8AC8A800CF7051 /* Quiz.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Quiz.swift; sourceTree = "<group>"; };
 		605DA0C82C07097F00CC9450 /* ImagePreviewButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePreviewButton.swift; sourceTree = "<group>"; };
 		605DA0CC2C070A0300CC9450 /* Camera.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Camera.swift; sourceTree = "<group>"; };
@@ -827,7 +825,6 @@
 				603F040A2C2416D2008A2332 /* ImageNetwork.swift */,
 				60C6B4D42C2C565700926C0E /* ChallengeNetwork.swift */,
 				60D8972A2E53B5AE006A8480 /* MissionHistoryNetwork.swift */,
-				605736192D8AC6F000CF7051 /* QuizNetwork.swift */,
 				609197332E5B2AA500F1D81B /* AreaNetwork.swift */,
 				A1C642292C33F55A004954CA /* QuestNetwork.swift */,
 				605445C92DD36E440005742D /* HonorNetwork.swift */,
@@ -1635,7 +1632,6 @@
 				6091975F2E5DEA2B00F1D81B /* BannerRepository.swift in Sources */,
 				60ADF9D22D5DDC5B00556958 /* QuizView.swift in Sources */,
 				605445D22DD7169A0005742D /* LegendRankingView.swift in Sources */,
-				6057361A2D8AC6F000CF7051 /* QuizNetwork.swift in Sources */,
 				60B8B9E92BF9EEF1005F6DE3 /* QuestView.swift in Sources */,
 				60D897452E575FD6006A8480 /* MissionType.swift in Sources */,
 				60C6B4D72C2C569800926C0E /* Challenge.swift in Sources */,
