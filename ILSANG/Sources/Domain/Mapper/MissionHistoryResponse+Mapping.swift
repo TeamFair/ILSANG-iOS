@@ -27,7 +27,8 @@ extension MissionHistoryResponse {
             userId: user.userId,
             nickname: user.nickname,
             profileImageId: user.profileImageId,
-            userTitle: userTitle
+            userTitle: userTitle,
+            emojis: emojis
         )
     }
 }

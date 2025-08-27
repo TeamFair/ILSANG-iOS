@@ -25,7 +25,7 @@ extension MissionHistory {
             profileImageId: profileImageId,
             profileImage: nil,
             userTitle: userTitle,
-            emoji: nil
+            emojis: UserEmojis(emojis: Set(emojis))
         )
     }
 }

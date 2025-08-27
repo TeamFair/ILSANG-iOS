@@ -24,14 +24,14 @@ struct ApprovalItemView: View {
             HStack(spacing: 8) {
                 emojiButton(
                     imageName: .thumbsDown,
-                    active: item.emoji?.isHate ?? false,
+                    active: item.emojis.isSelected(.hate),
                     activeFgColor: .primary300,
                     activeBgColor: .primary100,
                     action: { onHate() }
                 )
                 emojiButton(
                     imageName: .thumbsUp,
-                    active: item.emoji?.isLike ?? false,
+                    active: item.emojis.isSelected(.like),
                     activeFgColor: .white,
                     activeBgColor: .primaryPurple,
                     action: { onLike() }
