@@ -8,10 +8,7 @@
 import SwiftUI
 
 struct ApprovalView: View {
-    @State var vm = ApprovalViewModel(
-        emojiNetwork: EmojiNetwork(),
-        missionHistoryRepository: MissionHistoryRepository(network: MissionHistoryNetwork())
-    )
+    @State var vm: ApprovalViewModel
     
     var body: some View {
         VStack(spacing: 0) {
@@ -154,5 +151,12 @@ struct ApprovalView: View {
 }
 
 #Preview {
-    ApprovalView()
+    ApprovalView(
+        vm:
+            ApprovalViewModel(
+                emojiNetwork: EmojiNetwork(),
+                missionHistoryRepository: MissionHistoryRepository(network: MissionHistoryNetwork(),),
+                areaNameService: AreaNameService(areaRepository: AreaRepository(network: AreaNetwork()))
+            )
+    )
 }

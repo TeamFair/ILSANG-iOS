@@ -9,7 +9,7 @@ import SwiftUI
 
 struct AreaSelectionView: View {
     
-    let areas: [MetroArea]
+    @Binding var areas: [MetroArea]
     @Binding var selectedMetroIdx: Int
     @Binding var selectedCommercialArea: CommercialArea?
     var onChangeSelectedCommercial: (CommercialArea) -> Void
@@ -23,9 +23,11 @@ struct AreaSelectionView: View {
             
             // 일상존
             VStack(spacing: 0) {
-                commercialAreaHeader(title: areas[selectedMetroIdx].areaName)
-                horizontalDivider
-                commercialAreaList(areas[selectedMetroIdx].commercialAreas)
+                if areas.count > selectedMetroIdx {
+                    commercialAreaHeader(title: areas[selectedMetroIdx].areaName)
+                    horizontalDivider
+                    commercialAreaList(areas[selectedMetroIdx].commercialAreas)
+                }
             }
             .padding(.leading, 8)
         }
@@ -129,7 +131,7 @@ struct AreaSelectionView: View {
 
 #Preview {
     AreaSelectionView(
-        areas: [MetroArea(code: "G01", areaName: "경기남부", commercialAreas: [.init(code: "S01", areaName: "서현", metroAreaCode: "S01")])],
+        areas: .constant([]),
         selectedMetroIdx: .constant(0),
         selectedCommercialArea: .constant(nil),
         onChangeSelectedCommercial: { _ in }

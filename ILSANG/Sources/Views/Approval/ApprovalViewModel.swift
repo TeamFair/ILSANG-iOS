@@ -35,10 +35,13 @@ final class ApprovalViewModel {
     
     private let emojiNetwork: EmojiNetwork
     private let missionHistoryRepository: MissionHistoryRepository
-    
-    init(emojiNetwork: EmojiNetwork, missionHistoryRepository: MissionHistoryRepository) {
+
+    private let areaNameService: AreaNameProvider
+
+    init(emojiNetwork: EmojiNetwork, missionHistoryRepository: MissionHistoryRepository, areaNameService: AreaNameProvider) {
         self.emojiNetwork = emojiNetwork
         self.missionHistoryRepository = missionHistoryRepository
+        self.areaNameService = areaNameService
         
         self.paginationManager = PaginationManager<ApprovalMissionHistoryItem>(
             size: 10,
@@ -83,8 +86,11 @@ final class ApprovalViewModel {
         // 3. 이미지 및 이모지 병합
         let enrichedChallenges = await enrichChallengesWithImageAndEmoji(filteredChallenges)
         
-        // 4. itemList 업데이트
-        updateItemList(for: page, with: enrichedChallenges)
+        // 4. 지역 코드 → 지역명 매핑
+        let mappedChallenges = await mapAreaNames(for: enrichedChallenges)
+        
+        // 5. itemList 업데이트
+        updateItemList(for: page, with: mappedChallenges)
         
         return (itemList, total)
     }
@@ -127,7 +133,7 @@ final class ApprovalViewModel {
                 }
             }
             
-            var enrichedChallenges = challenges
+            let enrichedChallenges = challenges
             for await (index, challengeImage, profileImage, emoji) in group {
                 if let challengeImage = challengeImage {
                     enrichedChallenges[index].image = challengeImage
@@ -143,7 +149,22 @@ final class ApprovalViewModel {
         }
     }
 
-    /// 4. itemList 업데이트
+    /// 4. 지역 코드 → 지역명 매핑
+    private func mapAreaNames(for challenges: [ApprovalMissionHistoryItem]) async -> [ApprovalMissionHistoryItem] {
+        var results: [ApprovalMissionHistoryItem] = []
+        
+        for challenge in challenges {
+            if let code = challenge.commercialAreaCode,
+               let name = await areaNameService.getAreaName(for: code) {
+                challenge.commercialAreaName = name
+            }
+            results.append(challenge)
+        }
+        return results
+
+    }
+    
+    /// 5. itemList 업데이트
     @MainActor
     private func updateItemList(for page: Int, with challenges: [ApprovalMissionHistoryItem]) {
         if page == 0 {

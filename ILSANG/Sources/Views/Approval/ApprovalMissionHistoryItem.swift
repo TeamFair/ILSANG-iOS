@@ -7,7 +7,8 @@
 
 import UIKit
 
-struct ApprovalMissionHistoryItem: Identifiable {
+@Observable
+class ApprovalMissionHistoryItem: Identifiable {
     let id: Int
     let title: String
     let displayDate: String
@@ -16,13 +17,33 @@ struct ApprovalMissionHistoryItem: Identifiable {
     let viewCount: Int
     let imageId: String
     var image: UIImage?
-    let commercialAreaName: String?
+    let commercialAreaCode: String?
+    var commercialAreaName: String?
     let userId: String
     let nickname: String
     let profileImageId: String?
     var profileImage: UIImage?
     let userTitle: UserTitle?
     var emoji: Emoji?
+    
+    init(id: Int, title: String, displayDate: String, likeCount: Int, hateCount: Int, viewCount: Int, imageId: String, image: UIImage? = nil, commercialAreaCode: String?, commercialAreaName: String? = nil, userId: String, nickname: String, profileImageId: String?, profileImage: UIImage? = nil, userTitle: UserTitle?, emoji: Emoji? = nil) {
+        self.id = id
+        self.title = title
+        self.displayDate = displayDate
+        self.likeCount = likeCount
+        self.hateCount = hateCount
+        self.viewCount = viewCount
+        self.imageId = imageId
+        self.image = image
+        self.commercialAreaCode = commercialAreaCode
+        self.commercialAreaName = commercialAreaName
+        self.userId = userId
+        self.nickname = nickname
+        self.profileImageId = profileImageId
+        self.profileImage = profileImage
+        self.userTitle = userTitle
+        self.emoji = emoji
+    }
     
     static var mockDataList = [
         ApprovalMissionHistoryItem(
@@ -34,6 +55,7 @@ struct ApprovalMissionHistoryItem: Identifiable {
             viewCount: 45,
             imageId: "image_001",
             image: nil,
+            commercialAreaCode: "S01",
             commercialAreaName: "강남구",
             userId: "",
             nickname: "유저1",
@@ -51,7 +73,8 @@ struct ApprovalMissionHistoryItem: Identifiable {
             viewCount: 30,
             imageId: "image_002",
             image: nil,
-            commercialAreaName: "서초구",
+            commercialAreaCode: "S01",
+            commercialAreaName: "강남구",
             userId: "",
             nickname: "유저2",
             profileImageId: "profile_002",
@@ -68,7 +91,8 @@ struct ApprovalMissionHistoryItem: Identifiable {
             viewCount: 60,
             imageId: "image_003",
             image: nil,
-            commercialAreaName: "송파구",
+            commercialAreaCode: "S01",
+            commercialAreaName: "강남구",
             userId: "",
             nickname: "유저3",
             profileImageId: "profile_003",
@@ -86,6 +110,7 @@ struct ApprovalMissionHistoryItem: Identifiable {
         hateCount: 0,
         viewCount: 0,
         imageId: "",
+        commercialAreaCode: nil,
         commercialAreaName: nil,
         userId: "",
         nickname: "",

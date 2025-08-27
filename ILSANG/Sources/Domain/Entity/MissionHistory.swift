@@ -15,7 +15,7 @@ struct MissionHistory {
     let hateCount: Int
     let viewCount: Int
     let imageId: String
-    let commercialAreaName: String
+    let commercialAreaCode: String
     let userId: String
     let nickname: String
     let profileImageId: String?
