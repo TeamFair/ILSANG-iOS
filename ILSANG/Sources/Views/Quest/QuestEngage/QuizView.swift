@@ -9,7 +9,7 @@ import SwiftUI
 
 struct QuizView: View, KeyboardReadable {
     let missionType: MissionType
-    let quiz: Quiz
+    let quiz: QuizResponse
     @Binding var selectedAnswer: String
     @Binding var isKeyboardVisible: Bool
     
@@ -57,17 +57,19 @@ struct QuizView: View, KeyboardReadable {
         .roundedBackground(cornerRadius: 12)
     }
     
-    private func textQuizView(question: String, hint: String, userAnswer: String) -> some View {
+    private func textQuizView(question: String, hint: String?, userAnswer: String) -> some View {
         VStack(alignment: .leading, spacing: 24) {
             quizTitleView(question)
             
-            VStack(alignment: .leading, spacing: 4) {
-                Text("힌트")
-                    .styledFont(.heading2)
-                    .foregroundStyle(.primaryPurple)
-                Text(hint)
-                    .styledFont(.subTitle2)
-                    .foregroundStyle(.gray300)
+            if let hint {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("힌트")
+                        .styledFont(.heading2)
+                        .foregroundStyle(.primaryPurple)
+                    Text(hint)
+                        .styledFont(.subTitle2)
+                        .foregroundStyle(.gray300)
+                }
             }
             
             TextField("", text: $selectedAnswer, axis: .vertical)
@@ -124,8 +126,8 @@ struct QuizView: View, KeyboardReadable {
 
 #Preview {
     VStack {
-        QuizView(missionType: .quiz(.ox), quiz: Quiz(quizId: 1, question: "질문", hint: "힌드", answers: [.init(content: "답")]), selectedAnswer: .constant("answer"), isKeyboardVisible: .constant(true))
-        QuizView(missionType: .quiz(.text), quiz: Quiz(quizId: 1, question: "질문", hint: "힌드", answers: [.init(content: "답")]), selectedAnswer: .constant("answer"), isKeyboardVisible: .constant(true))
+        QuizView(missionType: .quiz(.ox), quiz: QuizResponse(quizId: 1, question: "질문", hint: "힌트"), selectedAnswer: .constant("answer"), isKeyboardVisible: .constant(true))
+        QuizView(missionType: .quiz(.text), quiz: QuizResponse(quizId: 1, question: "질문", hint: "힌트"), selectedAnswer: .constant("answer"), isKeyboardVisible: .constant(true))
     }
     .padding()
     .background(Color.background)

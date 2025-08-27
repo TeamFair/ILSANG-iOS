@@ -45,6 +45,7 @@ class SubmitRouterViewModel: ObservableObject {
                     await self.postChallengeWithImage()
                 }
             }
+            submitTask = nil
         }
     }
     
@@ -86,11 +87,17 @@ class SubmitRouterViewModel: ObservableObject {
         let response = await challengeNetwork.postQuizChallenge(missionId: selectedQuest.missionId, quizId: quizId, answer: userAnswer)
         
         switch response {
-        case .success:
-            AnalyticsService.logEvent(.questSubmitClick(questId: selectedQuest.id, questType: selectedQuest.questType?.rawValue.uppercased() ?? ""))
-            submitStatus = .complete
+        case .success(let result):
+            if result.resultCode == "S1000" { // (S1000 : 성공, F1000 : 오답)
+                AnalyticsService.logEvent(.questSubmitClick(questId: selectedQuest.id, questType: selectedQuest.questType?.rawValue.uppercased() ?? ""))
+                submitStatus = .complete
+            } else {
+                submitStatus = .retry
+            }
+            submitTask = nil
         case .failure:
             submitStatus = .fail
         }
+        submitTask = nil
     }
 }

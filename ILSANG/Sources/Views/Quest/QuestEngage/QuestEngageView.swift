@@ -57,15 +57,8 @@ struct QuestEngageView: View {
                     buttonAble: vm.isSubmitAbled) {
                         submitVM.showSubmitAlertView = true
                         submitVM.submitStatus = .inProgress
-                        let isCorrectAnswer = vm.compareAnswer(userAnswer: vm.selectedAnswer)
-                        if isCorrectAnswer {
-                            DispatchQueue.main.asyncAfter(deadline: .now()+0.8) {
-                                submitVM.submit(userAnswer: vm.selectedAnswer, quizId: vm.quiz?.quizId)
-                            }
-                        } else {
-                            DispatchQueue.main.asyncAfter(deadline: .now()+1.3) {
-                                submitVM.submitStatus = .retry
-                            }
+                        DispatchQueue.main.asyncAfter(deadline: .now()+0.8) {
+                            submitVM.submit(userAnswer: vm.selectedAnswer, quizId: vm.quiz?.quizId)
                         }
                     }
                     .padding(.top, 15)
@@ -88,7 +81,7 @@ struct QuestEngageView: View {
 
 #Preview {
     QuestEngageView(
-        vm: QuestEngageViewModel(quest: .mockData, quizNetwork: QuizNetwork()),
+        vm: QuestEngageViewModel(quest: .mockData, challengeNetwork: ChallengeNetwork()),
         submitVM: SubmitRouterViewModel(
             selectedImage: nil,
             selectedQuest: .mockData,
