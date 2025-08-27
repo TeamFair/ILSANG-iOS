@@ -161,6 +161,7 @@
 		609197652E5E02CD00F1D81B /* AreaRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 609197642E5E02CD00F1D81B /* AreaRepository.swift */; };
 		609197672E5E069600F1D81B /* Area.swift in Sources */ = {isa = PBXBuildFile; fileRef = 609197662E5E069400F1D81B /* Area.swift */; };
 		609197692E5E06FB00F1D81B /* AreaResponse+Mapping.swift in Sources */ = {isa = PBXBuildFile; fileRef = 609197682E5E06F300F1D81B /* AreaResponse+Mapping.swift */; };
+		6091976B2E5F307A00F1D81B /* AreaNameService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6091976A2E5F307A00F1D81B /* AreaNameService.swift */; };
 		60924DC92C48C00E00221072 /* Quest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60924DC82C48C00E00221072 /* Quest.swift */; };
 		60943FE62C0A38FB00C8A714 /* ApprovalViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60943FE52C0A38FB00C8A714 /* ApprovalViewModel.swift */; };
 		609A76D92CFC50C7009F4567 /* QuestImageWithTagView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 609A76D82CFC50C7009F4567 /* QuestImageWithTagView.swift */; };
@@ -439,6 +440,7 @@
 		609197642E5E02CD00F1D81B /* AreaRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AreaRepository.swift; sourceTree = "<group>"; };
 		609197662E5E069400F1D81B /* Area.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Area.swift; sourceTree = "<group>"; };
 		609197682E5E06F300F1D81B /* AreaResponse+Mapping.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AreaResponse+Mapping.swift"; sourceTree = "<group>"; };
+		6091976A2E5F307A00F1D81B /* AreaNameService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AreaNameService.swift; sourceTree = "<group>"; };
 		60924DC82C48C00E00221072 /* Quest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Quest.swift; sourceTree = "<group>"; };
 		60943FE52C0A38FB00C8A714 /* ApprovalViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApprovalViewModel.swift; sourceTree = "<group>"; };
 		609A76D82CFC50C7009F4567 /* QuestImageWithTagView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestImageWithTagView.swift; sourceTree = "<group>"; };
@@ -644,6 +646,7 @@
 				606F18162DA650DE00ABEA84 /* FavoriteService.swift */,
 				60299E382CC13DEC0039663F /* ImageCacheService.swift */,
 				603CF4CA2D7057BF00A2D19E /* ImageChallengeSubmitService.swift */,
+				6091976A2E5F307A00F1D81B /* AreaNameService.swift */,
 			);
 			path = Service;
 			sourceTree = "<group>";
@@ -1737,6 +1740,7 @@
 				60004AD72D4221F500CD2254 /* BannerNetwork.swift in Sources */,
 				609197282E59EC7100F1D81B /* RewardResponse+Mapping.swift in Sources */,
 				6091972A2E5A226600F1D81B /* RankingDetailView.swift in Sources */,
+				6091976B2E5F307A00F1D81B /* AreaNameService.swift in Sources */,
 				607FCBEB2BFE44D900BB2D04 /* IconView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

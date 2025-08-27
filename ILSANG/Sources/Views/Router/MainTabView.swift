@@ -14,6 +14,7 @@ struct MainTabView: View {
 
     var homeViewModel: HomeViewModel
     @StateObject var questViewModel: QuestViewModel
+    var approvalViewModel: ApprovalViewModel
     @StateObject var rankViewModel: RankingViewModel
     
     static var defaultHonorNetwork: HonorNetworkProtocol {
@@ -57,6 +58,12 @@ struct MainTabView: View {
             favoriteService: FavoriteService(favoriteNetwork: FavoriteNetwork()), sharedState: sharedState)
            )
 #endif
+        self.approvalViewModel = ApprovalViewModel(
+            emojiNetwork: EmojiNetwork(),
+            missionHistoryRepository: MissionHistoryRepository(network: MissionHistoryNetwork()),
+            areaNameService: AreaNameService(areaRepository: areaRepository)
+        )
+        
         self._rankViewModel = StateObject(
             wrappedValue:
                 RankingViewModel(
@@ -104,7 +111,7 @@ struct MainTabView: View {
         case .quest:
             QuestView(vm: questViewModel)
         case .approval:
-            ApprovalView()
+            ApprovalView(vm: approvalViewModel)
         case .ranking:
             RankingView(vm: rankViewModel)
         case .mypage:

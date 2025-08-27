@@ -8,13 +8,34 @@
 import Foundation
 
 extension String {
-    /// ISO 8601 형식의 문자열을 Date로 변환
-    func toDate() -> Date? {
-        // formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
-        let dateFormatter = ISO8601DateFormatter()
-        dateFormatter.formatOptions = [.withFullDate, .withTime, .withDashSeparatorInDate, .withColonSeparatorInTime]
-        return dateFormatter.date(from: self)
-    }
+    /// 다양한 ISO8601 포맷을 시도하여 Date로 변환
+        func toISO8601Date() -> Date? {
+            // 소수점(밀리초) 제거
+            let trimmed = self.components(separatedBy: ".").first ?? self
+            
+            let formatter = ISO8601DateFormatter()
+            formatter.timeZone = TimeZone(secondsFromGMT: 0)
+            
+            // 시도할 포맷 옵션 목록
+            let formats: [ISO8601DateFormatter.Options] = [
+                [.withFullDate, .withTime, .withColonSeparatorInTime], // 기본: 2025-08-23T23:12:20
+                [.withFullDate, .withTime, .withColonSeparatorInTime, .withDashSeparatorInDate],
+                [.withFullDate, .withTime, .withColonSeparatorInTime, .withFractionalSeconds], // 밀리초 포함
+                [.withFullDate, .withTime, .withColonSeparatorInTime, .withTimeZone] // Z, +00:00 포함
+            ]
+            
+            for format in formats {
+                formatter.formatOptions = format
+                if let date = formatter.date(from: trimmed) {
+                    return date
+                }
+            }
+            
+            // 변환 실패 시 로그
+            print("❌ Date 변환 실패 || 원본 문자열: \(self) || 소수점 제거 후 문자열: \(trimmed)")
+          
+            return nil
+        }
 
     /// 서버에서 보내주는 시간을 "12월 31일" 형식으로 날짜 포맷 변환.
     /// 현재와 년도가 다를 경우 "2024년 12월 31일"로 변환.

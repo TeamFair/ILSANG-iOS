@@ -8,10 +8,7 @@
 import Foundation
 
 extension MissionHistoryResponse {
-    func toDomain() -> MissionHistory {
-        let formatter = ISO8601DateFormatter()
-        let date = formatter.date(from: createdAt) ?? Date()
-        
+    func toDomain() -> MissionHistory { 
         let userTitle = user.title.flatMap { title in
             HonorGrade(rawValue: title.grade).flatMap { gradeEnum in
                 UserTitle(name: title.name, grade: gradeEnum)
@@ -21,12 +18,12 @@ extension MissionHistoryResponse {
         return MissionHistory(
             id: missionHistoryId,
             title: title,
-            createdAt: date,
+            createdAt: createdAt.toISO8601Date() ?? .now,
             likeCount: likeCount,
             hateCount: hateCount,
             viewCount: viewCount,
             imageId: imageId,
-            commercialAreaName: commercialAreaCode, // TODO: 지역시스템: 코드 -> 지역명으로 변경
+            commercialAreaCode: commercialAreaCode,
             userId: user.userId,
             nickname: user.nickname,
             profileImageId: user.profileImageId,

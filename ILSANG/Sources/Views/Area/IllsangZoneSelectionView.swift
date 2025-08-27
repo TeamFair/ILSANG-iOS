@@ -27,7 +27,7 @@ struct IllsangZoneSelectionView: View {
             .padding(.horizontal, -20)
             
             AreaSelectionView(
-                areas: viewModel.areas,
+                areas: $viewModel.areas,
                 selectedMetroIdx: $viewModel.selectedMetroIdx,
                 selectedCommercialArea: $viewModel.selectedArea,
                 onChangeSelectedCommercial: { area in
