@@ -17,7 +17,7 @@ extension PopularQuestResponse: DomainConvertible {
             title: title,
             writer: writerName,
             questType: QuestType(rawValue: questType),
-            repeatFrequency: self.repeatFrequency.flatMap { RepeatType(rawValue: $0) },
+            repeatFrequency: repeatFrequency.flatMap { RepeatType(param: $0) },
             rewards: nil,
             missions: [],
             expireDate: date,

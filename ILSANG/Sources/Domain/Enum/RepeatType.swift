@@ -13,7 +13,6 @@ enum RepeatType: String, Hashable, CustomStringConvertible, CaseIterable {
     case monthly
     
     init?(param: String) {
-        print(param)
         self.init(rawValue: param.lowercased())
     }
     
