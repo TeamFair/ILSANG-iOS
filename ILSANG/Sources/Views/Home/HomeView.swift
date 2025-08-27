@@ -85,15 +85,24 @@ struct HomeView: View {
                 .interactiveDismissDisabled()
         }
         .navigationDestination(item: $vm.selectedBanner) { banner in
-            BannerDetailView(banner: banner, shouldShowIllsangZoneWarning: vm.shouldShowIllsangZoneWarning, currentSeason: vm.currentSeason)
+            BannerDetailView(
+                viewModel: BannerDetailViewModel(
+                    banner: banner,
+                    shouldShowIllsangZoneWarning: vm.shouldShowIllsangZoneWarning,
+                    currentSeason: vm.currentSeason,
+                    questRepository: vm.questRepository,
+                    areaRepository: vm.areaRepository,
+                    favoriteService: vm.favoriteService
+                )
+            )
         }
         .navigationDestination(isPresented: $vm.showSelectMyRegionView) {
-            MyRegionAreaSelectionView { area in
+            MyRegionAreaSelectionView(areaRepository: vm.areaRepository) { area in
                 vm.handleMyRegionSelection(area)
             }
         }
         .navigationDestination(isPresented: $vm.showSelectIllsangZoneView) {
-            IllsangZoneSelectionView { area in
+            IllsangZoneSelectionView(areaRepository: vm.areaRepository) { area in
                 vm.handleIllsangZoneSelection(area)
             }
         }
@@ -453,6 +462,7 @@ struct HomeView: View {
         questRepository: QuestRepository(network: QuestNetwork()),
         rankRepository: RankRepository(network: RankNetwork()),
         bannerRepository: BannerRepository(network: BannerNetwork()),
+        areaRepository: AreaRepository(network: AreaNetwork()),
         favoriteService: FavoriteService(favoriteNetwork: FavoriteNetwork()), sharedState: SharedState()
     )
     HomeView(vm: viewModel)

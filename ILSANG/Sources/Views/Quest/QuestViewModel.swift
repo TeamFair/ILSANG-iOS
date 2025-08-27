@@ -119,12 +119,14 @@ class QuestViewModel: ObservableObject {
     var lastRefreshTime: Date? = nil
     
     private let questRepository: QuestRepositoryInterface
+    let areaRepository: AreaRepositoryInterface
     private let favoriteService: FavoriteService
     let sharedState: SharedState
     private var cancellables = Set<AnyCancellable>()
 
-    init(questRepository: QuestRepositoryInterface, favoriteService: FavoriteService, sharedState: SharedState) {
+    init(questRepository: QuestRepositoryInterface, areaRepository: AreaRepositoryInterface, favoriteService: FavoriteService, sharedState: SharedState) {
         self.questRepository = questRepository
+        self.areaRepository = areaRepository
         self.favoriteService = favoriteService
         
         // 필터 설정

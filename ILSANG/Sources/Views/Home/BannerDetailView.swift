@@ -13,18 +13,8 @@ struct BannerDetailView: View {
     @State var viewModel: BannerDetailViewModel
     @Environment(\.dismiss) var dismiss
     
-    init(banner: BannerViewModelItem, shouldShowIllsangZoneWarning: Bool, currentSeason: Int, viewModel: BannerDetailViewModel? = nil) {
-        if let viewModel = viewModel {
-            self._viewModel = State(wrappedValue: viewModel)
-        } else {
-            self._viewModel = State(wrappedValue: BannerDetailViewModel(
-                banner: banner,
-                shouldShowIllsangZoneWarning: shouldShowIllsangZoneWarning,
-                currentSeason: currentSeason,
-                questNetwork: QuestNetwork(),
-                favoriteService: FavoriteService(favoriteNetwork: FavoriteNetwork())
-            ))
-        }
+    init(viewModel: BannerDetailViewModel) {
+        _viewModel = State(wrappedValue: viewModel)
     }
     
     var body: some View {
@@ -58,8 +48,8 @@ struct BannerDetailView: View {
             }
         )
         // TODO: navigation으로 변경
-        .fullScreenCover(isPresented: $viewModel.showSelectIllsangZoneView) {
-            IllsangZoneSelectionView { area in
+        .navigationDestination(isPresented: $viewModel.showSelectIllsangZoneView) {
+            IllsangZoneSelectionView(areaRepository: viewModel.areaRepository) { area in
                 viewModel.handleIllsangZoneSelection(area)
             }
         }
@@ -347,15 +337,15 @@ struct QuestSortHelper {
 
 #Preview {
     BannerDetailView(
-        banner: BannerViewModelItem.init(
-            id: 1,
-            title: "TITLE",
-            navigationTitle: "내비게이션타이틀",
-            imageId: "",
-            description: "description",
-            image: .img0
-        ),
-        shouldShowIllsangZoneWarning: true,
-        currentSeason: 1
+        viewModel: BannerDetailViewModel(
+            banner: .init(id: 0, title: "title", navigationTitle: "일상", imageId: "", description: "", image: .img0),
+            shouldShowIllsangZoneWarning: false,
+            currentSeason: 1,
+            questRepository: QuestRepository(network: QuestNetwork()),
+            areaRepository: AreaRepository(network: AreaNetwork()),
+            favoriteService: FavoriteService(
+                favoriteNetwork: FavoriteNetwork()
+            )
+        )
     )
 }

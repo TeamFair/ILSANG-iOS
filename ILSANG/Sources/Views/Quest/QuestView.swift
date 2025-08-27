@@ -70,7 +70,7 @@ struct QuestView: View {
                 .interactiveDismissDisabled()
         }
         .navigationDestination(isPresented: $vm.showSelectMyRegionView) {
-            MyRegionAreaSelectionView { area in
+            MyRegionAreaSelectionView(areaRepository: vm.areaRepository) { area in
                 vm.handleMyRegionSelection(area)
             }
         }
@@ -271,7 +271,7 @@ extension QuestView {
 
 #Preview {
     QuestView(vm: QuestViewModel(
-        questRepository: MockQuestRepository(),
+        questRepository: MockQuestRepository(), areaRepository: AreaRepository(network: AreaNetwork()),
         favoriteService: FavoriteService(favoriteNetwork: FavoriteNetwork()), sharedState: SharedState()
     ))
 }
