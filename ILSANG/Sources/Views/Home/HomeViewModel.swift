@@ -90,6 +90,7 @@ final class HomeViewModel {
     var showRankList = true
     
     let userNetwork: UserNetwork
+    let areaNameService: AreaNameProvider
     let questRepository: QuestRepositoryInterface
     private let rankRepository: RankRepositoryInterface
     private let bannerRepository: BannerRepositoryInterface
@@ -101,6 +102,7 @@ final class HomeViewModel {
     
     init(
         userNetwork: UserNetwork,
+        areaNameService: AreaNameProvider,
         questRepository: QuestRepositoryInterface,
         rankRepository: RankRepositoryInterface,
         bannerRepository: BannerRepositoryInterface,
@@ -109,6 +111,7 @@ final class HomeViewModel {
         sharedState: SharedState
     ) {
         self.userNetwork = userNetwork
+        self.areaNameService = areaNameService
         self.questRepository = questRepository
         self.rankRepository = rankRepository
         self.bannerRepository = bannerRepository
@@ -195,6 +198,11 @@ final class HomeViewModel {
 
         if let userProfileImageId = UserService.shared.currentUser?.profileImageId {
             self.userProfileImage = await ImageCacheService.shared.loadImageAsync(imageId: userProfileImageId)
+        }
+        
+        if let illsangZoneCode = UserService.shared.currentUser?.commercialAreaCode {
+            self.illsangZoneCode = illsangZoneCode
+            self.illsangZoneName = await areaNameService.getAreaName(for: illsangZoneCode)
         }
 
         changeViewStatus(.loaded)

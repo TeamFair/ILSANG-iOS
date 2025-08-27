@@ -461,6 +461,7 @@ struct HomeView: View {
 #Preview {
     let viewModel = HomeViewModel(
         userNetwork: UserNetwork(),
+        areaNameService: AreaNameService(areaRepository: AreaRepository(network: AreaNetwork())),
         questRepository: QuestRepository(network: QuestNetwork()),
         rankRepository: RankRepository(network: RankNetwork()),
         bannerRepository: BannerRepository(network: BannerNetwork()),

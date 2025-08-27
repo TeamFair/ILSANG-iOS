@@ -35,9 +35,11 @@ struct MainTabView: View {
         let userNetwork = UserNetwork()
         let rankRepository = RankRepository(network: RankNetwork())
         let areaRepository = AreaRepository(network: AreaNetwork())
-        
+        let areaNameService = AreaNameService(areaRepository: areaRepository)
+
         self.homeViewModel = HomeViewModel(
             userNetwork: userNetwork,
+            areaNameService: areaNameService,
             questRepository: QuestRepository(network: QuestNetwork()),
             rankRepository: rankRepository,
             bannerRepository: BannerRepository(network: BannerNetwork()),
@@ -63,7 +65,7 @@ struct MainTabView: View {
         self.approvalViewModel = ApprovalViewModel(
             emojiNetwork: EmojiNetwork(),
             missionHistoryRepository: MissionHistoryRepository(network: MissionHistoryNetwork()),
-            areaNameService: AreaNameService(areaRepository: areaRepository)
+            areaNameService: areaNameService
         )
         
         self._rankViewModel = StateObject(
