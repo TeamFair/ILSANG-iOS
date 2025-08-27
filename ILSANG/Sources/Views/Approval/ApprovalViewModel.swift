@@ -83,8 +83,8 @@ final class ApprovalViewModel {
         // 2. 중복 제거
         let filteredChallenges = removeDuplicateChallenges(challenges)
         
-        // 3. 이미지 및 이모지 병합
-        let enrichedChallenges = await enrichChallengesWithImageAndEmoji(filteredChallenges)
+        // 3. 이미지 병합
+        let enrichedChallenges = await enrichChallengesWithImage(filteredChallenges)
         
         // 4. 지역 코드 → 지역명 매핑
         let mappedChallenges = await mapAreaNames(for: enrichedChallenges)
@@ -115,11 +115,11 @@ final class ApprovalViewModel {
         }
     }
 
-    /// 3. 이미지 및 이모지 병합: 각 챌린지에 이미지와 이모지 정보를 추가
-    private func enrichChallengesWithImageAndEmoji(
+    /// 3. 이미지 병합: 각 챌린지에 이미지 정보를 추가
+    private func enrichChallengesWithImage(
         _ challenges: [ApprovalMissionHistoryItem]
     ) async -> [ApprovalMissionHistoryItem] {
-        return await withTaskGroup(of: (Int, UIImage?, UIImage?, Emoji?).self) { group in
+        return await withTaskGroup(of: (Int, UIImage?, UIImage?).self) { group in
             for (index, challenge) in challenges.enumerated() {
                 group.addTask {
                     async let challengeImage = ImageCacheService.shared.loadImageAsync(imageId: challenge.imageId)
@@ -127,22 +127,18 @@ final class ApprovalViewModel {
                         guard let profileImageId = challenge.profileImageId else { return nil }
                         return await ImageCacheService.shared.loadImageAsync(imageId: profileImageId)
                     }()
-                    async let emoji = self.getEmoji(missionHistoryId: challenge.id)
                     
-                    return (index, await challengeImage, await profileImage, await emoji)
+                    return (index, await challengeImage, await profileImage)
                 }
             }
             
             let enrichedChallenges = challenges
-            for await (index, challengeImage, profileImage, emoji) in group {
+            for await (index, challengeImage, profileImage) in group {
                 if let challengeImage = challengeImage {
                     enrichedChallenges[index].image = challengeImage
                 }
                 if let profileImage = profileImage {
                     enrichedChallenges[index].profileImage = profileImage
-                }
-                if let emoji = emoji {
-                    enrichedChallenges[index].emoji = emoji
                 }
             }
             return enrichedChallenges
@@ -177,108 +173,51 @@ final class ApprovalViewModel {
     /// like 버튼을 눌렀을 때 호출됩니다.
     func onLike(for idx: Int) {
         Task {
-            await updateEmojiWithPrev(emojiType: .like, idx: idx)
+            await updateEmoji(emojiType: .like, idx: idx)
         }
     }
     
     /// hate 버튼을 눌렀을 때 호출됩니다.
     func onHate(for idx: Int) {
         Task {
-            await updateEmojiWithPrev(emojiType: .hate, idx: idx)
+            await updateEmoji(emojiType: .hate, idx: idx)
         }
     }
     
-    /// 이모지 상태를 업데이트합니다.
-    /// - 업데이트할 이모지 상태에 따라 서버에 요청을 보내고, 성공 시 로컬 상태를 변경합니다.
-    /// - Parameters:
-    ///   - emojiType: 업데이트할 이모지의 유형 (like 또는 hate).
-    ///   - idx: 업데이트할 항목의 인덱스.
     @MainActor
-    private func updateEmojiWithPrev(emojiType: EmojiType, idx: Int) async {
-        // 현재 항목의 이전 이모지 상태를 가져옵니다.
-        guard let prevEmoji = self.itemList[idx].emoji else { return }
+    private func updateEmoji(emojiType: EmojiType, idx: Int) async {
+        let item = itemList[idx]
         
-        let wasPrevEmojiActive: Bool
-        var emojiId: String? = nil
-
-        // 업데이트할 이모지 유형에 따라 이전 상태와 ID를 설정합니다.
+        // 현재 상태
+        let wasSelected = item.emojis.isSelected(emojiType)
+        
+        // 서버 요청
+        let success: Bool
+        if wasSelected {
+            success = await emojiNetwork.deleteEmoji(missionHistoryId: item.id, emojiType: emojiType)
+        } else {
+            success = await emojiNetwork.postEmoji(missionHistoryId: item.id, emojiType: emojiType)
+        }
+        
+        guard success else { return } // 서버 업데이트 실패 시 종료
+        
+        // 로컬 상태 토글
+        item.emojis.toggle(emojiType)
+        
+        // count 업데이트
+        func newCount(_ current: Int, isSelected: Bool) -> Int {
+            max(current + (isSelected ? 1 : -1), 0)
+        }
+        
         switch emojiType {
         case .like:
-            wasPrevEmojiActive = prevEmoji.isLike
-            if let prevLikeId = prevEmoji.likeId {
-                emojiId = prevLikeId
-            }
+            item.likeCount = newCount(item.likeCount, isSelected: item.emojis.isSelected(.like))
         case .hate:
-            wasPrevEmojiActive = prevEmoji.isHate
-            if let prevHateId = prevEmoji.hateId {
-                emojiId = prevHateId
-            }
+            item.hateCount = newCount(item.hateCount, isSelected: item.emojis.isSelected(.hate))
         }
         
-        // 서버에 상태 업데이트 요청을 보냅니다.
-        let challengeId = itemList[idx].id
-        let isServerUpdateSuccessful = await updateEmojiStatus(missionHistoryId: challengeId, emojiType: emojiType, emojiId: emojiId, prevEmojiActive: wasPrevEmojiActive, idx: idx)
-        
-        // 서버 업데이트 성공 시 로컬 상태를 반영합니다.
-        if isServerUpdateSuccessful {
-            switch emojiType {
-            case .like:
-                self.itemList[idx].emoji?.isLike.toggle()
-                if let emoji = self.itemList[idx].emoji, !emoji.isLike {
-                    self.itemList[idx].emoji?.likeId = nil
-                    self.itemList[idx].likeCount -= 1
-                    self.itemList[idx].likeCount = max(self.itemList[idx].likeCount, 0)
-                } else {
-                    self.itemList[idx].likeCount += 1
-                }
-            case .hate:
-                self.itemList[idx].emoji?.isHate.toggle()
-                if let emoji = self.itemList[idx].emoji, !emoji.isHate {
-                    self.itemList[idx].emoji?.hateId = nil
-                    self.itemList[idx].hateCount -= 1
-                    self.itemList[idx].hateCount = max(self.itemList[idx].hateCount, 0)
-                } else {
-                    self.itemList[idx].hateCount += 1
-                }
-            }
-        }
-    }
-    
-    /// 서버에 이모지 상태를 업데이트합니다.
-    /// - 서버 상태를 변경하고, 성공하면 로컬 데이터를 수정합니다.
-    /// - Parameters:
-    ///   - challengeId: 이모지를 업데이트할 도전 ID.
-    ///   - emojiType: 이모지의 유형 (like 또는 hate).
-    ///   - emojiId: 삭제할 이모지의 ID. nil이면 새로 생성.
-    ///   - prevEmojiActive: 이전 이모지가 활성화되어 있었는지 여부.
-    ///   - idx: 업데이트할 항목의 인덱스.
-    /// - Returns: 서버 업데이트 성공 여부를 반환합니다.
-    @MainActor
-    private func updateEmojiStatus(missionHistoryId: Int, emojiType: EmojiType, emojiId: String?, prevEmojiActive: Bool, idx: Int) async -> Bool {
-        var updateSucceeded = false
-        if prevEmojiActive {
-            // 이전 이모지가 활성화 상태라면, 삭제 요청을 보냅니다.
-            guard let emojiId = emojiId else { return false }
-            updateSucceeded = await emojiNetwork.deleteEmoji(emojiId: emojiId)
-        } else {
-            // 이전 이모지가 비활성화 상태라면, 생성 요청을 보냅니다.
-            let res = await emojiNetwork.postEmoji(missionHistoryId: missionHistoryId, emojiType: emojiType)
-            switch res {
-            case .success(let emojiId):
-                // 서버로부터 받은 emojiId를 로컬 데이터에 저장합니다.
-                switch emojiType {
-                case .like:
-                    self.itemList[idx].emoji?.likeId = emojiId
-                case .hate:
-                    self.itemList[idx].emoji?.hateId = emojiId
-                }
-                updateSucceeded = true
-            case .failure:
-                print(idx, missionHistoryId, "이모지 업데이트 상태 포스트 실패")
-                updateSucceeded = false
-            }
-        }
-        return updateSucceeded
+        // 리스트 업데이트
+        itemList[idx] = item
     }
     
     /// 신고 확인 버튼을 눌렀을 때 호출됩니다.
@@ -310,17 +249,6 @@ final class ApprovalViewModel {
         case .failure(let err):
             Log("도전내역랜덤 조회 실패 \(err.localizedDescription)")
             return ([], 0)
-        }
-    }
-    
-    private func getEmoji(missionHistoryId: Int) async -> Emoji? {
-        let getEmojiResult = await emojiNetwork.getEmoji(missionHistoryId: missionHistoryId)
-        switch getEmojiResult {
-        case .success(let response):
-            return response.data
-        case .failure(let err):
-            Log("이모지 조회 실패 \(missionHistoryId) \(err.localizedDescription)")
-            return nil
         }
     }
     

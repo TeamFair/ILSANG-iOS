@@ -10,7 +10,6 @@
 		60004AD52D3B799700CD2254 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60004AD42D3B799700CD2254 /* Constants.swift */; };
 		60004AD72D4221F500CD2254 /* BannerNetwork.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60004AD62D4221F500CD2254 /* BannerNetwork.swift */; };
 		60004AD92D42373300CD2254 /* Banner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60004AD82D42373300CD2254 /* Banner.swift */; };
-		600211E82C1EED40000CC02E /* Emoji.swift in Sources */ = {isa = PBXBuildFile; fileRef = 600211E72C1EED40000CC02E /* Emoji.swift */; };
 		600211EA2C1EEE6D000CC02E /* APITarget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 600211E92C1EEE6D000CC02E /* APITarget.swift */; };
 		600211EC2C1EEED7000CC02E /* APIManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 600211EB2C1EEED7000CC02E /* APIManager.swift */; };
 		600211EE2C1EEF91000CC02E /* EmojiNetwork.swift in Sources */ = {isa = PBXBuildFile; fileRef = 600211ED2C1EEF91000CC02E /* EmojiNetwork.swift */; };
@@ -285,7 +284,6 @@
 		60004AD42D3B799700CD2254 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		60004AD62D4221F500CD2254 /* BannerNetwork.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BannerNetwork.swift; sourceTree = "<group>"; };
 		60004AD82D42373300CD2254 /* Banner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Banner.swift; sourceTree = "<group>"; };
-		600211E72C1EED40000CC02E /* Emoji.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Emoji.swift; sourceTree = "<group>"; };
 		600211E92C1EEE6D000CC02E /* APITarget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APITarget.swift; sourceTree = "<group>"; };
 		600211EB2C1EEED7000CC02E /* APIManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIManager.swift; sourceTree = "<group>"; };
 		600211ED2C1EEF91000CC02E /* EmojiNetwork.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmojiNetwork.swift; sourceTree = "<group>"; };
@@ -579,7 +577,6 @@
 			isa = PBXGroup;
 			children = (
 				60C6B4DB2C2D042700926C0E /* Image.swift */,
-				600211E72C1EED40000CC02E /* Emoji.swift */,
 				A1FF91712C257E9A00F03E4B /* User.swift */,
 				A1FF91732C257F6400F03E4B /* XpLog.swift */,
 				60C6B4D62C2C569800926C0E /* Challenge.swift */,
@@ -1592,7 +1589,6 @@
 				60C6B4DF2C2D053600926C0E /* SubmitRouterViewModel.swift in Sources */,
 				604687AA2D1FDA090056E394 /* CarouselAutoSlideView.swift in Sources */,
 				605DA0C92C07097F00CC9450 /* ImagePreviewButton.swift in Sources */,
-				600211E82C1EED40000CC02E /* Emoji.swift in Sources */,
 				609197382E5C261900F1D81B /* UserRankResponse+Mapping.swift in Sources */,
 				605334572D29BE3600599159 /* TutorialViewModel.swift in Sources */,
 				606694F02DDA29E40000E368 /* AnimatedPopup.swift in Sources */,

@@ -20,6 +20,7 @@ struct MissionHistory {
     let nickname: String
     let profileImageId: String?
     let userTitle: UserTitle?
+    let emojis: [EmojiType]
 }
 
 struct UserTitle {

@@ -13,7 +13,7 @@ struct MissionHistoryResponse: Decodable {
     let title, createdAt: String
     let likeCount, hateCount, viewCount: Int
     let imageId, commercialAreaCode: String // TODO: API 변경 시 반영 필요
-    let emojis: [String]
+    let emojis: [EmojiType]
     
     struct User: Decodable {
         let userId, nickname: String

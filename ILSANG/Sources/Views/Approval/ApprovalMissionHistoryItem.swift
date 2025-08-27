@@ -7,6 +7,23 @@
 
 import UIKit
 
+
+struct UserEmojis {
+    var emojis: Set<EmojiType> = []
+    
+    mutating func toggle(_ emoji: EmojiType) {
+        if emojis.contains(emoji) {
+            emojis.remove(emoji)
+        } else {
+            emojis.insert(emoji)
+        }
+    }
+    
+    func isSelected(_ emoji: EmojiType) -> Bool {
+        emojis.contains(emoji)
+    }
+}
+
 @Observable
 class ApprovalMissionHistoryItem: Identifiable {
     let id: Int
@@ -24,9 +41,9 @@ class ApprovalMissionHistoryItem: Identifiable {
     let profileImageId: String?
     var profileImage: UIImage?
     let userTitle: UserTitle?
-    var emoji: Emoji?
+    var emojis: UserEmojis
     
-    init(id: Int, title: String, displayDate: String, likeCount: Int, hateCount: Int, viewCount: Int, imageId: String, image: UIImage? = nil, commercialAreaCode: String?, commercialAreaName: String? = nil, userId: String, nickname: String, profileImageId: String?, profileImage: UIImage? = nil, userTitle: UserTitle?, emoji: Emoji? = nil) {
+    init(id: Int, title: String, displayDate: String, likeCount: Int, hateCount: Int, viewCount: Int, imageId: String, image: UIImage? = nil, commercialAreaCode: String?, commercialAreaName: String? = nil, userId: String, nickname: String, profileImageId: String?, profileImage: UIImage? = nil, userTitle: UserTitle?, emojis: UserEmojis) {
         self.id = id
         self.title = title
         self.displayDate = displayDate
@@ -42,7 +59,7 @@ class ApprovalMissionHistoryItem: Identifiable {
         self.profileImageId = profileImageId
         self.profileImage = profileImage
         self.userTitle = userTitle
-        self.emoji = emoji
+        self.emojis = emojis
     }
     
     static var mockDataList = [
@@ -62,7 +79,7 @@ class ApprovalMissionHistoryItem: Identifiable {
             profileImageId: "profile_001",
             profileImage: nil,
             userTitle: UserTitle(name: "칭호1", grade: .standard),
-            emoji: Emoji(isLike: true, isHate: false)
+            emojis: .init(emojis: [.hate])
         ),
         ApprovalMissionHistoryItem(
             id: 2,
@@ -80,7 +97,7 @@ class ApprovalMissionHistoryItem: Identifiable {
             profileImageId: "profile_002",
             profileImage: nil,
             userTitle: UserTitle(name: "칭호2", grade: .legend),
-            emoji: Emoji(isLike: true, isHate: false)
+            emojis: .init(emojis: [.hate])
         ),
         ApprovalMissionHistoryItem(
             id: 3,
@@ -98,7 +115,7 @@ class ApprovalMissionHistoryItem: Identifiable {
             profileImageId: "profile_003",
             profileImage: .img2,
             userTitle: UserTitle(name: "칭호3", grade: .rare),
-            emoji: Emoji(isLike: true, isHate: false)
+            emojis: .init(emojis: [.hate])
         )
     ]
     
@@ -115,6 +132,7 @@ class ApprovalMissionHistoryItem: Identifiable {
         userId: "",
         nickname: "",
         profileImageId: nil,
-        userTitle: nil
+        userTitle: nil,
+        emojis: .init(emojis: [])
     )
 }
