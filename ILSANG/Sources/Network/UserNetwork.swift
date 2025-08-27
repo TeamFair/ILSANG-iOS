@@ -57,6 +57,18 @@ final class UserNetwork {
         }
     }
     
+    func putAreaZone(commercialAreaCode: String) async -> Bool {
+        let body = ["commercialAreaCode": commercialAreaCode]
+        let bodyData = body.convertToJsonData()
+        let res: Result<ResponseWithoutData, Error> = await Network.requestData(url: url+"/profile/area-zone", method: .put, body: bodyData)
+        switch res {
+        case.success:
+            return true
+        case.failure:
+            return false
+        }
+    }
+    
     /// 서버에서 프로필 이미지 연결 해제 & 이미지 삭제 처리
     func deleteUserImage() async -> Bool {
         let res: Result<ResponseWithoutData, Error> = await Network.requestData(url: url+"/profile/image", method: .delete, parameters: nil, withToken: true)

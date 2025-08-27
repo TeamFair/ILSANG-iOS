@@ -32,10 +32,12 @@ struct MainTabView: View {
         let seasonManager = SeasonManager(seasonNetwork: MainTabView.defaultSeasonNetwork)
         _seasonManager = StateObject(wrappedValue: seasonManager)
         
+        let userNetwork = UserNetwork()
         let rankRepository = RankRepository(network: RankNetwork())
         let areaRepository = AreaRepository(network: AreaNetwork())
         
         self.homeViewModel = HomeViewModel(
+            userNetwork: userNetwork,
             questRepository: QuestRepository(network: QuestNetwork()),
             rankRepository: rankRepository,
             bannerRepository: BannerRepository(network: BannerNetwork()),

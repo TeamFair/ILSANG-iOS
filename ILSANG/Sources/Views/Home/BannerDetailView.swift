@@ -49,7 +49,7 @@ struct BannerDetailView: View {
         )
         // TODO: navigation으로 변경
         .navigationDestination(isPresented: $viewModel.showSelectIllsangZoneView) {
-            IllsangZoneSelectionView(areaRepository: viewModel.areaRepository) { area in
+            IllsangZoneSelectionView(userNetwork: viewModel.userNetwork, areaRepository: viewModel.areaRepository) { area in
                 viewModel.handleIllsangZoneSelection(area)
             }
         }
@@ -341,6 +341,7 @@ struct QuestSortHelper {
             banner: .init(id: 0, title: "title", navigationTitle: "일상", imageId: "", description: "", image: .img0),
             shouldShowIllsangZoneWarning: false,
             currentSeason: 1,
+            userNetwork: UserNetwork(),
             questRepository: QuestRepository(network: QuestNetwork()),
             areaRepository: AreaRepository(network: AreaNetwork()),
             favoriteService: FavoriteService(

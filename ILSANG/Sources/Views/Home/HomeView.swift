@@ -90,6 +90,7 @@ struct HomeView: View {
                     banner: banner,
                     shouldShowIllsangZoneWarning: vm.shouldShowIllsangZoneWarning,
                     currentSeason: vm.currentSeason,
+                    userNetwork: vm.userNetwork,
                     questRepository: vm.questRepository,
                     areaRepository: vm.areaRepository,
                     favoriteService: vm.favoriteService
@@ -102,7 +103,7 @@ struct HomeView: View {
             }
         }
         .navigationDestination(isPresented: $vm.showSelectIllsangZoneView) {
-            IllsangZoneSelectionView(areaRepository: vm.areaRepository) { area in
+            IllsangZoneSelectionView(userNetwork: vm.userNetwork, areaRepository: vm.areaRepository) { area in
                 vm.handleIllsangZoneSelection(area)
             }
         }
@@ -459,6 +460,7 @@ struct HomeView: View {
 
 #Preview {
     let viewModel = HomeViewModel(
+        userNetwork: UserNetwork(),
         questRepository: QuestRepository(network: QuestNetwork()),
         rankRepository: RankRepository(network: RankNetwork()),
         bannerRepository: BannerRepository(network: BannerNetwork()),
