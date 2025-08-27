@@ -13,72 +13,76 @@ struct IllsangZoneSelectionView: View {
     
     var onSuccess: ((CommercialArea) -> Void)?
     
-    init(areaRepository: AreaRepositoryInterface, onSuccess: ((CommercialArea) -> Void)? = nil) {
-        self._viewModel = StateObject(wrappedValue: IllsangZoneSelectionViewModel(areaRepository: areaRepository))
+    init(userNetwork: UserNetwork, areaRepository: AreaRepositoryInterface, onSuccess: ((CommercialArea) -> Void)? = nil) {
+        self._viewModel = StateObject(wrappedValue: IllsangZoneSelectionViewModel(userNetwork: userNetwork, areaRepository: areaRepository))
         self.onSuccess = onSuccess
     }
     
     var body: some View {
-        VStack(spacing: 0) {
-            NavigationTitleView(title: "일상존 선택") {
-                dismiss()
-            }
-            .padding(.bottom, 8)
-            .padding(.horizontal, -20)
-            
-            AreaSelectionView(
-                areas: $viewModel.areas,
-                selectedMetroIdx: $viewModel.selectedMetroIdx,
-                selectedCommercialArea: $viewModel.selectedArea,
-                onChangeSelectedCommercial: { area in
-                    viewModel.selectedArea = area
+        ZStack {
+            VStack(spacing: 0) {
+                NavigationTitleView(title: "일상존 선택") {
+                    dismiss()
                 }
-            )
-        }
-        .task {
-            await viewModel.loadAreas()
-        }
-        .navigationBarBackButtonHidden()
-        .padding(.horizontal, 20)
-        .safeAreaInset(edge: .bottom, alignment: .center) {
-            if viewModel.selectedArea != nil {
-                PrimaryButton(title: "내 일상존 선택하기") {
-                    viewModel.showChangeWarning()
-                }
-                .padding(.horizontal, 20)
-            }
-        }
-        
-        if viewModel.showAlert {
-            switch viewModel.alertType {
-            case .illsangZoneSetWarning:
-                SettingAlertView(
-                    alertType: viewModel.alertType,
-                    onCancel: { viewModel.showAlert = false },
-                    onConfirm: {
-                        let setSucc = viewModel.setIllsangZone()
-                        if setSucc {
-                            if let selectedArea = viewModel.selectedArea {
-                                onSuccess?(selectedArea)
-                                dismiss()
-                            }
-                        }
-                    }) {
-                        HStack(spacing: 0) {
-                            Text("현재 선택된 일상존: ")
-                                .foregroundStyle(.gray500)
-                            Text(viewModel.selectedArea?.areaName ?? "없음")
-                                .foregroundStyle(.primary500)
-                        }
-                        .styledFont(.regular, size: 13, lineHeight: 20)
-                        
+                .padding(.bottom, 8)
+                .padding(.horizontal, -20)
+                
+                AreaSelectionView(
+                    areas: $viewModel.areas,
+                    selectedMetroIdx: $viewModel.selectedMetroIdx,
+                    selectedCommercialArea: $viewModel.selectedArea,
+                    onChangeSelectedCommercial: { area in
+                        viewModel.selectedArea = area
                     }
-            case .illsangZoneSetFailed:
-                SettingAlertView(
-                    alertType: viewModel.alertType,
-                    onConfirm: { viewModel.showAlert = false }
                 )
-            default: EmptyView()
+            }
+            .task {
+                await viewModel.loadAreas()
+            }
+            .navigationBarBackButtonHidden()
+            .padding(.horizontal, 20)
+            .safeAreaInset(edge: .bottom, alignment: .center) {
+                if viewModel.selectedArea != nil {
+                    PrimaryButton(title: "내 일상존 선택하기") {
+                        viewModel.showChangeWarning()
+                    }
+                    .padding(.horizontal, 20)
+                }
+            }
+            
+            if viewModel.showAlert {
+                switch viewModel.alertType {
+                case .illsangZoneSetWarning:
+                    SettingAlertView(
+                        alertType: viewModel.alertType,
+                        onCancel: { viewModel.showAlert = false },
+                        onConfirm: {
+                            Task {
+                                let setSucc = await viewModel.setIllsangZone()
+                                if setSucc {
+                                    if let selectedArea = viewModel.selectedArea {
+                                        onSuccess?(selectedArea)
+                                        dismiss()
+                                    }
+                                }
+                            }
+                        }) {
+                            HStack(spacing: 0) {
+                                Text("현재 선택된 일상존: ")
+                                    .foregroundStyle(.gray500)
+                                Text(viewModel.selectedArea?.areaName ?? "없음")
+                                    .foregroundStyle(.primary500)
+                            }
+                            .styledFont(.regular, size: 13, lineHeight: 20)
+                            
+                        }
+                case .illsangZoneSetFailed:
+                    SettingAlertView(
+                        alertType: viewModel.alertType,
+                        onConfirm: { viewModel.showAlert = false }
+                    )
+                default: EmptyView()
+                }
             }
         }
     }
@@ -93,9 +97,11 @@ class IllsangZoneSelectionViewModel: ObservableObject {
     @Published var showAlert: Bool = false
     @Published var alertType: AlertType = .illsangZoneSetWarning
     
+    private let userNetwork: UserNetwork
     private let areaRepository: AreaRepositoryInterface
     
-    init(areaRepository: AreaRepositoryInterface) {
+    init(userNetwork: UserNetwork, areaRepository: AreaRepositoryInterface) {
+        self.userNetwork = userNetwork
         self.areaRepository = areaRepository
     }
     
@@ -114,13 +120,13 @@ class IllsangZoneSelectionViewModel: ObservableObject {
         showAlert = true
     }
     
-    func setIllsangZone() -> Bool {
-        // TODO: 네트워크 요청
-        let result: Result<Void, Error> = .success(())
-        switch result {
-        case .success:
+    func setIllsangZone() async -> Bool {
+        guard let code = selectedArea?.code else { return false }
+        
+        let succ = await userNetwork.putAreaZone(commercialAreaCode: code)
+        if succ {
             return true
-        case .failure:
+        } else {
             alertType = .illsangZoneSetFailed
             showAlert = true
             return false
@@ -129,5 +135,5 @@ class IllsangZoneSelectionViewModel: ObservableObject {
 }
 
 #Preview {
-    IllsangZoneSelectionView(areaRepository: AreaRepository(network: AreaNetwork()))
+    IllsangZoneSelectionView(userNetwork: UserNetwork(), areaRepository: AreaRepository(network: AreaNetwork()))
 }

@@ -19,38 +19,40 @@ struct MyRegionAreaSelectionView: View {
     }
     
     var body: some View {
-        VStack(spacing: 0) {
-            NavigationTitleView(title: "내 지역") {
-                dismiss()
-            }
-            .padding(.bottom, 8)
-            .padding(.horizontal, -20)
-            
-            AreaSelectionView(
-                areas: $viewModel.areas,
-                selectedMetroIdx: $viewModel.selectedMetroIdx,
-                selectedCommercialArea: $viewModel.selectedArea,
-                onChangeSelectedCommercial: { area in
-                    viewModel.selectedArea = area
-                }
-            )
-        }
-        .task {
-            await viewModel.loadAreas()
-        }
-        .navigationBarBackButtonHidden()
-        .padding(.horizontal, 20)
-        .safeAreaInset(edge: .bottom, alignment: .center) {
-            if viewModel.selectedArea != nil {
-                PrimaryButton(title: "내 지역 선택하기") {
-                    if let selectedArea = viewModel.selectedArea {
-                        onSuccess?(selectedArea)
-                    }
+        ZStack {
+            VStack(spacing: 0) {
+                NavigationTitleView(title: "내 지역") {
                     dismiss()
                 }
-                .padding(.horizontal, 20)
+                .padding(.bottom, 8)
+                .padding(.horizontal, -20)
+                
+                AreaSelectionView(
+                    areas: $viewModel.areas,
+                    selectedMetroIdx: $viewModel.selectedMetroIdx,
+                    selectedCommercialArea: $viewModel.selectedArea,
+                    onChangeSelectedCommercial: { area in
+                        viewModel.selectedArea = area
+                    }
+                )
             }
-            
+            .task {
+                await viewModel.loadAreas()
+            }
+            .navigationBarBackButtonHidden()
+            .padding(.horizontal, 20)
+            .safeAreaInset(edge: .bottom, alignment: .center) {
+                if viewModel.selectedArea != nil {
+                    PrimaryButton(title: "내 지역 선택하기") {
+                        if let selectedArea = viewModel.selectedArea {
+                            onSuccess?(selectedArea)
+                        }
+                        dismiss()
+                    }
+                    .padding(.horizontal, 20)
+                }
+                
+            }
         }
     }
 }

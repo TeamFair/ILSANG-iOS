@@ -89,6 +89,8 @@ final class HomeViewModel {
     var showPopularRewardQuest: Bool = true
     var showRankList = true
     
+    let userNetwork: UserNetwork
+    let areaNameService: AreaNameProvider
     let questRepository: QuestRepositoryInterface
     private let rankRepository: RankRepositoryInterface
     private let bannerRepository: BannerRepositoryInterface
@@ -99,6 +101,8 @@ final class HomeViewModel {
     private var cancellables = Set<AnyCancellable>()
     
     init(
+        userNetwork: UserNetwork,
+        areaNameService: AreaNameProvider,
         questRepository: QuestRepositoryInterface,
         rankRepository: RankRepositoryInterface,
         bannerRepository: BannerRepositoryInterface,
@@ -106,6 +110,8 @@ final class HomeViewModel {
         favoriteService: FavoriteService,
         sharedState: SharedState
     ) {
+        self.userNetwork = userNetwork
+        self.areaNameService = areaNameService
         self.questRepository = questRepository
         self.rankRepository = rankRepository
         self.bannerRepository = bannerRepository
@@ -192,6 +198,11 @@ final class HomeViewModel {
 
         if let userProfileImageId = UserService.shared.currentUser?.profileImageId {
             self.userProfileImage = await ImageCacheService.shared.loadImageAsync(imageId: userProfileImageId)
+        }
+        
+        if let illsangZoneCode = UserService.shared.currentUser?.commercialAreaCode {
+            self.illsangZoneCode = illsangZoneCode
+            self.illsangZoneName = await areaNameService.getAreaName(for: illsangZoneCode)
         }
 
         changeViewStatus(.loaded)

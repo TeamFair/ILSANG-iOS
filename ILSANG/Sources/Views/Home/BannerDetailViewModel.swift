@@ -68,6 +68,7 @@ class BannerDetailViewModel {
         }
     }
     
+    let userNetwork: UserNetwork
     private let questRepository: QuestRepositoryInterface
     let areaRepository: AreaRepositoryInterface
     private let favoriteService: FavoriteService
@@ -76,11 +77,13 @@ class BannerDetailViewModel {
         banner: BannerViewModelItem,
         shouldShowIllsangZoneWarning: Bool,
         currentSeason: Int,
+        userNetwork: UserNetwork,
         questRepository: QuestRepositoryInterface,
         areaRepository: AreaRepositoryInterface,
         favoriteService: FavoriteService
     ) {
         self.banner = banner
+        self.userNetwork = userNetwork
         self.questRepository = questRepository
         self.areaRepository = areaRepository
         self.favoriteService = favoriteService
