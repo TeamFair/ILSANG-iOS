@@ -9,13 +9,20 @@ import SwiftUI
 
 struct SeasonPopupContainerView: View {
     @EnvironmentObject private var manager: SeasonManager
-    @State private var isPresented = false
+    @State private var isPresented: Bool? = nil
     
     var onTapShowRank: () -> Void
     
     var body: some View {
-        if manager.shouldShowPopup, let currentSeason = manager.currentSeason {
-            AnimatedPopup(isPresented: $isPresented) {
+        let showPopup = isPresented ?? manager.shouldShowPopup
+        
+        if showPopup, let currentSeason = manager.currentSeason {
+            AnimatedPopup(isPresented: Binding(
+                get: { self.isPresented ?? true },
+                set: { newValue in
+                    self.isPresented = false
+                }
+            )) {
                 SeasonOpenPopup(
                     season: currentSeason.seasonNumber,
                     seasonStartDate: currentSeason.startDate,
@@ -27,6 +34,7 @@ struct SeasonPopupContainerView: View {
                             }
                             isPresented = false
                         }
+                        self.isPresented = false
                     }) { neverShow in
                         withAnimation {
                             if neverShow {
@@ -34,11 +42,14 @@ struct SeasonPopupContainerView: View {
                             }
                             isPresented = false
                         }
+                        self.isPresented = false
                         onTapShowRank()
                     }
             }
             .onAppear {
-                isPresented = true
+                if isPresented == nil {
+                    isPresented = true
+                }
             }
         }
     }
