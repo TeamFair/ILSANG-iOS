@@ -314,52 +314,28 @@ class QuestViewModel: ObservableObject {
         
         switch status {
         case .default:
-            switch questFilterState.selectedValue {
-            case .pointHighest:
-                result = await questRepository.getDefaultQuests(commercialAreaCode: sharedState.selectedCommercialArea.code, orderRewardDesc: true, page: page, size: size)
-            case .pointLowest:
-                result = await questRepository.getDefaultQuests(commercialAreaCode: sharedState.selectedCommercialArea.code, orderRewardDesc: false, page: page, size: size)
-            case .popular:
-                result = await questRepository.getDefaultQuests(commercialAreaCode: sharedState.selectedCommercialArea.code, orderRewardDesc: nil, page: page, size: size)
-            }
+            result = await questRepository.getDefaultQuests(
+                commercialAreaCode: sharedState.selectedCommercialArea.code,
+                orderRewardDesc: questFilterState.selectedValue.orderRewardDesc,
+                page: page,
+                size: size
+            )
         case .repeat:
-            switch questFilterState.selectedValue {
-            case .pointHighest:
-                result = await questRepository.getRepeatQuests(
-                    commercialAreaCode: sharedState.selectedCommercialArea.code,
-                    repeatFrequency: self.repeatFilterState.selectedValue,
-                    orderRewardDesc: true,
-                    page: page,
-                    size: size
-                )
-            case .pointLowest:
-                result = await questRepository.getRepeatQuests(
-                    commercialAreaCode: sharedState.selectedCommercialArea.code,
-                    repeatFrequency: self.repeatFilterState.selectedValue,
-                    orderRewardDesc: false,
-                    page: page,
-                    size: size
-                )
-            case .popular:
-                result = await questRepository.getRepeatQuests(
-                    commercialAreaCode: sharedState.selectedCommercialArea.code,
-                    repeatFrequency: self.repeatFilterState.selectedValue,
-                    orderRewardDesc: nil,
-                    page: page,
-                    size: size
-                )
-            }
+            result = await questRepository.getRepeatQuests(
+                commercialAreaCode: sharedState.selectedCommercialArea.code,
+                repeatFrequency: repeatFilterState.selectedValue,
+                orderRewardDesc: questFilterState.selectedValue.orderRewardDesc,
+                page: page,
+                size: size
+            )
         case .event:
-            switch eventFilterState.selectedValue {
-            case .pointHighest:
-                result = await questRepository.getEventQuests(commercialAreaCode: sharedState.selectedCommercialArea.code, orderRewardDesc: true, orderExpiredDesc: nil, page: page, size: size)
-            case .pointLowest:
-                result = await questRepository.getEventQuests(commercialAreaCode: sharedState.selectedCommercialArea.code, orderRewardDesc: false, orderExpiredDesc: nil, page: page, size: size)
-            case .popular:
-                result = await questRepository.getEventQuests(commercialAreaCode: sharedState.selectedCommercialArea.code, orderRewardDesc: nil, orderExpiredDesc: nil, page: page, size: size)
-            case .upcoming:
-                result = await questRepository.getEventQuests(commercialAreaCode: sharedState.selectedCommercialArea.code, orderRewardDesc: nil, orderExpiredDesc: false, page: page, size: size)
-            }
+            result = await questRepository.getEventQuests(
+                commercialAreaCode: sharedState.selectedCommercialArea.code,
+                orderRewardDesc: nil,
+                orderExpiredDesc: eventFilterState.selectedValue.orderExpiredDesc,
+                page: page,
+                size: size
+            )
         case .completed:
             result = await questRepository.getCompletedQuests(page: page, size: size)
         }

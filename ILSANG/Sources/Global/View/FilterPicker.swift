@@ -135,7 +135,16 @@ enum QuestFilterType: String, CaseIterable, Hashable, CustomStringConvertible {
     case pointHighest = "포인트 높은 순"
     case pointLowest  = "포인트 낮은 순"
     case popular      = "인기순"
+    
     var description: String { rawValue }
+    
+    var orderRewardDesc: Bool? {
+        switch self {
+        case .pointHighest: return true
+        case .pointLowest:  return false
+        default: return nil
+        }
+    }
 }
 
 enum EventQuestFilterType: String, Hashable, CustomStringConvertible, CaseIterable {
@@ -143,8 +152,15 @@ enum EventQuestFilterType: String, Hashable, CustomStringConvertible, CaseIterab
     case pointHighest = "포인트 높은 순"
     case pointLowest = "포인트 낮은 순"
     case popular = "인기순"
-
+    
     var description: String { return self.rawValue }
+    
+    var orderExpiredDesc: Bool? {
+        switch self {
+        case .upcoming: return false
+        default: return nil
+        }
+    }
 }
 
 struct SeasonFilterType: Hashable, CustomStringConvertible {
