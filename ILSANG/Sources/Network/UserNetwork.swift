@@ -20,7 +20,7 @@ final class UserNetwork {
     }
     
     func putUser(nickname: String) async -> Bool {
-        let body = ["nickname": nickname]
+        let body = ["nickName": nickname]
         let bodyData = body.convertToJsonData()
         let res: Result<ResponseWithoutData, Error> = await Network.requestData(url: url+"/profile/nickname", method: .put, body: bodyData)
         
