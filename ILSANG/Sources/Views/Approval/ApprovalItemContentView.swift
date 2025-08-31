@@ -15,81 +15,92 @@ struct ApprovalItemContentView: View {
     
     @State var showMagView: Bool = false
     @State var showSheetView: Bool = false
-    
-    let item: ApprovalViewModelItem
+    let item: ApprovalMissionHistoryItem
     
     let width: CGFloat
     let height: CGFloat
     
+    let onOtherUserTapped: () -> Void
+
     var body: some View {
-        VStack(alignment: .leading, spacing: 16) {
-            NavigationLink {
-                OtherUserProfileView(customerId: item.customerId)
-            } label: {
-                profileView(nickname: item.nickname, honor: item.honor)
-            }
-            
-            Text(item.title)
-                .font(.system(size: 23, weight: .bold))
-                .frame(height: 24)
-                .foregroundStyle(.black)
-            
-            if #available(iOS 18.0, *) {
-                Image(uiImage: item.image ?? .logo)
-                    .resizable()
-                    .scaledToFill()
-                    .frame(width: width, height: height)
-                    .clipped()
-                    .contentShape(RoundedRectangle(cornerRadius: 12))
-                    .clipShape(RoundedRectangle(cornerRadius: 12))
-                    .matchedTransitionSource(id: item.id, in: namespace)
-                    .onTapGesture {
-                        showMagView = true
-                    }
-            } else {
-                Image(uiImage: item.image ?? .logo)
-                    .resizable()
-                    .scaledToFill()
-                    .frame(width: width, height: height)
-                    .clipped()
-                    .contentShape(RoundedRectangle(cornerRadius: 12))
-                    .clipShape(RoundedRectangle(cornerRadius: 12))
-                    .onTapGesture {
-                        showSheetView = true
-                    }
-            }
-            
-            Text(item.time)
-                .font(.system(size: 12, weight: .regular))
-                .frame(maxWidth: .infinity, alignment: .trailing)
-                .foregroundStyle(.gray500)
-                .padding(.trailing, 8)
-            
-            HStack(spacing: 16) {
-                emojiView(imageName: .thumbsUp, count: item.likeCnt, alignment: .top)
-                emojiView(imageName: .thumbsDown, count: item.hateCnt, alignment: .bottom)
-            }
-        }
-        .sheet(isPresented: $showSheetView, content: {
-            ImageFullScreenView(image: item.image ?? .logo) {
-                showSheetView.toggle()
-            }
-        })
-        .navigationDestination(isPresented: $showMagView) {
-            if #available(iOS 18.0, *) {
-                ImageFullScreenView(image: item.image ?? .logo) {
-                    showMagView.toggle()
+        NavigationStack {
+            VStack(alignment: .leading, spacing: 16) {
+                Button {
+                    onOtherUserTapped()
+                } label: {
+                    profileView(nickname: item.nickname, honor: item.userTitle)
                 }
-                .navigationTransition(.zoom(sourceID: item.id, in: namespace))
-            } else {
+                
+                Text(item.title)
+                    .styledFont(.title1)
+                    .foregroundStyle(.black)
+                
+                if #available(iOS 18.0, *) {
+                    Image(uiImage: item.image ?? .logo)
+                        .resizable()
+                        .scaledToFill()
+                        .frame(width: width, height: height)
+                        .clipped()
+                        .contentShape(RoundedRectangle(cornerRadius: 12))
+                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                        .matchedTransitionSource(id: item.id, in: namespace)
+                        .onTapGesture {
+                            showMagView.toggle()
+                        }
+                } else {
+                    Image(uiImage: item.image ?? .logo)
+                        .resizable()
+                        .scaledToFill()
+                        .frame(width: width, height: height)
+                        .clipped()
+                        .contentShape(RoundedRectangle(cornerRadius: 12))
+                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                        .onTapGesture {
+                            showSheetView.toggle()
+                        }
+                }
+                
+                HStack(spacing: 4) {
+                    Text(item.displayDate)
+                        .font(.system(size: 12, weight: .regular))
+                    Spacer(minLength: 0)
+                    if let commercialAreaName = item.commercialAreaName, !commercialAreaName.isEmpty {
+                        Image(.illsangRegion)
+                            .resizable()
+                            .scaledToFit()
+                            .frame(18)
+                        Text(commercialAreaName)
+                            .styledFont(.badge1)
+                    }
+                }
+                .foregroundStyle(.gray500)
+                
+                HStack(spacing: 16) {
+                    emojiView(imageName: .thumbsUp, count: item.likeCount, alignment: .top)
+                    emojiView(imageName: .thumbsDown, count: item.hateCount, alignment: .bottom)
+                }
+            }
+            .sheet(isPresented: $showSheetView, content: {
                 ImageFullScreenView(image: item.image ?? .logo) {
-                    showMagView.toggle()
+                    showSheetView.toggle()
+                }
+            })
+            .navigationDestination(isPresented: $showMagView) {
+                if #available(iOS 18.0, *) {
+                    ImageFullScreenView(image: item.image ?? .logo) {
+                        showMagView.toggle()
+                    }
+                    .navigationTransition(.zoom(sourceID: item.id, in: namespace))
+                } else {
+                    ImageFullScreenView(image: item.image ?? .logo) {
+                        showMagView.toggle()
+                    }
                 }
             }
         }
     }
     
-    private func profileView(nickname: String, honor: Title?) -> some View {
+    private func profileView(nickname: String, honor: UserTitle?) -> some View {
         HStack(spacing: 10) {
             Image(uiImage: item.profileImage ?? .profileCircle)
                 .resizable()
@@ -98,9 +109,8 @@ struct ApprovalItemContentView: View {
             VStack(alignment: .leading, spacing: 4) {
                 Text(nickname)
                     .font(.system(size: 14, weight: .semibold))
-                    .foregroundStyle(.gray500)
-                if let honor, let grade = HonorGrade(rawValue: honor.type) {
-                    HonorIconView(honorTitle: honor.name, grade: grade, imageSize: 20, spacing: 4, font: .badge1, fgColor: .gray500)
+                if let honor {
+                    HonorIconView(honorTitle: honor.name, grade: honor.grade, imageSize: 20, spacing: 4, font: .badge1, fgColor: .gray500)
                 }
             }
         }
@@ -124,20 +134,17 @@ struct ApprovalItemContentView: View {
     }
 }
 
-import SwiftUI
-
 struct ApprovalItemContentShareView: View {
-    let item: ApprovalViewModelItem
+    let item: ApprovalMissionHistoryItem
     let width: CGFloat
     let height: CGFloat
     
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
-            profileView(nickname: item.nickname, time: item.time)
-            
+            profileView(nickname: item.nickname, honor: item.userTitle)
+
             Text(item.title)
-                .font(.system(size: 23, weight: .bold))
-                .frame(height: 24)
+                .styledFont(.title1)
                 .foregroundStyle(.black)
             
             Image(uiImage: item.image ?? .logo)
@@ -148,23 +155,41 @@ struct ApprovalItemContentShareView: View {
                 .contentShape(RoundedRectangle(cornerRadius: 12))
                 .clipShape(RoundedRectangle(cornerRadius: 12))
             
+            HStack(spacing: 4) {
+                Text(item.displayDate)
+                    .font(.system(size: 12, weight: .regular))
+                Spacer(minLength: 0)
+                if let commercialAreaName = item.commercialAreaName, !commercialAreaName.isEmpty {
+                    Image(.illsangRegion)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(18)
+                    Text(commercialAreaName)
+                        .styledFont(.badge1)
+                }
+            }
+            .foregroundStyle(.gray500)
+            
             HStack(spacing: 16) {
-                emojiView(imageName: .thumbsUp, count: item.likeCnt, alignment: .top)
-                emojiView(imageName: .thumbsDown, count: item.hateCnt, alignment: .bottom)
+                emojiView(imageName: .thumbsUp, count: item.likeCount, alignment: .top)
+                emojiView(imageName: .thumbsDown, count: item.hateCount, alignment: .bottom)
             }
         }
+        .background(.white)
     }
     
-    private func profileView(nickname: String, time: String) -> some View {
+    private func profileView(nickname: String, honor: UserTitle?) -> some View {
         HStack(spacing: 10) {
-            Image(.profileCircle)
+            Image(uiImage: item.profileImage ?? .profileCircle)
                 .resizable()
                 .frame(width: 35, height: 35)
-            VStack(alignment: .leading, spacing: 3) {
+                .clipShape(Circle())
+            VStack(alignment: .leading, spacing: 6) {
                 Text(nickname)
                     .font(.system(size: 14, weight: .semibold))
-                Text(time)
-                    .font(.system(size: 12, weight: .regular))
+                if let honor {
+                    HonorIconView(honorTitle: honor.name, grade: honor.grade, imageSize: 20, spacing: 4, font: .badge1, fgColor: .gray500)
+                }
             }
             .foregroundStyle(.gray500)
         }
@@ -186,4 +211,13 @@ struct ApprovalItemContentShareView: View {
         }
         .frame(height: 24)
     }
+}
+
+#Preview {
+    VStack {
+        ApprovalItemContentView(item: .mockDataList[0], width: .screenWidth-40, height:  ((.screenWidth-40) / 5) * 4, onOtherUserTapped: {})
+        ApprovalItemContentShareView(item: .mockDataList[1], width: .screenWidth-40, height:  ((.screenWidth-40) / 5) * 4)
+    }
+    .frame(maxWidth: .infinity, maxHeight: .infinity)
+    .background(Color.background)
 }

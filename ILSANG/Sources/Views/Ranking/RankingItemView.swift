@@ -8,136 +8,259 @@
 import SwiftUI
 
 struct RankingItemView: View {
-    let rank: Rank
     let style: RankingItemStyle
     
     enum RankingItemStyle {
-        case horizontal
-        case vertical
+        case totalRank(UserRankViewModelItem)
+        case userRank(UserRankViewModelItem)
+        case areaRank(AreaRankViewModelItem)
+        case currentUserRank(UserRankViewModelItem)
+        case legendRank(UserRankViewModelItem)
     }
     
     var body: some View {
         switch style {
-        case .horizontal:
-            RankingHorizontalItemView(rank: rank)
-        case .vertical:
-            RankingVerticalItemView(rank: rank)
+        case .totalRank(let rank):
+            TotalRankItemView(rank: rank)
+        case .userRank(let rank):
+            UserRankItemView(rank: rank)
+        case .areaRank(let rank):
+            AreaRankItemView(rank: rank)
+        case .currentUserRank(let rank):
+            CurrentUserRankItemView(rank: rank)
+        case .legendRank(let rank):
+            LegendRankItemView(rank: rank)
         }
     }
 }
 
-fileprivate struct RankingHorizontalItemView: View {
-    let rank: Rank
+fileprivate struct UserRankItemView: View {
+    @ObservedObject var rank: UserRankViewModelItem
     
     var body: some View {
-        HStack(spacing: 0) {
-            RankIconView(idx: rank.idx, size: 26, fontStyle: .heading2)
-
+        HStack(spacing: 8) {
+            RankIconView(idx: rank.rank, size: 26, fontStyle: .heading2)
             RankProfileImageView(image: rank.profileImage, size: 48)
-                .padding(.leading, 8)
-                .padding(.trailing, 16)
             
-            VStack (alignment: .leading, spacing: 6) {
+            VStack(alignment: .leading, spacing: 0) {
                 Text(rank.nickname)
-                    .styledFont(.heading2)
-                    .foregroundStyle(.black)
+                    .styledFont(.semibold, size: 13, lineHeight: 20)
+                    .foregroundStyle(.gray500)
+                    .padding(.bottom, 4)
                 
-                titleView
+                if let title = rank.title {
+                    HonorIconView(
+                        honorTitle: title.name,
+                        grade: HonorGrade(rawValue: title.grade) ?? .standard,
+                        imageSize: 12,
+                        spacing: 4,
+                        font: .badge1,
+                        fgColor: .gray400
+                    )
+                    .padding(.bottom, 12)
+                }
                 
-                descriptionView
+                Text("\(rank.point)p")
+                    .styledFont(.title1)
+                    .foregroundColor(.black)
+            }
+            
+            Spacer(minLength: 0)
+        }
+        .padding(36)
+        .roundedBackground(cornerRadius: 16, bgColor: .white)
+        .padding(.horizontal, 20)
+    }
+}
+
+fileprivate struct AreaRankItemView: View {
+    let rank: AreaRankViewModelItem
+    
+    var body: some View {
+        HStack(spacing: 10) {
+            RankIconView(idx: rank.rank, size: 26, fontStyle: .heading2)
+            
+            VStack(alignment: .leading, spacing: 4) {
+                Text(rank.areaName)
+                    .styledFont(.semibold, size: 13, lineHeight: 20)
+                    .foregroundStyle(.gray500)
+                
+                Text("\(rank.point)p")
+                    .styledFont(.title1)
+                    .foregroundColor(.black)
             }
             
             Spacer(minLength: 0)
             
-            TagView(title: "LV.\(XpLevelCalculator.convertXPtoLv(xp: rank.xpTotal))", tagStyle: .level)
+            Image(systemName: "chevron.right")
+                .resizable()
+                .scaledToFit()
+                .frame(8)
+                .offset(x: 1)
+                .foregroundStyle(.gray500)
+                .frame(26)
+                .roundedBackground(cornerRadius: 100, bgColor: Color.gray92.opacity(0.1))
+        }
+        .padding(.leading, 36)
+        .padding(.trailing, 24)
+        .padding(.vertical, 24)
+        .roundedBackground(cornerRadius: 16, bgColor: .white)
+        .padding(.horizontal, 20)
+    }
+}
+
+fileprivate struct CurrentUserRankItemView: View {
+    @ObservedObject var rank: UserRankViewModelItem
+    let remainPoint: Int? = nil // TODO: API 추가 요청
+    
+    var body: some View {
+        VStack(spacing: 10) {
+            HStack(spacing: 8) {
+                VStack(spacing: 4) {
+                    Text("나")
+                        .foregroundStyle(.primaryPurple)
+                        .font(.system(size: 11))
+                        .frame(20)
+                        .background(Circle().fill(Color.primary100))
+                    RankIconView(idx: rank.rank, size: 26, fontStyle: .heading2)
+                }
+                RankProfileImageView(image: rank.profileImage, size: 48)
+                
+                VStack(alignment: .leading, spacing: 0) {
+                    Text(rank.nickname)
+                        .styledFont(.semibold, size: 13, lineHeight: 20)
+                        .foregroundStyle(.gray500)
+                        .padding(.bottom, 4)
+                    
+                    if let title = rank.title {
+                        HonorIconView(
+                            honorTitle: title.name,
+                            grade: HonorGrade(rawValue: title.grade) ?? .standard,
+                            imageSize: 12,
+                            spacing: 4,
+                            font: .badge1,
+                            fgColor: .gray400
+                        )
+                        .padding(.bottom, 12)
+                    }
+                    
+                    Text("\(rank.point)p")
+                        .styledFont(.title1)
+                        .foregroundColor(.black)
+                }
+                
+                Spacer(minLength: 0)
+            }
+            
+            if let remainPoint {
+                Text("앞으로 \(remainPoint)P 획득 시 다음 순위로 올라갈 수 있어요!")
+                    .styledFont(.badge1)
+                    .foregroundColor(.primaryPurple)
+                    .padding(.vertical, 6)
+                    .multilineTextAlignment(.center)
+                    .frame(maxWidth: .infinity)
+                    .background(
+                        RoundedRectangle(cornerRadius: 20)
+                            .fill(.white)
+                            .strokeBorder(lineWidth: 1)
+                            .foregroundStyle(Color.primaryPurple)
+                    )
+            }
+        }
+        .padding(36)
+        .roundedBackground(cornerRadius: 16, bgColor: .white)
+        .padding(.horizontal, 20)
+    }
+}
+
+fileprivate struct LegendRankItemView: View {
+    let rank: UserRankViewModelItem
+    let createdTitleAt: String? = nil // TODO: API 추가 요청
+    
+    var body: some View {
+        HStack(spacing: 0) {
+            RankIconView(idx: rank.rank, size: 26, fontStyle: .heading2)
+                .padding(.trailing, 8)
+            
+            RankProfileImageView(image: rank.profileImage, size: 48)
+                .padding(.trailing, 16)
+            
+            VStack(alignment: .leading, spacing: 0) {
+                Text(rank.nickname)
+                    .styledFont(.heading2)
+                    .foregroundStyle(.black)
+                    .padding(.bottom, 4)
+                
+                if let title = rank.title {
+                    HonorIconView(
+                        honorTitle: title.name,
+                        grade: HonorGrade(rawValue: title.grade) ?? .standard,
+                        imageSize: 12,
+                        spacing: 4,
+                        font: .badge1,
+                        fgColor: .gray400
+                    )
+                    .padding(.bottom, 12)
+                }
+                
+                if let createAt = createdTitleAt {
+                    Text("\(createAt.timeAgoCreatedAt()) 획득")
+                        .styledFont(.caption1)
+                        .foregroundColor(.gray400)
+                }
+            }
+            
+            Spacer(minLength: 0)
+            
+            TagView(title: "LV.\(XpLevelCalculator.convertXPtoLv(xp: rank.point))", tagStyle: .level)
         }
         .padding(.horizontal, 20)
         .padding(.vertical, 30)
-        .frame(maxWidth: .infinity, alignment: .topLeading)
-        .background(.white)
-        .cornerRadius(16)
+        .roundedBackground(cornerRadius: 16, bgColor: .white)
         .padding(.horizontal, 20)
     }
-    
-    @ViewBuilder
-    var titleView: some View {
-        if let title = rank.title, let honorTypeImage = rank.titleType?.image {
-            HStack(spacing: 4) {
-                Image(uiImage: honorTypeImage)
-                    .resizable()
-                    .frame(12)
-                Text(title)
-                    .styledFont(.badge1)
-                    .foregroundStyle(.gray400)
-            }
-        }
-    }
-    
-    var descriptionView: some View {
-        Group {
-            if let createAt = rank.createdTitleAt {
-                Text("\(createAt.timeAgoCreatedAt()) 획득")
-            } else if let xp = rank.xp {
-                if let xpType = rank.xpType {
-                    Text("\(convertStat(xpType)) : \(xp)p")
-                } else {
-                    Text("\(xp)p")
-                }
-            }
-        }
-        .styledFont(.caption1)
-        .foregroundColor(.gray400)
-    }
 }
 
-extension RankingHorizontalItemView {
-    /// XpStat 한글 변환
-    func convertStat(_ xpType: String) -> String {
-        let typeMapping: [String: String] = [
-            "STRENGTH": "체력",
-            "INTELLECT": "지능",
-            "FUN": "재미",
-            "CHARM": "매력",
-            "SOCIABILITY": "사회성"
-        ]
-    
-        return typeMapping[xpType] ?? xpType
-    }
-}
-
-fileprivate struct RankingVerticalItemView: View {
-    let rank: Rank
+fileprivate struct TotalRankItemView: View {
+    let rank: UserRankViewModelItem
     
     var body: some View {
         VStack(spacing: 6) {
             RankProfileImageView(image: rank.profileImage, size: 64)
-                .padding(6)
             
-            RankIconView(idx: rank.idx, size: 24, fontStyle: .tabBold)
+            RankIconView(idx: rank.rank, size: 24, fontStyle: .tabBold)
             
-            Text(rank.nickname)
-                .styledFont(.bold, size: 13, lineHeight: 20, tracking: -0.3)
-                .foregroundColor(.black)
-                .padding(.bottom, -4)
-            
-            if let xp = rank.xp {
-                Text("\(xp)xp")
+            VStack(spacing: 2) {
+                Text(rank.nickname)
+                    .styledFont(.bold, size: 13, lineHeight: 20, tracking: -0.3)
+                    .foregroundColor(.black)
+                
+                if let title = rank.title {
+                    HonorIconView(
+                        honorTitle: title.name,
+                        grade: HonorGrade(rawValue: title.grade) ?? .standard,
+                        imageSize: 12,
+                        spacing: 4,
+                        font: .badge1,
+                        fgColor: .gray400
+                    )
+                }
+                Text("\(rank.point)p")
                     .styledFont(.caption1)
                     .foregroundColor(.gray500)
             }
         }
-        .frame(width: 150)
-        .padding(.vertical, 16)
-        .background(.white)
-        .cornerRadius(12)
+        .frame(width: 150, height: 178)
+        .roundedBackground(cornerRadius: 12, bgColor: .white)
     }
 }
 
+// MARK: - 재사용 컴포넌트
 fileprivate struct RankProfileImageView: View {
     let image: UIImage?
     let size: CGFloat
     var emoji: String = "😍"
-
+    
     var body: some View {
         Group {
             if let image = image {
@@ -164,12 +287,21 @@ fileprivate struct RankIconView: View {
             if idx <= 3 {
                 Image("rank\(idx)")
                     .resizable()
+                    .scaledToFit()
             } else {
                 Text("\(idx)")
                     .styledFont(fontStyle)
                     .foregroundStyle(.gray500)
             }
         }
-        .frame(width: size, height: size)
+        .frame(width: idx < 100 ? size : size + 10, height: size)
     }
+}
+
+#Preview {
+    VStack {
+        RankingItemView(style: .areaRank(.mockData1))
+    }
+    .padding(.vertical)
+    .background(Color.pink)
 }

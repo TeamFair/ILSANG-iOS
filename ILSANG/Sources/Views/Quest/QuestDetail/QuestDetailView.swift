@@ -34,10 +34,10 @@ struct QuestDetailView: View {
             QuestDetailInfoView(quest: vm.quest)
             
             HStack {
-                if vm.quest.missionType == .image {
+                if vm.quest.missionType == .photo {
                     QuestDetailApprovalImageView(
                         images: vm.quest.challengeImages,
-                        showCount: vm.quest.isRepeatQuest ? 1 : 3,
+                        showCount: vm.quest.questType == .repeat ? 1 : 3,
                         imageWidth: contentWidth,
                         imageSpacing: imageSpacing,
                         isLoading: vm.isLoading,
@@ -47,11 +47,11 @@ struct QuestDetailView: View {
                     )
                 }
                 
-                if vm.quest.isRepeatQuest {
-                    QuestDetailRepeatRankView(rank: vm.quest.customerRank, contentWidth: contentWidth)
+                if vm.quest.questType == .repeat {
+                    QuestDetailRepeatRankView(rank: vm.quest.userRank, contentWidth: contentWidth)
                 }
             }
-            .padding(.vertical, vm.quest.isRepeatQuest || vm.quest.missionType == .image ? 24 : 0)
+            .padding(.vertical, vm.quest.questType == .repeat || vm.quest.missionType == .photo ? 24 : 0)
         
             QuestDetailStatView(quest: vm.quest)
             
@@ -64,7 +64,7 @@ struct QuestDetailView: View {
                 .padding(.bottom, CGFloat.isSmallDevice ? 8 : 16)
         }
         .task {
-            await vm.fetchQuestDetail()
+            await vm.updateChallengeImages()
         }
         .scrollIndicators(.never)
         .foregroundStyle(.gray500)
@@ -106,12 +106,13 @@ struct QuestDetailView: View {
 }
 
 #Preview {
-    QuestDetailView(vm: QuestDetailViewModel(quest: .mockData, questNetwork: QuestNetwork(), onUpdate: { _ in }), showQuestExImageAction: {  }, questApproveAction: { })
+    QuestDetailView(vm: QuestDetailViewModel(quest: .mockData, questRepository: QuestRepository(network: QuestNetwork()), onUpdate: {_ in },  showQuestExImageAction: {  }), action: { })
         .frame(height: 684)
 }
 
 
 #Preview {
     QuestDetailView(vm: QuestDetailViewModel(quest: .mockRepeatData, questNetwork: QuestNetwork(), onUpdate: { _ in }), showQuestExImageAction: {  }, questApproveAction: { })
+    QuestDetailView(vm: QuestDetailViewModel(quest: .mockRepeatData, questRepository: QuestRepository(network: QuestNetwork()), onUpdate: {_ in },  showQuestExImageAction: {  }), action: { })
         .frame(height: 684)
 }

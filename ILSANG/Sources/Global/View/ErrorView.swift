@@ -15,6 +15,7 @@ struct ErrorView: View {
     let subTitle: String
     var emoticon: String? = nil
     var showButton: Bool = true
+    var buttonTitle: String = "다시 시도"
     var buttonAction: (() -> ())? = nil
     
     var body: some View {
@@ -42,7 +43,7 @@ struct ErrorView: View {
             .multilineTextAlignment(.center)
             .lineSpacing(5)
             
-            PrimaryButton(title: "다시 시도") {
+            PrimaryButton(title: buttonTitle) {
                 buttonAction?()
             }
             .frame(width: 152)

@@ -7,10 +7,7 @@
 
 
 // Server URL
-SERVER_IP = 52.79.126.243
-ROOT_URL = http:/$()/52.79.126.243
-PORT = 8880
-
+ROOT_URL = https:/$()/api-dev.illsangtech.com
 
 // App Settings
 APP_NAME = 일상 DEV

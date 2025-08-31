@@ -7,18 +7,80 @@
 
 import SwiftUI
 
-struct PickerView<SelectionValue>: View where SelectionValue: Hashable & CustomStringConvertible & CaseIterable {
-    @Binding var status: PickerStatus
-    @Binding var selection: SelectionValue
+// MARK: - PickerStatus
+enum PickerStatus {
+    case open, close
+    mutating func toggle() { self = (self == .open) ? .close : .open }
+}
+
+// MARK: - PickerStateProtocol
+protocol PickerStateProtocol: ObservableObject {
+    associatedtype Value: Hashable & CustomStringConvertible
+    var selectedValue: Value { get set }
+    var options: [Value] { get set }
+    var pickerStatus: PickerStatus { get set }   // 읽기/쓰기 가능해야 함
+}
+
+// MARK: - Static (CaseIterable enum) state
+final class StaticFilterPickerState<Value>: PickerStateProtocol
+where Value: Hashable & CustomStringConvertible & CaseIterable {
+    @Published var selectedValue: Value {
+        didSet { onSelectionChange?(selectedValue) }
+    }
+    @Published var options: [Value]
+    @Published var pickerStatus: PickerStatus = .close
+
+    var onSelectionChange: ((Value) -> Void)?
+
+    init(initialValue: Value, onSelectionChange: ((Value) -> Void)? = nil) {
+        self.selectedValue = initialValue
+        self.options = Array(Value.allCases)
+        self.onSelectionChange = onSelectionChange
+    }
+}
+
+// MARK: - Dynamic State
+final class DynamicFilterPickerState<Value>: PickerStateProtocol
+where Value: Hashable & CustomStringConvertible {
+    @Published var selectedValue: Value {
+        didSet {
+            if oldValue != selectedValue {
+                onSelectionChange?(selectedValue)
+            }
+        }
+    }
+    @Published var options: [Value]
+    @Published var pickerStatus: PickerStatus = .close
+
+    var onSelectionChange: ((Value) -> Void)?
+
+    init(initialValue: Value, options: [Value] = [], onSelectionChange: ((Value) -> Void)? = nil) {
+        self.selectedValue = initialValue
+        self.options = options
+        self.onSelectionChange = onSelectionChange
+    }
+
+    func updateOptions(_ newOptions: [Value]) {
+        self.options = newOptions
+        if !newOptions.contains(selectedValue), let first = newOptions.first {
+            selectedValue = first
+        }
+    }
+}
+
+// MARK: - PickerView
+struct PickerView<State>: View where State: PickerStateProtocol {
+    @ObservedObject var state: State
+    var showBorder: Bool = false
     let width: CGFloat
-    
+
     var body: some View {
         ZStack(alignment: .top) {
             HStack(spacing: 0) {
-                Text("\(selection.description)")
+                Text(state.selectedValue.description)
                     .font(.system(size: 15, weight: .regular))
                 Spacer(minLength: 0)
-                Image(systemName: status == .open ? "chevron.down" : "chevron.up")
+                Image(systemName: state.pickerStatus == .open ? "chevron.down" : "chevron.up")
                     .resizable()
                     .scaledToFit()
                     .frame(width: 12)
@@ -27,23 +89,26 @@ struct PickerView<SelectionValue>: View where SelectionValue: Hashable & CustomS
             .foregroundStyle(.gray500)
             .padding(.horizontal, 12)
             .frame(width: width, height: 40)
-            .background(Color.white)
-            .clipShape(
+            .background(
                 RoundedRectangle(cornerRadius: 8)
+                    .fill(.white)
+                    .stroke(
+                        showBorder ? .gray200 : .clear,
+                        style: StrokeStyle(lineWidth: 1)
+                    )
             )
-            .onTapGesture {
-                self.status.toggle()
-            }
+            .onTapGesture { state.pickerStatus.toggle() }
             .shadow(color: .shadow7D.opacity(0.05), radius: 20, x: 0, y: 10)
-            
-            if status == .open {
+
+            // 드롭다운
+            if state.pickerStatus == .open {
                 VStack(spacing: 0) {
-                    let selectableList = SelectionValue.allCases.filter { $0 != selection }
-                    ForEach(Array(selectableList.enumerated()), id: \.offset) { idx, value in
-                        Button(action: {
-                            self.selection = value
-                            self.status.toggle()
-                        }) {
+                    let list = state.options.filter { $0 != state.selectedValue }
+                    ForEach(Array(list.enumerated()), id: \.offset) { idx, value in
+                        Button {
+                            state.selectedValue = value
+                            state.pickerStatus.toggle()
+                        } label: {
                             Text(value.description)
                                 .font(.system(size: 15, weight: .regular))
                                 .foregroundStyle(.gray500)
@@ -51,14 +116,6 @@ struct PickerView<SelectionValue>: View where SelectionValue: Hashable & CustomS
                                 .frame(height: 40)
                                 .background(Color.white)
                                 .padding(.horizontal, 12)
-                        }
-                        .overlay(alignment: .bottom) {
-                            if idx != selectableList.count - 1 {
-                                Rectangle()
-                                    .frame(height: 1)
-                                    .frame(maxWidth: .infinity)
-                                    .foregroundStyle(.gray100)
-                            }
                         }
                     }
                 }
@@ -73,33 +130,20 @@ struct PickerView<SelectionValue>: View where SelectionValue: Hashable & CustomS
     }
 }
 
-class FilterPickerState<SelectionValue>: ObservableObject where SelectionValue: Hashable & CustomStringConvertible & CaseIterable {
-    @Published var selectedValue: SelectionValue {
-        didSet {
-            onSelectionChange?(selectedValue)
-        }
-    }
-    
-    /// 상태 변경 시 실행할 클로저
-    var onSelectionChange: ((SelectionValue) -> Void)?
-    
-    /// Picker의 상태
-    var pickerStatus: PickerStatus = .close
-
-    init(initialValue: SelectionValue, onSelectionChange: ((SelectionValue) -> Void)? = nil) {
-        self.selectedValue = initialValue
-        self.onSelectionChange = onSelectionChange
-    }
-}
-
-enum QuestFilterType: String, Hashable, CustomStringConvertible, CaseIterable {
+// MARK: - Example Value Types
+enum QuestFilterType: String, CaseIterable, Hashable, CustomStringConvertible {
     case pointHighest = "포인트 높은 순"
-    case pointLowest = "포인트 낮은 순"
-    case popular = "인기순"
-    case favorite = "즐겨찾기만"
+    case pointLowest  = "포인트 낮은 순"
+    case popular      = "인기순"
     
-    var description: String {
-        return self.rawValue
+    var description: String { rawValue }
+    
+    var orderRewardDesc: Bool? {
+        switch self {
+        case .pointHighest: return true
+        case .pointLowest:  return false
+        default: return nil
+        }
     }
 }
 
@@ -108,23 +152,18 @@ enum EventQuestFilterType: String, Hashable, CustomStringConvertible, CaseIterab
     case pointHighest = "포인트 높은 순"
     case pointLowest = "포인트 낮은 순"
     case popular = "인기순"
-    case favorite = "즐겨찾기만"
-
-    var description: String {
-        return self.rawValue
-    }
-}
-
-enum PickerStatus {
-    case open
-    case close
     
-    mutating func toggle() {
-        self = self == .open ? .close : .open
+    var description: String { return self.rawValue }
+    
+    var orderExpiredDesc: Bool? {
+        switch self {
+        case .upcoming: return false
+        default: return nil
+        }
     }
 }
 
-
-//#Preview {
-//    PickerView<ExampleSelection>(status: .close, selection: .constant(.option1))
-//}
+struct SeasonFilterType: Hashable, CustomStringConvertible {
+    let seasonNumber: Int   // -1 = 전체
+    var description: String { seasonNumber == -1 ? "전체" : "시즌 \(seasonNumber)" }
+}

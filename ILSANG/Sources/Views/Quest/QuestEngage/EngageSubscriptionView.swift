@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct EngageSubscriptionView: View {
-    let type: QuestViewModelItem.QuizType
+    let type: QuizType
     
     var body: some View {
         VStack(alignment: .leading, spacing: 20) {

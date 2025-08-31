@@ -89,13 +89,14 @@ struct ImageDataTransferable: Transferable {
 }
 
 #Preview {
+    let challengeNetwork = ChallengeNetwork()
     ImagePreviewButton(
         submitViewModel: SubmitRouterViewModel(
             selectedQuest: .mockData,
             submitService: ImageChallengeSubmitService(
                 imageNetwork: ImageNetwork(),
-                challengeNetwork: ChallengeNetwork()
-            ), quizNetwork: QuizNetwork()
+                challengeNetwork: challengeNetwork
+            ), challengeNetwork: challengeNetwork
         )
     )
 }

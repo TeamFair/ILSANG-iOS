@@ -13,38 +13,19 @@ class QuestDetailViewModel {
     var isLoading: Bool = false
     private let onUpdate: (QuestViewModelItem) -> Void
 
-    var approvalDescription: String {
-        switch quest.missionType {
-        case .quiz:
-            "퀘스트를 지금 인증하고,\n보상을 적립받으세요!"
-        case .image:
-            "퀘스트를 수행하셨나요?\n인증 후 포인트를 적립받으세요"
-        }
-    }
+    var approvalDescription: String = "퀘스트를 수행하고\n인증 후, 포인트를 적립받으세요"
     
-    private let questNetwork: QuestNetwork
+    private let questRepository: QuestRepositoryInterface
     
-    init(quest: QuestViewModelItem, questNetwork: QuestNetwork, onUpdate: @escaping (QuestViewModelItem) -> Void) {
+    init(quest: QuestViewModelItem, questRepository: QuestRepositoryInterface, onUpdate: @escaping (QuestViewModelItem) -> Void) {
         self.quest = quest
-        self.questNetwork = questNetwork
+        self.questRepository = questRepository
         self.onUpdate = onUpdate
     }
     
-    func fetchQuestDetail() async {
+    func updateChallengeImages() async {
         isLoading = true
-        
-        do {
-            let questDetail = try await questNetwork.getQuestDetail(questId: quest.id).get().data
-            
-            // Model 객체에서 상태 업데이트
-            await quest.updateChallengeImages(
-                challengeImageIds: questDetail.topLikeChallenges,
-                customerRank: questDetail.customerRank
-            )
-        } catch {
-            Log("퀘스트 상세정보 불러오기 실패")
-        }
-        
+        await quest.updateChallengeImages()
         isLoading = false
     }
     

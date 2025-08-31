@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ApprovalItemView: View {
-    let item: ApprovalViewModelItem
+    let item: ApprovalMissionHistoryItem
     
     let width: CGFloat
     let height: CGFloat
@@ -16,22 +16,25 @@ struct ApprovalItemView: View {
     let padding: CGFloat
     let onLike: () -> Void
     let onHate: () -> Void
+    let onOtherUserTapped: () -> Void
     
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
-            ApprovalItemContentView(item: item, width: width, height: height)
+            ApprovalItemContentView(item: item, width: width, height: height) {
+                onOtherUserTapped()
+            }
             
             HStack(spacing: 8) {
                 emojiButton(
                     imageName: .thumbsDown,
-                    active: item.emoji?.isHate ?? false,
+                    active: item.emojis.isSelected(.hate),
                     activeFgColor: .primary300,
                     activeBgColor: .primary100,
                     action: { onHate() }
                 )
                 emojiButton(
                     imageName: .thumbsUp,
-                    active: item.emoji?.isLike ?? false,
+                    active: item.emojis.isSelected(.like),
                     activeFgColor: .white,
                     activeBgColor: .primaryPurple,
                     action: { onLike() }
@@ -77,6 +80,7 @@ struct ApprovalItemView: View {
         height: 200,
         padding: 20,
         onLike: { },
-        onHate: { }
+        onHate: { },
+        onOtherUserTapped: { }
     )
 }

@@ -19,12 +19,12 @@ struct MockHonorNetwork: HonorNetworkProtocol {
     }
     
     func readHonorHistory(historyId: String) async -> Result<ResponseWithoutData, Error> {
-        .success(.init(data: [:], errorStatus: "", errMessage: "", status: "", message: ""))
+        .success(.init(data: [:]))
     }
 }
 
 final class HonorNetwork: HonorNetworkProtocol {
-    private let url = APIManager.makeURL(CustomerTarget(path: "title/history"))
+    private let url = APIManager.makeURL(UserTarget(path: "title/history", version: 1))
     
     func getHonorHistory() async -> Result<Response<[HonorHistory]>, Error> {
         return await Network.requestData(url: url, method: .get, parameters: nil, withToken: true)

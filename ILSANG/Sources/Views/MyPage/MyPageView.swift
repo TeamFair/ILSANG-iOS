@@ -9,23 +9,18 @@ import SwiftUI
 
 struct MyPageView: View {
     
-    @StateObject var vm: MyPageViewModel = MyPageViewModel(userNetwork: UserNetwork(), challengeNetwork: ChallengeNetwork(), imageNetwork: ImageNetwork(), xpNetwork: XPNetwork())
+    @ObservedObject var vm: MyPageViewModel
+    @EnvironmentObject var sharedState: SharedState
+    @EnvironmentObject var seasonManager: SeasonManager
     
     var body: some View {
         VStack(spacing: 0) {
             header  // 타이틀 & 설정 버튼
-            content // 프로필 & 퀘스트/활동/내정보 컨텐츠
+            content // 프로필일상존 / 포인트 / 시즌요약
         }
         .background(Color.background)
         .task {
-            // TODO:
-            // 1) 초기화시 데이터 로딩하도록 수정
-            // 2) 도전내역 등록했을 때, 리프레시했을 때 재호출하도록 수정
-            await vm.fetchUser()
-            await vm.fetchXpStats()
-            
-            // 도전내역, 활동로그 불러오기
-            await vm.loadDataIfNeeded()
+            await vm.loadData()
         }
     }
     
@@ -51,42 +46,111 @@ struct MyPageView: View {
         ScrollView {
             VStack(spacing: 0) {
                 // 프로필
-                MyPageProfile(
-                    nickName: vm.userData?.nickname,
-                    profileImage: vm.userProfileImage,
-                    profileImageId: vm.userData?.profileImage,
-                    level: vm.xpStatus.currentLv,
-                    progress: vm.xpStatus.progress,
-                    honorTitle: vm.honorTitle,
-                    honorType: vm.honorType
+                VStack(spacing: 20) {
+                    MyPageProfile(
+                        nickName: vm.userData?.nickname,
+                        profileImage: vm.userProfileImage,
+                        profileImageId: vm.userData?.profileImageId,
+                        level: vm.xpStatus.currentLv,
+                        progress: vm.xpStatus.progress,
+                        honorTitle: vm.honorTitle,
+                        honorType: vm.honorType
+                    )
+                    
+                    HStack {
+                        NavigationLink {
+                            UserMissionHistoryView(
+                                vm: UserMissionHistoryViewModel(
+                                    missionHistoryRepository: MissionHistoryRepository(network: MissionHistoryNetwork())
+                                )
+                            )
+                        } label: {
+                            navigationButtonLabel(title: "수행한 퀘스트", image: .myQuest)
+                        }
+                        NavigationLink {
+                            EmptyView()
+                        } label: {
+                            navigationButtonLabel(title: "즐겨찾기 퀘스트", image: .myStar)
+                        }
+                        NavigationLink {
+                            EmptyView()
+                        } label: {
+                            navigationButtonLabel(title: "쿠폰", image: .coupon)
+                        }
+                    }
+                }
+                .padding(.top, 16)
+                .roundedBackground(cornerRadius: 16, bgColor: .white)
+                .padding(.horizontal, 20)
+                .padding(.bottom, 48)
+                
+                // 내 일상존: 일상존 없으면 미표시
+                if let pointCommercial = vm.pointCommercial, let topCommercialArea = pointCommercial.topCommercialArea {
+                    TitleWithContentView(
+                        title: "내 일상존",
+                        style: .my,
+                        content:
+                            IllsangZonePointView(
+                                topCommercialArea: topCommercialArea,
+                                totalOwnerContributions: pointCommercial.totalOwnerContributions,
+                                showPrimaryButton: true
+                            ) {
+                                sharedState.selectedTab = .quest
+                            }
+                            .padding(.horizontal, 20)
+                    )
+                    .padding(.bottom, 48)
+                }
+                
+                // 내 포인트
+                TitleWithContentView(
+                    title: "내 포인트",
+                    style: .my,
+                    content:
+                        UserPointView(
+                            seasonNumbers: seasonManager.seasons.map { $0.seasonNumber },
+                            points: vm.points,
+                            completedQuestCount: vm.completedQuestCount,
+                            selectedSeason: $vm.selectedSeasonNumber,
+                            filterState: $vm.seasonFilterState
+                        )
+                        .padding(.horizontal, 20)
                 )
-                .padding(.bottom, 36)
+                .padding(.bottom, 48)
                 
-                // 퀘스트/뱃지 세그먼트
-                MyPageTabView(selectedTab: $vm.selectedTab)
-                    .padding(.bottom, 16)
-                
-                // 퀘스트/뱃지 컨텐츠
-                switch vm.selectedTab {
-                case .quest:
-                    MyPageChallengeList(vm: vm)
-                case .info:                    
-                    MyPageInfoView(xpPoint: vm.userData?.xpPoint, xpStats: vm.xpStats, honorTitle: vm.honorTitle)
+                // 시즌 요약: 현재 시즌이 없으면 미표시
+                if let currentSeason = vm.currentSeason {
+                    TitleWithContentView(
+                        title: "시즌 요약",
+                        style: .my,
+                        content:
+                            SeasonSummaryView(
+                                nickname: vm.userData?.nickname, season: currentSeason, summary: vm.pointSummary
+                            )
+                            .padding(.horizontal, 20)
+                    )
                 }
             }
             .padding(.bottom, 72)
-            .padding(.horizontal, 20)
         }
-        .scrollIndicators(vm.selectedTab == .quest ? .visible : .never)
         .refreshable {
-            switch vm.selectedTab {
-            case .quest:
-                await vm.challengePaginationManager.loadData(isRefreshing: true)
-            case .info:
-                await vm.fetchUser()
-                await vm.fetchXpStats()
-            }
+            await vm.refreshData()
         }
+    }
+    
+    private func navigationButtonLabel(title: String, image: UIImage) -> some View {
+        VStack(spacing: 4) {
+            Image(uiImage: image)
+                .resizable()
+                .scaledToFit()
+                .frame(36)
+            Text(title)
+                .styledFont(.tabRegular)
+                .foregroundStyle(.gray500)
+        }
+        .padding(.top, 14)
+        .padding(.bottom, 24)
+        .frame(maxWidth: .infinity)
     }
 }
 
@@ -118,5 +182,12 @@ struct EmptyStateView: View {
 }
 
 #Preview {
-    MyPageView()
+    MyPageView(
+        vm: MyPageViewModel(
+            userRepository: UserRepository(network: UserNetwork()),
+            imageNetwork: ImageNetwork(),
+            areaNameService: AreaNameService(areaRepository: AreaRepository(network: AreaNetwork())),
+            seasonManager: SeasonManager(seasonNetwork: SeasonNetwork())
+        )
+    )
 }

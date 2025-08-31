@@ -21,21 +21,20 @@ struct QuestEngageInfoView: View {
             
             VStack(alignment: .leading, spacing: 2) {
                 Text(quest.writer)
-                    .styledFont(.regular, size: 15, lineHeight: 26)
+                    .styledFont(.body)
                 
-                Text(quest.missionTitle.forceCharWrapping)
-                    .styledFont(.bold, size: 18, lineHeight: 28)
-                    .kerning(-0.2)
+                Text(quest.title.forceCharWrapping)
+                    .styledFont(.title2)
                     .lineLimit(2)
                 
                 HStack(spacing: 4) {
                     // 이벤트 퀘스트 태그
-                    if quest.isEventQuest {
-                        TagView(title: "~"+quest.expireDate.timeAgoSinceDate(withYear: false), image: .event, tagStyle: .eventWithIcon)
+                    if quest.questType == .event {
+                        TagView(title: "한정", image: .event, tagStyle: .eventWithIcon)
                     }
                     
                     // 반복 퀘스트 태그
-                    if quest.isRepeatQuest, let repeatType = quest.repeatType {
+                    if quest.questType == .repeat, let repeatType = quest.repeatType {
                         TagView(
                             title: repeatType.description,
                             tagStyle: .repeat(repeatType)
@@ -52,7 +51,7 @@ struct QuestEngageInfoView: View {
             
             Spacer(minLength: 8)
             
-            Text(String(quest.totalRewardXP()) + "XP")
+            Text(String(quest.totalRewardPoint()) + "P")
                 .styledFont(.heading1)
                 .foregroundStyle(.primaryPurple)
                 .padding(10)

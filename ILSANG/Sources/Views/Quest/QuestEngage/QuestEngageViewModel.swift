@@ -11,9 +11,9 @@ import Foundation
 class QuestEngageViewModel: ObservableObject {
     // MARK: - Properties
     let quest: QuestViewModelItem
-    private let quizNetwork: QuizNetwork
+    private let challengeNetwork: ChallengeNetwork
     
-    @Published var quiz: Quiz?
+    @Published var quiz: QuizResponse?
     @Published var selectedAnswer: String = ""
     @Published var showBtn: Bool = true
     @Published var isKeyboardVisible: Bool = false
@@ -23,20 +23,14 @@ class QuestEngageViewModel: ObservableObject {
     var isSubmitAbled: Bool { selectedAnswer != "" }
     
     // MARK: - Initializer
-    init(quest: QuestViewModelItem, quizNetwork: QuizNetwork) {
+    init(quest: QuestViewModelItem, challengeNetwork: ChallengeNetwork) {
         self.quest = quest
-        self.quizNetwork = quizNetwork
-       
+        self.challengeNetwork = challengeNetwork
     }
     
     @MainActor
     func getRandomQuiz() async {
-        quiz = try? await quizNetwork.getRandomQuiz(missionId: quest.missionId).get().data
-    }
-    
-    // MARK: - Methods
-    func compareAnswer(userAnswer: String) -> Bool {
-        let answers = quiz?.answers.compactMap { $0.content } ?? []
-        return answers.contains(userAnswer)
+        quiz = try? await challengeNetwork.getRandomQuiz(missionId: quest.missionId)
+            .get()
     }
 }

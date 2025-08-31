@@ -20,7 +20,7 @@ struct FontStyle {
     static let heading2 = FontStyle(size: 15, weight: .bold, lineHeight: 18, tracking: -0.4)
     static let heading3 = FontStyle(size: 19, weight: .bold, lineHeight: 23, tracking: -0.4)
     
-    static let subTitle1 = FontStyle(size: 16, weight: .semibold, lineHeight: 24, tracking: -0.4)
+    static let subTitle1 = FontStyle(size: 16, weight: .regular, lineHeight: 24, tracking: -0.4)
     static let subTitle2 = FontStyle(size: 16, weight: .regular, lineHeight: 24, tracking: -0.4)
     
     static let caption1 = FontStyle(size: 13, weight: .regular, lineHeight: 20, tracking: -0.3)

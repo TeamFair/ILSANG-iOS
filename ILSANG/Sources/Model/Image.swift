@@ -7,5 +7,8 @@
 
 struct ImageEntity: Codable {
     var imageId: String
-    var location: String
+    
+    enum CodingKeys: String, CodingKey {
+        case imageId = "id"
+    }
 }

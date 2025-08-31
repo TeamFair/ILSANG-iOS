@@ -8,34 +8,23 @@
 import Alamofire
 
 final class EmojiNetwork {
-    private let url: String
+    private let url: String = APIManager.makeURL(UserTarget(path: "mission", version: 1))
     
-    init(url: String = APIManager.makeURL(CustomerTarget(path: "emoji"))) {
-        self.url = url
-    }
-        
-    func getEmoji(challengeId: String) async -> Result<Response<Emoji>,Error> {
-        let parameters: Parameters = ["challengeId": challengeId]
-        return await Network.requestData(url: url, method: .get, parameters: parameters, withToken: true)
-    }
-    
-    func postEmoji(challengeId: String, emojiType: EmojiType) async -> Result<String, Error> {
-        let body = ["targetId": challengeId,
-                                "targetType": "challenge",
-                                "emojiType": emojiType.rawValue]
+    func postEmoji(missionHistoryId: Int, emojiType: EmojiType) async -> Bool {
+        let body = ["emojiType": emojiType.serverValue]
         let bodyData = body.convertToJsonData()
-        let res: Result<Response<EmojiResponseData>, Error> = await Network.requestData(url: url, method: .post, parameters: nil, body: bodyData, withToken: true)
+        let res: Result<ResponseWithEmpty, Error> = await Network.requestData(url: url+"/history/\(missionHistoryId)/emoji", method: .post, body: bodyData)
         switch res {
-        case .success(let model):
-            return .success(model.data.emojiId)
-        case .failure(let error):
-            return .failure(error)
+        case .success:
+            return true
+        case .failure:
+            return false
         }
     }
     
-    func deleteEmoji(emojiId: String) async -> Bool {
-        let parameters: Parameters = ["emojiId": emojiId]
-        let res: Result<ResponseWithoutData, Error> = await Network.requestData(url: url, method: .delete, parameters: parameters, withToken: true)
+    func deleteEmoji(missionHistoryId: Int, emojiType: EmojiType) async -> Bool {
+        let parameters: Parameters = ["emojiType": emojiType.serverValue]
+        let res: Result<ResponseWithEmpty, Error> = await Network.requestData(url: url+"/history/\(missionHistoryId)/emoji", method: .delete, parameters: parameters)
         switch res {
         case .success:
             return true
@@ -45,12 +34,11 @@ final class EmojiNetwork {
     }
 }
 
-enum EmojiType: String {
-    case like
-    case hate
-}
-
-fileprivate struct EmojiResponseData: Decodable {
-    let emojiStatus: String
-    let emojiId: String
+enum EmojiType: String, Decodable {
+    case like = "LIKE"
+    case hate = "HATE"
+    
+    var serverValue: String {
+        rawValue.uppercased()
+    }
 }
