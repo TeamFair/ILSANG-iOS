@@ -61,10 +61,8 @@ class QuestViewModel: ObservableObject {
             return defaultQuestListByFilter[questFilterState.selectedValue] ?? []
         case .repeat:
             return repeatQuestListByFilter[repeatFilterState.selectedValue]?[questFilterState.selectedValue] ?? []
-            
         case .event:
             return eventQuestListByFilter[eventFilterState.selectedValue] ?? []
-            
         case .completed:
             return completedQuestList
         }
@@ -138,7 +136,13 @@ class QuestViewModel: ObservableObject {
 
         questFilterState.onSelectionChange = { [weak self] _ in
             guard let self = self else { return }
-            Task { await self.defaultPaginationManager.loadData(isRefreshing: true) }
+            switch selectedHeader {
+            case .default:
+                Task { await self.defaultPaginationManager.loadData(isRefreshing: true) }
+            case .repeat:
+                Task { await self.repeatPaginationManager.loadData(isRefreshing: true) }
+            default: break
+            }
         }
         eventFilterState.onSelectionChange = { [weak self] _ in
             guard let self = self else { return }
@@ -310,52 +314,30 @@ class QuestViewModel: ObservableObject {
         
         switch status {
         case .default:
-            switch questFilterState.selectedValue {
-            case .pointHighest:
-                result = await questRepository.getDefaultQuests(commercialAreaCode: sharedState.selectedCommercialArea.code, orderRewardDesc: false, page: page, size: size)
-            case .pointLowest:
-                result = await questRepository.getDefaultQuests(commercialAreaCode: sharedState.selectedCommercialArea.code, orderRewardDesc: true, page: page, size: size)
-            case .popular:
-                result = await questRepository.getDefaultQuests(commercialAreaCode: sharedState.selectedCommercialArea.code, orderRewardDesc: nil, page: page, size: size)
-            }
+            result = await questRepository.getDefaultQuests(
+                commercialAreaCode: sharedState.selectedCommercialArea.code,
+                orderRewardDesc: questFilterState.selectedValue.orderRewardDesc,
+                page: page,
+                size: size
+            )
         case .repeat:
-            switch questFilterState.selectedValue {
-            case .pointHighest:
-                result = await questRepository.getRepeatQuests(
-                    commercialAreaCode: sharedState.selectedCommercialArea.code,
-                    repeatFrequency: self.repeatFilterState.selectedValue,
-                    orderRewardDesc: false,
-                    page: page,
-                    size: size
-                )
-            case .pointLowest:
-                result = await questRepository.getRepeatQuests(
-                    commercialAreaCode: sharedState.selectedCommercialArea.code,
-                    repeatFrequency: self.repeatFilterState.selectedValue,
-                    orderRewardDesc: true,
-                    page: page,
-                    size: size
-                )
-            case .popular:
-                result = await questRepository.getRepeatQuests(
-                    commercialAreaCode: sharedState.selectedCommercialArea.code,
-                    repeatFrequency: self.repeatFilterState.selectedValue,
-                    orderRewardDesc: nil,
-                    page: page,
-                    size: size
-                )
-            }
+            result = await questRepository.getRepeatQuests(
+                commercialAreaCode: sharedState.selectedCommercialArea.code,
+                repeatFrequency: repeatFilterState.selectedValue,
+                orderRewardDesc: questFilterState.selectedValue.orderRewardDesc,
+                page: page,
+                size: size
+            )
         case .event:
-            switch eventFilterState.selectedValue {
-            case .pointHighest:
-                result = await questRepository.getEventQuests(commercialAreaCode: sharedState.selectedCommercialArea.code, orderRewardDesc: false, page: page, size: size)
-            case .pointLowest:
-                result = await questRepository.getEventQuests(commercialAreaCode: sharedState.selectedCommercialArea.code, orderRewardDesc: true, page: page, size: size)
-            case .popular, .upcoming:
-                result = await questRepository.getEventQuests(commercialAreaCode: sharedState.selectedCommercialArea.code, orderRewardDesc: nil, page: page, size: size)
-            }
+            result = await questRepository.getEventQuests(
+                commercialAreaCode: sharedState.selectedCommercialArea.code,
+                orderRewardDesc: nil,
+                orderExpiredDesc: eventFilterState.selectedValue.orderExpiredDesc,
+                page: page,
+                size: size
+            )
         case .completed:
-            result = await questRepository.getCompletedQuests(commercialAreaCode: sharedState.selectedCommercialArea.code, page: page, size: size)
+            result = await questRepository.getCompletedQuests(page: page, size: size)
         }
         
         switch result {

@@ -183,11 +183,12 @@ extension QuestView {
         .padding(.top, vm.selectedHeader != .completed ? 100 : 0)
         .overlay(alignment: .top) {
             VStack(spacing: 16) {
-                RegionPickerView(title: sharedState.selectedCommercialArea.areaName) {
-                    vm.showSelectMyRegionView = true
+                if vm.selectedHeader != .completed {
+                    RegionPickerView(title: sharedState.selectedCommercialArea.areaName) {
+                        vm.showSelectMyRegionView = true
+                    }
+                    .frame(maxWidth: .infinity, alignment: .leading)
                 }
-                .frame(maxWidth: .infinity, alignment: .leading)
-                
                 Group {
                     if (vm.selectedHeader == .default) {
                         filterPickerDefaultView
