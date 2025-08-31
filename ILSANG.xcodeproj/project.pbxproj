@@ -30,7 +30,7 @@
 		601BCF102D7B43F000138387 /* OtherUserProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 601BCF0F2D7B43F000138387 /* OtherUserProfileView.swift */; };
 		601BCF122D7B449C00138387 /* OtherUserProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 601BCF112D7B449C00138387 /* OtherUserProfileViewModel.swift */; };
 		601BCF162D7B502B00138387 /* OtherUserChallengeList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 601BCF152D7B502B00138387 /* OtherUserChallengeList.swift */; };
-		601BCF182D7C0C1400138387 /* ChallengeListItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 601BCF172D7C0C1400138387 /* ChallengeListItemView.swift */; };
+		601BCF182D7C0C1400138387 /* UserMissionHistoryItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 601BCF172D7C0C1400138387 /* UserMissionHistoryItemView.swift */; };
 		601BCF1A2D7C134500138387 /* ProgressBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 601BCF192D7C134500138387 /* ProgressBar.swift */; };
 		601BCF1C2D7C150700138387 /* OtherUserChallengeDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 601BCF1B2D7C150700138387 /* OtherUserChallengeDetailView.swift */; };
 		601BCF202D7C2DC100138387 /* UINavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 601BCF1F2D7C2DC100138387 /* UINavigationController.swift */; };
@@ -102,6 +102,21 @@
 		606694F82DDB2F4F0000E368 /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = 606694F72DDB2F4F0000E368 /* GoogleSignIn */; };
 		606694FA2DDB2F4F0000E368 /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 606694F92DDB2F4F0000E368 /* GoogleSignInSwift */; };
 		606C21CC2CC6B4FC00803947 /* SubmitStatusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 606C21CB2CC6B4FC00803947 /* SubmitStatusView.swift */; };
+		606C3EB42E60A2B90050C4D6 /* UserMissionHistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 606C3EB32E60A2B90050C4D6 /* UserMissionHistoryView.swift */; };
+		606C3EB62E60A57C0050C4D6 /* UserMissionHistoryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 606C3EB52E60A57C0050C4D6 /* UserMissionHistoryViewModel.swift */; };
+		606C3EBA2E60D0EA0050C4D6 /* UserPointView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 606C3EB92E60D0EA0050C4D6 /* UserPointView.swift */; };
+		606C3EBC2E60D1070050C4D6 /* SeasonSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 606C3EBB2E60D1070050C4D6 /* SeasonSummaryView.swift */; };
+		606C3EC22E60E9290050C4D6 /* PointResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 606C3EC02E60E9290050C4D6 /* PointResponse.swift */; };
+		606C3EC42E60E9410050C4D6 /* PointSummaryResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 606C3EC32E60E9410050C4D6 /* PointSummaryResponse.swift */; };
+		606C3EC62E60E94B0050C4D6 /* PointCommercialResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 606C3EC52E60E94B0050C4D6 /* PointCommercialResponse.swift */; };
+		606C3ECA2E60E9C20050C4D6 /* PointCommercial.swift in Sources */ = {isa = PBXBuildFile; fileRef = 606C3EC92E60E9C20050C4D6 /* PointCommercial.swift */; };
+		606C3ECC2E60EA220050C4D6 /* PointSummary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 606C3ECB2E60EA220050C4D6 /* PointSummary.swift */; };
+		606C3ECE2E60EBA50050C4D6 /* UserRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 606C3ECD2E60EBA50050C4D6 /* UserRepository.swift */; };
+		606C3ED02E60EDC50050C4D6 /* PointCommercial+Mapping.swift in Sources */ = {isa = PBXBuildFile; fileRef = 606C3ECF2E60EDC50050C4D6 /* PointCommercial+Mapping.swift */; };
+		606C3ED32E60EDE10050C4D6 /* PointSummary+Mapping.swift in Sources */ = {isa = PBXBuildFile; fileRef = 606C3ED22E60EDE10050C4D6 /* PointSummary+Mapping.swift */; };
+		606C3ED52E61ABAB0050C4D6 /* TopCommercialAreaItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 606C3ED42E61ABAB0050C4D6 /* TopCommercialAreaItem.swift */; };
+		606C3ED72E61ACCF0050C4D6 /* PointSummaryItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 606C3ED62E61ACCF0050C4D6 /* PointSummaryItem.swift */; };
+		606C3ED92E61ADD50050C4D6 /* Point+UIMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 606C3ED82E61ADD50050C4D6 /* Point+UIMapper.swift */; };
 		606C87AF2C0B9B8C002D5C3E /* ApprovalItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 606C87AE2C0B9B8C002D5C3E /* ApprovalItemView.swift */; };
 		606C87B12C0CC89B002D5C3E /* 2406_TERMS_OF_USE.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 606C87B02C0CC89B002D5C3E /* 2406_TERMS_OF_USE.pdf */; };
 		606F18152DA3E1F800ABEA84 /* FavoriteNetwork.swift in Sources */ = {isa = PBXBuildFile; fileRef = 606F18142DA3E1F800ABEA84 /* FavoriteNetwork.swift */; };
@@ -160,6 +175,12 @@
 		609197672E5E069600F1D81B /* Area.swift in Sources */ = {isa = PBXBuildFile; fileRef = 609197662E5E069400F1D81B /* Area.swift */; };
 		609197692E5E06FB00F1D81B /* AreaResponse+Mapping.swift in Sources */ = {isa = PBXBuildFile; fileRef = 609197682E5E06F300F1D81B /* AreaResponse+Mapping.swift */; };
 		6091976B2E5F307A00F1D81B /* AreaNameService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6091976A2E5F307A00F1D81B /* AreaNameService.swift */; };
+		6091976D2E5F8E9B00F1D81B /* UserMissionHistory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6091976C2E5F8E9B00F1D81B /* UserMissionHistory.swift */; };
+		6091976F2E5F8EC500F1D81B /* UserMissionHistoryResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6091976E2E5F8EC500F1D81B /* UserMissionHistoryResponse.swift */; };
+		609197712E5F8F4E00F1D81B /* UserMissionHistory+Mapping.swift in Sources */ = {isa = PBXBuildFile; fileRef = 609197702E5F8F4E00F1D81B /* UserMissionHistory+Mapping.swift */; };
+		609197732E5F8FAC00F1D81B /* UserMissionHistoryViewModelItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 609197722E5F8FAC00F1D81B /* UserMissionHistoryViewModelItem.swift */; };
+		609197752E5F8FF900F1D81B /* UserMissionHistory+UIMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 609197742E5F8FF900F1D81B /* UserMissionHistory+UIMapper.swift */; };
+		609197772E5FA6ED00F1D81B /* IllsangZonePointView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 609197762E5FA6ED00F1D81B /* IllsangZonePointView.swift */; };
 		60924DC92C48C00E00221072 /* Quest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60924DC82C48C00E00221072 /* Quest.swift */; };
 		60943FE62C0A38FB00C8A714 /* ApprovalViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60943FE52C0A38FB00C8A714 /* ApprovalViewModel.swift */; };
 		609A76D92CFC50C7009F4567 /* QuestImageWithTagView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 609A76D82CFC50C7009F4567 /* QuestImageWithTagView.swift */; };
@@ -237,7 +258,7 @@
 		A11D88F72C916DE500846122 /* Icon.swift in Sources */ = {isa = PBXBuildFile; fileRef = A11D88F62C916DE500846122 /* Icon.swift */; };
 		A142E0312C2D9F37004395F8 /* SettingAlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A142E0302C2D9F37004395F8 /* SettingAlertView.swift */; };
 		A1501B0A2C48C3E5001410E1 /* MyPageInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1501B092C48C3E5001410E1 /* MyPageInfoView.swift */; };
-		A1868C442C09B6C50020BF16 /* ChallengeDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1868C432C09B6C50020BF16 /* ChallengeDetailView.swift */; };
+		A1868C442C09B6C50020BF16 /* UserMissionHistoryDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1868C432C09B6C50020BF16 /* UserMissionHistoryDetailView.swift */; };
 		A18EB9B02C26B61C00405D56 /* WithdrawNetwork.swift in Sources */ = {isa = PBXBuildFile; fileRef = A18EB9AF2C26B61C00405D56 /* WithdrawNetwork.swift */; };
 		A19628622C0763F90037C53A /* ProfileEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A19628612C0763F90037C53A /* ProfileEditView.swift */; };
 		A19628652C076D7B0037C53A /* SettingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A19628642C076D7B0037C53A /* SettingView.swift */; };
@@ -252,7 +273,7 @@
 		A1AB3D6C2C1142AA001EB9D8 /* LoginButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1AB3D6B2C1142AA001EB9D8 /* LoginButton.swift */; };
 		A1AB3D6E2C117569001EB9D8 /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1AB3D6D2C117569001EB9D8 /* Color.swift */; };
 		A1BB60262BFE05B000AAADD4 /* MyPageTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1BB60252BFE05B000AAADD4 /* MyPageTabView.swift */; };
-		A1BB60282BFE129000AAADD4 /* MyPageChallengeList.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1BB60272BFE129000AAADD4 /* MyPageChallengeList.swift */; };
+		A1BB60282BFE129000AAADD4 /* UserMissionHistoryList.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1BB60272BFE129000AAADD4 /* UserMissionHistoryList.swift */; };
 		A1BB602C2BFF145100AAADD4 /* MyPageProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1BB602B2BFF145100AAADD4 /* MyPageProfile.swift */; };
 		A1C6422A2C33F55A004954CA /* QuestNetwork.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1C642292C33F55A004954CA /* QuestNetwork.swift */; };
 		A1F770642C2AABCE00DB24A0 /* MyPageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1F770632C2AABCE00DB24A0 /* MyPageViewModel.swift */; };
@@ -304,7 +325,7 @@
 		601BCF0F2D7B43F000138387 /* OtherUserProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OtherUserProfileView.swift; sourceTree = "<group>"; };
 		601BCF112D7B449C00138387 /* OtherUserProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OtherUserProfileViewModel.swift; sourceTree = "<group>"; };
 		601BCF152D7B502B00138387 /* OtherUserChallengeList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OtherUserChallengeList.swift; sourceTree = "<group>"; };
-		601BCF172D7C0C1400138387 /* ChallengeListItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChallengeListItemView.swift; sourceTree = "<group>"; };
+		601BCF172D7C0C1400138387 /* UserMissionHistoryItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserMissionHistoryItemView.swift; sourceTree = "<group>"; };
 		601BCF192D7C134500138387 /* ProgressBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressBar.swift; sourceTree = "<group>"; };
 		601BCF1B2D7C150700138387 /* OtherUserChallengeDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OtherUserChallengeDetailView.swift; sourceTree = "<group>"; };
 		601BCF1F2D7C2DC100138387 /* UINavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UINavigationController.swift; sourceTree = "<group>"; };
@@ -379,6 +400,21 @@
 		606694FE2DDCB2860000E368 /* GoogleService-Info-dev.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info-dev.plist"; sourceTree = "<group>"; };
 		606694FF2DDCB2960000E368 /* GoogleService-Info-dev.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info-dev.plist"; sourceTree = "<group>"; };
 		606C21CB2CC6B4FC00803947 /* SubmitStatusView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubmitStatusView.swift; sourceTree = "<group>"; };
+		606C3EB32E60A2B90050C4D6 /* UserMissionHistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserMissionHistoryView.swift; sourceTree = "<group>"; };
+		606C3EB52E60A57C0050C4D6 /* UserMissionHistoryViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserMissionHistoryViewModel.swift; sourceTree = "<group>"; };
+		606C3EB92E60D0EA0050C4D6 /* UserPointView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserPointView.swift; sourceTree = "<group>"; };
+		606C3EBB2E60D1070050C4D6 /* SeasonSummaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeasonSummaryView.swift; sourceTree = "<group>"; };
+		606C3EC02E60E9290050C4D6 /* PointResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PointResponse.swift; sourceTree = "<group>"; };
+		606C3EC32E60E9410050C4D6 /* PointSummaryResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PointSummaryResponse.swift; sourceTree = "<group>"; };
+		606C3EC52E60E94B0050C4D6 /* PointCommercialResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PointCommercialResponse.swift; sourceTree = "<group>"; };
+		606C3EC92E60E9C20050C4D6 /* PointCommercial.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PointCommercial.swift; sourceTree = "<group>"; };
+		606C3ECB2E60EA220050C4D6 /* PointSummary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PointSummary.swift; sourceTree = "<group>"; };
+		606C3ECD2E60EBA50050C4D6 /* UserRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserRepository.swift; sourceTree = "<group>"; };
+		606C3ECF2E60EDC50050C4D6 /* PointCommercial+Mapping.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PointCommercial+Mapping.swift"; sourceTree = "<group>"; };
+		606C3ED22E60EDE10050C4D6 /* PointSummary+Mapping.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PointSummary+Mapping.swift"; sourceTree = "<group>"; };
+		606C3ED42E61ABAB0050C4D6 /* TopCommercialAreaItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopCommercialAreaItem.swift; sourceTree = "<group>"; };
+		606C3ED62E61ACCF0050C4D6 /* PointSummaryItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PointSummaryItem.swift; sourceTree = "<group>"; };
+		606C3ED82E61ADD50050C4D6 /* Point+UIMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Point+UIMapper.swift"; sourceTree = "<group>"; };
 		606C87AE2C0B9B8C002D5C3E /* ApprovalItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApprovalItemView.swift; sourceTree = "<group>"; };
 		606C87B02C0CC89B002D5C3E /* 2406_TERMS_OF_USE.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = 2406_TERMS_OF_USE.pdf; sourceTree = "<group>"; };
 		606F18142DA3E1F800ABEA84 /* FavoriteNetwork.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteNetwork.swift; sourceTree = "<group>"; };
@@ -437,6 +473,12 @@
 		609197662E5E069400F1D81B /* Area.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Area.swift; sourceTree = "<group>"; };
 		609197682E5E06F300F1D81B /* AreaResponse+Mapping.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AreaResponse+Mapping.swift"; sourceTree = "<group>"; };
 		6091976A2E5F307A00F1D81B /* AreaNameService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AreaNameService.swift; sourceTree = "<group>"; };
+		6091976C2E5F8E9B00F1D81B /* UserMissionHistory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserMissionHistory.swift; sourceTree = "<group>"; };
+		6091976E2E5F8EC500F1D81B /* UserMissionHistoryResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserMissionHistoryResponse.swift; sourceTree = "<group>"; };
+		609197702E5F8F4E00F1D81B /* UserMissionHistory+Mapping.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserMissionHistory+Mapping.swift"; sourceTree = "<group>"; };
+		609197722E5F8FAC00F1D81B /* UserMissionHistoryViewModelItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserMissionHistoryViewModelItem.swift; sourceTree = "<group>"; };
+		609197742E5F8FF900F1D81B /* UserMissionHistory+UIMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserMissionHistory+UIMapper.swift"; sourceTree = "<group>"; };
+		609197762E5FA6ED00F1D81B /* IllsangZonePointView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IllsangZonePointView.swift; sourceTree = "<group>"; };
 		60924DC82C48C00E00221072 /* Quest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Quest.swift; sourceTree = "<group>"; };
 		60943FE52C0A38FB00C8A714 /* ApprovalViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApprovalViewModel.swift; sourceTree = "<group>"; };
 		609A76D82CFC50C7009F4567 /* QuestImageWithTagView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestImageWithTagView.swift; sourceTree = "<group>"; };
@@ -513,7 +555,7 @@
 		A11D88F62C916DE500846122 /* Icon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Icon.swift; sourceTree = "<group>"; };
 		A142E0302C2D9F37004395F8 /* SettingAlertView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingAlertView.swift; sourceTree = "<group>"; };
 		A1501B092C48C3E5001410E1 /* MyPageInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPageInfoView.swift; sourceTree = "<group>"; };
-		A1868C432C09B6C50020BF16 /* ChallengeDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChallengeDetailView.swift; sourceTree = "<group>"; };
+		A1868C432C09B6C50020BF16 /* UserMissionHistoryDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserMissionHistoryDetailView.swift; sourceTree = "<group>"; };
 		A18EB9AF2C26B61C00405D56 /* WithdrawNetwork.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WithdrawNetwork.swift; sourceTree = "<group>"; };
 		A19628612C0763F90037C53A /* ProfileEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileEditView.swift; sourceTree = "<group>"; };
 		A19628642C076D7B0037C53A /* SettingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingView.swift; sourceTree = "<group>"; };
@@ -528,7 +570,7 @@
 		A1AB3D6B2C1142AA001EB9D8 /* LoginButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginButton.swift; sourceTree = "<group>"; };
 		A1AB3D6D2C117569001EB9D8 /* Color.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Color.swift; sourceTree = "<group>"; };
 		A1BB60252BFE05B000AAADD4 /* MyPageTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPageTabView.swift; sourceTree = "<group>"; };
-		A1BB60272BFE129000AAADD4 /* MyPageChallengeList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPageChallengeList.swift; sourceTree = "<group>"; };
+		A1BB60272BFE129000AAADD4 /* UserMissionHistoryList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserMissionHistoryList.swift; sourceTree = "<group>"; };
 		A1BB602B2BFF145100AAADD4 /* MyPageProfile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPageProfile.swift; sourceTree = "<group>"; };
 		A1C642292C33F55A004954CA /* QuestNetwork.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestNetwork.swift; sourceTree = "<group>"; };
 		A1EB63392C132AC100B63F9C /* Roboto-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Roboto-Medium.ttf"; sourceTree = "<group>"; };
@@ -650,9 +692,9 @@
 			isa = PBXGroup;
 			children = (
 				601BCF0F2D7B43F000138387 /* OtherUserProfileView.swift */,
+				601BCF112D7B449C00138387 /* OtherUserProfileViewModel.swift */,
 				601BCF152D7B502B00138387 /* OtherUserChallengeList.swift */,
 				601BCF1B2D7C150700138387 /* OtherUserChallengeDetailView.swift */,
-				601BCF112D7B449C00138387 /* OtherUserProfileViewModel.swift */,
 			);
 			path = Profile;
 			sourceTree = "<group>";
@@ -712,14 +754,17 @@
 			path = Enum;
 			sourceTree = "<group>";
 		};
-		60299E2F2CBFF8D20039663F /* MyPageChallenge */ = {
+		60299E2F2CBFF8D20039663F /* UserMissionHistory */ = {
 			isa = PBXGroup;
 			children = (
-				A1BB60272BFE129000AAADD4 /* MyPageChallengeList.swift */,
-				601BCF172D7C0C1400138387 /* ChallengeListItemView.swift */,
-				A1868C432C09B6C50020BF16 /* ChallengeDetailView.swift */,
+				606C3EB32E60A2B90050C4D6 /* UserMissionHistoryView.swift */,
+				606C3EB52E60A57C0050C4D6 /* UserMissionHistoryViewModel.swift */,
+				609197722E5F8FAC00F1D81B /* UserMissionHistoryViewModelItem.swift */,
+				A1BB60272BFE129000AAADD4 /* UserMissionHistoryList.swift */,
+				601BCF172D7C0C1400138387 /* UserMissionHistoryItemView.swift */,
+				A1868C432C09B6C50020BF16 /* UserMissionHistoryDetailView.swift */,
 			);
-			path = MyPageChallenge;
+			path = UserMissionHistory;
 			sourceTree = "<group>";
 		};
 		603CF4ED2D79A80F00A2D19E /* SubmitAlert */ = {
@@ -842,6 +887,36 @@
 			path = HonorPopup;
 			sourceTree = "<group>";
 		};
+		606C3EC12E60E9290050C4D6 /* User */ = {
+			isa = PBXGroup;
+			children = (
+				606C3EC02E60E9290050C4D6 /* PointResponse.swift */,
+				606C3EC52E60E94B0050C4D6 /* PointCommercialResponse.swift */,
+				606C3EC32E60E9410050C4D6 /* PointSummaryResponse.swift */,
+			);
+			path = User;
+			sourceTree = "<group>";
+		};
+		606C3EC82E60E97E0050C4D6 /* User */ = {
+			isa = PBXGroup;
+			children = (
+				6091976C2E5F8E9B00F1D81B /* UserMissionHistory.swift */,
+				606C3EC92E60E9C20050C4D6 /* PointCommercial.swift */,
+				606C3ECB2E60EA220050C4D6 /* PointSummary.swift */,
+			);
+			path = User;
+			sourceTree = "<group>";
+		};
+		606C3ED12E60EDCC0050C4D6 /* User */ = {
+			isa = PBXGroup;
+			children = (
+				609197702E5F8F4E00F1D81B /* UserMissionHistory+Mapping.swift */,
+				606C3ECF2E60EDC50050C4D6 /* PointCommercial+Mapping.swift */,
+				606C3ED22E60EDE10050C4D6 /* PointSummary+Mapping.swift */,
+			);
+			path = User;
+			sourceTree = "<group>";
+		};
 		607FCBD22BFA645100BB2D04 /* Router */ = {
 			isa = PBXGroup;
 			children = (
@@ -885,10 +960,15 @@
 			isa = PBXGroup;
 			children = (
 				607FCBDC2BFA686700BB2D04 /* MyPageView.swift */,
-				A1BB602B2BFF145100AAADD4 /* MyPageProfile.swift */,
-				A1BB60252BFE05B000AAADD4 /* MyPageTabView.swift */,
 				A1F770632C2AABCE00DB24A0 /* MyPageViewModel.swift */,
-				60299E2F2CBFF8D20039663F /* MyPageChallenge */,
+				A1BB602B2BFF145100AAADD4 /* MyPageProfile.swift */,
+				609197762E5FA6ED00F1D81B /* IllsangZonePointView.swift */,
+				606C3EBB2E60D1070050C4D6 /* SeasonSummaryView.swift */,
+				606C3EB92E60D0EA0050C4D6 /* UserPointView.swift */,
+				A1BB60252BFE05B000AAADD4 /* MyPageTabView.swift */,
+				606C3ED42E61ABAB0050C4D6 /* TopCommercialAreaItem.swift */,
+				606C3ED62E61ACCF0050C4D6 /* PointSummaryItem.swift */,
+				60299E2F2CBFF8D20039663F /* UserMissionHistory */,
 				6053345D2D3126F900599159 /* MyPageInfo */,
 				600657E22DBD2DD10022D117 /* MyPageHonor */,
 			);
@@ -1116,6 +1196,7 @@
 			isa = PBXGroup;
 			children = (
 				60D897112E536D2C006A8480 /* MissionHistoryResponse.swift */,
+				6091976E2E5F8EC500F1D81B /* UserMissionHistoryResponse.swift */,
 				60D897362E57502B006A8480 /* BaseQuestResponse.swift */,
 				60D897302E57428D006A8480 /* QuestDetailResponse.swift */,
 				60D897402E575056006A8480 /* LargeRewardQuestResponse.swift */,
@@ -1126,6 +1207,7 @@
 				600D63972E48E5A9009FE14F /* AreaResponse.swift */,
 				60D897262E5374F8006A8480 /* UserTitleResponse.swift */,
 				6091975A2E5DE8C800F1D81B /* BannerResponse.swift */,
+				606C3EC12E60E9290050C4D6 /* User */,
 				6091974D2E5C27D000F1D81B /* Rank */,
 			);
 			path = Response;
@@ -1152,6 +1234,7 @@
 				60D897182E537188006A8480 /* MissionHistory.swift */,
 				60004AD82D42373300CD2254 /* Banner.swift */,
 				6091973C2E5C268500F1D81B /* Rank */,
+				606C3EC82E60E97E0050C4D6 /* User */,
 			);
 			path = Entity;
 			sourceTree = "<group>";
@@ -1164,6 +1247,7 @@
 				609197522E5C2E0500F1D81B /* RankRepository.swift */,
 				6091975E2E5DEA2B00F1D81B /* BannerRepository.swift */,
 				609197642E5E02CD00F1D81B /* AreaRepository.swift */,
+				606C3ECD2E60EBA50050C4D6 /* UserRepository.swift */,
 			);
 			path = Repository;
 			sourceTree = "<group>";
@@ -1183,6 +1267,7 @@
 				6091975C2E5DE9C100F1D81B /* BannerResponse+Mapping.swift */,
 				609197682E5E06F300F1D81B /* AreaResponse+Mapping.swift */,
 				609197392E5C263900F1D81B /* Rank */,
+				606C3ED12E60EDCC0050C4D6 /* User */,
 			);
 			path = Mapper;
 			sourceTree = "<group>";
@@ -1191,9 +1276,11 @@
 			isa = PBXGroup;
 			children = (
 				60D897222E537421006A8480 /* MIssionHistory+UIMapper.swift */,
+				609197742E5F8FF900F1D81B /* UserMissionHistory+UIMapper.swift */,
 				60D897522E578003006A8480 /* Quest+UIMapper.swift */,
 				609197542E5C364600F1D81B /* Rank+UIMapper.swift */,
 				609197622E5DEC0F00F1D81B /* Banner+UIMapper.swift */,
+				606C3ED82E61ADD50050C4D6 /* Point+UIMapper.swift */,
 			);
 			path = Mapper;
 			sourceTree = "<group>";
@@ -1501,6 +1588,7 @@
 			files = (
 				60D897472E576052006A8480 /* QuizType.swift in Sources */,
 				6091975D2E5DE9C100F1D81B /* BannerResponse+Mapping.swift in Sources */,
+				606C3EBC2E60D1070050C4D6 /* SeasonSummaryView.swift in Sources */,
 				60ADF9C92D5A019B00556958 /* UIApplication.swift in Sources */,
 				6091973B2E5C267B00F1D81B /* AreaRank.swift in Sources */,
 				605445C62DD36D1F0005742D /* HonorItem.swift in Sources */,
@@ -1508,22 +1596,27 @@
 				605445D02DD4366D0005742D /* HonorInfoPopupView.swift in Sources */,
 				60924DC92C48C00E00221072 /* Quest.swift in Sources */,
 				6091975B2E5DE8F600F1D81B /* BannerResponse.swift in Sources */,
+				606C3ECE2E60EBA50050C4D6 /* UserRepository.swift in Sources */,
 				60A2ADF82DAE6B68007AC375 /* FAQView.swift in Sources */,
 				604687A32D1FC32E0056E394 /* HomeViewModel.swift in Sources */,
 				605445CA2DD36E440005742D /* HonorNetwork.swift in Sources */,
 				60D8971A2E537188006A8480 /* MissionHistory.swift in Sources */,
+				606C3ED92E61ADD50050C4D6 /* Point+UIMapper.swift in Sources */,
 				606F18172DA650DE00ABEA84 /* FavoriteService.swift in Sources */,
 				609197202E59EBF100F1D81B /* LargeRewardQuestResponse+Mapping.swift in Sources */,
 				A196286B2C0859730037C53A /* CustomerServiceView.swift in Sources */,
 				607FCBE22BFA6A8300BB2D04 /* Buttons.swift in Sources */,
 				605DA0CF2C07118900CC9450 /* SubmitRouterView.swift in Sources */,
 				A1FF91742C257F6400F03E4B /* XpLog.swift in Sources */,
-				601BCF182D7C0C1400138387 /* ChallengeListItemView.swift in Sources */,
+				601BCF182D7C0C1400138387 /* UserMissionHistoryItemView.swift in Sources */,
 				607FCBD82BFA681500BB2D04 /* ApprovalView.swift in Sources */,
+				606C3ED52E61ABAB0050C4D6 /* TopCommercialAreaItem.swift in Sources */,
 				A142E0312C2D9F37004395F8 /* SettingAlertView.swift in Sources */,
 				601BCF392D7EE63100138387 /* CustomImagePicker.swift in Sources */,
+				606C3EB62E60A57C0050C4D6 /* UserMissionHistoryViewModel.swift in Sources */,
 				603CF4F32D79A8CE00A2D19E /* SubmitInprogressView.swift in Sources */,
 				609197592E5C957700F1D81B /* SeasonManager.swift in Sources */,
+				6091976F2E5F8EC500F1D81B /* UserMissionHistoryResponse.swift in Sources */,
 				601189272C3F00FB0070F2AD /* AuthChannel.swift in Sources */,
 				A1BB60262BFE05B000AAADD4 /* MyPageTabView.swift in Sources */,
 				609197552E5C364E00F1D81B /* Rank+UIMapper.swift in Sources */,
@@ -1533,6 +1626,7 @@
 				9FE63D722CB3AB4F00CA7940 /* RankingItemView.swift in Sources */,
 				9FE63D702CB3AAF100CA7940 /* RankingViewModel.swift in Sources */,
 				600D639C2E48E83F009FE14F /* AreaSelectionView.swift in Sources */,
+				6091976D2E5F8E9B00F1D81B /* UserMissionHistory.swift in Sources */,
 				6057361C2D8AC8A800CF7051 /* Quiz.swift in Sources */,
 				6053345F2D31272B00599159 /* MyPageInfoCardView.swift in Sources */,
 				60054FA02D931AA300E7C5A6 /* PDFKitView.swift in Sources */,
@@ -1551,6 +1645,7 @@
 				60D897312E57428D006A8480 /* QuestDetailResponse.swift in Sources */,
 				6091974A2E5C27A400F1D81B /* AreaUserRankResponse.swift in Sources */,
 				60D8974D2E5766DE006A8480 /* QuestRepository.swift in Sources */,
+				606C3ED02E60EDC50050C4D6 /* PointCommercial+Mapping.swift in Sources */,
 				601BCF162D7B502B00138387 /* OtherUserChallengeList.swift in Sources */,
 				6044B7352C3442E6002C13A0 /* NetworkError.swift in Sources */,
 				601BCF1A2D7C134500138387 /* ProgressBar.swift in Sources */,
@@ -1569,8 +1664,11 @@
 				601BCF202D7C2DC100138387 /* UINavigationController.swift in Sources */,
 				A1FF916E2C250C3B00F03E4B /* UserNetwork.swift in Sources */,
 				60004AD52D3B799700CD2254 /* Constants.swift in Sources */,
+				609197712E5F8F4E00F1D81B /* UserMissionHistory+Mapping.swift in Sources */,
 				A1AB3D6E2C117569001EB9D8 /* Color.swift in Sources */,
 				609197532E5C2E0500F1D81B /* RankRepository.swift in Sources */,
+				606C3EC62E60E94B0050C4D6 /* PointCommercialResponse.swift in Sources */,
+				606C3EC42E60E9410050C4D6 /* PointSummaryResponse.swift in Sources */,
 				60ADF9CD2D5DD3D000556958 /* RoundedBackground.swift in Sources */,
 				A1AB3D682C1141B3001EB9D8 /* LoginButtonView.swift in Sources */,
 				606F18152DA3E1F800ABEA84 /* FavoriteNetwork.swift in Sources */,
@@ -1578,6 +1676,7 @@
 				601189292C3F022D0070F2AD /* LoginViewModel.swift in Sources */,
 				60D8973D2E57504C006A8480 /* RecommendQuestResponse.swift in Sources */,
 				604687A52D1FC36A0056E394 /* TitleWithContentView.swift in Sources */,
+				609197732E5F8FAC00F1D81B /* UserMissionHistoryViewModelItem.swift in Sources */,
 				60FF5EC52E4949F8007A5B40 /* RegionPickerView.swift in Sources */,
 				609197692E5E06FB00F1D81B /* AreaResponse+Mapping.swift in Sources */,
 				A19628622C0763F90037C53A /* ProfileEditView.swift in Sources */,
@@ -1598,12 +1697,14 @@
 				60D897532E578003006A8480 /* Quest+UIMapper.swift in Sources */,
 				6091972E2E5A22A800F1D81B /* SeasonTimerView.swift in Sources */,
 				603F04132C26ADC6008A2332 /* CommonResponse.swift in Sources */,
+				606C3EC22E60E9290050C4D6 /* PointResponse.swift in Sources */,
 				609197632E5DEC0F00F1D81B /* Banner+UIMapper.swift in Sources */,
 				6091974F2E5C292F00F1D81B /* AreaRankViewModelItem.swift in Sources */,
 				60D897202E5372BE006A8480 /* MissionHistoryResponse+Mapping.swift in Sources */,
 				607FCBE42BFD124900BB2D04 /* QuestItemView.swift in Sources */,
 				605E81442D9FE56000ECDB15 /* QuestDetailTitleView.swift in Sources */,
 				60FF5EC32E4937A6007A5B40 /* MyRegionAreaSelectionView.swift in Sources */,
+				606C3EBA2E60D0EA0050C4D6 /* UserPointView.swift in Sources */,
 				606C87AF2C0B9B8C002D5C3E /* ApprovalItemView.swift in Sources */,
 				60D8974F2E576D46006A8480 /* ResponseMapper.swift in Sources */,
 				60D897292E537653006A8480 /* ApprovalMissionHistoryItem.swift in Sources */,
@@ -1614,15 +1715,17 @@
 				603CF4EF2D79A83600A2D19E /* SubmitStatus.swift in Sources */,
 				609197262E59EC5F00F1D81B /* MissionResponse+Mapping.swift in Sources */,
 				60FF5ECB2E4BB4A6007A5B40 /* SeasonNetwork.swift in Sources */,
+				609197752E5F8FF900F1D81B /* UserMissionHistory+UIMapper.swift in Sources */,
 				60246FA82D91E57E007C05B3 /* AnalyticsService.swift in Sources */,
 				609197362E5C25F400F1D81B /* UserRank.swift in Sources */,
-				A1868C442C09B6C50020BF16 /* ChallengeDetailView.swift in Sources */,
+				A1868C442C09B6C50020BF16 /* UserMissionHistoryDetailView.swift in Sources */,
 				600657DC2DBCCBAA0022D117 /* MyPageInfoCardBottomView.swift in Sources */,
 				6044B71D2C32B6A4002C13A0 /* UIImage++.swift in Sources */,
 				607FCBD42BFA648000BB2D04 /* Tab.swift in Sources */,
 				609197572E5C399000F1D81B /* AreaUserRankViewModelItem.swift in Sources */,
 				601BCF122D7B449C00138387 /* OtherUserProfileViewModel.swift in Sources */,
 				603CF4CB2D7057BF00A2D19E /* ImageChallengeSubmitService.swift in Sources */,
+				606C3ED32E60EDE10050C4D6 /* PointSummary+Mapping.swift in Sources */,
 				6090A5F52D53AC3300A01429 /* AppVersionManager.swift in Sources */,
 				60ADF9BD2D59D3FD00556958 /* FontStyle.swift in Sources */,
 				60299E312CBFFF160039663F /* TransferableUIImage.swift in Sources */,
@@ -1638,6 +1741,7 @@
 				60B8B9E72BF9EEF1005F6DE3 /* ILSANGApp.swift in Sources */,
 				60D897372E57502B006A8480 /* BaseQuestResponse.swift in Sources */,
 				60D8973B2E57503F006A8480 /* MissionResponse.swift in Sources */,
+				609197772E5FA6ED00F1D81B /* IllsangZonePointView.swift in Sources */,
 				6091971C2E59EAB800F1D81B /* QuestDetailResponse+Mapping.swift in Sources */,
 				609197402E5C26D800F1D81B /* MetroAreaRankResponse.swift in Sources */,
 				608EBF9F2C39C17F00B862CC /* Dictionary++.swift in Sources */,
@@ -1677,17 +1781,20 @@
 				60ADF9C22D59D47100556958 /* FontWithLineHeight.swift in Sources */,
 				606292D82C19E70A0098B6D2 /* Network.swift in Sources */,
 				605445CC2DD36EA30005742D /* TitleHistory.swift in Sources */,
+				606C3ECA2E60E9C20050C4D6 /* PointCommercial.swift in Sources */,
 				A1501B0A2C48C3E5001410E1 /* MyPageInfoView.swift in Sources */,
 				60A2ADF32DAE62BD007AC375 /* SettingItemView.swift in Sources */,
 				609197482E5C279700F1D81B /* AreaUserRank.swift in Sources */,
 				608EBFA12C39C5BB00B862CC /* String++.swift in Sources */,
 				605445C42DD36CE60005742D /* HonorListItemView.swift in Sources */,
 				600211EA2C1EEE6D000CC02E /* APITarget.swift in Sources */,
-				A1BB60282BFE129000AAADD4 /* MyPageChallengeList.swift in Sources */,
+				A1BB60282BFE129000AAADD4 /* UserMissionHistoryList.swift in Sources */,
 				6011891D2C3E8B3B0070F2AD /* UserService.swift in Sources */,
+				606C3ECC2E60EA220050C4D6 /* PointSummary.swift in Sources */,
 				609197652E5E02CD00F1D81B /* AreaRepository.swift in Sources */,
 				A196286D2C0859820037C53A /* TermsAndPolicyView.swift in Sources */,
 				605E813D2D9F1B9900ECDB15 /* QuestDetailViewModel.swift in Sources */,
+				606C3ED72E61ACCF0050C4D6 /* PointSummaryItem.swift in Sources */,
 				60C0F4242CCE9B2F00DB19AB /* UIDevice++.swift in Sources */,
 				60D897492E576302006A8480 /* Mission.swift in Sources */,
 				A1F770642C2AABCE00DB24A0 /* MyPageViewModel.swift in Sources */,
@@ -1703,6 +1810,7 @@
 				600657E42DBD2DF50022D117 /* MyPageHonorManageView.swift in Sources */,
 				601189212C3E94A60070F2AD /* AuthService.swift in Sources */,
 				603CF4E52D732DD800A2D19E /* ImageFullScreenView.swift in Sources */,
+				606C3EB42E60A2B90050C4D6 /* UserMissionHistoryView.swift in Sources */,
 				607FCBD62BFA660C00BB2D04 /* MainTabView.swift in Sources */,
 				6091971E2E59EBD800F1D81B /* BaseQuestResponse+Mapping.swift in Sources */,
 				603F040B2C2416D2008A2332 /* ImageNetwork.swift in Sources */,

@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Season: Decodable {
+struct Season: Decodable, Equatable {
     let id: Int
     let seasonNumber: Int
     let startDate: String

@@ -9,8 +9,9 @@ import SwiftUI
 
 // TODO: 에러처리 재정의 필요
 struct HomeView: View {
-    @Bindable var vm: HomeViewModel
+    @State var vm: HomeViewModel
     @EnvironmentObject var sharedState: SharedState
+    @EnvironmentObject var seasonManager: SeasonManager
     @EnvironmentObject var honorAcquisitionManager: HonorAcquisitionManager
     @Environment(\.redactionReasons) var redactionReasons
     
@@ -37,7 +38,7 @@ struct HomeView: View {
                     }
                 }
                 .task {
-                    await honorAcquisitionManager.fetchUnreadHonorHistory()
+                    // await honorAcquisitionManager.fetchUnreadHonorHistory()
                 }
                 .refreshable {
                     // TODO: 태스크 {} 제거
@@ -49,6 +50,9 @@ struct HomeView: View {
             case .error:
                 networkErrorView
             }
+        }
+        .task {
+            await vm.loadInitialData()
         }
         .background(Color.background)
         .overlay(
@@ -90,7 +94,7 @@ struct HomeView: View {
                     banner: banner,
                     shouldShowIllsangZoneWarning: vm.shouldShowIllsangZoneWarning,
                     currentSeason: vm.currentSeason,
-                    userNetwork: vm.userNetwork,
+                    userRepository: vm.userRepository,
                     questRepository: vm.questRepository,
                     areaRepository: vm.areaRepository,
                     favoriteService: vm.favoriteService
@@ -103,7 +107,7 @@ struct HomeView: View {
             }
         }
         .navigationDestination(isPresented: $vm.showSelectIllsangZoneView) {
-            IllsangZoneSelectionView(userNetwork: vm.userNetwork, areaRepository: vm.areaRepository) { area in
+            IllsangZoneSelectionView(userRepository: vm.userRepository, areaRepository: vm.areaRepository) { area in
                 vm.handleIllsangZoneSelection(area)
             }
         }
@@ -161,8 +165,8 @@ struct HomeView: View {
                 }
             }
             .padding(.bottom, 72)
-            .redacted(reason: vm.viewStatus == .loading ? .placeholder : [])
-            .foregroundStyle(redactionReasons.contains(.placeholder) ? .clear: Color.gray500)
+//            .redacted(reason: vm.viewStatus == .loading ? .placeholder : [])
+//            .foregroundStyle(redactionReasons.contains(.placeholder) ? .clear: Color.gray500)
         }
     }
     
@@ -386,7 +390,15 @@ struct HomeView: View {
                 .scrollIndicators(.never)
                 .navigationDestination(isPresented: $vm.showOtherUserProfileView) {
                     if let userId = vm.selectedUserId {
-                        OtherUserProfileView(userId: userId)
+                        OtherUserProfileView(
+                            vm: OtherUserProfileViewModel(
+                                userId: userId,
+                                userRepository: vm.userRepository,
+                                missionHistoryRepository: MissionHistoryRepository(network: MissionHistoryNetwork()),
+                                areaNameService: vm.areaNameService,
+                                seasonManager: seasonManager
+                            )
+                        )
                     }
                 }
         )
@@ -459,7 +471,7 @@ struct HomeView: View {
 
 #Preview {
     let viewModel = HomeViewModel(
-        userNetwork: UserNetwork(),
+        userRepository: UserRepository(network: UserNetwork()),
         areaNameService: AreaNameService(areaRepository: AreaRepository(network: AreaNetwork())),
         questRepository: QuestRepository(network: QuestNetwork()),
         rankRepository: RankRepository(network: RankNetwork()),

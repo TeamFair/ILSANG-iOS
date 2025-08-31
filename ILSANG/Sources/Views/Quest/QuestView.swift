@@ -211,30 +211,18 @@ extension QuestView {
     }
     
     private var filterPickerDefaultView: some View {
-        PickerView<QuestFilterType>(
-            status: $vm.questFilterState.pickerStatus,
-            selection: $vm.questFilterState.selectedValue,
-            width: 150
-        )
-        .onChange(of: vm.questFilterState.selectedValue) { _, newValue in
-            AnalyticsService.logEvent(.questFilterClick(filterOption: newValue.description))
-        }
+        PickerView(state: vm.questFilterState, width: 150)
+            .onChange(of: vm.questFilterState.selectedValue) { _, newValue in
+                AnalyticsService.logEvent(.questFilterClick(filterOption: newValue.description))
+            }
     }
     
     private var filterPickerRepeatView: some View {
-        PickerView<RepeatType>(
-            status: $vm.repeatFilterState.pickerStatus,
-            selection: $vm.repeatFilterState.selectedValue,
-            width: 85
-        )
+        PickerView(state: vm.repeatFilterState, width: 85)
     }
     
     private var filterPickerEventView: some View {
-        PickerView<EventQuestFilterType>(
-            status: $vm.eventFilterState.pickerStatus,
-            selection: $vm.eventFilterState.selectedValue,
-            width: 150
-        )
+        PickerView(state: vm.eventFilterState, width: 150)
     }
     
     @ViewBuilder

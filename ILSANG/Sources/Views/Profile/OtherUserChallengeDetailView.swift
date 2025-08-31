@@ -9,7 +9,7 @@ import SwiftUI
 
 struct OtherUserChallengeDetailView: View {
     @Environment(\.dismiss) var dismiss
-    let challenge: ChallengeViewModelItem
+    let challenge: UserMissionHistoryViewModelItem
     
     var body: some View {
         VStack {
@@ -18,7 +18,7 @@ struct OtherUserChallengeDetailView: View {
             }
             .padding(.bottom, 8) // 세로로 긴 이미지 대응 (NavigationTitleView의 bottom 패딩과 겹침)
             
-            ChallengeImageView(missionImage: challenge.challengeImage ?? .logo, challengeData: challenge)
+            ChallengeImageView(missionImage: challenge.submitImage ?? .logo, challengeData: challenge)
         }
         .navigationBarBackButtonHidden()
     }

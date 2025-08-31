@@ -9,26 +9,23 @@ import SwiftUI
 
 struct ProgressBar: View {
     let progress: Double
+    var height: CGFloat = 8
     
     var body: some View {
-        GeometryReader { geometry in
-            ZStack(alignment: .leading) {
-                Rectangle()
-                    .frame(width: geometry.size.width, height: 8)
-                    .cornerRadius(6)
-                    .foregroundColor(.gray100)
-                
-                Rectangle()
-                    .frame(width: CGFloat(progress) * geometry.size.width, height: 8)
-                    .cornerRadius(6)
-                    .foregroundColor(.accent)
-            }
+        ZStack(alignment: .leading) {
+            Rectangle()
+                .frame(height: height)
+                .cornerRadius(6)
+                .foregroundColor(.gray100)
+            
+            Rectangle()
+                .frame(height: height)
+                .cornerRadius(6)
+                .foregroundColor(.accent)
+                .scaleEffect(x: min(max(progress, 0), 1), anchor: .leading) // 0~1 범위로 제한
         }
     }
 }
-
-
-import SwiftUI
 
 struct ProgressCircleView: View {
     let progress: Double // 0.0 ~ 1.0
@@ -78,5 +75,8 @@ fileprivate struct ProgressCirclePreview: View {
     }
 }
 #Preview {
-    ProgressCirclePreview()
+    VStack {
+        ProgressBar(progress: 0.88)        
+        ProgressCirclePreview()
+    }
 }

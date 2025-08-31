@@ -19,10 +19,12 @@ class RankingDetailViewModel: ObservableObject {
         case metro
         case commercial
     }
-    @Published var viewStatus: ViewStatus = .loaded // TODO: 변경
-    @Published var areaUserRank: AreaUserRankViewModelItem = .init(ranks: [], user: .mockData1)  // TODO: 변경
+    @Published var viewStatus: ViewStatus = .loading // TODO: 변경
+    @Published var areaUserRank: AreaUserRankViewModelItem = .init(ranks: [], user: nil)  // TODO: 변경
     @Published var imageList: [UIImage] = []
     @Published var imageIdx = 0
+//    @Published var selectedUserId: String?
+//    @Published var isShowingUserProfile = false
     
     let seasonId: Int?
     let areaName: String
@@ -33,6 +35,7 @@ class RankingDetailViewModel: ObservableObject {
     let areaCode: String
     let areaType: AreaType
     private let rankRepository: RankRepositoryInterface
+    let areaNameService: AreaNameProvider
     
     init(
         seasonId: Int?,
@@ -42,7 +45,8 @@ class RankingDetailViewModel: ObservableObject {
         areaImageIds: [String],
         areaCode: String,
         areaType: AreaType,
-        rankRepository: RankRepositoryInterface
+        rankRepository: RankRepositoryInterface,
+        areaNameService: AreaNameProvider
     ) {
         self.seasonId = seasonId
         self.areaName = areaName
@@ -52,6 +56,7 @@ class RankingDetailViewModel: ObservableObject {
         self.areaCode = areaCode
         self.areaType = areaType
         self.rankRepository = rankRepository
+        self.areaNameService = areaNameService
     }
     
     @MainActor

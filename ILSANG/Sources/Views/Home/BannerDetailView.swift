@@ -49,7 +49,7 @@ struct BannerDetailView: View {
         )
         // TODO: navigation으로 변경
         .navigationDestination(isPresented: $viewModel.showSelectIllsangZoneView) {
-            IllsangZoneSelectionView(userNetwork: viewModel.userNetwork, areaRepository: viewModel.areaRepository) { area in
+            IllsangZoneSelectionView(userRepository: viewModel.userRepository, areaRepository: viewModel.areaRepository) { area in
                 viewModel.handleIllsangZoneSelection(area)
             }
         }
@@ -191,11 +191,7 @@ struct BannerDetailView: View {
 //    }
     
     private var filterPickerEventView: some View {
-        PickerView<BannerEventQuestFilterType>(
-            status: $viewModel.eventFilterState.pickerStatus,
-            selection: $viewModel.eventFilterState.selectedValue,
-            width: 150
-        )
+        PickerView(state: viewModel.eventFilterState, width: 85)
     }
     
     private var questListEmptyView: some View {
@@ -341,7 +337,7 @@ struct QuestSortHelper {
             banner: .init(id: 0, title: "title", navigationTitle: "일상", imageId: "", description: "", image: .img0),
             shouldShowIllsangZoneWarning: false,
             currentSeason: 1,
-            userNetwork: UserNetwork(),
+            userRepository: UserRepository(network: UserNetwork()),
             questRepository: QuestRepository(network: QuestNetwork()),
             areaRepository: AreaRepository(network: AreaNetwork()),
             favoriteService: FavoriteService(

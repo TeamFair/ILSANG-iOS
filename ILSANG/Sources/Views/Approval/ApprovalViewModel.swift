@@ -27,6 +27,7 @@ final class ApprovalViewModel {
     
     var viewStatus: ViewStatus = .loading
     var itemList: [ApprovalMissionHistoryItem] = []
+    var selectedUserId: String?
     
     var showReportAlert = false
     var selectedChallenge: ApprovalMissionHistoryItem?
@@ -34,12 +35,18 @@ final class ApprovalViewModel {
     var paginationManager: PaginationManager<ApprovalMissionHistoryItem>?
     
     private let emojiNetwork: EmojiNetwork
-    private let missionHistoryRepository: MissionHistoryRepository
+    let userRepository: UserRepositoryInterface
+    let missionHistoryRepository: MissionHistoryRepository
+    let areaNameService: AreaNameProvider
 
-    private let areaNameService: AreaNameProvider
-
-    init(emojiNetwork: EmojiNetwork, missionHistoryRepository: MissionHistoryRepository, areaNameService: AreaNameProvider) {
+    init(
+        emojiNetwork: EmojiNetwork,
+        userRepository: UserRepositoryInterface,
+        missionHistoryRepository: MissionHistoryRepository,
+        areaNameService: AreaNameProvider
+    ) {
         self.emojiNetwork = emojiNetwork
+        self.userRepository = userRepository
         self.missionHistoryRepository = missionHistoryRepository
         self.areaNameService = areaNameService
         

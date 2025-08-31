@@ -58,8 +58,13 @@ struct MyPageProfile: View {
                 HonorIconView(honorTitle: honorTitle, grade: honorType, imageSize: 20, spacing: 4, font: .badge1, fgColor: .gray500)
                     .padding(.vertical, 8)
                     .padding(.horizontal, 10)
-                    .background(Color.white)
-                    .clipShape(.capsule)
+                    .background(
+                        Capsule()
+                            .strokeBorder(
+                                .gray100,
+                                style: StrokeStyle(lineWidth: 1)
+                            )
+                    )
             }
         }
     }

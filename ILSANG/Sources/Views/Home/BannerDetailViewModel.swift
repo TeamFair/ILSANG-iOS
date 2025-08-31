@@ -39,7 +39,7 @@ class BannerDetailViewModel {
     
     var selectedQuest: QuestViewModelItem?
     var selectedHeader: BannerQuestStatus = .uncomplete
-    var eventFilterState: FilterPickerState<BannerEventQuestFilterType>
+    var eventFilterState: StaticFilterPickerState<BannerEventQuestFilterType>
     
     // 일상존 관련
     var currentSeason: Int
@@ -67,8 +67,8 @@ class BannerDetailViewModel {
             return completedQuest.isEmpty || filteredEventQuestList.isEmpty
         }
     }
-    
-    let userNetwork: UserNetwork
+
+    let userRepository: UserRepositoryInterface
     private let questRepository: QuestRepositoryInterface
     let areaRepository: AreaRepositoryInterface
     private let favoriteService: FavoriteService
@@ -77,18 +77,18 @@ class BannerDetailViewModel {
         banner: BannerViewModelItem,
         shouldShowIllsangZoneWarning: Bool,
         currentSeason: Int,
-        userNetwork: UserNetwork,
+        userRepository: UserRepositoryInterface,
         questRepository: QuestRepositoryInterface,
         areaRepository: AreaRepositoryInterface,
         favoriteService: FavoriteService
     ) {
         self.banner = banner
-        self.userNetwork = userNetwork
+        self.userRepository = userRepository
         self.questRepository = questRepository
         self.areaRepository = areaRepository
         self.favoriteService = favoriteService
         
-        eventFilterState = FilterPickerState(initialValue: BannerEventQuestFilterType.popular)
+        eventFilterState = StaticFilterPickerState(initialValue: .popular)
         
         self.currentSeason = currentSeason
         self.shouldShowIllsangZoneWarning = shouldShowIllsangZoneWarning

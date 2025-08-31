@@ -7,14 +7,14 @@
 
 import SwiftUI
 
-struct ChallengeDetailView: View {
+struct UserMissionHistoryDetailView: View {
     
     @Environment(\.dismiss) var dismiss
-    @ObservedObject var vm: MyPageViewModel
+    @ObservedObject var vm: UserMissionHistoryViewModel
     
     let idx: Int
     
-    init(vm: MyPageViewModel, idx: Int) {
+    init(vm: UserMissionHistoryViewModel, idx: Int) {
         self.vm = vm
         self.idx = idx
     }
@@ -29,16 +29,16 @@ struct ChallengeDetailView: View {
             }
             .padding(.bottom, 8) // 세로로 긴 이미지 대응 (NavigationTitleView의 bottom 패딩과 겹침)
             
-            if vm.challengeList.indices.contains(idx) {
-                if let missionImage = vm.challengeList[idx].challengeImage {
-                    ChallengeImageView(missionImage: missionImage, challengeData: vm.challengeList[idx])
-                } else if vm.challengeList[idx].challengeImage == nil {
-                    ChallengeImageView(missionImage: nil, challengeData: vm.challengeList[idx])
+            if vm.missionHistories.indices.contains(idx) {
+                if let missionImage = vm.missionHistories[idx].submitImage {
+                    ChallengeImageView(missionImage: missionImage, challengeData: vm.missionHistories[idx])
+                } else if vm.missionHistories[idx].submitImage == nil {
+                    ChallengeImageView(missionImage: nil, challengeData: vm.missionHistories[idx])
                 } else {
                     ErrorView(title: "챌린지 정보를 불러오지 못했어요", subTitle: "챌린지 정보를 불러오는 데 실패했어요.\n인터넷 연결 상태 확인 후 다시 시도해주세요.") {
                         Task {
-                            if let challengeImageId = vm.challengeList[idx].challengeImageId {
-                                vm.challengeList[idx].challengeImage = await vm.getImage(imageId: challengeImageId)
+                            if let submitImageId = vm.missionHistories[idx].submitImageId {
+                                vm.missionHistories[idx].submitImage = await vm.getImage(imageId: submitImageId)
                             }
                         }
                     }
@@ -48,8 +48,8 @@ struct ChallengeDetailView: View {
         .background(Color.background)
         .navigationBarBackButtonHidden()
         .task {
-            if let questImageId = vm.challengeList[idx].writerImageId {
-                self.vm.challengeList[idx].writerImage = await vm.getImage(imageId: questImageId)
+            if let questImageId = vm.missionHistories[idx].questImageId {
+                self.vm.missionHistories[idx].questImage = await vm.getImage(imageId: questImageId)
             }
         }
         .overlay {
@@ -59,7 +59,7 @@ struct ChallengeDetailView: View {
                     onCancel: { vm.challengeDelete = false },
                     onConfirm: {
                         Task {
-                            if await vm.updateChallengeStatus(challengeId: vm.challengeList[idx].challengeId, imageId: vm.challengeList[idx].challengeImageId) {
+                            if await vm.deleteMissionHistory(id: vm.missionHistories[idx].missionHistoryId) {
                                 vm.challengeDelete = false
                                 dismiss()
                             } else {
@@ -98,12 +98,12 @@ struct ChallengeDetailView: View {
     }
     
     private var dailyShareUIImage: UIImage {
-        guard vm.challengeList.indices.contains(idx) else {
+        guard vm.missionHistories.indices.contains(idx) else {
             return UIImage()
         }
         
         let renderer = ImageRenderer(
-            content: ChallengeImageView(missionImage: vm.challengeList[idx].challengeImage ?? .logo, challengeData: vm.challengeList[idx]).frame(width: 440)
+            content: ChallengeImageView(missionImage: vm.missionHistories[idx].submitImage ?? .logo, challengeData: vm.missionHistories[idx]).frame(width: 440)
         )
         renderer.scale = 3.0
         return renderer.uiImage ?? .init()
@@ -112,19 +112,19 @@ struct ChallengeDetailView: View {
 
 struct ChallengeImageView: View {
     let missionImage: UIImage?
-    let challengeData : ChallengeViewModelItem
+    let challengeData : UserMissionHistoryViewModelItem
     
     var body: some View {
-        if let missionImage {
-            Image(uiImage: missionImage)
+        if let submitImage = challengeData.submitImage {
+            Image(uiImage: submitImage)
                 .resizable()
                 .aspectRatio(contentMode: .fit)
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .overlay(alignment: .bottom) {
                     challengeInfoView /// 도전내역 정보 컴포넌트
                 }
-        }else {
-            Image(uiImage:.logoWithAlpha)
+        } else {
+            Image(uiImage: .logoWithAlpha)
                 .resizable()
                 .aspectRatio(contentMode: .fit)
                 .frame(height: 72)
@@ -138,8 +138,8 @@ struct ChallengeImageView: View {
     
     private var challengeInfoView: some View {
         HStack(spacing: 0) {
-            if let writerImage = challengeData.writerImage {
-                Image(uiImage: writerImage)
+            if let questImage = challengeData.questImage {
+                Image(uiImage: questImage)
                     .resizable()
                     .frame(width: 48, height: 48)
                     .background(.primary100)
@@ -148,7 +148,7 @@ struct ChallengeImageView: View {
             }
             
             VStack(alignment: .leading, spacing: 4) {
-                Text(challengeData.missionTitle ?? "")
+                Text(challengeData.title)
                     .font(.system(size: 17, weight: .bold))
                     .kerning(-0.3)
                     .foregroundColor(.black)
@@ -156,7 +156,7 @@ struct ChallengeImageView: View {
                     Image(.heart)
                         .resizable()
                         .frame(width: 10, height: 9)
-                    Text("\(challengeData.likeCnt)")
+                    Text("\(challengeData.likeCount)")
                         .font(.system(size: 12, weight: .regular))
                 }
                 .foregroundColor(.gray500)
@@ -176,7 +176,6 @@ struct ChallengeImageView: View {
         }
         .padding(.horizontal, 9.5)
         .padding(.vertical, 20)
-
         .background(
             RoundedRectangle(cornerRadius: 12)
                 .foregroundStyle(.white)
@@ -186,21 +185,9 @@ struct ChallengeImageView: View {
 }
 
 
-#Preview {
-    TabView {
-        NavigationStack {
-            ChallengeDetailView(
-                vm: MyPageViewModel(
-                    userNetwork: UserNetwork(),
-                    challengeNetwork: ChallengeNetwork(),
-                    imageNetwork: ImageNetwork(),
-                    pointNetwork: PointNetwork()
-                ),
-                idx: 0
-            )
-        }
-        .tabItem {
-            Label("탭", image: "profile")
-        }
-    }
-}
+//#Preview {
+//    ChallengeDetailView(
+//        vm: MissionHistoryViewModel(),
+//        idx: 0
+//    )
+//}

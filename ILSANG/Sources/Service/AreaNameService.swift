@@ -32,6 +32,7 @@ actor AreaNameService: AreaNameProvider {
         
         var dict: [String: String] = [:]
         for metro in metros {
+            dict[metro.code] = metro.areaName
             for commercial in metro.commercialAreas {
                 dict[commercial.code] = commercial.areaName
             }
