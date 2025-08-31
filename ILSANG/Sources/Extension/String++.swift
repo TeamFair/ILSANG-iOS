@@ -9,12 +9,14 @@ import Foundation
 
 extension String {
     /// 다양한 ISO8601 포맷을 시도하여 Date로 변환
-    func toISO8601Date() -> Date? {
+    func toISO8601Date(applyKST: Bool = true) -> Date? {
         // 소수점(밀리초) 제거
         let trimmed = self.components(separatedBy: ".").first ?? self
         
         let formatter = ISO8601DateFormatter()
-        formatter.timeZone = TimeZone(secondsFromGMT: 0)
+        if applyKST {
+            formatter.timeZone = TimeZone(identifier: "Asia/Seoul") // KST 반영
+        }
         
         // 시도할 포맷 옵션 목록
         let formats: [ISO8601DateFormatter.Options] = [
