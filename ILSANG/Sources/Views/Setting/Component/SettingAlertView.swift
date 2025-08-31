@@ -31,8 +31,8 @@ struct SettingAlertView<Content: View>: View {
             if let icon = alertType.icon {
                 Image(uiImage: icon)
                     .resizable()
-                    .frame(24)
-                    .frame(36)
+                    .scaledToFit()
+                    .frame(30)
                     .padding(.bottom, 6)
             }
             Text(alertType.title)
@@ -176,7 +176,7 @@ enum AlertType {
     
     var icon: UIImage? {
         switch self {
-        case .illsangZoneSetFailed: .error
+        case .illsangZoneSetFailed: .retry
         default: nil
         }
     }
