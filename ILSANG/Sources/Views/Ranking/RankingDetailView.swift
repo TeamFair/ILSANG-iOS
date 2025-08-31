@@ -61,8 +61,9 @@ struct RankingDetailView: View {
             .padding(.top, 8)
         }
         .overlay(alignment: .bottom) {
-            if let currentSeason = seasonManager.currentSeason {
-                SeasonTimerView(season: currentSeason.seasonNumber, targetDateString: currentSeason.endDate.formatDateOnly())
+            if let currentSeason = seasonManager.currentSeason,
+            let targetDate = currentSeason.endDate.toISO8601Date() {
+                SeasonTimerView(season: currentSeason.seasonNumber, targetDate: targetDate)
                     .padding(.horizontal, 20)
                     .padding(.bottom, 20)
             }

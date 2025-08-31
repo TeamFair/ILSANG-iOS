@@ -55,8 +55,9 @@ struct RankingView: View {
             }
         }
         .overlay(alignment: .bottom) {
-            if let currentSeason = seasonManager.currentSeason {
-                SeasonTimerView(season: currentSeason.seasonNumber, targetDateString: currentSeason.endDate.formatDateOnly())
+            if let currentSeason = seasonManager.currentSeason,
+            let targetDate = currentSeason.endDate.toISO8601Date() {
+                SeasonTimerView(season: currentSeason.seasonNumber, targetDate: targetDate)
                     .padding(.horizontal, 20)
                     .padding(.bottom, 20)
             }
@@ -312,7 +313,7 @@ extension RankingView {
                         areaPoint: rank.point,
                         areaImageIds: rank.imageIds,
                         areaCode: rank.areaCode,
-                        areaType: .commercial,
+                        areaType: .metro,
                         rankRepository: vm.rankRepository,
                         areaNameService: vm.areaNameService
                     )

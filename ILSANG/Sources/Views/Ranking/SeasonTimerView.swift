@@ -15,15 +15,6 @@ struct SeasonTimerView: View {
     @State private var now: Date = Date()
     private let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     
-    init(season: Int, targetDateString: String) {
-        self.season = season
-        
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy.MM.dd"
-        formatter.timeZone = TimeZone(identifier: "Asia/Seoul")
-        self.targetDate = formatter.date(from: targetDateString) ?? Date()
-    }
-    
     var body: some View {
         VStack(spacing: 6) {
             Text("시즌\(season) 종료까지")
@@ -55,5 +46,5 @@ struct SeasonTimerView: View {
 }
 
 #Preview {
-    SeasonTimerView(season: 2, targetDateString: "2025-09-01")
+    SeasonTimerView(season: 2, targetDate: .now)
 }
