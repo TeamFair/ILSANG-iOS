@@ -96,8 +96,9 @@ final class UserNetwork {
     
     /// 서버에서 프로필 이미지 연결 해제 & 이미지 삭제 처리
     func deleteUserImage() async -> Bool {
-        let res: Result<ResponseWithoutData, Error> = await Network.requestData(url: url+"/profile/image", method: .delete, parameters: nil, withToken: true)
-        
+        let body = ["imageId": nil] as [String : Any?]
+        let bodyData = body.convertToJsonData()
+        let res: Result<ResponseWithoutData, Error> = await Network.requestData(url: url+"/profile/image", method: .put, body: bodyData)
         switch res {
         case.success:
             return true
