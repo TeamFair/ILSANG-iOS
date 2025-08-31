@@ -16,10 +16,13 @@ struct ApprovalItemView: View {
     let padding: CGFloat
     let onLike: () -> Void
     let onHate: () -> Void
+    let onOtherUserTapped: () -> Void
     
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
-            ApprovalItemContentView(item: item, width: width, height: height)
+            ApprovalItemContentView(item: item, width: width, height: height) {
+                onOtherUserTapped()
+            }
             
             HStack(spacing: 8) {
                 emojiButton(
@@ -77,6 +80,7 @@ struct ApprovalItemView: View {
         height: 200,
         padding: 20,
         onLike: { },
-        onHate: { }
+        onHate: { },
+        onOtherUserTapped: { }
     )
 }

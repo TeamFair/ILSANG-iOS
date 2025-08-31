@@ -25,10 +25,10 @@ class QuestViewModel: ObservableObject {
     @Published var alertType: AlertType? = nil
     
     // 필터
-    @Published var repeatFilterState: FilterPickerState<RepeatType>
-    @Published var questFilterState: FilterPickerState<QuestFilterType>
-    @Published var eventFilterState: FilterPickerState<EventQuestFilterType>
-
+    @Published var questFilterState: StaticFilterPickerState<QuestFilterType>
+    @Published var repeatFilterState: StaticFilterPickerState<RepeatType>
+    @Published var eventFilterState: StaticFilterPickerState<EventQuestFilterType>
+    
     // 선택된 퀘스트
     @Published var selectedQuest: QuestViewModelItem = .mockData
     @Published var showQuestSheet: Bool = false
@@ -77,31 +77,31 @@ class QuestViewModel: ObservableObject {
     // TODO: 퀘스트 갯수 확인 필요
     // TODO: 현재 0페이지만 불러오며, 임시로 60개 로딩. 스탯 분류&필터링과 관련해서 기획 & API 수정에 따라 페이지네이션 로직 수정 필요
     lazy var defaultPaginationManager = PaginationManager<QuestViewModelItem>(
-        size: 60,
-        threshold: 58,
+        size: 20,
+        threshold: 18,
         loadPage: { [weak self] page in
             guard let self = self else { return ([], 0) }
-            return await loadQuestListWithImage(page: page, size: 60, status: .default)
+            return await loadQuestListWithImage(page: page, size: 20, status: .default)
         }
     )
     
     // TODO: 현재 0페이지만 불러오며, 임시로 40개 로딩. 스탯 분류&필터링과 관련해서 기획 & API 수정에 따라 페이지네이션 로직 수정 필요
     lazy var repeatPaginationManager = PaginationManager<QuestViewModelItem>(
-        size: 40,
-        threshold: 38,
+        size: 20,
+        threshold: 18,
         loadPage: { [weak self] page in
             guard let self = self else { return ([], 0) }
-            return await loadQuestListWithImage(page: page, size: 40, status: .repeat)
+            return await loadQuestListWithImage(page: page, size: 20, status: .repeat)
         }
     )
     
     // TODO: 스탯 분류&필터링과 관련해서 기획 & API 수정에 따라 페이지네이션 로직 수정 필요
     lazy var eventPaginationManager = PaginationManager<QuestViewModelItem>(
-        size: 30,
-        threshold: 28,
+        size: 20,
+        threshold: 18,
         loadPage: { [weak self] page in
             guard let self = self else { return ([], 0) }
-            return await loadQuestListWithImage(page: page, size: 30, status: .event)
+            return await loadQuestListWithImage(page: page, size: 20, status: .event)
         }
     )
     
@@ -123,17 +123,17 @@ class QuestViewModel: ObservableObject {
     private let favoriteService: FavoriteService
     let sharedState: SharedState
     private var cancellables = Set<AnyCancellable>()
-
+    
     init(questRepository: QuestRepositoryInterface, areaRepository: AreaRepositoryInterface, favoriteService: FavoriteService, sharedState: SharedState) {
         self.questRepository = questRepository
         self.areaRepository = areaRepository
         self.favoriteService = favoriteService
         
         // 필터 설정
-        questFilterState = FilterPickerState(initialValue: QuestFilterType.popular)
-        eventFilterState = FilterPickerState(initialValue: EventQuestFilterType.popular)
-        repeatFilterState = FilterPickerState(initialValue: RepeatType.daily)
-                
+        questFilterState = StaticFilterPickerState<QuestFilterType>(initialValue: .popular)
+        eventFilterState = StaticFilterPickerState<EventQuestFilterType>(initialValue: .popular)
+        repeatFilterState = StaticFilterPickerState<RepeatType>(initialValue: .daily)
+        
         self.sharedState = sharedState
 
         questFilterState.onSelectionChange = { [weak self] _ in
@@ -151,6 +151,7 @@ class QuestViewModel: ObservableObject {
         
         sharedState.$selectedCommercialArea
             .removeDuplicates()
+            .dropFirst()
             .sink { [weak self] _ in
                 Task { await self?.loadInitialData() }
             }

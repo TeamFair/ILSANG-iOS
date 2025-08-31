@@ -9,7 +9,8 @@ import SwiftUI
 
 struct ApprovalView: View {
     @State var vm: ApprovalViewModel
-    
+    @EnvironmentObject var seasonManager: SeasonManager
+
     var body: some View {
         VStack(spacing: 0) {
             switch vm.viewStatus {
@@ -27,6 +28,17 @@ struct ApprovalView: View {
             await vm.loadDataIfNeeded()
         }
         .overlay { reportAlertView }
+        .navigationDestination(item: $vm.selectedUserId) { userId in
+            OtherUserProfileView(
+                vm: OtherUserProfileViewModel(
+                    userId: userId,
+                    userRepository: vm.userRepository,
+                    missionHistoryRepository: vm.missionHistoryRepository,
+                    areaNameService: vm.areaNameService,
+                    seasonManager: seasonManager
+                )
+            )
+        }
     }
     
     /// 퀘스트 타이틀  + 퀘스트 인증 이미지
@@ -49,7 +61,10 @@ struct ApprovalView: View {
                         height: ((.screenWidth-40) / 5) * 4,
                         padding: 20,
                         onLike: { vm.onLike(for: idx) },
-                        onHate: { vm.onHate(for: idx) }
+                        onHate: { vm.onHate(for: idx) },
+                        onOtherUserTapped: {
+                            vm.selectedUserId = item.userId
+                        }
                     )
                     .overlay(alignment: .topTrailing) {
                         trailingButton(for: item)
@@ -155,6 +170,7 @@ struct ApprovalView: View {
         vm:
             ApprovalViewModel(
                 emojiNetwork: EmojiNetwork(),
+                userRepository: UserRepository(network: UserNetwork()),
                 missionHistoryRepository: MissionHistoryRepository(network: MissionHistoryNetwork(),),
                 areaNameService: AreaNameService(areaRepository: AreaRepository(network: AreaNetwork()))
             )

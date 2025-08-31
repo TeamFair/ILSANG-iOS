@@ -36,11 +36,24 @@ struct RankingDetailView: View {
                         RankingItemView(style: .currentUserRank(user))
                     }
                     ForEach(vm.areaUserRank.ranks, id: \.userId) { rank in
-                        NavigationLink {
-                            OtherUserProfileView(userId: rank.userId)
-                        } label: {
+//                        NavigationLink {
+//                            OtherUserProfileView(
+//                                vm: OtherUserProfileViewModel(
+//                                    userId: rank.userId,
+//                                    userRepository: UserRepository(network: UserNetwork()),
+//                                    missionHistoryRepository: MissionHistoryRepository(network: MissionHistoryNetwork()),
+//                                    areaNameService: vm.areaNameService,
+//                                    seasonManager: seasonManager
+//                                )
+//                            )
+//                        Button {
+//                            vm.selectedUserId = rank.userId
+//                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
+//                                vm.isShowingUserProfile = true
+//                            }
+//                        } label: {
                             RankingItemView(style: .userRank(rank))
-                        }
+//                        }
                     }
                 }
                 .padding(.bottom, 170)
@@ -60,6 +73,19 @@ struct RankingDetailView: View {
             await vm.getRankDetail()
             await vm.getImages()
         }
+//        .navigationDestination(isPresented: $vm.isShowingUserProfile) {
+//            if let userId = vm.selectedUserId {
+//                OtherUserProfileView(
+//                    vm: OtherUserProfileViewModel(
+//                        userId: userId,
+//                        userRepository: UserRepository(network: UserNetwork()),
+//                        missionHistoryRepository: MissionHistoryRepository(network: MissionHistoryNetwork()),
+//                        areaNameService: vm.areaNameService,
+//                        seasonManager: seasonManager
+//                    )
+//                )
+//            }
+//        }
     }
     
     private var imageListView: some View {
@@ -136,7 +162,8 @@ struct RankingDetailView: View {
             areaImageIds: [""],
             areaCode: "",
             areaType: .commercial,
-            rankRepository: RankRepository(network: RankNetwork())
+            rankRepository: RankRepository(network: RankNetwork()),
+            areaNameService: AreaNameService(areaRepository: AreaRepository(network: AreaNetwork()))
         )
     )
 }

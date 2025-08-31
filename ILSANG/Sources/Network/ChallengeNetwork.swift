@@ -12,16 +12,6 @@ import Foundation
 final class ChallengeNetwork {
     private let url: String = APIManager.makeURL(NoTarget(path: "challenge", version: 1))
     
-    func getChallenges(page: Int, size: Int) async -> Result<ResponseWithPage<[Challenge]>, Error> {
-        let parameters: Parameters = ["userDataOnly": true, "page": page, "size": size]
-        return await Network.requestData(url: url+"challenge", method: .get, parameters: parameters, withToken: true)
-    }
-    
-    func getChallenges(page: Int, size: Int, userId: String) async -> Result<ResponseWithPage<[Challenge]>, Error> {
-        let parameters: Parameters = ["userDataOnly": true, "status": "APPROVED", "userId": userId, "page": page, "size": size]
-        return await Network.requestData(url: url+"challenge", method: .get, parameters: parameters, withToken: true)
-    }
-    
     func getRandomQuiz(missionId: Int) async -> Result<QuizResponse, Error> {
         let parameters: Parameters = ["missionId": "\(missionId)"]
         return await Network.requestData(url: url+"/random-quiz", method: .get, parameters: parameters)

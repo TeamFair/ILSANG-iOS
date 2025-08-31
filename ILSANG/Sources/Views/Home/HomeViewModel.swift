@@ -89,7 +89,7 @@ final class HomeViewModel {
     var showPopularRewardQuest: Bool = true
     var showRankList = true
     
-    let userNetwork: UserNetwork
+    let userRepository: UserRepositoryInterface
     let areaNameService: AreaNameProvider
     let questRepository: QuestRepositoryInterface
     private let rankRepository: RankRepositoryInterface
@@ -101,7 +101,7 @@ final class HomeViewModel {
     private var cancellables = Set<AnyCancellable>()
     
     init(
-        userNetwork: UserNetwork,
+        userRepository: UserRepositoryInterface,
         areaNameService: AreaNameProvider,
         questRepository: QuestRepositoryInterface,
         rankRepository: RankRepositoryInterface,
@@ -110,7 +110,7 @@ final class HomeViewModel {
         favoriteService: FavoriteService,
         sharedState: SharedState
     ) {
-        self.userNetwork = userNetwork
+        self.userRepository = userRepository
         self.areaNameService = areaNameService
         self.questRepository = questRepository
         self.rankRepository = rankRepository
@@ -121,14 +121,11 @@ final class HomeViewModel {
         
         sharedState.$selectedCommercialArea
             .removeDuplicates()
+            .dropFirst()
             .sink { [weak self] _ in
                 Task { await self?.loadInitialData() } // TODO: 배너 제외 데이터 재로드
             }
             .store(in: &cancellables)
-        
-        Task {
-            await loadInitialData()
-        }
     }
     
     @MainActor

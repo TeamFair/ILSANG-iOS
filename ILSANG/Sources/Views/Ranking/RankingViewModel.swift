@@ -24,6 +24,8 @@ class RankingViewModel: ObservableObject {
         selectedSeason?.id
     }
     @Published var showSelectSeasonView = false
+    @Published var showRankingDetailView = false
+    @Published var selectedRank: AreaRankViewModelItem?
     
     @Published var metroRank: [AreaRankViewModelItem] = []
     @Published var commercialRank: [AreaRankViewModelItem] = []
@@ -32,13 +34,17 @@ class RankingViewModel: ObservableObject {
     @Published var seasons: [Season] = []
     
     let rankRepository: RankRepositoryInterface
+    let userRepository: UserRepositoryInterface
+    let areaNameService: AreaNameProvider
     private let seasonManager: SeasonManager
     
     private var currentLoadTask: Task<Void, Never>?
     private var cancellables = Set<AnyCancellable>()
     
-    init(rankRepository: RankRepositoryInterface, seasonManager: SeasonManager)  {
+    init(rankRepository: RankRepositoryInterface, userRepository: UserRepositoryInterface, areaNameService: AreaNameProvider, seasonManager: SeasonManager)  {
         self.rankRepository = rankRepository
+        self.userRepository = userRepository
+        self.areaNameService = areaNameService
         self.seasonManager = seasonManager
         
         selectedSeason = seasonManager.currentSeason ?? nil // 현재시즌으로 초기화

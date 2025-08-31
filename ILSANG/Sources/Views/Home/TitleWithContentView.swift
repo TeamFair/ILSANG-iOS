@@ -10,8 +10,28 @@ import SwiftUI
 struct TitleWithContentView<Content: View>: View {
     let title: String
     var seeAll: (type: SeeAllType, alignment: SeeAllAlignment, action: () -> ())? = nil
+    var style: Style = .home
     let content: Content
 
+    enum Style {
+        case home
+        case my
+        
+        var titleFont: FontStyle {
+            switch self {
+            case .home: .init(size: 19, weight: .bold, lineHeight: 22, tracking: 0)
+            case .my: .heading1
+            }
+        }
+        
+        var spacing: CGFloat {
+            switch self {
+            case .home: 12
+            case .my: 16
+            }
+        }
+    }
+    
     enum SeeAllAlignment {
         case topTrailing
         case bottom
@@ -54,10 +74,10 @@ struct TitleWithContentView<Content: View>: View {
     }
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
+        VStack(alignment: .leading, spacing: style.spacing) {
             HStack {
                 Text(title.forceCharWrapping)
-                    .font(.system(size: 19, weight: .bold))
+                    .styledFont(style.titleFont)
                 Spacer(minLength: 0)
                 if seeAll?.alignment == .topTrailing {
                     Button {

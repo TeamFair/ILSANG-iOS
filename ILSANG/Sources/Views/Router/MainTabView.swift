@@ -12,10 +12,11 @@ struct MainTabView: View {
     @StateObject var honorAcquisitionManager = HonorAcquisitionManager(honorNetwork: defaultHonorNetwork)
     @StateObject var seasonManager: SeasonManager
 
-    var homeViewModel: HomeViewModel
+    @State var homeViewModel: HomeViewModel
     @StateObject var questViewModel: QuestViewModel
     var approvalViewModel: ApprovalViewModel
     @StateObject var rankViewModel: RankingViewModel
+    @StateObject var myPageViewModel: MyPageViewModel
     
     static var defaultHonorNetwork: HonorNetworkProtocol {
         return HonorNetwork() // MockHonorNetwork()
@@ -33,12 +34,13 @@ struct MainTabView: View {
         _seasonManager = StateObject(wrappedValue: seasonManager)
         
         let userNetwork = UserNetwork()
+        let userRepository = UserRepository(network: userNetwork)
         let rankRepository = RankRepository(network: RankNetwork())
         let areaRepository = AreaRepository(network: AreaNetwork())
         let areaNameService = AreaNameService(areaRepository: areaRepository)
 
-        self.homeViewModel = HomeViewModel(
-            userNetwork: userNetwork,
+        self._homeViewModel = State(wrappedValue: HomeViewModel(
+            userRepository: userRepository,
             areaNameService: areaNameService,
             questRepository: QuestRepository(network: QuestNetwork()),
             rankRepository: rankRepository,
@@ -46,24 +48,25 @@ struct MainTabView: View {
             areaRepository: areaRepository,
             favoriteService: FavoriteService(favoriteNetwork: FavoriteNetwork()),
             sharedState: sharedState
-        )
+        ))
         
-#if DEBUG
-           self._questViewModel = StateObject(wrappedValue: QuestViewModel(
-            questRepository: MockQuestRepository(),
-            areaRepository: areaRepository,
-            favoriteService: FavoriteService(favoriteNetwork: FavoriteNetwork()), sharedState: sharedState)
-           )
-           
-#else
+//#if DEBUG
+//           self._questViewModel = StateObject(wrappedValue: QuestViewModel(
+//            questRepository: MockQuestRepository(),
+//            areaRepository: areaRepository,
+//            favoriteService: FavoriteService(favoriteNetwork: FavoriteNetwork()), sharedState: sharedState)
+//           )
+//           
+//#else
            self._questViewModel = StateObject(wrappedValue: QuestViewModel(
             questRepository: QuestRepository(network: QuestNetwork()),
             areaRepository: areaRepository,
             favoriteService: FavoriteService(favoriteNetwork: FavoriteNetwork()), sharedState: sharedState)
            )
-#endif
+//#endif
         self.approvalViewModel = ApprovalViewModel(
             emojiNetwork: EmojiNetwork(),
+            userRepository: userRepository,
             missionHistoryRepository: MissionHistoryRepository(network: MissionHistoryNetwork()),
             areaNameService: areaNameService
         )
@@ -72,8 +75,19 @@ struct MainTabView: View {
             wrappedValue:
                 RankingViewModel(
                     rankRepository: rankRepository,
+                    userRepository: userRepository,
+                    areaNameService: areaNameService,
                     seasonManager: seasonManager
                 )
+        )
+        
+        self._myPageViewModel = StateObject(
+            wrappedValue: MyPageViewModel(
+                userRepository: userRepository,
+                imageNetwork: ImageNetwork(),
+                areaNameService: AreaNameService(areaRepository: AreaRepository(network: AreaNetwork())),
+                seasonManager: seasonManager
+            )
         )
     }
     
@@ -119,7 +133,7 @@ struct MainTabView: View {
         case .ranking:
             RankingView(vm: rankViewModel)
         case .mypage:
-            MyPageView()
+            MyPageView(vm: myPageViewModel)
         }
     }
 }

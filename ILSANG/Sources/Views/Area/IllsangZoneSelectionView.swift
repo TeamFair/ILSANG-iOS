@@ -13,8 +13,8 @@ struct IllsangZoneSelectionView: View {
     
     var onSuccess: ((CommercialArea) -> Void)?
     
-    init(userNetwork: UserNetwork, areaRepository: AreaRepositoryInterface, onSuccess: ((CommercialArea) -> Void)? = nil) {
-        self._viewModel = StateObject(wrappedValue: IllsangZoneSelectionViewModel(userNetwork: userNetwork, areaRepository: areaRepository))
+    init(userRepository: UserRepositoryInterface, areaRepository: AreaRepositoryInterface, onSuccess: ((CommercialArea) -> Void)? = nil) {
+        self._viewModel = StateObject(wrappedValue: IllsangZoneSelectionViewModel(userRepository: userRepository, areaRepository: areaRepository))
         self.onSuccess = onSuccess
     }
     
@@ -97,11 +97,11 @@ class IllsangZoneSelectionViewModel: ObservableObject {
     @Published var showAlert: Bool = false
     @Published var alertType: AlertType = .illsangZoneSetWarning
     
-    private let userNetwork: UserNetwork
+    private let userRepository: UserRepositoryInterface
     private let areaRepository: AreaRepositoryInterface
     
-    init(userNetwork: UserNetwork, areaRepository: AreaRepositoryInterface) {
-        self.userNetwork = userNetwork
+    init(userRepository: UserRepositoryInterface, areaRepository: AreaRepositoryInterface) {
+        self.userRepository = userRepository
         self.areaRepository = areaRepository
     }
     
@@ -123,7 +123,7 @@ class IllsangZoneSelectionViewModel: ObservableObject {
     func setIllsangZone() async -> Bool {
         guard let code = selectedArea?.code else { return false }
         
-        let succ = await userNetwork.putAreaZone(commercialAreaCode: code)
+        let succ = await userRepository.putAreaZone(commercialAreaCode: code)
         if succ {
             return true
         } else {
@@ -135,5 +135,5 @@ class IllsangZoneSelectionViewModel: ObservableObject {
 }
 
 #Preview {
-    IllsangZoneSelectionView(userNetwork: UserNetwork(), areaRepository: AreaRepository(network: AreaNetwork()))
+    IllsangZoneSelectionView(userRepository: UserRepository(network: UserNetwork()), areaRepository: AreaRepository(network: AreaNetwork()))
 }

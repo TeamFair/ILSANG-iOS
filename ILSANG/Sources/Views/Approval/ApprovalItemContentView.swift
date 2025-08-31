@@ -19,11 +19,13 @@ struct ApprovalItemContentView: View {
     let width: CGFloat
     let height: CGFloat
     
+    let onOtherUserTapped: () -> Void
+
     var body: some View {
         NavigationStack {
             VStack(alignment: .leading, spacing: 16) {
-                NavigationLink {
-                    OtherUserProfileView(userId: item.userId)
+                Button {
+                    onOtherUserTapped()
                 } label: {
                     profileView(nickname: item.nickname, honor: item.userTitle)
                 }
@@ -213,7 +215,7 @@ struct ApprovalItemContentShareView: View {
 
 #Preview {
     VStack {
-         ApprovalItemContentView(item: .mockDataList[0], width: .screenWidth-40, height:  ((.screenWidth-40) / 5) * 4)
+        ApprovalItemContentView(item: .mockDataList[0], width: .screenWidth-40, height:  ((.screenWidth-40) / 5) * 4, onOtherUserTapped: {})
         ApprovalItemContentShareView(item: .mockDataList[1], width: .screenWidth-40, height:  ((.screenWidth-40) / 5) * 4)
     }
     .frame(maxWidth: .infinity, maxHeight: .infinity)

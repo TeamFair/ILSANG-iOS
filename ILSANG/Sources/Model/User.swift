@@ -8,6 +8,7 @@
 import Foundation
 
 struct User: Decodable {
+    let id: String
     let email: String
     let channel: String
     let status: String

@@ -7,13 +7,13 @@
 
 import SwiftUI
 
-struct ChallengeListItemView: View {
-    let challenge: ChallengeViewModelItem
+struct UserMissionHistoryItemView: View {
+    let challenge: UserMissionHistoryViewModelItem
     
     var body: some View {
         ZStack {
             Group {
-                if let image = challenge.challengeImage {
+                if let image = challenge.submitImage {
                     Image(uiImage: image)
                         .resizable()
                         .scaledToFill()
@@ -37,13 +37,13 @@ struct ChallengeListItemView: View {
                             endPoint: .bottom
                         )
                     )
-                    .opacity(challenge.challengeImage == nil ? 0.3 : 1)
+                    .opacity(challenge.submitImage == nil ? 0.3 : 1)
             }
             .clipShape(RoundedRectangle(cornerRadius: 12))
             
             VStack(alignment: .leading, spacing: 6) {
                 Spacer()
-                Text(challenge.missionTitle ?? "")
+                Text(challenge.title)
                     .font(.system(size: 23, weight: .bold))
                     .foregroundColor(.white)
                 

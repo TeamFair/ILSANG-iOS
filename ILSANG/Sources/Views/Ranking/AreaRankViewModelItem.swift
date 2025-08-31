@@ -8,7 +8,15 @@
 
 import UIKit
 
-class AreaRankViewModelItem: ObservableObject, Identifiable {
+class AreaRankViewModelItem: ObservableObject, Identifiable, Hashable {
+    static func == (lhs: AreaRankViewModelItem, rhs: AreaRankViewModelItem) -> Bool {
+        lhs.areaCode == rhs.areaCode && lhs.rank == rhs.rank
+    }
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(areaCode)
+        hasher.combine(rank)
+    }
+    
     let areaCode: String
     let areaName: String
     let point: Int

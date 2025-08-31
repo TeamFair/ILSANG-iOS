@@ -16,8 +16,22 @@ final class MissionHistoryNetwork {
         return await Network.requestData(url: url+"/history/random", method: .get, parameters: parameters)
     }
     
+    /// 수행한 퀘스트 이력(미션) 조회
+    /// useId가 nil이면 현재 유저 정보
+    func getMissionHistories(page: Int, size: Int, userId: String?) async -> Result<ResponseWithPage<[UserMissionHistoryResponse]>, Error> {
+        var parameters: Parameters = ["page": page, "size": size]
+        if let userId {
+            parameters["userId"] = userId
+        }
+        return await Network.requestData(url: url+"/history", method: .get, parameters: parameters)
+    }
+    
     /// 신고하기
     func putMissionHistory(missionHistoryId: Int) async -> Result<ResponseWithEmpty, Error> {
         return await Network.requestData(url: url+"/history/\(missionHistoryId)", method: .put)
+    }
+    
+    func deleteMissionHistory(missionHistoryId: Int) async -> Result<ResponseWithEmpty, Error> {
+        return await Network.requestData(url: url+"/history/\(missionHistoryId)", method: .delete)
     }
 }
