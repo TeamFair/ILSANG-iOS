@@ -32,6 +32,7 @@ class QuestViewModel: ObservableObject {
     // 선택된 퀘스트
     @Published var selectedQuest: QuestViewModelItem = .mockData
     @Published var showQuestSheet: Bool = false
+    @Published var showChallengeImageView: Bool = false
     @Published var showSubmitRouterView: Bool = false {
         didSet {
             // TODO: 도전내역 등록 완료시 리스트에서 퀘스트만 삭제/추가하도록 개선(퀘스트 조회 API 호출x)
@@ -394,6 +395,11 @@ class QuestViewModel: ObservableObject {
         } else {
             showQuestEngageView = true
         }
+    }
+    
+    func onChallengeExImageTapped() {
+        showQuestSheet = false
+        showChallengeImageView = true
     }
     
     func closeFilterPicker() {

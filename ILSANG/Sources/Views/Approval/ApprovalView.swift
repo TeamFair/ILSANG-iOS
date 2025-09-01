@@ -76,7 +76,7 @@ struct ApprovalView: View {
                         .task { await vm.loadMoreData() }
                 }
             }
-            .padding(.top, 47)
+            .padding(.top, vm.approvalSource == .tab ? 47 : 0)
             .padding(.bottom, 72)
         }
         .refreshable {
@@ -169,6 +169,7 @@ struct ApprovalView: View {
     ApprovalView(
         vm:
             ApprovalViewModel(
+                approvalSource: .tab,
                 emojiNetwork: EmojiNetwork(),
                 userRepository: UserRepository(network: UserNetwork()),
                 missionHistoryRepository: MissionHistoryRepository(network: MissionHistoryNetwork(),),

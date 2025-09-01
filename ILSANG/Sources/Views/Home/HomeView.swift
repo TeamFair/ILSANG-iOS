@@ -28,7 +28,7 @@ struct HomeView: View {
     }
     
     var body: some View {
-        NavigationStack {
+        Group {
             switch vm.viewStatus {
             case .loading, .loaded:
                 ScrollView {
@@ -73,10 +73,12 @@ struct HomeView: View {
                     onUpdate: { quest in
                         vm.toggleFavoriteStatus(quest: quest)
                     }
-                )
-            ) {
-                vm.onQuestApprovalTapped()
-            }
+                ), showQuestExImageAction: {
+                    vm.onChallengeExImageTapped()
+                }, questApproveAction: {
+                    vm.onQuestApprovalTapped()
+                }
+            )
             .presentationCornerRadius(24)
             .presentationDragIndicator(.hidden)
             .presentationDetents([tall ? .height(UISheetPresentationController.Detent.questDetailDetentHeightTall) : .height(UISheetPresentationController.Detent.questDetailDetentHeightShort)])
@@ -124,6 +126,9 @@ struct HomeView: View {
                     challengeNetwork: challengeNetwork
                 )
             )
+        }
+        .navigationDestination(isPresented: $vm.showChallengeImageView) {
+            ApprovalDetailView(missionId: vm.selectedQuest.missionId)
         }
     }
     

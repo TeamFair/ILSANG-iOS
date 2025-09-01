@@ -40,6 +40,7 @@ final class HomeViewModel {
     var paginatedPopularQuests: [[QuestViewModelItem]] {
         popularQuestList.chunks(of: popularChunkSize)
     }
+    var showChallengeImageView: Bool = false
     var showSubmitRouterView: Bool = false {
         didSet {
             // TODO: 해당 데이터가 포함되어있으면 제거 or 리로드하도록 수정
@@ -390,6 +391,11 @@ final class HomeViewModel {
         } else {
             showQuestEngageView = true
         }
+    }
+    
+    func onChallengeExImageTapped() {
+        showQuestSheet = false
+        showChallengeImageView = true
     }
     
     // 일상존 선택 완료 시

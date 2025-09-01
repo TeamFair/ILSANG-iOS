@@ -65,6 +65,7 @@ struct MainTabView: View {
            )
 //#endif
         self.approvalViewModel = ApprovalViewModel(
+            approvalSource: .tab,
             emojiNetwork: EmojiNetwork(),
             userRepository: userRepository,
             missionHistoryRepository: MissionHistoryRepository(network: MissionHistoryNetwork()),
