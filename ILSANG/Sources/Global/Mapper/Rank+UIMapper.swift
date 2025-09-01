@@ -14,7 +14,8 @@ extension UserRank {
             nickname: nickname,
             point: point,
             rank: rank,
-            title: title
+            title: title,
+            pointGap: pointGap
         )
     }
 }
