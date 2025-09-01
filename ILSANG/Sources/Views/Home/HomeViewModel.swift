@@ -29,7 +29,7 @@ final class HomeViewModel {
     var userRankList: [UserRankViewModelItem] = [] // 10개
     var largestRewardQuestList: [QuestViewModelItem] = [] // 3*5개
     var recommendQuestList: [QuestViewModelItem] = [] //QuestViewModelItem.mockQuestList // 10개
-    var popularQuestList: [QuestViewModelItem] = [QuestViewModelItem.mockData] // 4n개
+    var popularQuestList: [QuestViewModelItem] = [] // 4n개
     
     var currentBanner: Int = 0
     
@@ -327,8 +327,13 @@ final class HomeViewModel {
             }
             
             for await (index, image) in group {
-                if let image = image {
-                    quests[index].image = image
+                if let image {
+                    if getWriterImage {
+                        quests[index].image = image
+                    }
+                    if getMainImage {
+                        quests[index].mainImage = image
+                    }
                 }
             }
         }
@@ -371,6 +376,9 @@ final class HomeViewModel {
             let questDetail = try await questRepository.getQuestDetail(questId: quest.id)
                 .get()
                 .toQuestItem()
+            if let imageId = questDetail.imageId {
+                questDetail.image = await ImageCacheService.shared.loadImageAsync(imageId: imageId)
+            }
             self.selectedQuest = questDetail
         }
         

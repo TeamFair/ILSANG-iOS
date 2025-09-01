@@ -369,7 +369,13 @@ class QuestViewModel: ObservableObject {
             let questDetail = try await questRepository.getQuestDetail(questId: quest.id)
                 .get()
                 .toQuestItem()
-            self.selectedQuest = questDetail
+            
+            if let imageId = questDetail.imageId {
+                questDetail.image = await ImageCacheService.shared.loadImageAsync(imageId: imageId)
+            }
+            await MainActor.run {
+                self.selectedQuest = questDetail
+            }
         }
         
         DispatchQueue.main.asyncAfter(deadline: .now()+0.3) {
