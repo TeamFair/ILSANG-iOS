@@ -13,4 +13,5 @@ struct UserRank {
     let point: Int
     let rank: Int
     let title: TitleResponse?
+    let pointGap: Int?
 }

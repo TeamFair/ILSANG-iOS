@@ -111,7 +111,6 @@ fileprivate struct AreaRankItemView: View {
 
 fileprivate struct CurrentUserRankItemView: View {
     @ObservedObject var rank: UserRankViewModelItem
-    let remainPoint: Int? = nil // TODO: API 추가 요청
     
     var body: some View {
         VStack(spacing: 10) {
@@ -152,7 +151,7 @@ fileprivate struct CurrentUserRankItemView: View {
                 Spacer(minLength: 0)
             }
             
-            if let remainPoint {
+            if let remainPoint = rank.pointGap {
                 Text("앞으로 \(remainPoint)P 획득 시 다음 순위로 올라갈 수 있어요!")
                     .styledFont(.badge1)
                     .foregroundColor(.primaryPurple)

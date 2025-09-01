@@ -14,7 +14,8 @@ extension UserRankResponse: DomainConvertible {
             nickname: nickname,
             point: point ?? 0,
             rank: rank ?? 0,
-            title: title
+            title: title,
+            pointGap: pointGap
         )
     }
     
