@@ -9,6 +9,7 @@ import SwiftUI
 
 struct ApprovalView: View {
     @State var vm: ApprovalViewModel
+    @EnvironmentObject var dependencies: AppDependencies
     @EnvironmentObject var seasonManager: SeasonManager
 
     var body: some View {
@@ -30,13 +31,11 @@ struct ApprovalView: View {
         .overlay { reportAlertView }
         .navigationDestination(item: $vm.selectedUserId) { userId in
             OtherUserProfileView(
-                vm: OtherUserProfileViewModel(
-                    userId: userId,
-                    userRepository: vm.userRepository,
-                    missionHistoryRepository: vm.missionHistoryRepository,
-                    areaNameService: vm.areaNameService,
-                    seasonManager: seasonManager
-                )
+                userId: userId,
+                userRepository: dependencies.userRepository,
+                missionHistoryRepository: dependencies.missionHistoryRepository,
+                areaNameService: dependencies.areaNameService,
+                seasonManager: seasonManager
             )
         }
     }

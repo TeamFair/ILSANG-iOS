@@ -11,6 +11,7 @@ import SwiftUI
 // TODO: 일상존 선택 시 홈뷰에서 일상존선택상태 변경
 struct BannerDetailView: View {
     @State var viewModel: BannerDetailViewModel
+    @EnvironmentObject var dependencies: AppDependencies
     @Environment(\.dismiss) var dismiss
     
     init(viewModel: BannerDetailViewModel) {
@@ -49,11 +50,10 @@ struct BannerDetailView: View {
         )
         // TODO: navigation으로 변경
         .navigationDestination(isPresented: $viewModel.showSelectIllsangZoneView) {
-            IllsangZoneSelectionView(userRepository: viewModel.userRepository, areaRepository: viewModel.areaRepository) { area in
+            IllsangZoneSelectionView(userRepository: dependencies.userRepository, areaRepository: dependencies.areaRepository) { area in
                 viewModel.handleIllsangZoneSelection(area)
             }
         }
-        // TODO: 확인하기
         .navigationDestination(isPresented: $viewModel.showChallengeImageView) {
             if let id = viewModel.selectedQuest?.missionId {
                 ApprovalDetailView(missionId: id)
@@ -62,16 +62,14 @@ struct BannerDetailView: View {
         // TODO: navigation으로 변경
         .fullScreenCover(isPresented: $viewModel.showQuestEngageView) {
             if let selectedQuest = viewModel.selectedQuest {
-                let challengeNetwork = ChallengeNetwork()
-                
                 QuestEngageView(
                     vm: QuestEngageViewModel(quest: selectedQuest,
-                                             challengeNetwork: challengeNetwork),
+                                             challengeNetwork: dependencies.challengeNetwork),
                     submitVM: SubmitRouterViewModel(
                         selectedImage: nil,
                         selectedQuest: selectedQuest,
-                        submitService: ImageChallengeSubmitService(imageNetwork: ImageNetwork(), challengeNetwork: challengeNetwork),
-                        challengeNetwork: challengeNetwork
+                        submitService: dependencies.imageChallengeSubmitService,
+                        challengeNetwork: dependencies.challengeNetwork
                     )
                 )
             }
@@ -83,7 +81,7 @@ struct BannerDetailView: View {
                 QuestDetailView(
                     vm: QuestDetailViewModel(
                         quest: quest,
-                        questRepository: QuestRepository(network: QuestNetwork()),
+                        questRepository: dependencies.questRepository,
                         onUpdate: { quest in
                             viewModel.toggleQuestFavorite(quest: quest)
                         })
@@ -102,7 +100,7 @@ struct BannerDetailView: View {
         }
         .fullScreenCover(isPresented: $viewModel.showSubmitRouterView) {
             if let selectedQuest = viewModel.selectedQuest {
-                SubmitRouterView(selectedQuest: selectedQuest)
+                SubmitRouterView(selectedQuest: selectedQuest, submitService: dependencies.imageChallengeSubmitService, challengeNetwork: dependencies.challengeNetwork)
                     .interactiveDismissDisabled()
             }
         }

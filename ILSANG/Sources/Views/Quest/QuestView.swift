@@ -9,9 +9,10 @@ import SwiftUI
 import Combine
 
 struct QuestView: View {
-    @EnvironmentObject var sharedState: SharedState
     @ObservedObject var vm: QuestViewModel
-    
+    @EnvironmentObject var dependencies: AppDependencies
+    @EnvironmentObject var sharedState: SharedState
+
     var body: some View {
         VStack(spacing: 0) {
             headerView
@@ -51,7 +52,7 @@ struct QuestView: View {
             QuestDetailView(
                 vm: QuestDetailViewModel(
                     quest: vm.selectedQuest,
-                    questRepository: QuestRepository(network: QuestNetwork()),
+                    questRepository: dependencies.questRepository,
                     onUpdate: { quest in
                         vm.toggleFavoriteStatus(quest: quest)
                     }
@@ -69,24 +70,22 @@ struct QuestView: View {
             }
         }
         .fullScreenCover(isPresented: $vm.showSubmitRouterView) {
-            SubmitRouterView(selectedQuest: vm.selectedQuest)
+            SubmitRouterView(selectedQuest: vm.selectedQuest, submitService: dependencies.imageChallengeSubmitService, challengeNetwork: dependencies.challengeNetwork)
                 .interactiveDismissDisabled()
         }
         .navigationDestination(isPresented: $vm.showSelectMyRegionView) {
-            MyRegionAreaSelectionView(areaRepository: vm.areaRepository) { area in
+            MyRegionAreaSelectionView(areaRepository: dependencies.areaRepository) { area in
                 vm.handleMyRegionSelection(area)
             }
         }
         .navigationDestination(isPresented: $vm.showQuestEngageView) {
-            let challengeNetwork = ChallengeNetwork()
-            
             QuestEngageView(
-                vm: QuestEngageViewModel(quest: vm.selectedQuest, challengeNetwork: challengeNetwork),
+                vm: QuestEngageViewModel(quest: vm.selectedQuest, challengeNetwork: dependencies.challengeNetwork),
                 submitVM: SubmitRouterViewModel(
                     selectedImage: nil,
                     selectedQuest: vm.selectedQuest,
-                    submitService: ImageChallengeSubmitService(imageNetwork: ImageNetwork(), challengeNetwork: challengeNetwork),
-                    challengeNetwork: challengeNetwork
+                    submitService: dependencies.imageChallengeSubmitService,
+                    challengeNetwork: dependencies.challengeNetwork
                 )
             )
         }

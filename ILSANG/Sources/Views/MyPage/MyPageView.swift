@@ -8,10 +8,10 @@
 import SwiftUI
 
 struct MyPageView: View {
-    
     @ObservedObject var vm: MyPageViewModel
-    @EnvironmentObject var sharedState: SharedState
+    @EnvironmentObject var dependencies: AppDependencies
     @EnvironmentObject var seasonManager: SeasonManager
+    @EnvironmentObject var sharedState: SharedState
     
     var body: some View {
         VStack(spacing: 0) {
@@ -61,7 +61,7 @@ struct MyPageView: View {
                         NavigationLink {
                             UserMissionHistoryView(
                                 vm: UserMissionHistoryViewModel(
-                                    missionHistoryRepository: MissionHistoryRepository(network: MissionHistoryNetwork())
+                                    missionHistoryRepository: dependencies.missionHistoryRepository
                                 )
                             )
                         } label: {

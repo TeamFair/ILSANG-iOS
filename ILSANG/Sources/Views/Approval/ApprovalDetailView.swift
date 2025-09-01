@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct ApprovalDetailView: View {
+    @EnvironmentObject var dependencies: AppDependencies
+
     let missionId: Int
     @Environment(\.dismiss) var dismiss
 
@@ -21,10 +23,10 @@ struct ApprovalDetailView: View {
             ApprovalView(
                 vm: ApprovalViewModel(
                     approvalSource: .detail(missionId: missionId),
-                    emojiNetwork: EmojiNetwork(),
-                    userRepository: UserRepository(network: UserNetwork()),
-                    missionHistoryRepository: MissionHistoryRepository(network: MissionHistoryNetwork()),
-                    areaNameService: AreaNameService(areaRepository: AreaRepository(network: AreaNetwork()))
+                    emojiNetwork: dependencies.emojiNetwork,
+                    userRepository: dependencies.userRepository,
+                    missionHistoryRepository: dependencies.missionHistoryRepository,
+                    areaNameService: dependencies.areaNameService
                 )
             )
         }
