@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ApprovalDetailView: View {
-    let questId: String
+    let missionId: Int
     @Environment(\.dismiss) var dismiss
 
     var body: some View {
@@ -19,10 +19,12 @@ struct ApprovalDetailView: View {
             .padding(.bottom, 8)
 
             ApprovalView(
-                viewModel: .init(
-                    approvalSource: .detail(questId: questId),
+                vm: ApprovalViewModel(
+                    approvalSource: .detail(missionId: missionId),
                     emojiNetwork: EmojiNetwork(),
-                    challengeNetwork: ChallengeNetwork()
+                    userRepository: UserRepository(network: UserNetwork()),
+                    missionHistoryRepository: MissionHistoryRepository(network: MissionHistoryNetwork()),
+                    areaNameService: AreaNameService(areaRepository: AreaRepository(network: AreaNetwork()))
                 )
             )
         }

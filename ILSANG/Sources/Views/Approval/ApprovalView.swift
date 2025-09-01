@@ -169,6 +169,7 @@ struct ApprovalView: View {
     ApprovalView(
         vm:
             ApprovalViewModel(
+                approvalSource: .tab,
                 emojiNetwork: EmojiNetwork(),
                 userRepository: UserRepository(network: UserNetwork()),
                 missionHistoryRepository: MissionHistoryRepository(network: MissionHistoryNetwork(),),

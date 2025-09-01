@@ -106,13 +106,28 @@ struct QuestDetailView: View {
 }
 
 #Preview {
-    QuestDetailView(vm: QuestDetailViewModel(quest: .mockData, questRepository: QuestRepository(network: QuestNetwork()), onUpdate: {_ in },  showQuestExImageAction: {  }), action: { })
-        .frame(height: 684)
+    QuestDetailView(
+        vm: QuestDetailViewModel(
+            quest: .mockData,
+            questRepository:  QuestRepository(network: QuestNetwork()),
+            onUpdate:  { _ in }
+        ),
+        showQuestExImageAction: { },
+        questApproveAction: { }
+    )
+    .frame(height: 684)
 }
 
 
 #Preview {
-    QuestDetailView(vm: QuestDetailViewModel(quest: .mockRepeatData, questNetwork: QuestNetwork(), onUpdate: { _ in }), showQuestExImageAction: {  }, questApproveAction: { })
-    QuestDetailView(vm: QuestDetailViewModel(quest: .mockRepeatData, questRepository: QuestRepository(network: QuestNetwork()), onUpdate: {_ in },  showQuestExImageAction: {  }), action: { })
-        .frame(height: 684)
+    QuestDetailView(
+        vm: QuestDetailViewModel(
+            quest: .mockRepeatData,
+            questRepository:  QuestRepository(network: QuestNetwork()),
+            onUpdate:  { _ in }
+        ),
+        showQuestExImageAction: { },
+        questApproveAction: { }
+    )
+    .frame(height: 684)
 }

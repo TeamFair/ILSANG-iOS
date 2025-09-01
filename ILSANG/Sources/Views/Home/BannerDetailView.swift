@@ -53,6 +53,12 @@ struct BannerDetailView: View {
                 viewModel.handleIllsangZoneSelection(area)
             }
         }
+        // TODO: 확인하기
+        .navigationDestination(isPresented: $viewModel.showChallengeImageView) {
+            if let id = viewModel.selectedQuest?.missionId {
+                ApprovalDetailView(missionId: id)
+            }
+        }
         // TODO: navigation으로 변경
         .fullScreenCover(isPresented: $viewModel.showQuestEngageView) {
             if let selectedQuest = viewModel.selectedQuest {
@@ -81,9 +87,11 @@ struct BannerDetailView: View {
                         onUpdate: { quest in
                             viewModel.toggleQuestFavorite(quest: quest)
                         })
-                ) {
+                , showQuestExImageAction: {
+                    viewModel.onChallengeExImageTapped()
+                }, questApproveAction: {
                     viewModel.onQuestApprovalTapped()
-                }
+                })
                 .presentationCornerRadius(24)
                 .presentationDragIndicator(.hidden)
                 .presentationDetents([tall ? .height(UISheetPresentationController.Detent.questDetailDetentHeightTall) : .height(UISheetPresentationController.Detent.questDetailDetentHeightShort)])

@@ -25,6 +25,18 @@ final class MissionHistoryRepository {
         }
     }
     
+    /// 미션 아이디별 조회 - 퀘스트 인증 예시 화면에서 사용
+    func getMissionHistories(missionId: Int, page: Int, size: Int) async -> Result<(data: [MissionHistory], total: Int), Error> {
+        let res = await network.getMissionHistories(missionId: missionId, page: page, size: size)
+        switch res {
+        case .success(let response):
+            let domainModels = response.content.map { $0.toDomain() }
+            return .success((domainModels, response.totalElements))
+        case .failure(let error):
+            return .failure(error)
+        }
+    }
+    
     func getMissionHistories(page: Int, size: Int, userId: String?) async -> Result<(data: [UserMissionHistory], total: Int), Error> {
         let res = await network.getMissionHistories(page: page, size: size, userId: userId)
         switch res {

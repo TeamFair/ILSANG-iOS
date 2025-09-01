@@ -65,6 +65,7 @@ struct MainTabView: View {
            )
 //#endif
         self.approvalViewModel = ApprovalViewModel(
+            approvalSource: .tab,
             emojiNetwork: EmojiNetwork(),
             userRepository: userRepository,
             missionHistoryRepository: MissionHistoryRepository(network: MissionHistoryNetwork()),
@@ -74,7 +75,6 @@ struct MainTabView: View {
         self._rankViewModel = StateObject(
             wrappedValue:
                 RankingViewModel(
-                    approvalSource: .tab,
                     rankRepository: rankRepository,
                     userRepository: userRepository,
                     areaNameService: areaNameService,

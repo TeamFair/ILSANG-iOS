@@ -85,7 +85,7 @@ struct ApprovalItemContentView: View {
                     showSheetView.toggle()
                 }
             })
-            .navigationDestination(isPresented: $showMagView) {
+            .sheet(isPresented: $showMagView) {
                 if #available(iOS 18.0, *) {
                     ImageFullScreenView(image: item.image ?? .logo) {
                         showMagView.toggle()
@@ -114,6 +114,7 @@ struct ApprovalItemContentView: View {
                 }
             }
         }
+        .foregroundStyle(.gray500)
     }
     
     private func emojiView(imageName: UIImage, count: Int, alignment: Alignment) -> some View {

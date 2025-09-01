@@ -128,7 +128,7 @@ struct HomeView: View {
             )
         }
         .navigationDestination(isPresented: $vm.showChallengeImageView) {
-            ApprovalDetailView(questId: vm.selectedQuest.id)
+            ApprovalDetailView(missionId: vm.selectedQuest.missionId)
         }
     }
     
