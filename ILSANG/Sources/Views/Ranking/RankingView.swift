@@ -9,8 +9,9 @@ import SwiftUI
 
 struct RankingView: View {
     @ObservedObject var vm: RankingViewModel
-    @EnvironmentObject var sharedState: SharedState
+    @EnvironmentObject var dependencies: AppDependencies
     @EnvironmentObject private var seasonManager: SeasonManager
+    @EnvironmentObject var sharedState: SharedState
     
     @State private var isRefreshing = false
    
@@ -239,22 +240,7 @@ extension RankingView {
             case .metro:
                 ForEach(vm.metroRank) { rank in
                     Button {
-//                        vm.showRankingDetailView = true
                         vm.selectedRank = rank
-
-//                        RankingDetailView(
-//                            vm: RankingDetailViewModel(
-//                                seasonId: vm.selectedSeasonId,
-//                                areaName: rank.areaName,
-//                                areaRank: rank.rank,
-//                                areaPoint: rank.point,
-//                                areaImageIds: rank.imageIds,
-//                                areaCode: rank.areaCode,
-//                                areaType: .metro,
-//                                rankRepository: vm.rankRepository,
-//                                areaNameService: vm.areaNameService
-//                            )
-//                        )
                     } label: {
                         RankingItemView(style: .areaRank(rank))
                     }
@@ -262,21 +248,7 @@ extension RankingView {
             case .commercial:
                 ForEach(vm.commercialRank) { rank in
                     Button {
-//                        vm.showRankingDetailView = true
                         vm.selectedRank = rank
-//                        RankingDetailView(
-//                            vm: RankingDetailViewModel(
-//                                seasonId: vm.selectedSeasonId,
-//                                areaName: rank.areaName,
-//                                areaRank: rank.rank,
-//                                areaPoint: rank.point,
-//                                areaImageIds: rank.imageIds,
-//                                areaCode: rank.areaCode,
-//                                areaType: .commercial,
-//                                rankRepository: vm.rankRepository,
-//                                areaNameService: vm.areaNameService
-//                            )
-//                        )
                     } label: {
                         RankingItemView(style: .areaRank(rank))
                     }
@@ -285,13 +257,11 @@ extension RankingView {
                 ForEach(vm.contributionRank, id: \.userId) { rank in
                     NavigationLink {
                         OtherUserProfileView(
-                            vm: OtherUserProfileViewModel(
-                                userId: rank.userId,
-                                userRepository: UserRepository(network: UserNetwork()),
-                                missionHistoryRepository: MissionHistoryRepository(network: MissionHistoryNetwork()),
-                                areaNameService: vm.areaNameService,
-                                seasonManager: seasonManager
-                            )
+                            userId: rank.userId,
+                            userRepository: dependencies.userRepository,
+                            missionHistoryRepository: dependencies.missionHistoryRepository,
+                            areaNameService: dependencies.areaNameService,
+                            seasonManager: seasonManager
                         )
                     } label: {
                         RankingItemView(style: .userRank(rank))
@@ -315,8 +285,8 @@ extension RankingView {
                         areaImageIds: rank.imageIds,
                         areaCode: rank.areaCode,
                         areaType: .metro,
-                        rankRepository: vm.rankRepository,
-                        areaNameService: vm.areaNameService
+                        rankRepository: dependencies.rankRepository,
+                        areaNameService: dependencies.areaNameService
                     )
                 )
             case .commercial:
@@ -329,8 +299,8 @@ extension RankingView {
                         areaImageIds: rank.imageIds,
                         areaCode: rank.areaCode,
                         areaType: .commercial,
-                        rankRepository: vm.rankRepository,
-                        areaNameService: vm.areaNameService
+                        rankRepository: dependencies.rankRepository,
+                        areaNameService: dependencies.areaNameService
                     )
                 )
             case .contribution:

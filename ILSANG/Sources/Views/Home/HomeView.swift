@@ -10,9 +10,10 @@ import SwiftUI
 // TODO: 에러처리 재정의 필요
 struct HomeView: View {
     @State var vm: HomeViewModel
-    @EnvironmentObject var sharedState: SharedState
-    @EnvironmentObject var seasonManager: SeasonManager
+    @EnvironmentObject var dependencies: AppDependencies
     @EnvironmentObject var honorAcquisitionManager: HonorAcquisitionManager
+    @EnvironmentObject var seasonManager: SeasonManager
+    @EnvironmentObject var sharedState: SharedState
     @Environment(\.redactionReasons) var redactionReasons
     
     private let gridItem = [GridItem(), GridItem()]
@@ -41,10 +42,7 @@ struct HomeView: View {
                     // await honorAcquisitionManager.fetchUnreadHonorHistory()
                 }
                 .refreshable {
-                    // TODO: 태스크 {} 제거
-                    Task {
-                        await vm.loadInitialData()
-                    }
+                    await vm.loadInitialData()
                 }
                 .disabled(vm.viewStatus == .loading)
             case .error:
@@ -69,7 +67,7 @@ struct HomeView: View {
             QuestDetailView(
                 vm: QuestDetailViewModel(
                     quest: vm.selectedQuest,
-                    questRepository: QuestRepository(network: QuestNetwork()),
+                    questRepository: dependencies.questRepository,
                     onUpdate: { quest in
                         vm.toggleFavoriteStatus(quest: quest)
                     }
@@ -87,7 +85,7 @@ struct HomeView: View {
             }
         }
         .fullScreenCover(isPresented: $vm.showSubmitRouterView) {
-            SubmitRouterView(selectedQuest: vm.selectedQuest)
+            SubmitRouterView(selectedQuest: vm.selectedQuest, submitService: dependencies.imageChallengeSubmitService, challengeNetwork: dependencies.challengeNetwork)
                 .interactiveDismissDisabled()
         }
         .navigationDestination(item: $vm.selectedBanner) { banner in
@@ -96,34 +94,33 @@ struct HomeView: View {
                     banner: banner,
                     shouldShowIllsangZoneWarning: vm.shouldShowIllsangZoneWarning,
                     currentSeason: vm.currentSeason,
-                    userRepository: vm.userRepository,
-                    questRepository: vm.questRepository,
-                    areaRepository: vm.areaRepository,
-                    favoriteService: vm.favoriteService
+                    userRepository: dependencies.userRepository,
+                    questRepository: dependencies.questRepository,
+                    areaRepository: dependencies.areaRepository,
+                    favoriteService: dependencies.favoriteService
                 )
             )
         }
         .navigationDestination(isPresented: $vm.showSelectMyRegionView) {
-            MyRegionAreaSelectionView(areaRepository: vm.areaRepository) { area in
+            MyRegionAreaSelectionView(areaRepository: dependencies.areaRepository) { area in
                 vm.handleMyRegionSelection(area)
             }
         }
         .navigationDestination(isPresented: $vm.showSelectIllsangZoneView) {
-            IllsangZoneSelectionView(userRepository: vm.userRepository, areaRepository: vm.areaRepository) { area in
+            IllsangZoneSelectionView(userRepository: dependencies.userRepository, areaRepository: dependencies.areaRepository) { area in
                 vm.handleIllsangZoneSelection(area)
             }
         }
         .navigationDestination(isPresented: $vm.showQuestEngageView) {
-            let challengeNetwork = ChallengeNetwork()
             QuestEngageView(
                 vm: QuestEngageViewModel(
-                    quest: vm.selectedQuest, challengeNetwork: challengeNetwork
+                    quest: vm.selectedQuest, challengeNetwork: dependencies.challengeNetwork
                 ),
                 submitVM: SubmitRouterViewModel(
                     selectedImage: nil,
                     selectedQuest: vm.selectedQuest,
-                    submitService: ImageChallengeSubmitService(imageNetwork: ImageNetwork(), challengeNetwork: challengeNetwork),
-                    challengeNetwork: challengeNetwork
+                    submitService: dependencies.imageChallengeSubmitService,
+                    challengeNetwork: dependencies.challengeNetwork
                 )
             )
         }
@@ -396,13 +393,11 @@ struct HomeView: View {
                 .navigationDestination(isPresented: $vm.showOtherUserProfileView) {
                     if let userId = vm.selectedUserId {
                         OtherUserProfileView(
-                            vm: OtherUserProfileViewModel(
-                                userId: userId,
-                                userRepository: vm.userRepository,
-                                missionHistoryRepository: MissionHistoryRepository(network: MissionHistoryNetwork()),
-                                areaNameService: vm.areaNameService,
-                                seasonManager: seasonManager
-                            )
+                            userId: userId,
+                            userRepository: dependencies.userRepository,
+                            missionHistoryRepository: dependencies.missionHistoryRepository,
+                            areaNameService: dependencies.areaNameService,
+                            seasonManager: seasonManager
                         )
                     }
                 }

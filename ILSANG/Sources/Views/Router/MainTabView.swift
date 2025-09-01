@@ -8,9 +8,10 @@
 import SwiftUI
 
 struct MainTabView: View {
+    @StateObject var dependencies = AppDependencies()
     @StateObject var sharedState = SharedState()
     @StateObject var honorAcquisitionManager = HonorAcquisitionManager(honorNetwork: defaultHonorNetwork)
-    @StateObject var seasonManager: SeasonManager
+    @StateObject var seasonManager: SeasonManager // TODO: AppDependencies에 통합
 
     @State var homeViewModel: HomeViewModel
     @StateObject var questViewModel: QuestViewModel
@@ -27,66 +28,56 @@ struct MainTabView: View {
     }
     
     init() {
+        let dependencies = AppDependencies()
+        _dependencies = StateObject(wrappedValue: dependencies)
+        
         let sharedState = SharedState()
         _sharedState = StateObject(wrappedValue: sharedState)
         
         let seasonManager = SeasonManager(seasonNetwork: MainTabView.defaultSeasonNetwork)
         _seasonManager = StateObject(wrappedValue: seasonManager)
         
-        let userNetwork = UserNetwork()
-        let userRepository = UserRepository(network: userNetwork)
-        let rankRepository = RankRepository(network: RankNetwork())
-        let areaRepository = AreaRepository(network: AreaNetwork())
-        let areaNameService = AreaNameService(areaRepository: areaRepository)
-
         self._homeViewModel = State(wrappedValue: HomeViewModel(
-            userRepository: userRepository,
-            areaNameService: areaNameService,
-            questRepository: QuestRepository(network: QuestNetwork()),
-            rankRepository: rankRepository,
-            bannerRepository: BannerRepository(network: BannerNetwork()),
-            areaRepository: areaRepository,
-            favoriteService: FavoriteService(favoriteNetwork: FavoriteNetwork()),
+            userRepository: dependencies.userRepository,
+            areaNameService: dependencies.areaNameService,
+            questRepository: dependencies.questRepository,
+            rankRepository: dependencies.rankRepository,
+            bannerRepository: dependencies.bannerRepository,
+            areaRepository: dependencies.areaRepository,
+            favoriteService: dependencies.favoriteService,
             sharedState: sharedState
         ))
         
-//#if DEBUG
-//           self._questViewModel = StateObject(wrappedValue: QuestViewModel(
-//            questRepository: MockQuestRepository(),
-//            areaRepository: areaRepository,
-//            favoriteService: FavoriteService(favoriteNetwork: FavoriteNetwork()), sharedState: sharedState)
-//           )
-//           
-//#else
-           self._questViewModel = StateObject(wrappedValue: QuestViewModel(
-            questRepository: QuestRepository(network: QuestNetwork()),
-            areaRepository: areaRepository,
-            favoriteService: FavoriteService(favoriteNetwork: FavoriteNetwork()), sharedState: sharedState)
-           )
-//#endif
+        self._questViewModel = StateObject(wrappedValue: QuestViewModel(
+            questRepository: dependencies.questRepository,
+            areaRepository: dependencies.areaRepository,
+            favoriteService: dependencies.favoriteService,
+            sharedState: sharedState
+        ))
+        
         self.approvalViewModel = ApprovalViewModel(
             approvalSource: .tab,
-            emojiNetwork: EmojiNetwork(),
-            userRepository: userRepository,
-            missionHistoryRepository: MissionHistoryRepository(network: MissionHistoryNetwork()),
-            areaNameService: areaNameService
+            emojiNetwork: dependencies.emojiNetwork,
+            userRepository: dependencies.userRepository,
+            missionHistoryRepository: dependencies.missionHistoryRepository,
+            areaNameService: dependencies.areaNameService
         )
         
         self._rankViewModel = StateObject(
             wrappedValue:
                 RankingViewModel(
-                    rankRepository: rankRepository,
-                    userRepository: userRepository,
-                    areaNameService: areaNameService,
+                    rankRepository: dependencies.rankRepository,
+                    userRepository: dependencies.userRepository,
+                    areaNameService: dependencies.areaNameService,
                     seasonManager: seasonManager
                 )
         )
         
         self._myPageViewModel = StateObject(
             wrappedValue: MyPageViewModel(
-                userRepository: userRepository,
-                imageNetwork: ImageNetwork(),
-                areaNameService: AreaNameService(areaRepository: AreaRepository(network: AreaNetwork())),
+                userRepository: dependencies.userRepository,
+                imageNetwork: dependencies.imageNetwork,
+                areaNameService: dependencies.areaNameService,
                 seasonManager: seasonManager
             )
         )
@@ -117,6 +108,7 @@ struct MainTabView: View {
                 }
             )
         }
+        .environmentObject(dependencies)
         .environmentObject(sharedState)
         .environmentObject(honorAcquisitionManager)
         .environmentObject(seasonManager)

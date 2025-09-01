@@ -9,11 +9,26 @@ import SwiftUI
 
 struct OtherUserProfileView: View {
     @StateObject var vm: OtherUserProfileViewModel
+    @EnvironmentObject var dependencies: AppDependencies
     @EnvironmentObject var seasonManager: SeasonManager
     @Environment(\.dismiss) var dismiss
     
-    init(vm: OtherUserProfileViewModel) {
-        _vm = StateObject(wrappedValue: vm)
+    init(
+        userId: String,
+        userRepository: UserRepositoryInterface,
+        missionHistoryRepository: MissionHistoryRepository,
+        areaNameService: AreaNameProvider,
+        seasonManager: SeasonManager
+    ) {
+        _vm = StateObject(
+            wrappedValue: OtherUserProfileViewModel(
+                userId: userId,
+                userRepository: userRepository,
+                missionHistoryRepository: missionHistoryRepository,
+                areaNameService: areaNameService,
+                seasonManager: seasonManager
+            )
+        )
     }
     
     var body: some View {
@@ -138,13 +153,11 @@ struct OtherUserProfileView: View {
 
 #Preview {
     OtherUserProfileView(
-        vm: OtherUserProfileViewModel(
-            userId: "",
-            userRepository: UserRepository(network: UserNetwork()),
-            missionHistoryRepository: MissionHistoryRepository(network: MissionHistoryNetwork()),
-            areaNameService: AreaNameService(areaRepository: AreaRepository(network: AreaNetwork())),
-            seasonManager: SeasonManager(seasonNetwork: SeasonNetwork())
-        )
+        userId: "",
+        userRepository: UserRepository(network: UserNetwork()),
+        missionHistoryRepository: MissionHistoryRepository(network: MissionHistoryNetwork()),
+        areaNameService: AreaNameService(areaRepository: AreaRepository(network: AreaNetwork())),
+        seasonManager: SeasonManager(seasonNetwork: SeasonNetwork())
     )
 }
 
