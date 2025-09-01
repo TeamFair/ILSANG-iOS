@@ -92,14 +92,24 @@ struct RankingDetailView: View {
     private var imageListView: some View {
         let height: CGFloat = 150
         return VStack(spacing: 0) {
-            TabView(selection: $vm.imageIdx) {
-                ForEach(Array(vm.imageList.enumerated()), id: \.offset) { idx, image in
-                    Image(uiImage: image)
-                        .resizable()
-                        .scaledToFill()
+            Group {
+                if vm.imageList.isEmpty {
+                    Text("아직 사진이\n등록되지 않았어요")
+                        .styledFont(.heading3)
+                        .foregroundStyle(.gray200)
+                        .multilineTextAlignment(.center)
                         .frame(maxWidth: .infinity)
-                        .frame(height: height)
-                        .tag(idx)
+                } else {
+                    TabView(selection: $vm.imageIdx) {
+                        ForEach(Array(vm.imageList.enumerated()), id: \.offset) { idx, image in
+                            Image(uiImage: image)
+                                .resizable()
+                                .scaledToFill()
+                                .frame(maxWidth: .infinity)
+                                .frame(height: height)
+                                .tag(idx)
+                        }
+                    }
                 }
             }
             .frame(height: height)

@@ -29,7 +29,8 @@ struct RankingView: View {
                             switch vm.viewStatus {
                             case .loading:
                                 ProgressView()
-                                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                                    .frame(height: 300)
+                                    .frame(maxWidth: .infinity)
                             case .loaded:
                                 rankingListView
                             case .error:

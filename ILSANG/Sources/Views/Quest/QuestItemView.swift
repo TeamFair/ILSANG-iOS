@@ -234,7 +234,7 @@ struct PopularQuestItemView: View {
     var body: some View {
         Button(action: { action() }) {
             VStack(alignment: .leading, spacing: 0) {
-                Image(uiImage: quest.image ?? .logo)
+                Image(uiImage: quest.mainImage ?? .logo)
                     .resizable()
                     .scaledToFill()
                     .frame(width: imageSize.width, height: imageSize.height)
