@@ -33,17 +33,15 @@ class RankingViewModel: ObservableObject {
     
     @Published var seasons: [Season] = []
     
-    let rankRepository: RankRepositoryInterface
-    let userRepository: UserRepositoryInterface
-    let areaNameService: AreaNameProvider
-    private let seasonManager: SeasonManager
+    private let rankRepository: RankRepositoryInterface
+    private let areaNameService: AreaNameProvider
+    let seasonManager: SeasonManager
     
     private var currentLoadTask: Task<Void, Never>?
     private var cancellables = Set<AnyCancellable>()
     
-    init(rankRepository: RankRepositoryInterface, userRepository: UserRepositoryInterface, areaNameService: AreaNameProvider, seasonManager: SeasonManager)  {
+    init(rankRepository: RankRepositoryInterface, areaNameService: AreaNameProvider, seasonManager: SeasonManager)  {
         self.rankRepository = rankRepository
-        self.userRepository = userRepository
         self.areaNameService = areaNameService
         self.seasonManager = seasonManager
         

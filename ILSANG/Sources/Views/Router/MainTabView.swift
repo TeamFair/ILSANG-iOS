@@ -10,22 +10,12 @@ import SwiftUI
 struct MainTabView: View {
     @StateObject var dependencies = AppDependencies()
     @StateObject var sharedState = SharedState()
-    @StateObject var honorAcquisitionManager = HonorAcquisitionManager(honorNetwork: defaultHonorNetwork)
-    @StateObject var seasonManager: SeasonManager // TODO: AppDependencies에 통합
-
+    
     @State var homeViewModel: HomeViewModel
-    @StateObject var questViewModel: QuestViewModel
-    var approvalViewModel: ApprovalViewModel
+    @State var questViewModel: QuestViewModel
+    @State var approvalViewModel: ApprovalViewModel
     @StateObject var rankViewModel: RankingViewModel
     @StateObject var myPageViewModel: MyPageViewModel
-    
-    static var defaultHonorNetwork: HonorNetworkProtocol {
-        return HonorNetwork() // MockHonorNetwork()
-    }
-    
-    static var defaultSeasonNetwork: SeasonNetworkProtocol {
-        return SeasonNetwork() // MockSeasonNetwork()
-    }
     
     init() {
         let dependencies = AppDependencies()
@@ -33,24 +23,19 @@ struct MainTabView: View {
         
         let sharedState = SharedState()
         _sharedState = StateObject(wrappedValue: sharedState)
-        
-        let seasonManager = SeasonManager(seasonNetwork: MainTabView.defaultSeasonNetwork)
-        _seasonManager = StateObject(wrappedValue: seasonManager)
-        
+
         self._homeViewModel = State(wrappedValue: HomeViewModel(
             userRepository: dependencies.userRepository,
             areaNameService: dependencies.areaNameService,
             questRepository: dependencies.questRepository,
             rankRepository: dependencies.rankRepository,
             bannerRepository: dependencies.bannerRepository,
-            areaRepository: dependencies.areaRepository,
             favoriteService: dependencies.favoriteService,
             sharedState: sharedState
         ))
         
-        self._questViewModel = StateObject(wrappedValue: QuestViewModel(
+        self._questViewModel = State(wrappedValue: QuestViewModel(
             questRepository: dependencies.questRepository,
-            areaRepository: dependencies.areaRepository,
             favoriteService: dependencies.favoriteService,
             sharedState: sharedState
         ))
@@ -58,7 +43,6 @@ struct MainTabView: View {
         self.approvalViewModel = ApprovalViewModel(
             approvalSource: .tab,
             emojiNetwork: dependencies.emojiNetwork,
-            userRepository: dependencies.userRepository,
             missionHistoryRepository: dependencies.missionHistoryRepository,
             areaNameService: dependencies.areaNameService
         )
@@ -67,9 +51,8 @@ struct MainTabView: View {
             wrappedValue:
                 RankingViewModel(
                     rankRepository: dependencies.rankRepository,
-                    userRepository: dependencies.userRepository,
                     areaNameService: dependencies.areaNameService,
-                    seasonManager: seasonManager
+                    seasonManager: dependencies.seasonManager
                 )
         )
         
@@ -78,7 +61,7 @@ struct MainTabView: View {
                 userRepository: dependencies.userRepository,
                 imageNetwork: dependencies.imageNetwork,
                 areaNameService: dependencies.areaNameService,
-                seasonManager: seasonManager
+                seasonManager: dependencies.seasonManager
             )
         )
     }
@@ -110,17 +93,16 @@ struct MainTabView: View {
         }
         .environmentObject(dependencies)
         .environmentObject(sharedState)
-        .environmentObject(honorAcquisitionManager)
-        .environmentObject(seasonManager)
+//        .environmentObject(dependencies.seasonManager)
     }
     
     @ViewBuilder
     func createTabView(for tab: Tab) -> some View {
         switch tab {
         case .home:
-            HomeView(vm: homeViewModel)
+            HomeView(vm: homeViewModel, questRepository: dependencies.questRepository, illsangZoneManager: dependencies.illsangZoneManager)
         case .quest:
-            QuestView(vm: questViewModel)
+            QuestView(vm: questViewModel, questRepository: dependencies.questRepository, illsangZoneManager: dependencies.illsangZoneManager)
         case .approval:
             ApprovalView(vm: approvalViewModel)
         case .ranking:

@@ -8,7 +8,8 @@
 import UIKit
 import Combine
 
-class QuestViewModel: ObservableObject {
+@Observable
+class QuestViewModel {
     // TODO: API 요청 실패 시 에러상태로 변경하기
     enum ViewStatus {
         case error
@@ -16,46 +17,24 @@ class QuestViewModel: ObservableObject {
         case loaded
     }
     
-    @Published var viewStatus: ViewStatus = .loading
+     var viewStatus: ViewStatus = .loading
     
     // TODO: 바뀔 때 api 요청하도록 수정 (refresh, init 고려)
-    @Published var selectedHeader: QuestStatus = .default
+     var selectedHeader: QuestStatus = .default
     
-    @Published var showSelectMyRegionView: Bool = false
-    @Published var alertType: AlertType? = nil
+     var showSelectMyRegionView: Bool = false
+     var alertType: AlertType? = nil
     
     // 필터
-    @Published var questFilterState: StaticFilterPickerState<QuestFilterType>
-    @Published var repeatFilterState: StaticFilterPickerState<RepeatType>
-    @Published var eventFilterState: StaticFilterPickerState<EventQuestFilterType>
-    
-    // 선택된 퀘스트
-    @Published var selectedQuest: QuestViewModelItem = .mockData
-    @Published var showQuestSheet: Bool = false
-    @Published var showChallengeImageView: Bool = false
-    @Published var showSubmitRouterView: Bool = false {
-        didSet {
-            // TODO: 도전내역 등록 완료시 리스트에서 퀘스트만 삭제/추가하도록 개선(퀘스트 조회 API 호출x)
-            if showSubmitRouterView == false {
-                Task { await loadInitialData() }
-            }
-        }
-    }
-    @Published var showQuestEngageView: Bool = false {
-        didSet {
-            // TODO: 도전내역 등록 완료시 리스트에서 퀘스트만 삭제/추가하도록 개선(퀘스트 조회 API 호출x)
-            if showQuestEngageView == false {
-                Task { await loadInitialData() }
-            }
-        }
-    }
-    
-    @Published var defaultQuestListByFilter: [QuestFilterType: [QuestViewModelItem]] = [:]
-    @Published var repeatQuestListByFilter: [RepeatType: [QuestFilterType: [QuestViewModelItem]]] = [:]
-    @Published var eventQuestListByFilter: [EventQuestFilterType: [QuestViewModelItem]] = [:]
-    @Published var completedQuestList: [QuestViewModelItem] = []
+     var questFilterState: StaticFilterPickerState<QuestFilterType>
+     var repeatFilterState: StaticFilterPickerState<RepeatType>
+     var eventFilterState: StaticFilterPickerState<EventQuestFilterType>
+       
+     var defaultQuestListByFilter: [QuestFilterType: [QuestViewModelItem]] = [:]
+     var repeatQuestListByFilter: [RepeatType: [QuestFilterType: [QuestViewModelItem]]] = [:]
+     var eventQuestListByFilter: [EventQuestFilterType: [QuestViewModelItem]] = [:]
+     var completedQuestList: [QuestViewModelItem] = []
 
-    
     var currentQuests: [QuestViewModelItem] {
         switch selectedHeader {
         case .default:
@@ -73,68 +52,56 @@ class QuestViewModel: ObservableObject {
         currentQuests.isEmpty
     }
     
-    // TODO: 퀘스트 갯수 확인 필요
-    // TODO: 현재 0페이지만 불러오며, 임시로 60개 로딩. 스탯 분류&필터링과 관련해서 기획 & API 수정에 따라 페이지네이션 로직 수정 필요
-    lazy var defaultPaginationManager = PaginationManager<QuestViewModelItem>(
-        size: 20,
-        threshold: 18,
-        loadPage: { [weak self] page in
-            guard let self = self else { return ([], 0) }
-            return await loadQuestListWithImage(page: page, size: 20, status: .default)
-        }
-    )
-    
-    // TODO: 현재 0페이지만 불러오며, 임시로 40개 로딩. 스탯 분류&필터링과 관련해서 기획 & API 수정에 따라 페이지네이션 로직 수정 필요
-    lazy var repeatPaginationManager = PaginationManager<QuestViewModelItem>(
-        size: 20,
-        threshold: 18,
-        loadPage: { [weak self] page in
-            guard let self = self else { return ([], 0) }
-            return await loadQuestListWithImage(page: page, size: 20, status: .repeat)
-        }
-    )
-    
-    // TODO: 스탯 분류&필터링과 관련해서 기획 & API 수정에 따라 페이지네이션 로직 수정 필요
-    lazy var eventPaginationManager = PaginationManager<QuestViewModelItem>(
-        size: 20,
-        threshold: 18,
-        loadPage: { [weak self] page in
-            guard let self = self else { return ([], 0) }
-            return await loadQuestListWithImage(page: page, size: 20, status: .event)
-        }
-    )
-    
-    lazy var completedPaginationManager = PaginationManager<QuestViewModelItem>(
-        size: 10,
-        threshold: 8,
-        loadPage: { [weak self] page in
-            guard let self = self else { return ([], 0) }
-            return await loadQuestListWithImage(page: page, size: 10, status: .completed)
-        }
-    )
+    // TODO: 페이지네이션 로직 수정 필요
+    let defaultPaginationManager: PaginationManager<QuestViewModelItem>
+    let repeatPaginationManager: PaginationManager<QuestViewModelItem>
+    let eventPaginationManager: PaginationManager<QuestViewModelItem>
+    let completedPaginationManager: PaginationManager<QuestViewModelItem>
     
     // MARK: throttle 관련
     let throttleInterval: TimeInterval = 2.0
     var lastRefreshTime: Date? = nil
     
     private let questRepository: QuestRepositoryInterface
-    let areaRepository: AreaRepositoryInterface
     private let favoriteService: FavoriteService
-    let sharedState: SharedState
+    private let sharedState: SharedState
+        
     private var cancellables = Set<AnyCancellable>()
     
-    init(questRepository: QuestRepositoryInterface, areaRepository: AreaRepositoryInterface, favoriteService: FavoriteService, sharedState: SharedState) {
+    init(
+        questRepository: QuestRepositoryInterface,
+        favoriteService: FavoriteService,
+        sharedState: SharedState
+    ) {
         self.questRepository = questRepository
-        self.areaRepository = areaRepository
         self.favoriteService = favoriteService
+        self.sharedState = sharedState
         
-        // 필터 설정
         questFilterState = StaticFilterPickerState<QuestFilterType>(initialValue: .popular)
         eventFilterState = StaticFilterPickerState<EventQuestFilterType>(initialValue: .popular)
         repeatFilterState = StaticFilterPickerState<RepeatType>(initialValue: .daily)
         
-        self.sharedState = sharedState
-
+        self.defaultPaginationManager = PaginationManager(size: 20, threshold: 18)
+        self.repeatPaginationManager = PaginationManager(size: 20, threshold: 18)
+        self.eventPaginationManager = PaginationManager(size: 20, threshold: 18)
+        self.completedPaginationManager = PaginationManager(size: 20, threshold: 18)
+        self.defaultPaginationManager.loadPageData = { [weak self] page in
+            guard let self = self else { return ([], 0) }
+            return await self.loadQuestListWithImage(page: page, size: 20, status: .default)
+        }
+        self.repeatPaginationManager.loadPageData = { [weak self] page in
+            guard let self = self else { return ([], 0) }
+            return await self.loadQuestListWithImage(page: page, size: 20, status: .repeat)
+        }
+        self.eventPaginationManager.loadPageData = { [weak self] page in
+            guard let self = self else { return ([], 0) }
+            return await self.loadQuestListWithImage(page: page, size: 20, status: .event)
+        }
+        self.completedPaginationManager.loadPageData = { [weak self] page in
+            guard let self = self else { return ([], 0) }
+            return await self.loadQuestListWithImage(page: page, size: 10, status: .completed)
+        }
+        
         questFilterState.onSelectionChange = { [weak self] _ in
             guard let self = self else { return }
             switch selectedHeader {
@@ -154,6 +121,11 @@ class QuestViewModel: ObservableObject {
             Task { await self.repeatPaginationManager.loadData(isRefreshing: true) }
         }
         
+        Task { await setupBindings() }
+    }
+    
+    @MainActor
+    private func setupBindings() {
         sharedState.$selectedCommercialArea
             .removeDuplicates()
             .dropFirst()
@@ -161,6 +133,26 @@ class QuestViewModel: ObservableObject {
                 Task { await self?.loadInitialData() }
             }
             .store(in: &cancellables)
+        
+//        questRouter.$showSubmitRouter
+//            .removeDuplicates()
+//            .dropFirst()
+//            .sink { [weak self] isPresented in
+//                if !isPresented {
+//                    Task { await self?.loadInitialData() }
+//                }
+//            }
+//            .store(in: &cancellables)
+//        
+//        questRouter.$showQuestEngage
+//            .removeDuplicates()
+//            .dropFirst()
+//            .sink { [weak self] isPresented in
+//                if !isPresented {
+//                    Task { await self?.loadInitialData() }
+//                }
+//            }
+//            .store(in: &cancellables)
     }
     
     func loadDataIfNeeded() async {
@@ -362,50 +354,14 @@ class QuestViewModel: ObservableObject {
         }
     }
     
-    func onQuestTapped(quest: QuestViewModelItem) {
-        AnalyticsService.logEvent(.questItemClick(questId: quest.id, questType: quest.questType?.rawValue.uppercased() ?? ""))
-        selectedQuest = quest
-        Task {
-            let questDetail = try await questRepository.getQuestDetail(questId: quest.id)
-                .get()
-                .toQuestItem()
-            
-            if let imageId = questDetail.imageId {
-                questDetail.image = await ImageCacheService.shared.loadImageAsync(imageId: imageId)
-            }
-            await MainActor.run {
-                self.selectedQuest = questDetail
-            }
-        }
-        
-        DispatchQueue.main.asyncAfter(deadline: .now()+0.3) {
-            self.showQuestSheet = true
-        }
-    }
-    
     func handleMyRegionSelection(_ area: CommercialArea) {
         sharedState.selectedCommercialArea = area
         self.alertType = .myRegionChangeSuccess
     }
     
-    
     /// 즐겨찾기 상태를 UI에 즉시 반영하고,  서버 반영은 디바운싱 처리
     func toggleFavoriteStatus(quest: QuestViewModelItem) {
         favoriteService.toggle(quest: quest)
-    }
-    
-    func onQuestApprovalTapped() {
-        showQuestSheet = false
-        if selectedQuest.missionType == .photo {
-            showSubmitRouterView = true
-        } else {
-            showQuestEngageView = true
-        }
-    }
-    
-    func onChallengeExImageTapped() {
-        showQuestSheet = false
-        showChallengeImageView = true
     }
     
     func closeFilterPicker() {

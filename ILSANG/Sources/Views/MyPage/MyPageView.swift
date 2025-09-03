@@ -10,7 +10,6 @@ import SwiftUI
 struct MyPageView: View {
     @ObservedObject var vm: MyPageViewModel
     @EnvironmentObject var dependencies: AppDependencies
-    @EnvironmentObject var seasonManager: SeasonManager
     @EnvironmentObject var sharedState: SharedState
     
     var body: some View {
@@ -108,7 +107,7 @@ struct MyPageView: View {
                     style: .my,
                     content:
                         UserPointView(
-                            seasonNumbers: seasonManager.seasons.map { $0.seasonNumber },
+                            seasonNumbers: dependencies.seasonManager.seasons.map { $0.seasonNumber },
                             points: vm.points,
                             completedQuestCount: vm.completedQuestCount,
                             selectedSeason: $vm.selectedSeasonNumber,

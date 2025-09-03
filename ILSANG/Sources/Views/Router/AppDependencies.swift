@@ -32,10 +32,12 @@ class AppDependencies: ObservableObject {
     let bannerRepository: BannerRepository
     
     // MARK: - Services
+    let illsangZoneManager: IllsangZoneManager
     let areaNameService: AreaNameProvider
-    // let seasonManager: SeasonManager
+    let seasonManager: SeasonManager
     let imageChallengeSubmitService: ImageChallengeSubmitService
     let favoriteService: FavoriteService
+    let honorAcquisitionManager: HonorAcquisitionManager
     
     init() {
         // Networks
@@ -62,11 +64,10 @@ class AppDependencies: ObservableObject {
         
         // Services
         self.areaNameService = AreaNameService(areaRepository: areaRepository)
-        // self.seasonManager = SeasonManager(seasonNetwork: seasonNetwork)
-        self.imageChallengeSubmitService = ImageChallengeSubmitService(
-            imageNetwork: imageNetwork,
-            challengeNetwork: challengeNetwork
-        )
+        self.seasonManager = SeasonManager(seasonNetwork: seasonNetwork)
+        self.illsangZoneManager = IllsangZoneManager(areaNameService: areaNameService, seasonManager: seasonManager)
+        self.imageChallengeSubmitService = ImageChallengeSubmitService(imageNetwork: imageNetwork, challengeNetwork: challengeNetwork)
         self.favoriteService = FavoriteService(favoriteNetwork: favoriteNetwork)
+        self.honorAcquisitionManager = HonorAcquisitionManager(honorNetwork: honorNetwork)
     }
 }

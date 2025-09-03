@@ -21,14 +21,15 @@ final class UserMissionHistoryViewModel: ObservableObject {
     
     init(missionHistoryRepository: MissionHistoryRepository, challengeDelete: Bool = false) {
         self.missionHistoryRepository = missionHistoryRepository
-    }
-    lazy var challengePaginationManager = PaginationManager<UserMissionHistoryViewModelItem>(
-        size: 10,
-        threshold: 7,
-        loadPage: { [weak self] page in
+        challengePaginationManager.loadPageData = { [weak self] page in
             guard let self = self else { return ([], 0) }
             return await loadChallengeListWithImage(page: page, size: 10)
         }
+    }
+    
+    var challengePaginationManager = PaginationManager<UserMissionHistoryViewModelItem>(
+        size: 10,
+        threshold: 7
     )
     
     @discardableResult @MainActor

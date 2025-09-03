@@ -82,7 +82,7 @@ struct BannerDetailView: View {
                     vm: QuestDetailViewModel(
                         quest: quest,
                         questRepository: dependencies.questRepository,
-                        onUpdate: { quest in
+                        onFavorite: { quest in
                             viewModel.toggleQuestFavorite(quest: quest)
                         })
                 , showQuestExImageAction: {
@@ -210,7 +210,7 @@ struct BannerDetailView: View {
     }
     
     @ViewBuilder
-    private func alertView(_ alertType: AlertType) -> some View {
+    private func alertView(_ alertType: IllsangZoneAlertType) -> some View {
         if alertType == .illsangZoneNotSelected {
             SettingAlertView(
                 alertType: alertType,
@@ -341,8 +341,6 @@ struct QuestSortHelper {
     BannerDetailView(
         viewModel: BannerDetailViewModel(
             banner: .init(id: 0, title: "title", navigationTitle: "일상", imageId: "", description: "", image: .img0),
-            shouldShowIllsangZoneWarning: false,
-            currentSeason: 1,
             userRepository: UserRepository(network: UserNetwork()),
             questRepository: QuestRepository(network: QuestNetwork()),
             areaRepository: AreaRepository(network: AreaNetwork()),

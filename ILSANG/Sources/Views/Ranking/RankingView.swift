@@ -8,20 +8,27 @@
 import SwiftUI
 
 struct RankingView: View {
-    @ObservedObject var vm: RankingViewModel
+    @StateObject var vm: RankingViewModel
+    @StateObject var userRouter: UserRouter
     @EnvironmentObject var dependencies: AppDependencies
-    @EnvironmentObject private var seasonManager: SeasonManager
     @EnvironmentObject var sharedState: SharedState
     
     @State private var isRefreshing = false
    
+    init(
+        vm: RankingViewModel,
+    ) {
+        _vm = StateObject(wrappedValue: vm)
+        _userRouter = StateObject(wrappedValue: UserRouter())
+    }
+    
     var body: some View {
         VStack(spacing: 0) {
             Spacer().frame(height: 94) // 고정 영역
             
             ScrollView {
                 VStack(spacing: 0) {
-                    if let currentSeason = seasonManager.currentSeason {
+                    if let currentSeason = vm.seasonManager.currentSeason {
                         seasonBannerView(season: currentSeason)
                     }
                     
@@ -56,8 +63,9 @@ struct RankingView: View {
                     .frame(height: 200)
             }
         }
+        .withUserNavigation(userRouter: userRouter)
         .overlay(alignment: .bottom) {
-            if let currentSeason = seasonManager.currentSeason,
+            if let currentSeason = vm.seasonManager.currentSeason,
             let targetDate = currentSeason.endDate.toISO8601Date() {
                 SeasonTimerView(season: currentSeason.seasonNumber, targetDate: targetDate)
                     .padding(.horizontal, 20)
@@ -255,14 +263,15 @@ extension RankingView {
                 }
             case .contribution:
                 ForEach(vm.contributionRank, id: \.userId) { rank in
-                    NavigationLink {
-                        OtherUserProfileView(
-                            userId: rank.userId,
-                            userRepository: dependencies.userRepository,
-                            missionHistoryRepository: dependencies.missionHistoryRepository,
-                            areaNameService: dependencies.areaNameService,
-                            seasonManager: seasonManager
-                        )
+                    Button {
+                        userRouter.navigateToUserProfile(userId: rank.userId)
+//                        OtherUserProfileView(
+//                            userId: rank.userId,
+//                            userRepository: dependencies.userRepository,
+//                            missionHistoryRepository: dependencies.missionHistoryRepository,
+//                            areaNameService: dependencies.areaNameService,
+//                            seasonManager: seasonManager
+//                        )
                     } label: {
                         RankingItemView(style: .userRank(rank))
                     }
@@ -325,7 +334,7 @@ extension RankingView {
     RankingView(
         vm: RankingViewModel(
             rankRepository: RankRepository(network: RankNetwork()),
-            userRepository: UserRepository(network: UserNetwork()), areaNameService: AreaNameService(areaRepository: AreaRepository(network: AreaNetwork())),
+            areaNameService: AreaNameService(areaRepository: AreaRepository(network: AreaNetwork())),
             seasonManager: SeasonManager(
                 seasonNetwork: SeasonNetwork()
             )

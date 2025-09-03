@@ -62,6 +62,7 @@ struct IllsangZonePointView: View {
                 VStack(alignment: .leading, spacing: 32) {
                     let percents = totalOwnerContributions.pointRatios()
                     
+                    // TODO: 지역 3개만 보이도록 수정
                     ForEach(Array(totalOwnerContributions.enumerated()), id: \.offset) { idx, contribution in
                         VStack(alignment: .leading, spacing: 10) {
                             HStack(spacing: 4) {
