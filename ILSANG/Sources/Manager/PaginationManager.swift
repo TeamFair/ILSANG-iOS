@@ -12,17 +12,16 @@ final class PaginationManager<T> {
     private let threshold: Int
     
     /// 페이지 번호를 인자로 받아 해당 페이지의 데이터를 비동기적으로 로드하는 메서드. 데이터 배열과 전체 항목 수를 반환해야 합니다.
-    private let loadPageData: (Int) async -> (data: [T], totalCount: Int)
-    
+    var loadPageData: ((Int) async -> (data: [T], totalCount: Int))?
+
     private var currentPage: Int = 0
     private var totalPage: Int = 0
     private var totalCount: Int = 0
     private var isLoading = false
     
-    init(size: Int, threshold: Int, loadPage: @escaping (Int) async -> (data: [T], totalCount: Int)) {
+    init(size: Int, threshold: Int) {
         self.size = size
         self.threshold = threshold
-        self.loadPageData = loadPage
     }
     
     /// 인덱스 없이 데이터를 로드할 수 있는지 확인하는 메서드
@@ -54,7 +53,7 @@ final class PaginationManager<T> {
         } else {
             incrementPage()
         }
-        
+        guard let loadPageData else { return }
         let (_, totalCount) = await loadPageData(currentPage)
         updatePaginationState(totalCount: totalCount)
     }

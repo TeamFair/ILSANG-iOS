@@ -9,10 +9,26 @@ import SwiftUI
 import Combine
 
 struct QuestView: View {
-    @ObservedObject var vm: QuestViewModel
+    @State var vm: QuestViewModel
+    @StateObject var questRouter: QuestRouter
+    @StateObject var userRouter: UserRouter
     @EnvironmentObject var dependencies: AppDependencies
     @EnvironmentObject var sharedState: SharedState
 
+    init(
+        vm: QuestViewModel,
+        questRepository: QuestRepositoryInterface,
+        illsangZoneManager: IllsangZoneManager
+    ) {
+        _vm = State(wrappedValue: vm)
+        _questRouter = StateObject(
+            wrappedValue: QuestRouter(
+                illsangZoneManager: illsangZoneManager, questRepository: questRepository
+            )
+        )
+        _userRouter = StateObject(wrappedValue: UserRouter())
+    }
+    
     var body: some View {
         VStack(spacing: 0) {
             headerView
@@ -31,14 +47,8 @@ struct QuestView: View {
         .task {
             await vm.loadDataIfNeeded()
         }
-        .onReceive(
-            vm.$selectedHeader
-                .combineLatest(vm.questFilterState.$selectedValue)
-                .combineLatest(vm.repeatFilterState.$selectedValue)
-                .combineLatest(vm.eventFilterState.$selectedValue)
-        ) { _ in
-            vm.closeFilterPicker()
-        }
+        .withQuestNavigation(questRouter: questRouter)
+        .withUserNavigation(userRouter: userRouter)
         .overlay(
             Group {
                 if let alert = vm.alertType {
@@ -46,51 +56,10 @@ struct QuestView: View {
                 }
             }
         )
-        .sheet(isPresented: $vm.showQuestSheet) {
-            let tall = vm.selectedQuest.questType == .repeat || vm.selectedQuest.missionType == .photo
-            
-            QuestDetailView(
-                vm: QuestDetailViewModel(
-                    quest: vm.selectedQuest,
-                    questRepository: dependencies.questRepository,
-                    onUpdate: { quest in
-                        vm.toggleFavoriteStatus(quest: quest)
-                    }
-                ), showQuestExImageAction: {
-                    vm.onChallengeExImageTapped()
-                }, questApproveAction: {
-                    vm.onQuestApprovalTapped()
-                }
-            )
-            .presentationCornerRadius(24)
-            .presentationDragIndicator(.hidden)
-            .presentationDetents([tall ? .height(UISheetPresentationController.Detent.questDetailDetentHeightTall) : .height(UISheetPresentationController.Detent.questDetailDetentHeightShort)])
-            .onAppear {
-                UIApplication.shared.updateSheetDetents(to: [tall ? .questDetailDetentTall : .questDetailDetentShort], whenCurrentDetentsAre: [.large()])
-            }
-        }
-        .fullScreenCover(isPresented: $vm.showSubmitRouterView) {
-            SubmitRouterView(selectedQuest: vm.selectedQuest, submitService: dependencies.imageChallengeSubmitService, challengeNetwork: dependencies.challengeNetwork)
-                .interactiveDismissDisabled()
-        }
         .navigationDestination(isPresented: $vm.showSelectMyRegionView) {
             MyRegionAreaSelectionView(areaRepository: dependencies.areaRepository) { area in
                 vm.handleMyRegionSelection(area)
             }
-        }
-        .navigationDestination(isPresented: $vm.showQuestEngageView) {
-            QuestEngageView(
-                vm: QuestEngageViewModel(quest: vm.selectedQuest, challengeNetwork: dependencies.challengeNetwork),
-                submitVM: SubmitRouterViewModel(
-                    selectedImage: nil,
-                    selectedQuest: vm.selectedQuest,
-                    submitService: dependencies.imageChallengeSubmitService,
-                    challengeNetwork: dependencies.challengeNetwork
-                )
-            )
-        }
-        .navigationDestination(isPresented: $vm.showChallengeImageView) {
-            ApprovalDetailView(missionId: vm.selectedQuest.missionId)
         }
     }
 }
@@ -131,12 +100,25 @@ extension QuestView {
                     questListEmptyView
                 }
             }
-            .onReceive(
-                vm.$selectedHeader
-                    .combineLatest(vm.questFilterState.$selectedValue)
-                    .combineLatest(vm.repeatFilterState.$selectedValue)
-                    .combineLatest(vm.eventFilterState.$selectedValue)
-            ) { _ in
+            .onChange(of: vm.selectedHeader) { _, _ in
+                vm.closeFilterPicker()
+                withAnimation {
+                    proxy.scrollTo("top", anchor: .top)
+                }
+            }
+            .onChange(of: vm.questFilterState.selectedValue) {  _, _ in
+                vm.closeFilterPicker()
+                withAnimation {
+                    proxy.scrollTo("top", anchor: .top)
+                }
+            }
+            .onChange(of: vm.repeatFilterState.selectedValue) { _, _ in
+                vm.closeFilterPicker()
+                withAnimation {
+                    proxy.scrollTo("top", anchor: .top)
+                }
+            }
+            .onChange(of: vm.eventFilterState.selectedValue) { _, _ in
                 vm.closeFilterPicker()
                 withAnimation {
                     proxy.scrollTo("top", anchor: .top)
@@ -152,7 +134,12 @@ extension QuestView {
                 ForEach(vm.currentQuests, id: \.id) { quest in
                     DefaultQuestItemView(
                         quest: quest,
-                        action: { vm.onQuestTapped(quest: quest) },
+                        action: {
+                            AnalyticsService.logEvent(.questItemClick(questId: quest.id, questType: quest.questType?.rawValue.uppercased() ?? ""))
+                            questRouter.presentQuestDetail(quest: quest) { quest in
+                                vm.toggleFavoriteStatus(quest: quest)
+                            }
+                        },
                         favoriteAction: { vm.toggleFavoriteStatus(quest: quest) }
                     )
                 }
@@ -160,7 +147,12 @@ extension QuestView {
                 ForEach(vm.currentQuests, id: \.id) { quest in
                     RepeatQuestItemView(
                         quest: quest,
-                        action: { vm.onQuestTapped(quest: quest) },
+                        action: {
+                            AnalyticsService.logEvent(.questItemClick(questId: quest.id, questType: quest.questType?.rawValue.uppercased() ?? ""))
+                            questRouter.presentQuestDetail(quest: quest) { quest in
+                                vm.toggleFavoriteStatus(quest: quest)
+                            }
+                        },
                         favoriteAction: { vm.toggleFavoriteStatus(quest: quest) }
                     )
                 }
@@ -168,7 +160,12 @@ extension QuestView {
                 ForEach(vm.currentQuests, id: \.id) { quest in
                     EventQuestItemView(
                         quest: quest,
-                        action: { vm.onQuestTapped(quest: quest) },
+                        action: {
+                            AnalyticsService.logEvent(.questItemClick(questId: quest.id, questType: quest.questType?.rawValue.uppercased() ?? ""))
+                            questRouter.presentQuestDetail(quest: quest) { quest in
+                                vm.toggleFavoriteStatus(quest: quest)
+                            }
+                        },
                         favoriteAction: { vm.toggleFavoriteStatus(quest: quest) }
                     )
                 }
@@ -209,7 +206,6 @@ extension QuestView {
                 .frame(maxWidth: .infinity, alignment: .trailing)
             }
             .padding(.horizontal, 20)
-//            .padding(.top, 16)
             .padding(.top, 2)
             .padding(.bottom, 12)
         }
@@ -264,8 +260,18 @@ extension QuestView {
 }
 
 #Preview {
-    QuestView(vm: QuestViewModel(
-        questRepository: MockQuestRepository(), areaRepository: AreaRepository(network: AreaNetwork()),
-        favoriteService: FavoriteService(favoriteNetwork: FavoriteNetwork()), sharedState: SharedState()
-    ))
+    QuestView(
+        vm: QuestViewModel(
+            questRepository: QuestRepository(network: QuestNetwork()),
+            favoriteService: FavoriteService(favoriteNetwork: FavoriteNetwork()),
+            sharedState: SharedState()
+        ),
+        questRepository: QuestRepository(network: QuestNetwork()),
+        illsangZoneManager: IllsangZoneManager(
+            areaNameService: AreaNameService(areaRepository: AreaRepository(network: AreaNetwork())),
+            seasonManager: SeasonManager(
+                seasonNetwork: SeasonNetwork()
+            )
+        )
+    )
 }

@@ -100,7 +100,7 @@ struct DeleteAccountView: View {
             
             if delAlert {
                 SettingAlertView(
-                    alertType: .Withdrawal,
+                    alertType: AlertType.Withdrawal,
                     onCancel: { delAlert = false },
                     onConfirm: { withdraw() }
                 )

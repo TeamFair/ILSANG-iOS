@@ -55,7 +55,7 @@ struct UserMissionHistoryDetailView: View {
         .overlay {
             if vm.challengeDelete {
                 SettingAlertView(
-                    alertType: .ChallengeDelete,
+                    alertType: AlertType.ChallengeDelete,
                     onCancel: { vm.challengeDelete = false },
                     onConfirm: {
                         Task {

@@ -28,14 +28,9 @@ final class OtherUserProfileViewModel: ObservableObject {
     
     @Published var seasonFilterState: DynamicFilterPickerState<SeasonFilterType>
 
-    lazy var challengePaginationManager = PaginationManager<UserMissionHistoryViewModelItem>(
+    var challengePaginationManager = PaginationManager<UserMissionHistoryViewModelItem>(
         size: 10,
-        threshold: 7,
-        loadPage: { [weak self] page in
-            guard let self = self else { return ([], 0) }
-            return await loadChallengeListWithImage(page: page, size: 10)
-        }
-    )
+        threshold: 7)
     
     private let userRepository: UserRepositoryInterface
     private let missionHistoryRepository: MissionHistoryRepository
@@ -84,6 +79,11 @@ final class OtherUserProfileViewModel: ObservableObject {
 //                self.updateSeasonsFromServer(seasons.map { $0.seasonNumber })
 //            }
 //            .store(in: &cancellables)
+        
+        challengePaginationManager.loadPageData = { [weak self] page in
+            guard let self = self else { return ([], 0) }
+            return await loadChallengeListWithImage(page: page, size: 10)
+        }
     }
 
     

@@ -24,7 +24,6 @@ struct ApprovalDetailView: View {
                 vm: ApprovalViewModel(
                     approvalSource: .detail(missionId: missionId),
                     emojiNetwork: dependencies.emojiNetwork,
-                    userRepository: dependencies.userRepository,
                     missionHistoryRepository: dependencies.missionHistoryRepository,
                     areaNameService: dependencies.areaNameService
                 )

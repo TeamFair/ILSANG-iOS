@@ -8,15 +8,15 @@
 import SwiftUI
 
 struct SeasonPopupContainerView: View {
-    @EnvironmentObject private var manager: SeasonManager
+    @EnvironmentObject var dependencies: AppDependencies
     @State private var isPresented: Bool? = nil
     
     var onTapShowRank: () -> Void
     
     var body: some View {
-        let showPopup = isPresented ?? manager.shouldShowPopup
+        let showPopup = isPresented ?? dependencies.seasonManager.shouldShowPopup
         
-        if showPopup, let currentSeason = manager.currentSeason {
+        if showPopup, let currentSeason = dependencies.seasonManager.currentSeason {
             AnimatedPopup(isPresented: Binding(
                 get: { self.isPresented ?? true },
                 set: { newValue in
@@ -30,7 +30,7 @@ struct SeasonPopupContainerView: View {
                     onDismiss: { neverShow in
                         withAnimation {
                             if neverShow {
-                                manager.hidePopupForCurrentSeason()
+                                dependencies.seasonManager.hidePopupForCurrentSeason()
                             }
                             isPresented = false
                         }
@@ -38,7 +38,7 @@ struct SeasonPopupContainerView: View {
                     }) { neverShow in
                         withAnimation {
                             if neverShow {
-                                manager.hidePopupForCurrentSeason()
+                                dependencies.seasonManager.hidePopupForCurrentSeason()
                             }
                             isPresented = false
                         }

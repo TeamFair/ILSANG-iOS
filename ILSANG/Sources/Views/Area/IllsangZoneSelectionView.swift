@@ -95,7 +95,7 @@ class IllsangZoneSelectionViewModel: ObservableObject {
     @Published var selectedMetroIdx: Int = 0
     @Published var selectedArea: CommercialArea?
     @Published var showAlert: Bool = false
-    @Published var alertType: AlertType = .illsangZoneSetWarning
+    @Published var alertType: IllsangZoneAlertType = .illsangZoneSetWarning
     
     private let userRepository: UserRepositoryInterface
     private let areaRepository: AreaRepositoryInterface

@@ -10,7 +10,6 @@ import SwiftUI
 struct OtherUserProfileView: View {
     @StateObject var vm: OtherUserProfileViewModel
     @EnvironmentObject var dependencies: AppDependencies
-    @EnvironmentObject var seasonManager: SeasonManager
     @Environment(\.dismiss) var dismiss
     
     init(
@@ -128,7 +127,7 @@ struct OtherUserProfileView: View {
             style: .my,
             content:
                 UserPointView(
-                    seasonNumbers: seasonManager.seasons.map { $0.seasonNumber },
+                    seasonNumbers: dependencies.seasonManager.seasons.map { $0.seasonNumber },
                     points: vm.points,
                     completedQuestCount: vm.completedQuestCount,
                     selectedSeason: $vm.selectedSeasonNumber,

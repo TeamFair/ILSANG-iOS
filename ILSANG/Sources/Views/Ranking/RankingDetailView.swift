@@ -9,12 +9,13 @@ import SwiftUI
 
 struct RankingDetailView: View {
     @StateObject var vm: RankingDetailViewModel
+    @StateObject var userRouter: UserRouter
     @EnvironmentObject var dependencies: AppDependencies
-    @EnvironmentObject private var seasonManager: SeasonManager
     @Environment(\.dismiss) var dismiss
     
     init(vm: RankingDetailViewModel) {
         _vm = StateObject(wrappedValue: vm)
+        _userRouter = StateObject(wrappedValue: UserRouter())
     }
     
     var body: some View {
@@ -37,14 +38,15 @@ struct RankingDetailView: View {
                         RankingItemView(style: .currentUserRank(user))
                     }
                     ForEach(vm.areaUserRank.ranks, id: \.userId) { rank in
-                        NavigationLink {
-                            OtherUserProfileView(
-                                userId: rank.userId,
-                                userRepository: dependencies.userRepository,
-                                missionHistoryRepository: dependencies.missionHistoryRepository,
-                                areaNameService: dependencies.areaNameService,
-                                seasonManager: seasonManager
-                            )
+                        Button {
+                            userRouter.navigateToUserProfile(userId: rank.userId)
+//                            OtherUserProfileView(
+//                                userId: rank.userId,
+//                                userRepository: dependencies.userRepository,
+//                                missionHistoryRepository: dependencies.missionHistoryRepository,
+//                                areaNameService: dependencies.areaNameService,
+//                                seasonManager: seasonManager
+//                            )
                         } label: {
                             RankingItemView(style: .userRank(rank))
                         }
@@ -54,8 +56,9 @@ struct RankingDetailView: View {
             }
             .padding(.top, 8)
         }
+        .withUserNavigation(userRouter: userRouter)
         .overlay(alignment: .bottom) {
-            if let currentSeason = seasonManager.currentSeason,
+            if let currentSeason = dependencies.seasonManager.currentSeason,
             let targetDate = currentSeason.endDate.toISO8601Date() {
                 SeasonTimerView(season: currentSeason.seasonNumber, targetDate: targetDate)
                     .padding(.horizontal, 20)

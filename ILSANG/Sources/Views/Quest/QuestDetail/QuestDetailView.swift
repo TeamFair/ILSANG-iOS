@@ -110,7 +110,7 @@ struct QuestDetailView: View {
         vm: QuestDetailViewModel(
             quest: .mockData,
             questRepository:  QuestRepository(network: QuestNetwork()),
-            onUpdate:  { _ in }
+            onFavorite:  { _ in }
         ),
         showQuestExImageAction: { },
         questApproveAction: { }
@@ -124,7 +124,7 @@ struct QuestDetailView: View {
         vm: QuestDetailViewModel(
             quest: .mockRepeatData,
             questRepository:  QuestRepository(network: QuestNetwork()),
-            onUpdate:  { _ in }
+            onFavorite:  { _ in }
         ),
         showQuestExImageAction: { },
         questApproveAction: { }
