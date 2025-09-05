@@ -103,7 +103,7 @@ final class Network {
         }
 
         let response = await request
-            .responseString { response in
+            .responseString(encoding: .utf8) { response in
                    switch response.result {
                    case .success(let raw): 
                         print("✅ [Raw Response String]:\n\(raw)")
