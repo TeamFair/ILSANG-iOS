@@ -22,6 +22,7 @@ class AppDependencies: ObservableObject {
     let honorNetwork: HonorNetwork
     let favoriteNetwork: FavoriteNetwork
     let bannerNetwork: BannerNetwork
+    let couponNetwork: CouponNetwork
     
     // MARK: - Repositories
     let userRepository: UserRepositoryInterface
@@ -30,6 +31,7 @@ class AppDependencies: ObservableObject {
     let rankRepository: RankRepository
     let questRepository: QuestRepository
     let bannerRepository: BannerRepository
+    let couponRepository: CouponRepository
     
     // MARK: - Services
     let illsangZoneManager: IllsangZoneManager
@@ -53,6 +55,7 @@ class AppDependencies: ObservableObject {
         self.honorNetwork = HonorNetwork()
         self.favoriteNetwork = FavoriteNetwork()
         self.bannerNetwork = BannerNetwork()
+        self.couponNetwork = CouponNetwork()
         
         // Repositories
         self.userRepository = UserRepository(network: userNetwork)
@@ -61,6 +64,7 @@ class AppDependencies: ObservableObject {
         self.rankRepository = RankRepository(network: rankNetwork)
         self.questRepository = QuestRepository(network: questNetwork)
         self.bannerRepository = BannerRepository(network: bannerNetwork)
+        self.couponRepository = CouponRepository(network: couponNetwork)
         
         // Services
         self.areaNameService = AreaNameService(areaRepository: areaRepository)

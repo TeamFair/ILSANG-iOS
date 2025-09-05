@@ -72,7 +72,11 @@ struct MyPageView: View {
                             navigationButtonLabel(title: "즐겨찾기 퀘스트", image: .myStar)
                         }
                         NavigationLink {
-                            EmptyView()
+                            CouponListView(
+                                viewModel: CouponListViewModel(
+                                    couponRepository: dependencies.couponRepository
+                                )
+                            )
                         } label: {
                             navigationButtonLabel(title: "쿠폰", image: .coupon)
                         }
