@@ -8,9 +8,15 @@
 import SwiftUI
 
 struct MyPageView: View {
-    @ObservedObject var vm: MyPageViewModel
+    @StateObject var vm: MyPageViewModel
     @EnvironmentObject var dependencies: AppDependencies
     @EnvironmentObject var sharedState: SharedState
+    
+    init(
+        vm: MyPageViewModel
+    ) {
+        _vm = StateObject(wrappedValue: vm)
+    }
     
     var body: some View {
         VStack(spacing: 0) {
