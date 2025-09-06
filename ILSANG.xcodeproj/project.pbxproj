@@ -236,6 +236,8 @@
 		60B8BA022BF9EEF3005F6DE3 /* ILSANGUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60B8BA012BF9EEF3005F6DE3 /* ILSANGUITests.swift */; };
 		60B8BA042BF9EEF3005F6DE3 /* ILSANGUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60B8BA032BF9EEF3005F6DE3 /* ILSANGUITestsLaunchTests.swift */; };
 		60B8BA112BF9EF50005F6DE3 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 60B8BA102BF9EF50005F6DE3 /* Launch Screen.storyboard */; };
+		60BDE2BE2E6C5EEF00968725 /* FavoriteListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60BDE2BD2E6C5EEF00968725 /* FavoriteListView.swift */; };
+		60BDE2C02E6C5EFF00968725 /* FavoriteListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60BDE2BF2E6C5EFF00968725 /* FavoriteListViewModel.swift */; };
 		60C0F4242CCE9B2F00DB19AB /* UIDevice++.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60C0F4232CCE9B2F00DB19AB /* UIDevice++.swift */; };
 		60C6B4D52C2C565700926C0E /* ChallengeNetwork.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60C6B4D42C2C565700926C0E /* ChallengeNetwork.swift */; };
 		60C6B4D72C2C569800926C0E /* Challenge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60C6B4D62C2C569800926C0E /* Challenge.swift */; };
@@ -556,6 +558,8 @@
 		60B8BA032BF9EEF3005F6DE3 /* ILSANGUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ILSANGUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		60B8BA102BF9EF50005F6DE3 /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
 		60B8BA142BF9F354005F6DE3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		60BDE2BD2E6C5EEF00968725 /* FavoriteListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteListView.swift; sourceTree = "<group>"; };
+		60BDE2BF2E6C5EFF00968725 /* FavoriteListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteListViewModel.swift; sourceTree = "<group>"; };
 		60C0F4232CCE9B2F00DB19AB /* UIDevice++.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIDevice++.swift"; sourceTree = "<group>"; };
 		60C6B4D42C2C565700926C0E /* ChallengeNetwork.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChallengeNetwork.swift; sourceTree = "<group>"; };
 		60C6B4D62C2C569800926C0E /* Challenge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Challenge.swift; sourceTree = "<group>"; };
@@ -1080,6 +1084,7 @@
 				60299E2F2CBFF8D20039663F /* UserMissionHistory */,
 				6053345D2D3126F900599159 /* MyPageInfo */,
 				600657E22DBD2DD10022D117 /* MyPageHonor */,
+				60BDE2BC2E6C5EDA00968725 /* Favorite */,
 				606C3EF52E69F07B0050C4D6 /* Coupon */,
 			);
 			path = MyPage;
@@ -1290,6 +1295,15 @@
 				607FCBDE2BFA693F00BB2D04 /* Views */,
 			);
 			path = Sources;
+			sourceTree = "<group>";
+		};
+		60BDE2BC2E6C5EDA00968725 /* Favorite */ = {
+			isa = PBXGroup;
+			children = (
+				60BDE2BD2E6C5EEF00968725 /* FavoriteListView.swift */,
+				60BDE2BF2E6C5EFF00968725 /* FavoriteListViewModel.swift */,
+			);
+			path = Favorite;
 			sourceTree = "<group>";
 		};
 		60C6B4DD2C2D046000926C0E /* Submit */ = {
@@ -1749,6 +1763,7 @@
 				6091976D2E5F8E9B00F1D81B /* UserMissionHistory.swift in Sources */,
 				6057361C2D8AC8A800CF7051 /* Quiz.swift in Sources */,
 				6053345F2D31272B00599159 /* MyPageInfoCardView.swift in Sources */,
+				60BDE2C02E6C5EFF00968725 /* FavoriteListViewModel.swift in Sources */,
 				60054FA02D931AA300E7C5A6 /* PDFKitView.swift in Sources */,
 				605DA0D62C07123400CC9450 /* View++.swift in Sources */,
 				60299E392CC13DEC0039663F /* ImageCacheService.swift in Sources */,
@@ -1839,6 +1854,7 @@
 				60D897292E537653006A8480 /* ApprovalMissionHistoryItem.swift in Sources */,
 				60943FE62C0A38FB00C8A714 /* ApprovalViewModel.swift in Sources */,
 				60C6B4DC2C2D042700926C0E /* Image.swift in Sources */,
+				60BDE2BE2E6C5EEF00968725 /* FavoriteListView.swift in Sources */,
 				6048D5252E4E632C00CC74F5 /* BannerDetailView.swift in Sources */,
 				A18EB9B02C26B61C00405D56 /* WithdrawNetwork.swift in Sources */,
 				606C3F032E69FCBC0050C4D6 /* CouponRepository.swift in Sources */,
