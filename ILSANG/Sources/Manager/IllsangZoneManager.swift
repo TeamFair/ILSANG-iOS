@@ -26,6 +26,7 @@ class IllsangZoneManager: ObservableObject {
         
         // 시즌 변경 시 currentSeason 업데이트
         seasonManager.$currentSeason
+            .removeDuplicates()
             .receive(on: DispatchQueue.main)
             .sink { [weak self] newSeason in
                 self?.currentSeason = newSeason

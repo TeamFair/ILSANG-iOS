@@ -35,7 +35,8 @@ class AppDelegate: NSObject, UIApplicationDelegate {
 @main
 struct ILSANGApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
-
+    @StateObject private var dependencies = AppDependencies()
+    @StateObject private var sharedState = SharedState()
     @AppStorage("isLogin") var isLogin = Bool()
     
     @State private var isTutorialVisible = Bool()
@@ -59,6 +60,8 @@ struct ILSANGApp: App {
                     LoginView(vm: LoginViewModel())
                 } else {
                     MainTabView()
+                        .environmentObject(dependencies)
+                        .environmentObject(sharedState)
                         .fullScreenCover(isPresented: $isTutorialVisible) {
                             TutorialView()
                         }
@@ -88,6 +91,7 @@ struct ILSANGApp: App {
             .onChange(of: isLogin, { _, newValue in // 로그인 후 튜토리얼 UI 표시
                 if newValue {
                     isTutorialVisible = true
+                    Task { await dependencies.seasonManager.fetchSeasons() }
                 }
             })
             .task {

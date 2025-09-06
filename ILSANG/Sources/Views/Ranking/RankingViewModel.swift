@@ -47,6 +47,7 @@ class RankingViewModel: ObservableObject {
         
         selectedSeason = seasonManager.currentSeason ?? nil // 현재시즌으로 초기화
         seasonManager.$seasons
+            .removeDuplicates()
             .sink { [weak self] seasons in
                 guard let self else { return }
                 self.seasons = seasons
@@ -54,6 +55,7 @@ class RankingViewModel: ObservableObject {
             .store(in: &cancellables)
         
         seasonManager.$currentSeason
+            .removeDuplicates()
             .sink { [weak self] season in
                 guard let self else { return }
                 self.selectedSeason = season

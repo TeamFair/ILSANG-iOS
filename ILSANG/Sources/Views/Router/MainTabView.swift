@@ -8,63 +8,8 @@
 import SwiftUI
 
 struct MainTabView: View {
-    @StateObject var dependencies = AppDependencies()
-    @StateObject var sharedState = SharedState()
-    
-    @State var homeViewModel: HomeViewModel
-    @State var questViewModel: QuestViewModel
-    @State var approvalViewModel: ApprovalViewModel
-    @StateObject var rankViewModel: RankingViewModel
-    @StateObject var myPageViewModel: MyPageViewModel
-    
-    init() {
-        let dependencies = AppDependencies()
-        _dependencies = StateObject(wrappedValue: dependencies)
-        
-        let sharedState = SharedState()
-        _sharedState = StateObject(wrappedValue: sharedState)
-
-        self._homeViewModel = State(wrappedValue: HomeViewModel(
-            userRepository: dependencies.userRepository,
-            areaNameService: dependencies.areaNameService,
-            questRepository: dependencies.questRepository,
-            rankRepository: dependencies.rankRepository,
-            bannerRepository: dependencies.bannerRepository,
-            favoriteService: dependencies.favoriteService,
-            sharedState: sharedState
-        ))
-        
-        self._questViewModel = State(wrappedValue: QuestViewModel(
-            questRepository: dependencies.questRepository,
-            favoriteService: dependencies.favoriteService,
-            sharedState: sharedState
-        ))
-        
-        self.approvalViewModel = ApprovalViewModel(
-            approvalSource: .tab,
-            emojiNetwork: dependencies.emojiNetwork,
-            missionHistoryRepository: dependencies.missionHistoryRepository,
-            areaNameService: dependencies.areaNameService
-        )
-        
-        self._rankViewModel = StateObject(
-            wrappedValue:
-                RankingViewModel(
-                    rankRepository: dependencies.rankRepository,
-                    areaNameService: dependencies.areaNameService,
-                    seasonManager: dependencies.seasonManager
-                )
-        )
-        
-        self._myPageViewModel = StateObject(
-            wrappedValue: MyPageViewModel(
-                userRepository: dependencies.userRepository,
-                imageNetwork: dependencies.imageNetwork,
-                areaNameService: dependencies.areaNameService,
-                seasonManager: dependencies.seasonManager
-            )
-        )
-    }
+    @EnvironmentObject var dependencies: AppDependencies
+    @EnvironmentObject var sharedState: SharedState
     
     var body: some View {
         NavigationStack {
@@ -91,24 +36,65 @@ struct MainTabView: View {
                 }
             )
         }
-        .environmentObject(dependencies)
-        .environmentObject(sharedState)
-//        .environmentObject(dependencies.seasonManager)
     }
     
     @ViewBuilder
     func createTabView(for tab: Tab) -> some View {
         switch tab {
         case .home:
-            HomeView(vm: homeViewModel, questRepository: dependencies.questRepository, illsangZoneManager: dependencies.illsangZoneManager)
+            HomeView(
+                vm: HomeViewModel(
+                    userRepository: dependencies.userRepository,
+                    areaNameService: dependencies.areaNameService,
+                    questRepository: dependencies.questRepository,
+                    rankRepository: dependencies.rankRepository,
+                    bannerRepository: dependencies.bannerRepository,
+                    favoriteService: dependencies.favoriteService,
+                    sharedState: sharedState
+                ),
+                questRepository: dependencies.questRepository,
+                illsangZoneManager: dependencies.illsangZoneManager
+            )
+            
         case .quest:
-            QuestView(vm: questViewModel, questRepository: dependencies.questRepository, illsangZoneManager: dependencies.illsangZoneManager)
+            QuestView(
+                vm: QuestViewModel(
+                    questRepository: dependencies.questRepository,
+                    favoriteService: dependencies.favoriteService,
+                    sharedState: sharedState
+                ),
+                questRepository: dependencies.questRepository,
+                illsangZoneManager: dependencies.illsangZoneManager
+            )
+            
         case .approval:
-            ApprovalView(vm: approvalViewModel)
+            ApprovalView(
+                vm: ApprovalViewModel(
+                    approvalSource: .tab,
+                    emojiNetwork: dependencies.emojiNetwork,
+                    missionHistoryRepository: dependencies.missionHistoryRepository,
+                    areaNameService: dependencies.areaNameService
+                )
+            )
+            
         case .ranking:
-            RankingView(vm: rankViewModel)
+            RankingView(
+                vm: RankingViewModel(
+                    rankRepository: dependencies.rankRepository,
+                    areaNameService: dependencies.areaNameService,
+                    seasonManager: dependencies.seasonManager
+                )
+            )
+            
         case .mypage:
-            MyPageView(vm: myPageViewModel)
+            MyPageView(
+                vm: MyPageViewModel(
+                    userRepository: dependencies.userRepository,
+                    imageNetwork: dependencies.imageNetwork,
+                    areaNameService: dependencies.areaNameService,
+                    seasonManager: dependencies.seasonManager
+                )
+            )
         }
     }
 }

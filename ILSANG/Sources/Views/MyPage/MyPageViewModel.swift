@@ -79,14 +79,17 @@ final class MyPageViewModel: ObservableObject {
         selectedSeasonNumber = seasonManager.currentSeason?.seasonNumber ?? -1 // 현재시즌으로 초기화
         
         currentSeason = seasonManager.currentSeason ?? nil
-        
         seasonManager.$currentSeason
+            .dropFirst()
+            .removeDuplicates()
             .sink { [weak self] season in
                 guard let self else { return }
                 self.currentSeason = season
             }
             .store(in: &cancellables)
         seasonManager.$seasons
+            .dropFirst()
+            .removeDuplicates()
             .sink { [weak self] seasons in
                 guard let self else { return }
                 self.updateSeasonsFromServer(seasons.map { $0.seasonNumber })

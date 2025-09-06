@@ -1677,7 +1677,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "echo \"Source Root: ${SRCROOT}\"\n\ncase \"${CONFIGURATION}\" in\n  \"Debug\" )\ncp -r \"$SRCROOT/${PROJECT_NAME}/Resources/FirebaseConfig/Release/GoogleService-Info.plist\" \"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/GoogleService-Info.plist\" ;;\n  \"Staging\" )\ncp -r \"$SRCROOT/${PROJECT_NAME}/Resources/FirebaseConfig/Staging/GoogleService-Info-dev.plist\" \"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/GoogleService-Info.plist\" ;;\n  \"Release\" )\ncp -r \"$SRCROOT/${PROJECT_NAME}/Resources/FirebaseConfig/Release/GoogleService-Info.plist\" \"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/GoogleService-Info.plist\" ;;\n*)\n;;\nesac\n";
+			shellScript = "echo \"Source Root: ${SRCROOT}\"\n\ncase \"${CONFIGURATION}\" in\n  \"Debug\" )\ncp -r \"$SRCROOT/${PROJECT_NAME}/Resources/FirebaseConfig/Debug/GoogleService-Info-dev.plist\" \"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/GoogleService-Info.plist\" ;;\n  \"Staging\" )\ncp -r \"$SRCROOT/${PROJECT_NAME}/Resources/FirebaseConfig/Staging/GoogleService-Info-dev.plist\" \"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/GoogleService-Info.plist\" ;;\n  \"Release\" )\ncp -r \"$SRCROOT/${PROJECT_NAME}/Resources/FirebaseConfig/Release/GoogleService-Info.plist\" \"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/GoogleService-Info.plist\" ;;\n*)\n;;\nesac\n";
 		};
 		609169E02DFE976000A34D4F /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
