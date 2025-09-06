@@ -173,7 +173,7 @@ fileprivate struct CurrentUserRankItemView: View {
 }
 
 fileprivate struct LegendRankItemView: View {
-    let rank: UserRankViewModelItem
+    @ObservedObject var rank: UserRankViewModelItem
     let createdTitleAt: String? = nil // TODO: API 추가 요청
     
     var body: some View {
@@ -221,7 +221,7 @@ fileprivate struct LegendRankItemView: View {
 }
 
 fileprivate struct TotalRankItemView: View {
-    let rank: UserRankViewModelItem
+    @ObservedObject var rank: UserRankViewModelItem
     
     var body: some View {
         VStack(spacing: 6) {
