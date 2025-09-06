@@ -24,9 +24,13 @@ struct CouponSheetView: View {
                     Text(item.coupon.name)
                         .styledFont(.title2)
                         .foregroundStyle(.black)
-                    Text(item.coupon.storeName)
-                        .styledFont(.body)
-                        .foregroundStyle(.gray500)
+                    
+                    if let storeName = item.coupon.storeName {
+                        Text(storeName)
+                            .styledFont(.body)
+                            .foregroundStyle(.gray500)
+                    }
+                    
                     Text(item.expireAtText)
                         .styledFont(.tabRegular)
                         .foregroundStyle(.gray400)
@@ -46,9 +50,11 @@ struct CouponSheetView: View {
                         Text(item.coupon.name)
                             .styledFont(.heading2)
                             .foregroundStyle(.black)
-                        Text(item.coupon.storeName)
-                            .styledFont(.badge1)
-                            .foregroundStyle(.gray400)
+                        if let storeName = item.coupon.storeName {
+                            Text(storeName)
+                                .styledFont(.badge1)
+                                .foregroundStyle(.gray400)
+                        }
                         Text(item.expireAtText)
                             .styledFont(.tabRegular)
                             .foregroundStyle(.gray400)
@@ -67,8 +73,8 @@ struct CouponSheetView: View {
                     .foregroundStyle(.black)
                     .padding(.bottom, 16)
                 
-                PinCodeView(pin: $viewModel.password)
-                    .padding(.bottom, 24)
+                PinCodeView(pin: $viewModel.password, showPasswordError: $viewModel.showPasswordError)
+                    .padding(.bottom, 8)
                 
                 Text("쿠폰은 사용 후 되돌릴 수 없습니다\n쿠폰을 사용하시겠습니까?")
                     .styledFont(.tabRegular)
@@ -103,16 +109,5 @@ struct CouponSheetView: View {
             .padding(.bottom, 8)
         }
         .padding(.horizontal, 20)
-        .overlay {
-            if let alertType = viewModel.alertType, alertType != .success {
-                VStack(spacing: 0) {
-                    SettingAlertView(alertType: alertType, onConfirm: {
-                        viewModel.alertType = nil
-                    })
-                    Color.black.opacity(0.5).ignoresSafeArea()
-                        .frame(height: 260)
-                }
-            }
-        }
     }
 }

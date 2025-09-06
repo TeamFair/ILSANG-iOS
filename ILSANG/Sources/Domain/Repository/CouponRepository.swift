@@ -8,7 +8,7 @@
 import Foundation
 
 protocol CouponRepositoryInterface {
-    func getCoupons(page: Int, size: Int) async -> Result<[UserCoupon], Error>
+    func getCoupons(page: Int, size: Int) async -> Result<ResponseWithPage<[UserCoupon]>, Error>
     func verifyPassword(id: Int, password: String) async -> Result<Bool, Error>
     func useCoupon(id: Int) async -> Result<UserCoupon, Error>
 }
@@ -20,9 +20,9 @@ final class CouponRepository: CouponRepositoryInterface {
         self.network = network
     }
     
-    func getCoupons(page: Int, size: Int) async -> Result<[UserCoupon], Error> {
+    func getCoupons(page: Int, size: Int) async -> Result<ResponseWithPage<[UserCoupon]>, Error> {
         let res = await network.getCoupons(page: page, size: size)
-        return ResponseMapper.mapArrayResponse(res)
+        return ResponseMapper.mapPagedResponse(res)
     }
     
     func verifyPassword(id: Int, password: String) async -> Result<Bool, Error> {

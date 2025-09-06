@@ -11,7 +11,6 @@ extension CouponResponse: DomainConvertible {
     func toDomain() -> Coupon {
         Coupon(
             id: id,
-            couponType: couponType,
             name: name,
             imageId: imageId,
             storeName: storeName,
