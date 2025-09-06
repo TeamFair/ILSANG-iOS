@@ -27,11 +27,11 @@ class AppDependencies: ObservableObject {
     // MARK: - Repositories
     let userRepository: UserRepositoryInterface
     let missionHistoryRepository: MissionHistoryRepository
-    let areaRepository: AreaRepository
-    let rankRepository: RankRepository
-    let questRepository: QuestRepository
-    let bannerRepository: BannerRepository
-    let couponRepository: CouponRepository
+    let areaRepository: AreaRepositoryInterface
+    let rankRepository: RankRepositoryInterface
+    let questRepository: QuestRepositoryInterface
+    let bannerRepository: BannerRepositoryInterface
+    let couponRepository: CouponRepositoryInterface
     
     // MARK: - Services
     let illsangZoneManager: IllsangZoneManager

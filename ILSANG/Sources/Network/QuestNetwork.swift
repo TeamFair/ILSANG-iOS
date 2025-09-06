@@ -76,6 +76,19 @@ final class QuestNetwork {
         return await getQuests(parameters: parameters)
     }
     
+    /// 즐겨찾기 퀘스트 조회
+    func getFavoriteQuests(commercialAreaCode: String, page: Int, size: Int) async -> Result<ResponseWithPage<[BaseQuestResponse]>, Error> {
+        let parameters: Parameters = [
+            "completedYn": false,
+            "favoriteYn": true,
+            "commercialAreaCode": commercialAreaCode,
+            "page": page,
+            "size": size
+        ]
+        
+        return await getQuests(parameters: parameters)
+    }
+    
     /// 퀘스트 유형별 조회
     private func getQuests(parameters: Parameters) async -> Result<ResponseWithPage<[BaseQuestResponse]>, Error> {
         return await Network.requestData(url: questUrl+"/search/type", method: .get, parameters: parameters)

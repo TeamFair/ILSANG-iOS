@@ -73,7 +73,15 @@ struct MyPageView: View {
                             navigationButtonLabel(title: "수행한 퀘스트", image: .myQuest)
                         }
                         NavigationLink {
-                            EmptyView()
+                            FavoriteListView(
+                                viewModel: FavoriteListViewModel(
+                                    questRepository: dependencies.questRepository,
+                                    favoriteService: dependencies.favoriteService,
+                                    selectedCommercialArea: sharedState.selectedCommercialArea
+                                ),
+                                questRepository: dependencies.questRepository,
+                                illsangZoneManager: dependencies.illsangZoneManager
+                            )
                         } label: {
                             navigationButtonLabel(title: "즐겨찾기 퀘스트", image: .myStar)
                         }
