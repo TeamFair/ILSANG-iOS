@@ -86,7 +86,7 @@ extension FavoriteListView {
     }
     
     private var selectScopeView: some View {
-        RegionPickerView(title: sharedState.selectedCommercialArea.areaName) {
+        RegionPickerView(title: viewModel.selectedArea.areaName) {
             viewModel.showSelectRegionView = true
         }
         .frame(maxWidth: .infinity, alignment: .leading)

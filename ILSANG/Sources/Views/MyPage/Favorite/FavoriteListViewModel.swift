@@ -10,7 +10,7 @@ import UIKit
 class FavoriteListViewModel: ObservableObject {
     @Published var viewStatus: ViewStatus = .loading
     @Published var showSelectRegionView: Bool = false
-    @Published var selectedArea: CommercialArea?
+    @Published var selectedArea: CommercialArea
     @Published var quests: [QuestViewModelItem] = []
     
     // TODO: 페이지네이션 수정 필요
@@ -33,8 +33,7 @@ class FavoriteListViewModel: ObservableObject {
         self.paginationManager = PaginationManager(size: 20, threshold: 18)
         self.paginationManager.loadPageData = { [weak self] page in
             guard let self = self else { return ([], 0) }
-            guard let areaCode = selectedArea?.code else { return ([], 0) }
-            return await self.loadQuestListWithImage(areaCode: areaCode, page: page, size: 20)
+            return await self.loadQuestListWithImage(areaCode: selectedArea.code, page: page, size: 20)
         }
     }
     
@@ -49,8 +48,7 @@ class FavoriteListViewModel: ObservableObject {
         refreshTask?.cancel()
         refreshTask = Task {
             changeViewStatus(.loading)
-            guard let areaCode = selectedArea?.code else { return }
-            await loadQuestListWithImage(areaCode: areaCode, page: 0, size: 10)
+            await loadQuestListWithImage(areaCode: selectedArea.code, page: 0, size: 10)
             changeViewStatus(.loaded)
         }
         await refreshTask?.value
