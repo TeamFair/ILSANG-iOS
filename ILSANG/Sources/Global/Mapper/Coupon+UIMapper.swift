@@ -11,7 +11,6 @@ extension Coupon {
     func toCoupon() -> CouponItem {
         CouponItem(
             id: id,
-            couponType: couponType,
             name: name,
             imageId: imageId,
             image: nil,
@@ -20,7 +19,6 @@ extension Coupon {
             validFrom: validFrom,
             validTo: validTo
         )
-        
     }
 }
 

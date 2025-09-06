@@ -43,13 +43,9 @@ struct CouponListView: View {
         }
         .overlay {
             if let alertType = viewModel.alertType {
-                if alertType == .success {
-                    SettingAlertView(alertType: alertType, onConfirm: {
-                        viewModel.alertType = nil
-                    })
-                } else {
-                    Color.black.opacity(0.5).ignoresSafeArea()
-                }
+                SettingAlertView(alertType: alertType, onConfirm: {
+                    viewModel.alertType = nil
+                })
             }
         }
     }
@@ -95,6 +91,8 @@ extension CouponListView {
         .sheet(item: $viewModel.selectedCoupon, onDismiss: {
             viewModel.sheetStatus = .info
             viewModel.password = ""
+            viewModel.showPasswordError = false
+
             if viewModel.alertType != .success {
                 viewModel.alertType = nil
             }
@@ -143,7 +141,7 @@ extension CouponListView {
         ErrorView(
             systemImageName: "wifi.exclamationmark",
             title: "네트워크 연결 상태를 확인해주세요",
-            subTitle: "네트워크 연결 상태가 좋지 않아\n랭킹을 불러올 수 없어요",
+            subTitle: "네트워크 연결 상태가 좋지 않아\n쿠폰을 불러올 수 없어요",
             emoticon: "🥲"
         ) {
             Task { await viewModel.loadInitialData() }

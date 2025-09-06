@@ -39,9 +39,8 @@ extension UserCouponItem {
             usedAt: nil,
             coupon: CouponItem(
                 id: 101,
-                couponType: .week,
                 name: "1주일 무료 이용권",
-                imageId: "img_weekly_pass",
+                imageId: "",
                 image: nil,
                 storeName: "일상 스토어",
                 description: "7일 동안 자유롭게 사용할 수 있는 이용권",
@@ -56,9 +55,8 @@ extension UserCouponItem {
             usedAt: Date(),
             coupon: CouponItem(
                 id: 102,
-                couponType: .month,
                 name: "1개월 할인 쿠폰",
-                imageId: "img_monthly_discount",
+                imageId: "",
                 image: nil,
                 storeName: "일상 마켓",
                 description: "30일 동안 사용할 수 있는 특별 할인 쿠폰",
@@ -73,9 +71,8 @@ extension UserCouponItem {
             usedAt: nil,
             coupon: CouponItem(
                 id: 103,
-                couponType: .season,
                 name: "시즌 특별 쿠폰",
-                imageId: "img_season_special",
+                imageId: "",
                 image: nil,
                 storeName: "일상 가게",
                 description: "시즌 한정으로 제공되는 특별 혜택 쿠폰",
@@ -90,9 +87,8 @@ extension UserCouponItem {
             usedAt: nil,
             coupon: CouponItem(
                 id: 103,
-                couponType: .season,
                 name: "시즌 특별 쿠폰",
-                imageId: "img_season_special",
+                imageId: "",
                 image: nil,
                 storeName: "일상 가게",
                 description: "시즌 한정으로 제공되는 특별 혜택 쿠폰",

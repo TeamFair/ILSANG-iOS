@@ -10,7 +10,7 @@ import Alamofire
 final class CouponNetwork {
     private let url = APIManager.makeURL(NoTarget(path: "user/coupon", version: 1))
     
-    func getCoupons(page: Int, size: Int) async -> Result<[UserCouponResponse], Error> {
+    func getCoupons(page: Int, size: Int) async -> Result<ResponseWithPage<[UserCouponResponse]>, Error> {
         let parameters: Parameters = ["page": page, "size": size]
         return await Network.requestData(url: url, method: .get, parameters: parameters)
     }

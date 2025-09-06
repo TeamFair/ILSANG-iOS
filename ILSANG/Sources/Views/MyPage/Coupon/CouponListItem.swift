@@ -31,9 +31,11 @@ struct CouponListItem: View {
                     .styledFont(.heading1)
                     .foregroundStyle(.gray400)
                 
-                Text(item.coupon.storeName)
-                    .styledFont(.body)
-                    .foregroundStyle(.gray300)
+                if let storeName = item.coupon.storeName {
+                    Text(storeName)
+                        .styledFont(.body)
+                        .foregroundStyle(.gray300)
+                }
                 
                 Text(item.expireAtText)
                     .styledFont(.tabRegular)
@@ -54,11 +56,13 @@ struct CouponListItem: View {
                     .styledFont(.heading1)
                     .foregroundStyle(.primaryPurple)
                 
-                Text(item.coupon.storeName)
-                    .styledFont(.body)
-                    .foregroundStyle(.gray500)
+                if let storeName = item.coupon.storeName {
+                    Text(storeName)
+                        .styledFont(.body)
+                        .foregroundStyle(.gray500)
+                }
                 
-                Text(item.expireAtText )
+                Text(item.expireAtText)
                     .styledFont(.tabRegular)
                     .foregroundStyle(.gray400)
             }
