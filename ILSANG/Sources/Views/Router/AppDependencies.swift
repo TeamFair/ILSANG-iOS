@@ -19,7 +19,7 @@ class AppDependencies: ObservableObject {
     let imageNetwork: ImageNetwork
     let challengeNetwork: ChallengeNetwork
     let questNetwork: QuestNetwork
-    let honorNetwork: HonorNetwork
+    let titleNetwork: TitleNetworkInterface
     let favoriteNetwork: FavoriteNetwork
     let bannerNetwork: BannerNetwork
     let couponNetwork: CouponNetwork
@@ -32,6 +32,7 @@ class AppDependencies: ObservableObject {
     let questRepository: QuestRepositoryInterface
     let bannerRepository: BannerRepositoryInterface
     let couponRepository: CouponRepositoryInterface
+    let titleRepository: TitleRepositoryInterface
     
     // MARK: - Services
     let illsangZoneManager: IllsangZoneManager
@@ -52,7 +53,7 @@ class AppDependencies: ObservableObject {
         self.imageNetwork = ImageNetwork()
         self.challengeNetwork = ChallengeNetwork()
         self.questNetwork = QuestNetwork()
-        self.honorNetwork = HonorNetwork()
+        self.titleNetwork = TitleNetwork()
         self.favoriteNetwork = FavoriteNetwork()
         self.bannerNetwork = BannerNetwork()
         self.couponNetwork = CouponNetwork()
@@ -65,6 +66,7 @@ class AppDependencies: ObservableObject {
         self.questRepository = QuestRepository(network: questNetwork)
         self.bannerRepository = BannerRepository(network: bannerNetwork)
         self.couponRepository = CouponRepository(network: couponNetwork)
+        self.titleRepository = TitleRepository(network: titleNetwork)
         
         // Services
         self.areaNameService = AreaNameService(areaRepository: areaRepository)
@@ -72,6 +74,6 @@ class AppDependencies: ObservableObject {
         self.illsangZoneManager = IllsangZoneManager(areaNameService: areaNameService, seasonManager: seasonManager)
         self.imageChallengeSubmitService = ImageChallengeSubmitService(imageNetwork: imageNetwork, challengeNetwork: challengeNetwork)
         self.favoriteService = FavoriteService(favoriteNetwork: favoriteNetwork)
-        self.honorAcquisitionManager = HonorAcquisitionManager(honorNetwork: honorNetwork)
+        self.honorAcquisitionManager = HonorAcquisitionManager(titleRepository: titleRepository)
     }
 }

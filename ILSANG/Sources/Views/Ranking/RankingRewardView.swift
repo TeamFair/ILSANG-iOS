@@ -11,7 +11,7 @@ struct RankingRewardView: View {
     @Environment(\.dismiss) var dismiss
     @State private var viewStatus: ViewStatus = .loaded
     @State private var selectedScope: PointType = .commercial
-    @State var items: [SeasonReward] = [.init(idx: 0, honor: .init(titleId: "", historyId: "", isSelected: false, title: "칭호", acquisitionCondition: "조건", type: .legend), subtitle: "서브타이틀")]
+    @State var items: [SeasonReward] = [.init(idx: 0, honor: .init(titleId: "", name: "", condition: "조건", grade: .legend, historyId: 0, isSelected: false), subtitle: "서브타이틀")]
     
     var body: some View {
         VStack (spacing: 0){
@@ -64,7 +64,7 @@ struct RankingRewardView: View {
     }
     struct SeasonReward {
         let idx: Int
-        let honor: HonorItem
+        let honor: TitleItem
         let subtitle: String
     }
     
@@ -76,8 +76,8 @@ struct RankingRewardView: View {
                 .frame(30)
             
             HonorIconView(
-                honorTitle: reward.honor.title,
-                grade: reward.honor.type,
+                honorTitle: reward.honor.name,
+                grade: reward.honor.grade,
                 imageSize: 20,
                 spacing: 8,
                 font: .init(size: 15, weight: .bold, lineHeight: 20, tracking: 0),

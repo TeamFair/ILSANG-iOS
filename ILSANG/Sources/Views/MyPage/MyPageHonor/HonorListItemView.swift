@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct HonorListItemView: View {
-    let honor: HonorItem
+    let honor: TitleItem
     let rowColumnWidth: CGFloat
     let onSelect: () -> Void
     let onShowRankingView: () -> ()
@@ -34,15 +34,15 @@ struct HonorListItemView: View {
             }
             
             Button(action: onShowRankingView) {
-                Text(honor.title.forceCharWrapping)
+                Text(honor.name.forceCharWrapping)
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .multilineTextAlignment(.leading)
                     .foregroundStyle(.gray400)
                     .padding(.horizontal, 8)
             }
-            .disabled(honor.type != .legend) // 전설 칭호만 랭킹 조회 가능
+            .disabled(honor.grade != .legend) // 전설 칭호만 랭킹 조회 가능
             
-            Text(honor.acquisitionCondition.forceCharWrapping)
+            Text(honor.condition.forceCharWrapping)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .multilineTextAlignment(.leading)
                 .foregroundStyle(.gray400)
@@ -74,5 +74,15 @@ struct HonorListItemView: View {
 
 
 #Preview {
-    HonorListItemView(honor: .init(titleId: "3",historyId: "4", isSelected: true, title: "일상의 개척자", acquisitionCondition: "일상 회원가입 시", type: .legend), rowColumnWidth: 50) { } onShowRankingView: { }
+    HonorListItemView(
+        honor: .init(
+            titleId: "1",
+            name: "일상 회원가입 시",
+            condition: "조건",
+            grade: .legend,
+            historyId: 1,
+            isSelected: false
+        ),
+        rowColumnWidth: 50
+    ) { } onShowRankingView: { }
 }

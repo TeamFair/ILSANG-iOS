@@ -53,7 +53,7 @@ struct HomeView: View {
                     }
                 }
                 .task {
-                    // await honorAcquisitionManager.fetchUnreadHonorHistory()
+                    await dependencies.honorAcquisitionManager.fetchUnreadHonorHistory()
                 }
                 .refreshable {
                     await vm.loadInitialData()
