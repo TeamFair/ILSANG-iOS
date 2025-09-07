@@ -12,18 +12,19 @@ struct ProgressBar: View {
     var height: CGFloat = 8
     
     var body: some View {
-        ZStack(alignment: .leading) {
-            Rectangle()
-                .frame(height: height)
-                .cornerRadius(6)
-                .foregroundColor(.gray100)
-            
-            Rectangle()
-                .frame(height: height)
-                .cornerRadius(6)
-                .foregroundColor(.accent)
-                .scaleEffect(x: min(max(progress, 0), 1), anchor: .leading) // 0~1 범위로 제한
+        GeometryReader { geometry in
+            ZStack(alignment: .leading) {
+                RoundedRectangle(cornerRadius: height / 2)
+                    .frame(height: height)
+                    .foregroundColor(.gray100)
+                
+                RoundedRectangle(cornerRadius: height / 2)
+                    .frame(width: geometry.size.width * min(max(progress, 0), 1),
+                           height: height)
+                    .foregroundColor(.accent)
+            }
         }
+        .frame(height: height)
     }
 }
 
@@ -79,4 +80,5 @@ fileprivate struct ProgressCirclePreview: View {
         ProgressBar(progress: 0.88)        
         ProgressCirclePreview()
     }
+    .padding()
 }
