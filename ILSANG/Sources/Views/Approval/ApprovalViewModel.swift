@@ -17,6 +17,11 @@ import SwiftUI
 ✅ 리프레시
 */
 
+enum ApprovalSource: Equatable {
+    case tab
+    case detail(missionId: Int)
+}
+
 @Observable
 final class ApprovalViewModel {
     enum ViewStatus {
@@ -27,37 +32,36 @@ final class ApprovalViewModel {
     
     var viewStatus: ViewStatus = .loading
     var itemList: [ApprovalMissionHistoryItem] = []
-    var selectedUserId: String?
     
     var showReportAlert = false
     var selectedChallenge: ApprovalMissionHistoryItem?
     
-    var paginationManager: PaginationManager<ApprovalMissionHistoryItem>?
-    
+    var paginationManager: PaginationManager<ApprovalMissionHistoryItem>?    
+    let approvalSource: ApprovalSource
+
     private let emojiNetwork: EmojiNetwork
-    let userRepository: UserRepositoryInterface
-    let missionHistoryRepository: MissionHistoryRepository
-    let areaNameService: AreaNameProvider
+    private let missionHistoryRepository: MissionHistoryRepository
+    private let areaNameService: AreaNameProvider
 
     init(
+        approvalSource: ApprovalSource,
         emojiNetwork: EmojiNetwork,
-        userRepository: UserRepositoryInterface,
         missionHistoryRepository: MissionHistoryRepository,
         areaNameService: AreaNameProvider
     ) {
+        self.approvalSource = approvalSource
         self.emojiNetwork = emojiNetwork
-        self.userRepository = userRepository
         self.missionHistoryRepository = missionHistoryRepository
         self.areaNameService = areaNameService
         
         self.paginationManager = PaginationManager<ApprovalMissionHistoryItem>(
             size: 10,
-            threshold: 3,
-            loadPage: { [weak self] page in
-                guard let self = self else { return ([], 0) }
-                return await self.getChallengesWithImage(page: page)
-            }
+            threshold: 3
         )
+        paginationManager?.loadPageData = { [weak self] page in
+            guard let self = self else { return ([], 0) }
+            return await self.getChallengesWithImage(page: page)
+        }
     }
     
     @MainActor
@@ -105,10 +109,16 @@ final class ApprovalViewModel {
     // MARK: 도전내역 조회 - Helper Methods
     /// 1. 챌린지 데이터 로드
     private func loadChallenges(page: Int) async -> ([ApprovalMissionHistoryItem], Int) {
-        let result = await getRandomChallenges(page: page, size: paginationManager?.size ?? 10)
-        return (result.data, result.total)
+        switch approvalSource {
+        case .tab:
+            let result = await getRandomChallenges(page: page, size: paginationManager?.size ?? 10)
+            return (result.data, result.total)
+        case .detail(let missionId):
+            let result = await getChallenges(missionId: missionId, page: page, size: paginationManager?.size ?? 10)
+            return (result.data, result.total)
+        }
     }
-
+    
     /// 2. 중복 제거: 동일한 ID를 가진 챌린지를 필터링하여 중복 제거
     private func removeDuplicateChallenges(_ challenges: [ApprovalMissionHistoryItem]) -> [ApprovalMissionHistoryItem] {
         var seenIDs = Set<Int>()
@@ -250,6 +260,17 @@ final class ApprovalViewModel {
     // MARK: - API 호출부
     private func getRandomChallenges(page: Int, size: Int) async -> (data: [ApprovalMissionHistoryItem], total: Int) {
         let res = await missionHistoryRepository.getRandomMissionHistories(page: page, size: size)
+        switch res {
+        case .success(let response):
+            return (response.data.map {$0.toApprovalItem()}, response.total)
+        case .failure(let err):
+            Log("도전내역랜덤 조회 실패 \(err.localizedDescription)")
+            return ([], 0)
+        }
+    }
+    
+    private func getChallenges(missionId: Int, page: Int, size: Int) async -> (data: [ApprovalMissionHistoryItem], total: Int) {
+        let res = await missionHistoryRepository.getMissionHistories(missionId: missionId, page: page, size: size)
         switch res {
         case .success(let response):
             return (response.data.map {$0.toApprovalItem()}, response.total)

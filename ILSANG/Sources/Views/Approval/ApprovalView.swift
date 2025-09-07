@@ -9,8 +9,16 @@ import SwiftUI
 
 struct ApprovalView: View {
     @State var vm: ApprovalViewModel
-    @EnvironmentObject var seasonManager: SeasonManager
-
+    @StateObject var userRouter: UserRouter
+    @EnvironmentObject var dependencies: AppDependencies
+    
+    init(
+        vm: ApprovalViewModel,
+    ) {
+        _vm = State(wrappedValue: vm)
+        _userRouter = StateObject(wrappedValue: UserRouter())
+    }
+    
     var body: some View {
         VStack(spacing: 0) {
             switch vm.viewStatus {
@@ -28,17 +36,7 @@ struct ApprovalView: View {
             await vm.loadDataIfNeeded()
         }
         .overlay { reportAlertView }
-        .navigationDestination(item: $vm.selectedUserId) { userId in
-            OtherUserProfileView(
-                vm: OtherUserProfileViewModel(
-                    userId: userId,
-                    userRepository: vm.userRepository,
-                    missionHistoryRepository: vm.missionHistoryRepository,
-                    areaNameService: vm.areaNameService,
-                    seasonManager: seasonManager
-                )
-            )
-        }
+        .withUserNavigation(userRouter: userRouter)
     }
     
     /// 퀘스트 타이틀  + 퀘스트 인증 이미지
@@ -63,7 +61,7 @@ struct ApprovalView: View {
                         onLike: { vm.onLike(for: idx) },
                         onHate: { vm.onHate(for: idx) },
                         onOtherUserTapped: {
-                            vm.selectedUserId = item.userId
+                            userRouter.navigateToUserProfile(userId: item.userId)
                         }
                     )
                     .overlay(alignment: .topTrailing) {
@@ -76,7 +74,7 @@ struct ApprovalView: View {
                         .task { await vm.loadMoreData() }
                 }
             }
-            .padding(.top, 47)
+            .padding(.top, vm.approvalSource == .tab ? 47 : 0)
             .padding(.bottom, 72)
         }
         .refreshable {
@@ -114,7 +112,7 @@ struct ApprovalView: View {
     private var reportAlertView: some View {
         if vm.showReportAlert {
             SettingAlertView(
-                alertType: .Report,
+                alertType: AlertType.Report,
                 onCancel: { vm.dismissReportAlert() },
                 onConfirm: { Task { await vm.confirmReport() } }
             )
@@ -169,8 +167,8 @@ struct ApprovalView: View {
     ApprovalView(
         vm:
             ApprovalViewModel(
+                approvalSource: .tab,
                 emojiNetwork: EmojiNetwork(),
-                userRepository: UserRepository(network: UserNetwork()),
                 missionHistoryRepository: MissionHistoryRepository(network: MissionHistoryNetwork(),),
                 areaNameService: AreaNameService(areaRepository: AreaRepository(network: AreaNetwork()))
             )

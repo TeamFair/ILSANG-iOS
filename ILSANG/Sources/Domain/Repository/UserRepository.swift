@@ -12,7 +12,7 @@ protocol UserRepositoryInterface {
     func getUser(userId: String) async -> Result<User, Error>
     func putUser(nickname: String) async -> Bool
     func putUserImage(imageId: String) async -> Bool
-    func putHonor(historyId: String) async -> Bool
+    func putHonor(historyId: Int?) async -> Bool
     func putAreaZone(commercialAreaCode: String) async -> Bool
     func getUserPoint(userId: String?, seasonId: Int?) async -> Result<PointResponse, Error>
     func getUserPointSummary(seasonId: Int) async -> Result<PointSummary, Error>
@@ -36,6 +36,7 @@ final class UserRepository: UserRepositoryInterface {
             return .failure(error)
         }
     }
+    
     func getUser(userId: String) async -> Result<User, Error> {
         let res = await network.getUser(userId: userId)
         switch res {
@@ -54,7 +55,7 @@ final class UserRepository: UserRepositoryInterface {
         return await network.putUserImage(imageId: imageId)
     }
     
-    func putHonor(historyId: String) async -> Bool {
+    func putHonor(historyId: Int?) async -> Bool {
         return await network.putHonor(historyId: historyId)
     }
     

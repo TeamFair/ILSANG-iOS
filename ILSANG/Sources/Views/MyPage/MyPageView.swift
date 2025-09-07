@@ -8,10 +8,15 @@
 import SwiftUI
 
 struct MyPageView: View {
-    
-    @ObservedObject var vm: MyPageViewModel
+    @StateObject var vm: MyPageViewModel
+    @EnvironmentObject var dependencies: AppDependencies
     @EnvironmentObject var sharedState: SharedState
-    @EnvironmentObject var seasonManager: SeasonManager
+    
+    init(
+        vm: MyPageViewModel
+    ) {
+        _vm = StateObject(wrappedValue: vm)
+    }
     
     var body: some View {
         VStack(spacing: 0) {
@@ -61,19 +66,31 @@ struct MyPageView: View {
                         NavigationLink {
                             UserMissionHistoryView(
                                 vm: UserMissionHistoryViewModel(
-                                    missionHistoryRepository: MissionHistoryRepository(network: MissionHistoryNetwork())
+                                    missionHistoryRepository: dependencies.missionHistoryRepository
                                 )
                             )
                         } label: {
                             navigationButtonLabel(title: "수행한 퀘스트", image: .myQuest)
                         }
                         NavigationLink {
-                            EmptyView()
+                            FavoriteListView(
+                                viewModel: FavoriteListViewModel(
+                                    questRepository: dependencies.questRepository,
+                                    favoriteService: dependencies.favoriteService,
+                                    selectedCommercialArea: sharedState.selectedCommercialArea
+                                ),
+                                questRepository: dependencies.questRepository,
+                                illsangZoneManager: dependencies.illsangZoneManager
+                            )
                         } label: {
                             navigationButtonLabel(title: "즐겨찾기 퀘스트", image: .myStar)
                         }
                         NavigationLink {
-                            EmptyView()
+                            CouponListView(
+                                viewModel: CouponListViewModel(
+                                    couponRepository: dependencies.couponRepository
+                                )
+                            )
                         } label: {
                             navigationButtonLabel(title: "쿠폰", image: .coupon)
                         }
@@ -112,7 +129,7 @@ struct MyPageView: View {
                     style: .my,
                     content:
                         UserPointView(
-                            seasonNumbers: seasonManager.seasons.map { $0.seasonNumber },
+                            seasonNumbers: dependencies.seasonManager.seasons.map { $0.seasonNumber },
                             points: vm.points,
                             completedQuestCount: vm.completedQuestCount,
                             selectedSeason: $vm.selectedSeasonNumber,

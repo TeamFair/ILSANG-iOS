@@ -11,6 +11,7 @@ import SwiftUI
 // TODO: 일상존 선택 시 홈뷰에서 일상존선택상태 변경
 struct BannerDetailView: View {
     @State var viewModel: BannerDetailViewModel
+    @EnvironmentObject var dependencies: AppDependencies
     @Environment(\.dismiss) var dismiss
     
     init(viewModel: BannerDetailViewModel) {
@@ -49,23 +50,26 @@ struct BannerDetailView: View {
         )
         // TODO: navigation으로 변경
         .navigationDestination(isPresented: $viewModel.showSelectIllsangZoneView) {
-            IllsangZoneSelectionView(userRepository: viewModel.userRepository, areaRepository: viewModel.areaRepository) { area in
+            IllsangZoneSelectionView(userRepository: dependencies.userRepository, areaRepository: dependencies.areaRepository) { area in
                 viewModel.handleIllsangZoneSelection(area)
+            }
+        }
+        .navigationDestination(isPresented: $viewModel.showChallengeImageView) {
+            if let id = viewModel.selectedQuest?.missionId {
+                ApprovalDetailView(missionId: id)
             }
         }
         // TODO: navigation으로 변경
         .fullScreenCover(isPresented: $viewModel.showQuestEngageView) {
             if let selectedQuest = viewModel.selectedQuest {
-                let challengeNetwork = ChallengeNetwork()
-                
                 QuestEngageView(
                     vm: QuestEngageViewModel(quest: selectedQuest,
-                                             challengeNetwork: challengeNetwork),
+                                             challengeNetwork: dependencies.challengeNetwork),
                     submitVM: SubmitRouterViewModel(
                         selectedImage: nil,
                         selectedQuest: selectedQuest,
-                        submitService: ImageChallengeSubmitService(imageNetwork: ImageNetwork(), challengeNetwork: challengeNetwork),
-                        challengeNetwork: challengeNetwork
+                        submitService: dependencies.imageChallengeSubmitService,
+                        challengeNetwork: dependencies.challengeNetwork
                     )
                 )
             }
@@ -77,13 +81,15 @@ struct BannerDetailView: View {
                 QuestDetailView(
                     vm: QuestDetailViewModel(
                         quest: quest,
-                        questRepository: QuestRepository(network: QuestNetwork()),
-                        onUpdate: { quest in
+                        questRepository: dependencies.questRepository,
+                        onFavorite: { quest in
                             viewModel.toggleQuestFavorite(quest: quest)
                         })
-                ) {
+                , showQuestExImageAction: {
+                    viewModel.onChallengeExImageTapped()
+                }, questApproveAction: {
                     viewModel.onQuestApprovalTapped()
-                }
+                })
                 .presentationCornerRadius(24)
                 .presentationDragIndicator(.hidden)
                 .presentationDetents([tall ? .height(UISheetPresentationController.Detent.questDetailDetentHeightTall) : .height(UISheetPresentationController.Detent.questDetailDetentHeightShort)])
@@ -94,7 +100,7 @@ struct BannerDetailView: View {
         }
         .fullScreenCover(isPresented: $viewModel.showSubmitRouterView) {
             if let selectedQuest = viewModel.selectedQuest {
-                SubmitRouterView(selectedQuest: selectedQuest)
+                SubmitRouterView(selectedQuest: selectedQuest, submitService: dependencies.imageChallengeSubmitService, challengeNetwork: dependencies.challengeNetwork)
                     .interactiveDismissDisabled()
             }
         }
@@ -204,7 +210,7 @@ struct BannerDetailView: View {
     }
     
     @ViewBuilder
-    private func alertView(_ alertType: AlertType) -> some View {
+    private func alertView(_ alertType: IllsangZoneAlertType) -> some View {
         if alertType == .illsangZoneNotSelected {
             SettingAlertView(
                 alertType: alertType,
@@ -335,8 +341,6 @@ struct QuestSortHelper {
     BannerDetailView(
         viewModel: BannerDetailViewModel(
             banner: .init(id: 0, title: "title", navigationTitle: "일상", imageId: "", description: "", image: .img0),
-            shouldShowIllsangZoneWarning: false,
-            currentSeason: 1,
             userRepository: UserRepository(network: UserNetwork()),
             questRepository: QuestRepository(network: QuestNetwork()),
             areaRepository: AreaRepository(network: AreaNetwork()),

@@ -8,88 +8,8 @@
 import SwiftUI
 
 struct MainTabView: View {
-    @StateObject var sharedState = SharedState()
-    @StateObject var honorAcquisitionManager = HonorAcquisitionManager(honorNetwork: defaultHonorNetwork)
-    @StateObject var seasonManager: SeasonManager
-
-    @State var homeViewModel: HomeViewModel
-    @StateObject var questViewModel: QuestViewModel
-    var approvalViewModel: ApprovalViewModel
-    @StateObject var rankViewModel: RankingViewModel
-    @StateObject var myPageViewModel: MyPageViewModel
-    
-    static var defaultHonorNetwork: HonorNetworkProtocol {
-        return HonorNetwork() // MockHonorNetwork()
-    }
-    
-    static var defaultSeasonNetwork: SeasonNetworkProtocol {
-        return SeasonNetwork() // MockSeasonNetwork()
-    }
-    
-    init() {
-        let sharedState = SharedState()
-        _sharedState = StateObject(wrappedValue: sharedState)
-        
-        let seasonManager = SeasonManager(seasonNetwork: MainTabView.defaultSeasonNetwork)
-        _seasonManager = StateObject(wrappedValue: seasonManager)
-        
-        let userNetwork = UserNetwork()
-        let userRepository = UserRepository(network: userNetwork)
-        let rankRepository = RankRepository(network: RankNetwork())
-        let areaRepository = AreaRepository(network: AreaNetwork())
-        let areaNameService = AreaNameService(areaRepository: areaRepository)
-
-        self._homeViewModel = State(wrappedValue: HomeViewModel(
-            userRepository: userRepository,
-            areaNameService: areaNameService,
-            questRepository: QuestRepository(network: QuestNetwork()),
-            rankRepository: rankRepository,
-            bannerRepository: BannerRepository(network: BannerNetwork()),
-            areaRepository: areaRepository,
-            favoriteService: FavoriteService(favoriteNetwork: FavoriteNetwork()),
-            sharedState: sharedState
-        ))
-        
-//#if DEBUG
-//           self._questViewModel = StateObject(wrappedValue: QuestViewModel(
-//            questRepository: MockQuestRepository(),
-//            areaRepository: areaRepository,
-//            favoriteService: FavoriteService(favoriteNetwork: FavoriteNetwork()), sharedState: sharedState)
-//           )
-//           
-//#else
-           self._questViewModel = StateObject(wrappedValue: QuestViewModel(
-            questRepository: QuestRepository(network: QuestNetwork()),
-            areaRepository: areaRepository,
-            favoriteService: FavoriteService(favoriteNetwork: FavoriteNetwork()), sharedState: sharedState)
-           )
-//#endif
-        self.approvalViewModel = ApprovalViewModel(
-            emojiNetwork: EmojiNetwork(),
-            userRepository: userRepository,
-            missionHistoryRepository: MissionHistoryRepository(network: MissionHistoryNetwork()),
-            areaNameService: areaNameService
-        )
-        
-        self._rankViewModel = StateObject(
-            wrappedValue:
-                RankingViewModel(
-                    rankRepository: rankRepository,
-                    userRepository: userRepository,
-                    areaNameService: areaNameService,
-                    seasonManager: seasonManager
-                )
-        )
-        
-        self._myPageViewModel = StateObject(
-            wrappedValue: MyPageViewModel(
-                userRepository: userRepository,
-                imageNetwork: ImageNetwork(),
-                areaNameService: AreaNameService(areaRepository: AreaRepository(network: AreaNetwork())),
-                seasonManager: seasonManager
-            )
-        )
-    }
+    @EnvironmentObject var dependencies: AppDependencies
+    @EnvironmentObject var sharedState: SharedState
     
     var body: some View {
         NavigationStack {
@@ -116,24 +36,65 @@ struct MainTabView: View {
                 }
             )
         }
-        .environmentObject(sharedState)
-        .environmentObject(honorAcquisitionManager)
-        .environmentObject(seasonManager)
     }
     
     @ViewBuilder
     func createTabView(for tab: Tab) -> some View {
         switch tab {
         case .home:
-            HomeView(vm: homeViewModel)
+            HomeView(
+                vm: HomeViewModel(
+                    userRepository: dependencies.userRepository,
+                    areaNameService: dependencies.areaNameService,
+                    questRepository: dependencies.questRepository,
+                    rankRepository: dependencies.rankRepository,
+                    bannerRepository: dependencies.bannerRepository,
+                    favoriteService: dependencies.favoriteService,
+                    sharedState: sharedState
+                ),
+                questRepository: dependencies.questRepository,
+                illsangZoneManager: dependencies.illsangZoneManager
+            )
+            
         case .quest:
-            QuestView(vm: questViewModel)
+            QuestView(
+                vm: QuestViewModel(
+                    questRepository: dependencies.questRepository,
+                    favoriteService: dependencies.favoriteService,
+                    sharedState: sharedState
+                ),
+                questRepository: dependencies.questRepository,
+                illsangZoneManager: dependencies.illsangZoneManager
+            )
+            
         case .approval:
-            ApprovalView(vm: approvalViewModel)
+            ApprovalView(
+                vm: ApprovalViewModel(
+                    approvalSource: .tab,
+                    emojiNetwork: dependencies.emojiNetwork,
+                    missionHistoryRepository: dependencies.missionHistoryRepository,
+                    areaNameService: dependencies.areaNameService
+                )
+            )
+            
         case .ranking:
-            RankingView(vm: rankViewModel)
+            RankingView(
+                vm: RankingViewModel(
+                    rankRepository: dependencies.rankRepository,
+                    areaNameService: dependencies.areaNameService,
+                    seasonManager: dependencies.seasonManager
+                )
+            )
+            
         case .mypage:
-            MyPageView(vm: myPageViewModel)
+            MyPageView(
+                vm: MyPageViewModel(
+                    userRepository: dependencies.userRepository,
+                    imageNetwork: dependencies.imageNetwork,
+                    areaNameService: dependencies.areaNameService,
+                    seasonManager: dependencies.seasonManager
+                )
+            )
         }
     }
 }

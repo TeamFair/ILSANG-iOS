@@ -16,6 +16,7 @@ class BannerDetailViewModel {
     
     var isLoading: Bool = false
     var showQuestSheet: Bool = false
+    var showChallengeImageView: Bool = false
     var showSubmitRouterView: Bool = false {
         didSet {
             // TODO: 해당 데이터가 포함되어있으면 제거 or 리로드하도록 수정
@@ -42,14 +43,14 @@ class BannerDetailViewModel {
     var eventFilterState: StaticFilterPickerState<BannerEventQuestFilterType>
     
     // 일상존 관련
-    var currentSeason: Int
-    private var shouldShowIllsangZoneWarning: Bool
+//    var currentSeason: Int
+//    private var shouldShowIllsangZoneWarning: Bool
     var showSelectIllsangZoneView: Bool = false
     
     
     var isNeverShowAlertSelected: Bool = false // 일상존미선택 알럿 - 토글버튼
     var isQuestSheetPending: Bool = false // 퀘스트 시트를 다시 열어야 하는지 여부
-    var alertType: AlertType? = nil
+    var alertType: IllsangZoneAlertType? = nil
     private let dontShowKey = "DontShowIllsangZoneWarning"
     private let seasonKey = "IllsangZoneSeason"
     
@@ -75,8 +76,7 @@ class BannerDetailViewModel {
     
     init(
         banner: BannerViewModelItem,
-        shouldShowIllsangZoneWarning: Bool,
-        currentSeason: Int,
+//        shouldShowIllsangZoneWarning: Bool,
         userRepository: UserRepositoryInterface,
         questRepository: QuestRepositoryInterface,
         areaRepository: AreaRepositoryInterface,
@@ -90,8 +90,10 @@ class BannerDetailViewModel {
         
         eventFilterState = StaticFilterPickerState(initialValue: .popular)
         
-        self.currentSeason = currentSeason
-        self.shouldShowIllsangZoneWarning = shouldShowIllsangZoneWarning
+//        self.currentSeason = currentSeason
+// TODO: 내부에서 계산 (shouldShowIllsangZoneWarning)
+//        self.shouldShowIllsangZoneWarning = shouldShowIllsangZoneWarning
+        
         Task { await fetchQuestByBannerId() }
     }
     
@@ -111,14 +113,14 @@ class BannerDetailViewModel {
     
     func selectQuest(_ quest: QuestViewModelItem) {
         selectedQuest = quest
-        if shouldShowIllsangZoneWarning {
-            isQuestSheetPending = true // 일상존 선택 후 다시 열기 위해 기록
-            alertType = .illsangZoneNotSelected
-        } else {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                self.showQuestSheet.toggle()
-            }
-        }
+//        if shouldShowIllsangZoneWarning {
+//            isQuestSheetPending = true // 일상존 선택 후 다시 열기 위해 기록
+//            alertType = .illsangZoneNotSelected
+//        } else {
+//            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+//                self.showQuestSheet.toggle()
+//            }
+//        }
     }
     
     func onQuestApprovalTapped() {
@@ -152,13 +154,18 @@ class BannerDetailViewModel {
     func saveDontShowPreferenceIfSelected() {
         if isNeverShowAlertSelected {
             UserDefaults.standard.set(true, forKey: dontShowKey)
-            UserDefaults.standard.set(currentSeason, forKey: seasonKey)
-            shouldShowIllsangZoneWarning = false
+//            UserDefaults.standard.set(currentSeason, forKey: seasonKey)
+//            shouldShowIllsangZoneWarning = false
         }
     }
     
     /// 즐겨찾기 상태를 UI에 즉시 반영하고,  서버 반영은 디바운싱 처리
     func toggleQuestFavorite(quest: QuestViewModelItem) {
         favoriteService.toggle(quest: quest)
+    }
+    
+    func onChallengeExImageTapped() {
+        showQuestSheet = false
+        showChallengeImageView = true
     }
 }

@@ -103,17 +103,25 @@ final class Network {
         }
 
         let response = await request
+            .responseString(encoding: .utf8) { response in
+                   switch response.result {
+                   case .success(let raw): 
+                        print("✅ [Raw Response String]:\n\(raw)")
+                   case .failure(let error):
+                       print("❌ [Raw Response String Error]: \(error)")
+                   }
+               }
             .serializingResponse(using: DecodableResponseSerializer<T>(emptyResponseCodes: [200]))
             .response
         let statusCode = response.response?.statusCode ?? -1
         let responseData = try? response.result.get()
         let result = handleStatusCode(statusCode, data: responseData, errorData: request.data)
-        dump(response.result)
         switch result {
         case .success(let res):
             Log("네트워크 요청 성공: \(fullPath), \(method.rawValue)")
             return .success(res)
         case .failure(let error):
+            print(response.response?.statusCode, response.result)
             Log("네트워크 요청 실패: \(fullPath), \(error.localizedDescription)")
             return .failure(error)
         }

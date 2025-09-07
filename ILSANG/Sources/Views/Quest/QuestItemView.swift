@@ -169,6 +169,46 @@ struct UncompletedBannerQuestItemView: View {
     }
 }
 
+struct FavoriteQuestItemView: View {
+    let quest: QuestViewModelItem
+    let action: (() -> Void)
+    let favoriteAction: (() -> Void)
+
+    var body: some View {
+        BaseQuestItemView(
+            quest: quest,
+            tagConfig: tagConfig(for: quest.questType ?? .normal),
+            imageSize: .init(width: 60, height: 60),
+            trailingPadding: 20,
+            isDisabled: false,
+            trailingView: TrailingStarView(favoriteYn: quest.favoriteYn),
+            action: action,
+            favoriteAction: favoriteAction
+        )
+    }
+    
+    private func tagConfig(for type: QuestType) -> TagConfig? {
+        switch type {
+        case .normal:
+            return nil
+        case .repeat:
+            if let repeatType = quest.repeatType {
+                return TagConfig(style: .repeat(repeatType), image: nil, offset: (48, 0), title: repeatType.description)
+            } else {
+                return nil
+            }
+        case .event:
+            return TagConfig(style: .eventWithIcon, image: .event, offset: (48, 0), title: "한정")
+        }
+    }
+    
+    private func tagImage(for type: QuestType) -> ImageResource? {
+        switch type {
+        case .event: return .event
+        default: return nil
+        }
+    }
+}
 
 struct CompletedQuestItemView: View {
     let quest: QuestViewModelItem
@@ -234,7 +274,7 @@ struct PopularQuestItemView: View {
     var body: some View {
         Button(action: { action() }) {
             VStack(alignment: .leading, spacing: 0) {
-                Image(uiImage: quest.image ?? .logo)
+                Image(uiImage: quest.mainImage ?? .logo)
                     .resizable()
                     .scaledToFill()
                     .frame(width: imageSize.width, height: imageSize.height)

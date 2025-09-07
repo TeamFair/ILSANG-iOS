@@ -29,58 +29,27 @@ final class HomeViewModel {
     var userRankList: [UserRankViewModelItem] = [] // 10개
     var largestRewardQuestList: [QuestViewModelItem] = [] // 3*5개
     var recommendQuestList: [QuestViewModelItem] = [] //QuestViewModelItem.mockQuestList // 10개
-    var popularQuestList: [QuestViewModelItem] = [QuestViewModelItem.mockData] // 4n개
+    var popularQuestList: [QuestViewModelItem] = [] // 4n개
     
     var currentBanner: Int = 0
     
-    var showQuestSheet: Bool = false
-    var selectedQuest: QuestViewModelItem = .mockData
     var selectedPopularTabIndex: Int = 0
     let popularChunkSize: Int = 4
     var paginatedPopularQuests: [[QuestViewModelItem]] {
         popularQuestList.chunks(of: popularChunkSize)
     }
-    var showSubmitRouterView: Bool = false {
-        didSet {
-            // TODO: 해당 데이터가 포함되어있으면 제거 or 리로드하도록 수정
-            if showSubmitRouterView == false {
-                Task {
-                    await loadInitialData()
-                }
-            }
-        }
-    }
-    var showQuestEngageView: Bool = false {
-        didSet {
-            // TODO: 해당 데이터가 포함되어있으면 제거 or 리로드하도록 수정
-            if showSubmitRouterView == false {
-                Task {
-                    await loadInitialData()
-                }
-            }
-        }
-    }
+    
     var showSelectMyRegionView: Bool = false
-    var showSelectIllsangZoneView: Bool = false
     var selectedBanner: BannerViewModelItem? = nil
     
-    var illsangZoneCode: String? = nil
-    var illsangZoneName: String? = nil
     var alertType: AlertType? = nil
     
-    var isNeverShowAlertSelected: Bool = false // 일상존미선택 알럿 - 토글버튼
-    var isQuestSheetPending: Bool = false // 퀘스트 시트를 다시 열어야 하는지 여부
+//    var shouldShowIllsangZoneWarning: Bool = false
+//    
+//    private let dontShowKey = "DontShowIllsangZoneWarning"
+//    private let seasonKey = "IllsangZoneSeason"
     
-    var shouldShowIllsangZoneWarning: Bool = false
-    
-    private let dontShowKey = "DontShowIllsangZoneWarning"
-    private let seasonKey = "IllsangZoneSeason"
-    
-    let currentSeason: Int = 1 // TODO: 서버에서 가져오도록 수정
-    
-    // 다른 유저 프로필 확인
-    var showOtherUserProfileView = false
-    var selectedUserId: String? = nil
+//    let currentSeason: Int = 1 // TODO: 서버에서 가져오도록 수정
     
     var errorCnt = 0
     var showMainBanners: Bool = true
@@ -89,13 +58,12 @@ final class HomeViewModel {
     var showPopularRewardQuest: Bool = true
     var showRankList = true
     
-    let userRepository: UserRepositoryInterface
-    let areaNameService: AreaNameProvider
-    let questRepository: QuestRepositoryInterface
+    private let userRepository: UserRepositoryInterface
+    private let areaNameService: AreaNameProvider
+    private let questRepository: QuestRepositoryInterface
     private let rankRepository: RankRepositoryInterface
     private let bannerRepository: BannerRepositoryInterface
-    let areaRepository: AreaRepositoryInterface
-    let favoriteService: FavoriteService
+    private let favoriteService: FavoriteService
     private let sharedState: SharedState
     
     private var cancellables = Set<AnyCancellable>()
@@ -106,26 +74,61 @@ final class HomeViewModel {
         questRepository: QuestRepositoryInterface,
         rankRepository: RankRepositoryInterface,
         bannerRepository: BannerRepositoryInterface,
-        areaRepository: AreaRepositoryInterface,
         favoriteService: FavoriteService,
         sharedState: SharedState
-    ) {
+    )  {
         self.userRepository = userRepository
         self.areaNameService = areaNameService
         self.questRepository = questRepository
         self.rankRepository = rankRepository
         self.bannerRepository = bannerRepository
-        self.areaRepository = areaRepository
         self.favoriteService = favoriteService
         self.sharedState = sharedState
         
+        Task { await setupBindings() }
+    }
+    
+    @MainActor
+    private func setupBindings() {
         sharedState.$selectedCommercialArea
             .removeDuplicates()
             .dropFirst()
             .sink { [weak self] _ in
-                Task { await self?.loadInitialData() } // TODO: 배너 제외 데이터 재로드
+                Task { await self?.loadInitialData() }
             }
             .store(in: &cancellables)
+        
+        // 퀘스트 라우터 완료 시 데이터 새로고침
+//        questRouter.$showSubmitRouter
+//            .removeDuplicates()
+//            .dropFirst()
+//            .sink { [weak self] isPresented in
+//                if !isPresented {
+//                    Task { await self?.loadInitialData() }
+//                }
+//            }
+//            .store(in: &cancellables)
+//        
+//        questRouter.$showQuestEngage
+//            .removeDuplicates()
+//            .dropFirst()
+//            .sink { [weak self] isPresented in
+//                if !isPresented {
+//                    Task { await self?.loadInitialData() }
+//                }
+//            }
+//            .store(in: &cancellables)
+    }
+    
+    @MainActor
+    func loadDataIfNeeded() async {
+        if mainBanners.isEmpty ||
+            popularQuestList.isEmpty ||
+            recommendQuestList.isEmpty ||
+            largestRewardQuestList.isEmpty ||
+            userRankList.isEmpty {
+            await loadInitialData()
+        }
     }
     
     @MainActor
@@ -137,7 +140,6 @@ final class HomeViewModel {
         self.showRecommendRewardQuest = true
         self.showLargestRewardQuest = true
         self.showRankList = true
-        updateIllsangZoneWarningStatus()
         
         await withThrowingTaskGroup(of: Void.self) { group in
             group.addTask {
@@ -195,11 +197,6 @@ final class HomeViewModel {
 
         if let userProfileImageId = UserService.shared.currentUser?.profileImageId {
             self.userProfileImage = await ImageCacheService.shared.loadImageAsync(imageId: userProfileImageId)
-        }
-        
-        if let illsangZoneCode = UserService.shared.currentUser?.commercialAreaCode {
-            self.illsangZoneCode = illsangZoneCode
-            self.illsangZoneName = await areaNameService.getAreaName(for: illsangZoneCode)
         }
 
         changeViewStatus(.loaded)
@@ -326,8 +323,13 @@ final class HomeViewModel {
             }
             
             for await (index, image) in group {
-                if let image = image {
-                    quests[index].image = image
+                if let image {
+                    if getWriterImage {
+                        quests[index].image = image
+                    }
+                    if getMainImage {
+                        quests[index].mainImage = image
+                    }
                 }
             }
         }
@@ -364,74 +366,10 @@ final class HomeViewModel {
         self.viewStatus = viewStatus
     }
     
-    func onQuestTapped(quest: QuestViewModelItem) {
-        selectedQuest = quest
-        Task {
-            let questDetail = try await questRepository.getQuestDetail(questId: quest.id)
-                .get()
-                .toQuestItem()
-            self.selectedQuest = questDetail
-        }
-        
-        if illsangZoneCode == nil && shouldShowIllsangZoneWarning {
-            isQuestSheetPending = true // 일상존 선택 후 다시 열기 위해 기록
-            alertType = .illsangZoneNotSelected
-        } else {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                self.showQuestSheet.toggle()
-            }
-        }
-    }
-    
-    func onQuestApprovalTapped() {
-        showQuestSheet = false
-        if selectedQuest.missionType == .photo {
-            showSubmitRouterView = true
-        } else {
-            showQuestEngageView = true
-        }
-    }
-    
-    // 일상존 선택 완료 시
-    func handleIllsangZoneSelection(_ area: CommercialArea) {
-        self.illsangZoneCode = area.code
-        self.illsangZoneName = area.areaName
-        self.alertType = .illsangZoneSetSuccess
-    }
-    
-    // TODO: 함수명 변경
-    func finalizeIllsangZoneSelection() {
-        alertType = nil
-        if isQuestSheetPending {
-            isQuestSheetPending = false
-            showQuestSheet = true
-        }
-    }
-    
     // 내 지역 선택 완료 시
     func handleMyRegionSelection(_ area: CommercialArea) {
         sharedState.selectedCommercialArea = area
         self.alertType = .myRegionChangeSuccess
-    }
-    
-    /// "다시 보지 않기" 체크 여부 확인
-    private func updateIllsangZoneWarningStatus() {
-        let savedSeason = UserDefaults.standard.integer(forKey: seasonKey)
-        let dontShow = UserDefaults.standard.bool(forKey: dontShowKey)
-        
-        // 시즌이 바뀌었거나 "다시 보지 않기" 안 한 경우엔 보여주기
-        if savedSeason != currentSeason || !dontShow {
-            shouldShowIllsangZoneWarning = true
-        }
-    }
-    
-    /// "다시 보지 않기" 선택 시 저장
-    func saveDontShowPreferenceIfSelected() {
-        if isNeverShowAlertSelected {
-            UserDefaults.standard.set(true, forKey: dontShowKey)
-            UserDefaults.standard.set(currentSeason, forKey: seasonKey)
-            shouldShowIllsangZoneWarning = false
-        }
     }
     
     /// 즐겨찾기 상태를 UI에 즉시 반영하고,  서버 반영은 디바운싱 처리

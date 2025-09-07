@@ -17,16 +17,16 @@ struct MyPageInfoView: View {
     var body: some View {
         ScrollView {
             HStack(spacing: contentSpacing) {
-                NavigationLink {
-                    MyPageHonorManageView()
-                } label: {
+//                NavigationLink {
+//                    MyPageHonorManageView()
+//                } label: {
                     MyPageInfoCardView(
                         title: "내 칭호",
                         content: honorTitle ?? "",
                         showTitleChevron: true,
                         trailContent: HonorTrailingView(hasHonorTitie: honorTitle != nil)
                     )
-                }
+//                }
                 
                 MyPageInfoCardView(
                     title: "총 포인트",

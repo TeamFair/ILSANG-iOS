@@ -58,7 +58,7 @@ struct SettingView: View {
         .overlay {
             if logoutAlert {
                 SettingAlertView(
-                    alertType: .Logout,
+                    alertType: AlertType.Logout,
                     onCancel: { logoutAlert = false },
                     onConfirm: { logout() }
                 )

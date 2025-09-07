@@ -8,19 +8,27 @@
 import SwiftUI
 
 struct RankingView: View {
-    @ObservedObject var vm: RankingViewModel
+    @StateObject var vm: RankingViewModel
+    @StateObject var userRouter: UserRouter
+    @EnvironmentObject var dependencies: AppDependencies
     @EnvironmentObject var sharedState: SharedState
-    @EnvironmentObject private var seasonManager: SeasonManager
     
     @State private var isRefreshing = false
    
+    init(
+        vm: RankingViewModel,
+    ) {
+        _vm = StateObject(wrappedValue: vm)
+        _userRouter = StateObject(wrappedValue: UserRouter())
+    }
+    
     var body: some View {
         VStack(spacing: 0) {
             Spacer().frame(height: 94) // 고정 영역
             
             ScrollView {
                 VStack(spacing: 0) {
-                    if let currentSeason = seasonManager.currentSeason {
+                    if let currentSeason = vm.seasonManager.currentSeason {
                         seasonBannerView(season: currentSeason)
                     }
                     
@@ -29,7 +37,8 @@ struct RankingView: View {
                             switch vm.viewStatus {
                             case .loading:
                                 ProgressView()
-                                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                                    .frame(height: 300)
+                                    .frame(maxWidth: .infinity)
                             case .loaded:
                                 rankingListView
                             case .error:
@@ -54,9 +63,11 @@ struct RankingView: View {
                     .frame(height: 200)
             }
         }
+        .withUserNavigation(userRouter: userRouter)
         .overlay(alignment: .bottom) {
-            if let currentSeason = seasonManager.currentSeason {
-                SeasonTimerView(season: currentSeason.seasonNumber, targetDateString: currentSeason.endDate.formatDateOnly())
+            if let currentSeason = vm.seasonManager.currentSeason,
+            let targetDate = currentSeason.endDate.toISO8601Date() {
+                SeasonTimerView(season: currentSeason.seasonNumber, targetDate: targetDate)
                     .padding(.horizontal, 20)
                     .padding(.bottom, 20)
             }
@@ -237,22 +248,7 @@ extension RankingView {
             case .metro:
                 ForEach(vm.metroRank) { rank in
                     Button {
-//                        vm.showRankingDetailView = true
                         vm.selectedRank = rank
-
-//                        RankingDetailView(
-//                            vm: RankingDetailViewModel(
-//                                seasonId: vm.selectedSeasonId,
-//                                areaName: rank.areaName,
-//                                areaRank: rank.rank,
-//                                areaPoint: rank.point,
-//                                areaImageIds: rank.imageIds,
-//                                areaCode: rank.areaCode,
-//                                areaType: .metro,
-//                                rankRepository: vm.rankRepository,
-//                                areaNameService: vm.areaNameService
-//                            )
-//                        )
                     } label: {
                         RankingItemView(style: .areaRank(rank))
                     }
@@ -260,37 +256,22 @@ extension RankingView {
             case .commercial:
                 ForEach(vm.commercialRank) { rank in
                     Button {
-//                        vm.showRankingDetailView = true
                         vm.selectedRank = rank
-//                        RankingDetailView(
-//                            vm: RankingDetailViewModel(
-//                                seasonId: vm.selectedSeasonId,
-//                                areaName: rank.areaName,
-//                                areaRank: rank.rank,
-//                                areaPoint: rank.point,
-//                                areaImageIds: rank.imageIds,
-//                                areaCode: rank.areaCode,
-//                                areaType: .commercial,
-//                                rankRepository: vm.rankRepository,
-//                                areaNameService: vm.areaNameService
-//                            )
-//                        )
                     } label: {
                         RankingItemView(style: .areaRank(rank))
                     }
                 }
             case .contribution:
                 ForEach(vm.contributionRank, id: \.userId) { rank in
-                    NavigationLink {
-                        OtherUserProfileView(
-                            vm: OtherUserProfileViewModel(
-                                userId: rank.userId,
-                                userRepository: UserRepository(network: UserNetwork()),
-                                missionHistoryRepository: MissionHistoryRepository(network: MissionHistoryNetwork()),
-                                areaNameService: vm.areaNameService,
-                                seasonManager: seasonManager
-                            )
-                        )
+                    Button {
+                        userRouter.navigateToUserProfile(userId: rank.userId)
+//                        OtherUserProfileView(
+//                            userId: rank.userId,
+//                            userRepository: dependencies.userRepository,
+//                            missionHistoryRepository: dependencies.missionHistoryRepository,
+//                            areaNameService: dependencies.areaNameService,
+//                            seasonManager: seasonManager
+//                        )
                     } label: {
                         RankingItemView(style: .userRank(rank))
                     }
@@ -312,9 +293,9 @@ extension RankingView {
                         areaPoint: rank.point,
                         areaImageIds: rank.imageIds,
                         areaCode: rank.areaCode,
-                        areaType: .commercial,
-                        rankRepository: vm.rankRepository,
-                        areaNameService: vm.areaNameService
+                        areaType: .metro,
+                        rankRepository: dependencies.rankRepository,
+                        areaNameService: dependencies.areaNameService
                     )
                 )
             case .commercial:
@@ -327,8 +308,8 @@ extension RankingView {
                         areaImageIds: rank.imageIds,
                         areaCode: rank.areaCode,
                         areaType: .commercial,
-                        rankRepository: vm.rankRepository,
-                        areaNameService: vm.areaNameService
+                        rankRepository: dependencies.rankRepository,
+                        areaNameService: dependencies.areaNameService
                     )
                 )
             case .contribution:
@@ -353,7 +334,7 @@ extension RankingView {
     RankingView(
         vm: RankingViewModel(
             rankRepository: RankRepository(network: RankNetwork()),
-            userRepository: UserRepository(network: UserNetwork()), areaNameService: AreaNameService(areaRepository: AreaRepository(network: AreaNetwork())),
+            areaNameService: AreaNameService(areaRepository: AreaRepository(network: AreaNetwork())),
             seasonManager: SeasonManager(
                 seasonNetwork: SeasonNetwork()
             )

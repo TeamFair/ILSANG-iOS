@@ -20,7 +20,7 @@ final class UserNetwork {
     }
     
     func putUser(nickname: String) async -> Bool {
-        let body = ["nickname": nickname]
+        let body = ["nickName": nickname]
         let bodyData = body.convertToJsonData()
         let res: Result<ResponseWithoutData, Error> = await Network.requestData(url: url+"/profile/nickname", method: .put, body: bodyData)
         
@@ -46,9 +46,13 @@ final class UserNetwork {
     }
     
     /// titleHistoryId값을 null이나 빈값으로 요청하면 칭호 미사용
-    func putHonor(historyId: String) async -> Bool {
-        let params = ["titleHistoryId": historyId]
-        let res: Result<ResponseWithoutData, Error> = await Network.requestData(url: url+"/profile/title", method: .put, parameters: params)
+    func putHonor(historyId: Int?) async -> Bool {
+        var body: [String: Any] = [:]
+        if let historyId = historyId {
+            body["titleHistoryId"] = historyId
+        }
+        let bodyData = body.convertToJsonData()
+        let res: Result<ResponseWithoutData, Error> = await Network.requestData(url: url+"/profile/title", method: .put, body: bodyData)
         switch res {
         case.success:
             return true
@@ -96,8 +100,9 @@ final class UserNetwork {
     
     /// 서버에서 프로필 이미지 연결 해제 & 이미지 삭제 처리
     func deleteUserImage() async -> Bool {
-        let res: Result<ResponseWithoutData, Error> = await Network.requestData(url: url+"/profile/image", method: .delete, parameters: nil, withToken: true)
-        
+        let body = ["imageId": nil] as [String : Any?]
+        let bodyData = body.convertToJsonData()
+        let res: Result<ResponseWithoutData, Error> = await Network.requestData(url: url+"/profile/image", method: .put, body: bodyData)
         switch res {
         case.success:
             return true

@@ -10,9 +10,10 @@ import SwiftUI
 // TODO: 에러처리 재정의 필요
 struct HomeView: View {
     @State var vm: HomeViewModel
+    @StateObject var questRouter: QuestRouter
+    @StateObject var userRouter: UserRouter
+    @EnvironmentObject var dependencies: AppDependencies
     @EnvironmentObject var sharedState: SharedState
-    @EnvironmentObject var seasonManager: SeasonManager
-    @EnvironmentObject var honorAcquisitionManager: HonorAcquisitionManager
     @Environment(\.redactionReasons) var redactionReasons
     
     private let gridItem = [GridItem(), GridItem()]
@@ -27,8 +28,22 @@ struct HomeView: View {
         static let circleSize: CGFloat = 10
     }
     
+    init(
+        vm: HomeViewModel,
+        questRepository: QuestRepositoryInterface,
+        illsangZoneManager: IllsangZoneManager
+    ) {
+        _vm = State(wrappedValue: vm)
+        _questRouter = StateObject(
+            wrappedValue: QuestRouter(
+                illsangZoneManager: illsangZoneManager, questRepository: questRepository
+            )
+        )
+        _userRouter = StateObject(wrappedValue: UserRouter())
+    }
+    
     var body: some View {
-        NavigationStack {
+        Group {
             switch vm.viewStatus {
             case .loading, .loaded:
                 ScrollView {
@@ -38,92 +53,47 @@ struct HomeView: View {
                     }
                 }
                 .task {
-                    // await honorAcquisitionManager.fetchUnreadHonorHistory()
+                    await dependencies.honorAcquisitionManager.fetchUnreadHonorHistory()
                 }
                 .refreshable {
-                    // TODO: 태스크 {} 제거
-                    Task {
-                        await vm.loadInitialData()
-                    }
+                    await vm.loadInitialData()
                 }
                 .disabled(vm.viewStatus == .loading)
+                .withQuestNavigation(questRouter: questRouter)
+                .withUserNavigation(userRouter: userRouter)
             case .error:
                 networkErrorView
             }
         }
         .task {
-            await vm.loadInitialData()
+            await vm.loadDataIfNeeded()
         }
         .background(Color.background)
         .overlay(
             Group {
-                if let _ = honorAcquisitionManager.currentHonor {
+                if let _ = dependencies.honorAcquisitionManager.currentHonor {
                     HonorPopupContainerView()
                 } else if let alert = vm.alertType {
                      alertView(alert)
                 }
             }
         )
-        .sheet(isPresented: $vm.showQuestSheet) {
-            let tall = vm.selectedQuest.questType == .repeat || vm.selectedQuest.missionType == .photo
-            QuestDetailView(
-                vm: QuestDetailViewModel(
-                    quest: vm.selectedQuest,
-                    questRepository: QuestRepository(network: QuestNetwork()),
-                    onUpdate: { quest in
-                        vm.toggleFavoriteStatus(quest: quest)
-                    }
-                )
-            ) {
-                vm.onQuestApprovalTapped()
-            }
-            .presentationCornerRadius(24)
-            .presentationDragIndicator(.hidden)
-            .presentationDetents([tall ? .height(UISheetPresentationController.Detent.questDetailDetentHeightTall) : .height(UISheetPresentationController.Detent.questDetailDetentHeightShort)])
-            .onAppear {
-                UIApplication.shared.updateSheetDetents(to: [tall ? .questDetailDetentTall : .questDetailDetentShort], whenCurrentDetentsAre: [.large()])
-            }
-        }
-        .fullScreenCover(isPresented: $vm.showSubmitRouterView) {
-            SubmitRouterView(selectedQuest: vm.selectedQuest)
-                .interactiveDismissDisabled()
-        }
+       
         .navigationDestination(item: $vm.selectedBanner) { banner in
             BannerDetailView(
                 viewModel: BannerDetailViewModel(
                     banner: banner,
-                    shouldShowIllsangZoneWarning: vm.shouldShowIllsangZoneWarning,
-                    currentSeason: vm.currentSeason,
-                    userRepository: vm.userRepository,
-                    questRepository: vm.questRepository,
-                    areaRepository: vm.areaRepository,
-                    favoriteService: vm.favoriteService
+                    userRepository: dependencies.userRepository,
+                    questRepository: dependencies.questRepository,
+                    areaRepository: dependencies.areaRepository,
+                    favoriteService: dependencies.favoriteService
                 )
             )
         }
         .navigationDestination(isPresented: $vm.showSelectMyRegionView) {
-            MyRegionAreaSelectionView(areaRepository: vm.areaRepository) { area in
+            MyRegionAreaSelectionView(areaRepository: dependencies.areaRepository) { area in
                 vm.handleMyRegionSelection(area)
             }
-        }
-        .navigationDestination(isPresented: $vm.showSelectIllsangZoneView) {
-            IllsangZoneSelectionView(userRepository: vm.userRepository, areaRepository: vm.areaRepository) { area in
-                vm.handleIllsangZoneSelection(area)
-            }
-        }
-        .navigationDestination(isPresented: $vm.showQuestEngageView) {
-            let challengeNetwork = ChallengeNetwork()
-            QuestEngageView(
-                vm: QuestEngageViewModel(
-                    quest: vm.selectedQuest, challengeNetwork: challengeNetwork
-                ),
-                submitVM: SubmitRouterViewModel(
-                    selectedImage: nil,
-                    selectedQuest: vm.selectedQuest,
-                    submitService: ImageChallengeSubmitService(imageNetwork: ImageNetwork(), challengeNetwork: challengeNetwork),
-                    challengeNetwork: challengeNetwork
-                )
-            )
         }
     }
     
@@ -181,17 +151,12 @@ struct HomeView: View {
                 .styledFont(.caption2)
                 .foregroundStyle(.gray400)
             Button {
-                if vm.illsangZoneName == nil {
-                    vm.isQuestSheetPending = false
-                    vm.showSelectIllsangZoneView = true
-                } else {
-                    vm.alertType = .illsangZoneChangeNotAllowed
-                }
+                questRouter.handleIllsangZoneButtonTap()
             } label: {
                 HStack(spacing: 0) {
-                    Text(vm.illsangZoneName ?? "선택하기")
+                    Text(dependencies.illsangZoneManager.currentZoneName ?? "선택하기")
                         .styledFont(.caption1)
-                    if vm.illsangZoneName == nil {
+                    if dependencies.illsangZoneManager.currentZoneName == nil {
                         Image(.arrowUnder)
                             .resizable()
                             .scaledToFit()
@@ -276,7 +241,9 @@ struct HomeView: View {
                     imageSize: CGSize(width: (UIScreen.main.bounds.width - 40 - 2) / 2, height: 137)
                 ) {
                     AnalyticsService.logEvent(.homePopularQuestClick(questId: quest.id))
-                    vm.onQuestTapped(quest: quest)
+                    questRouter.presentQuestDetail(quest: quest) { quest in
+                        vm.toggleFavoriteStatus(quest: quest)
+                    }
                 }
             }
         }
@@ -294,7 +261,9 @@ struct HomeView: View {
                                 imageSize: CGSize(width: (UIScreen.main.bounds.width - 40 - 2) / 2, height: 137)
                             ) {
                                 AnalyticsService.logEvent(.homePopularQuestClick(questId: quest.id))
-                                vm.onQuestTapped(quest: quest)
+                                questRouter.presentQuestDetail(quest: quest) { quest in
+                                    vm.toggleFavoriteStatus(quest: quest)
+                                }
                             }
                         }
                     }
@@ -332,7 +301,9 @@ struct HomeView: View {
                         ForEach(vm.recommendQuestList, id: \.id) { quest in
                             RecommendQuestItemView(quest: quest) {
                                 AnalyticsService.logEvent(.homeRecommendQuestClick(questId: quest.id))
-                                vm.onQuestTapped(quest: quest)
+                                questRouter.presentQuestDetail(quest: quest) { quest in
+                                    vm.toggleFavoriteStatus(quest: quest)
+                                }
                             }
                         }
                     }
@@ -356,7 +327,9 @@ struct HomeView: View {
                     ForEach(vm.largestRewardQuestList.prefix(3), id: \.id) { quest in
                         LargeRewardQuestItemView(quest: quest) {
                             AnalyticsService.logEvent(.homeBigRewardQuestClick(questId: quest.id))
-                            vm.onQuestTapped(quest: quest)
+                            questRouter.presentQuestDetail(quest: quest) { quest in
+                                vm.toggleFavoriteStatus(quest: quest)
+                            }
                         }
                     }
                 }
@@ -378,8 +351,7 @@ struct HomeView: View {
                         ForEach(vm.userRankList, id: \.userId) { rank in
                             Button {
                                 AnalyticsService.logEvent(.homeRankingClick(userId: rank.userId))
-                                vm.selectedUserId = rank.userId
-                                vm.showOtherUserProfileView = true
+                                userRouter.navigateToUserProfile(userId: rank.userId)
                             } label: {
                                 RankingItemView(style: .totalRank(rank))
                             }
@@ -388,68 +360,12 @@ struct HomeView: View {
                     .padding(.horizontal, LayoutConstants.horizontalPadding)
                 }
                 .scrollIndicators(.never)
-                .navigationDestination(isPresented: $vm.showOtherUserProfileView) {
-                    if let userId = vm.selectedUserId {
-                        OtherUserProfileView(
-                            vm: OtherUserProfileViewModel(
-                                userId: userId,
-                                userRepository: vm.userRepository,
-                                missionHistoryRepository: MissionHistoryRepository(network: MissionHistoryNetwork()),
-                                areaNameService: vm.areaNameService,
-                                seasonManager: seasonManager
-                            )
-                        )
-                    }
-                }
         )
     }
     
     @ViewBuilder
     private func alertView(_ alertType: AlertType) -> some View {
-        if alertType == .illsangZoneNotSelected {
-            SettingAlertView(
-                alertType: alertType,
-                onCancel: {
-                    vm.alertType = nil
-                    vm.saveDontShowPreferenceIfSelected()
-                    vm.showQuestSheet = true
-                }, onConfirm: {
-                    vm.alertType = nil
-                    vm.saveDontShowPreferenceIfSelected()
-                    vm.showSelectIllsangZoneView = true
-                }) {
-                    Button {
-                        vm.isNeverShowAlertSelected.toggle()
-                    } label: {
-                        HStack(spacing: 4) {
-                            Image(.checkThin)
-                                .renderingMode(.template)
-                                .resizable()
-                                .scaledToFill()
-                                .frame(width: 9, height: 5.5)
-                                .frame(16)
-                                .foregroundStyle(vm.isNeverShowAlertSelected ? .white : .clear)
-                                .background(
-                                    RoundedRectangle(cornerRadius: 3)
-                                        .strokeBorder(
-                                            vm.isNeverShowAlertSelected ? .clear : .gray200,
-                                            style: StrokeStyle(lineWidth: 1)
-                                        )
-                                        .fill(vm.isNeverShowAlertSelected ? .primaryPurple : .clear)
-                                )
-                                .frame(24)
-                            Text("다시 보지 않기")
-                                .styledFont(.tabRegular)
-                                .foregroundStyle(.gray500)
-                        }
-                    }
-                }
-        } else if alertType == .illsangZoneSetSuccess {
-            SettingAlertView(
-                alertType: alertType,
-                onConfirm: { vm.finalizeIllsangZoneSelection() }
-            )
-        } else if [AlertType.illsangZoneChangeNotAllowed, AlertType.myRegionChangeSuccess].contains(alertType) {
+        if alertType ==  AlertType.myRegionChangeSuccess {
             SettingAlertView(
                 alertType: alertType,
                 onConfirm: { vm.alertType = nil }
@@ -476,10 +392,16 @@ struct HomeView: View {
         questRepository: QuestRepository(network: QuestNetwork()),
         rankRepository: RankRepository(network: RankNetwork()),
         bannerRepository: BannerRepository(network: BannerNetwork()),
-        areaRepository: AreaRepository(network: AreaNetwork()),
         favoriteService: FavoriteService(favoriteNetwork: FavoriteNetwork()), sharedState: SharedState()
     )
-    HomeView(vm: viewModel)
+    HomeView(
+        vm: viewModel,
+        questRepository: QuestRepository(network: QuestNetwork()),
+        illsangZoneManager: IllsangZoneManager(
+            areaNameService: AreaNameService(areaRepository: AreaRepository(network: AreaNetwork())),
+            seasonManager: SeasonManager(seasonNetwork: SeasonNetwork())
+        )
+    )
 }
 
 extension Array {

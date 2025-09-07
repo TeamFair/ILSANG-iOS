@@ -12,6 +12,7 @@ import SwiftUI
 /// 18 버전 이상 > 네비게이션 이동(zoom 효과)
 struct ApprovalItemContentView: View {
     @Namespace var namespace
+    
     @State var showMagView: Bool = false
     @State var showSheetView: Bool = false
     let item: ApprovalMissionHistoryItem
@@ -84,7 +85,7 @@ struct ApprovalItemContentView: View {
                     showSheetView.toggle()
                 }
             })
-            .navigationDestination(isPresented: $showMagView) {
+            .sheet(isPresented: $showMagView) {
                 if #available(iOS 18.0, *) {
                     ImageFullScreenView(image: item.image ?? .logo) {
                         showMagView.toggle()
@@ -104,16 +105,16 @@ struct ApprovalItemContentView: View {
             Image(uiImage: item.profileImage ?? .profileCircle)
                 .resizable()
                 .frame(width: 35, height: 35)
-                .clipShape(Circle())
-            VStack(alignment: .leading, spacing: 6) {
+                .clipShape(.circle)
+            VStack(alignment: .leading, spacing: 4) {
                 Text(nickname)
                     .font(.system(size: 14, weight: .semibold))
                 if let honor {
                     HonorIconView(honorTitle: honor.name, grade: honor.grade, imageSize: 20, spacing: 4, font: .badge1, fgColor: .gray500)
                 }
             }
-            .foregroundStyle(.gray500)
         }
+        .foregroundStyle(.gray500)
     }
     
     private func emojiView(imageName: UIImage, count: Int, alignment: Alignment) -> some View {

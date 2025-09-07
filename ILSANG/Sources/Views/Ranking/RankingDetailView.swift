@@ -9,11 +9,13 @@ import SwiftUI
 
 struct RankingDetailView: View {
     @StateObject var vm: RankingDetailViewModel
-    @EnvironmentObject private var seasonManager: SeasonManager
+    @StateObject var userRouter: UserRouter
+    @EnvironmentObject var dependencies: AppDependencies
     @Environment(\.dismiss) var dismiss
     
     init(vm: RankingDetailViewModel) {
         _vm = StateObject(wrappedValue: vm)
+        _userRouter = StateObject(wrappedValue: UserRouter())
     }
     
     var body: some View {
@@ -36,33 +38,29 @@ struct RankingDetailView: View {
                         RankingItemView(style: .currentUserRank(user))
                     }
                     ForEach(vm.areaUserRank.ranks, id: \.userId) { rank in
-//                        NavigationLink {
+                        Button {
+                            userRouter.navigateToUserProfile(userId: rank.userId)
 //                            OtherUserProfileView(
-//                                vm: OtherUserProfileViewModel(
-//                                    userId: rank.userId,
-//                                    userRepository: UserRepository(network: UserNetwork()),
-//                                    missionHistoryRepository: MissionHistoryRepository(network: MissionHistoryNetwork()),
-//                                    areaNameService: vm.areaNameService,
-//                                    seasonManager: seasonManager
-//                                )
+//                                userId: rank.userId,
+//                                userRepository: dependencies.userRepository,
+//                                missionHistoryRepository: dependencies.missionHistoryRepository,
+//                                areaNameService: dependencies.areaNameService,
+//                                seasonManager: seasonManager
 //                            )
-//                        Button {
-//                            vm.selectedUserId = rank.userId
-//                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
-//                                vm.isShowingUserProfile = true
-//                            }
-//                        } label: {
+                        } label: {
                             RankingItemView(style: .userRank(rank))
-//                        }
+                        }
                     }
                 }
                 .padding(.bottom, 170)
             }
             .padding(.top, 8)
         }
+        .withUserNavigation(userRouter: userRouter)
         .overlay(alignment: .bottom) {
-            if let currentSeason = seasonManager.currentSeason {
-                SeasonTimerView(season: currentSeason.seasonNumber, targetDateString: currentSeason.endDate.formatDateOnly())
+            if let currentSeason = dependencies.seasonManager.currentSeason,
+            let targetDate = currentSeason.endDate.toISO8601Date() {
+                SeasonTimerView(season: currentSeason.seasonNumber, targetDate: targetDate)
                     .padding(.horizontal, 20)
                     .padding(.bottom, 20)
             }
@@ -73,32 +71,29 @@ struct RankingDetailView: View {
             await vm.getRankDetail()
             await vm.getImages()
         }
-//        .navigationDestination(isPresented: $vm.isShowingUserProfile) {
-//            if let userId = vm.selectedUserId {
-//                OtherUserProfileView(
-//                    vm: OtherUserProfileViewModel(
-//                        userId: userId,
-//                        userRepository: UserRepository(network: UserNetwork()),
-//                        missionHistoryRepository: MissionHistoryRepository(network: MissionHistoryNetwork()),
-//                        areaNameService: vm.areaNameService,
-//                        seasonManager: seasonManager
-//                    )
-//                )
-//            }
-//        }
     }
     
     private var imageListView: some View {
         let height: CGFloat = 150
         return VStack(spacing: 0) {
-            TabView(selection: $vm.imageIdx) {
-                ForEach(Array(vm.imageList.enumerated()), id: \.offset) { idx, image in
-                    Image(uiImage: image)
-                        .resizable()
-                        .scaledToFill()
+            Group {
+                if vm.imageList.isEmpty {
+                    Text("아직 사진이\n등록되지 않았어요")
+                        .styledFont(.heading3)
+                        .foregroundStyle(.gray200)
+                        .multilineTextAlignment(.center)
                         .frame(maxWidth: .infinity)
-                        .frame(height: height)
-                        .tag(idx)
+                } else {
+                    TabView(selection: $vm.imageIdx) {
+                        ForEach(Array(vm.imageList.enumerated()), id: \.offset) { idx, image in
+                            Image(uiImage: image)
+                                .resizable()
+                                .scaledToFill()
+                                .frame(maxWidth: .infinity)
+                                .frame(height: height)
+                                .tag(idx)
+                        }
+                    }
                 }
             }
             .frame(height: height)

@@ -48,7 +48,7 @@ final class QuestNetwork {
     }
     
     /// 이벤트 퀘스트 조회
-    func getEventQuests(commercialAreaCode: String, orderRewardDesc: Bool?, page: Int, size: Int) async -> Result<ResponseWithPage<[BaseQuestResponse]>, Error> {
+    func getEventQuests(commercialAreaCode: String, orderRewardDesc: Bool?, orderExpiredDesc: Bool?, page: Int, size: Int) async -> Result<ResponseWithPage<[BaseQuestResponse]>, Error> {
         var parameters: Parameters = [
             "questType": "EVENT",
             "completedYn": false,
@@ -59,18 +59,33 @@ final class QuestNetwork {
         if let orderRewardDesc = orderRewardDesc {
             parameters["orderRewardDesc"] = orderRewardDesc
         }
+        if let orderExpiredDesc = orderExpiredDesc {
+            parameters["orderExpiredDesc"] = orderExpiredDesc
+        }
 
         return await getQuests(parameters: parameters)
     }
     
     /// 완료 퀘스트 조회
-    func getCompletedQuests(commercialAreaCode: String, page: Int, size: Int) async -> Result<ResponseWithPage<[BaseQuestResponse]>, Error> {
+    func getCompletedQuests(page: Int, size: Int) async -> Result<ResponseWithPage<[BaseQuestResponse]>, Error> {
         let parameters: Parameters = [
             "completedYn": true,
+            "page": page,
+            "size": size
+        ]
+        return await getQuests(parameters: parameters)
+    }
+    
+    /// 즐겨찾기 퀘스트 조회
+    func getFavoriteQuests(commercialAreaCode: String, page: Int, size: Int) async -> Result<ResponseWithPage<[BaseQuestResponse]>, Error> {
+        let parameters: Parameters = [
+            "completedYn": false,
+            "favoriteYn": true,
             "commercialAreaCode": commercialAreaCode,
             "page": page,
             "size": size
         ]
+        
         return await getQuests(parameters: parameters)
     }
     

@@ -39,8 +39,6 @@ extension Date {
     
     func toDisplayFormat(_ format: DisplayFormat = .full) -> String {
         let formatter = DateFormatter()
-        formatter.locale = Locale(identifier: "ko_KR")
-        formatter.timeZone = TimeZone(identifier: "Asia/Seoul")
         formatter.dateFormat = format.rawValue
         return formatter.string(from: self)
     }

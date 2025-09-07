@@ -12,8 +12,9 @@ struct UserRankResponse: Decodable {
     let nickname: String
     let point: Int?
     let rank: Int?
-    let title: TitleResponse?
-    
+    let title: UserTitleResponse?
+    let pointGap: Int?
+
     enum CodingKeys: String, CodingKey {
         case userId
         case profileImageId
@@ -21,5 +22,6 @@ struct UserRankResponse: Decodable {
         case point
         case rank
         case title
+        case pointGap
     }
 }

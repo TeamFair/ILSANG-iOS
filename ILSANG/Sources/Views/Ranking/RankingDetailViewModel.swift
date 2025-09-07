@@ -23,8 +23,6 @@ class RankingDetailViewModel: ObservableObject {
     @Published var areaUserRank: AreaUserRankViewModelItem = .init(ranks: [], user: nil)  // TODO: 변경
     @Published var imageList: [UIImage] = []
     @Published var imageIdx = 0
-//    @Published var selectedUserId: String?
-//    @Published var isShowingUserProfile = false
     
     let seasonId: Int?
     let areaName: String

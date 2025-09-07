@@ -64,8 +64,7 @@ struct IllsangZonePointView: View {
                     VStack(alignment: .leading, spacing: 32) {
                         ForEach(Array(contributions.prefix(3).enumerated()), id: \.offset) { idx, element in
                             let contribution = element.item
-                            let percent = element.percent
-                            
+                            let percent = element.percent                            
                             VStack(alignment: .leading, spacing: 10) {
                                 HStack(spacing: 4) {
                                     let rankStyle = RankStyle(rank: idx+1)
