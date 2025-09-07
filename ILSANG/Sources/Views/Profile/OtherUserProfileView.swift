@@ -95,13 +95,16 @@ struct OtherUserProfileView: View {
                 title: "내 일상존",
                 style: .my,
                 content:
-                    IllsangZonePointView(
-                        topCommercialArea: topCommercialArea,
-                        totalOwnerContributions: pointCommercial.totalOwnerContributions,
-                        showPrimaryButton: false
-                    )
-                    .padding(.horizontal, 20)
-
+                    Group {
+                        let percents = pointCommercial.totalOwnerContributions.pointRatios()
+                        let contributionsWithPercents = Array(zip(pointCommercial.totalOwnerContributions, percents))
+                        IllsangZonePointView(
+                            topCommercialArea: topCommercialArea,
+                            contributions: contributionsWithPercents,
+                            showPrimaryButton: false
+                        )
+                        .padding(.horizontal, 20)
+                    }
             )
         }
     }

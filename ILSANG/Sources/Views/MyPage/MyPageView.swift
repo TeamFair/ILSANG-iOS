@@ -84,20 +84,24 @@ struct MyPageView: View {
                 .padding(.horizontal, 20)
                 .padding(.bottom, 48)
                 
-                // 내 일상존: 일상존 없으면 미표시
-                if let pointCommercial = vm.pointCommercial, let topCommercialArea = pointCommercial.topCommercialArea {
+                // 내 일상존
+                if let pointCommercial = vm.pointCommercial, pointCommercial.topCommercialArea != nil || !pointCommercial.totalOwnerContributions.isEmpty {
                     TitleWithContentView(
                         title: "내 일상존",
                         style: .my,
                         content:
-                            IllsangZonePointView(
-                                topCommercialArea: topCommercialArea,
-                                totalOwnerContributions: pointCommercial.totalOwnerContributions,
-                                showPrimaryButton: true
-                            ) {
-                                sharedState.selectedTab = .quest
+                            Group {
+                                let percents = pointCommercial.totalOwnerContributions.pointRatios()
+                                let contributionsWithPercents = Array(zip(pointCommercial.totalOwnerContributions, percents))
+                                IllsangZonePointView(
+                                    topCommercialArea: pointCommercial.topCommercialArea,
+                                    contributions: contributionsWithPercents,
+                                    showPrimaryButton: true
+                                ) {
+                                    sharedState.selectedTab = .quest
+                                }
+                                .padding(.horizontal, 20)
                             }
-                            .padding(.horizontal, 20)
                     )
                     .padding(.bottom, 48)
                 }
