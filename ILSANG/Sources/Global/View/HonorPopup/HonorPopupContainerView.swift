@@ -8,25 +8,24 @@
 import SwiftUI
 
 struct HonorPopupContainerView: View {
-    @EnvironmentObject private var manager: HonorAcquisitionManager
+    @EnvironmentObject private var dependencies: AppDependencies
     @State private var isPresented = false
     
     var body: some View {
         ZStack {
-            if let honor = manager.currentHonor,
-               let grade = HonorGrade(rawValue: honor.title.type) {
+            if let honor = dependencies.honorAcquisitionManager.currentHonor {
                 AnimatedPopup(isPresented: $isPresented) {
                     HonorAcquisitionPopup(
-                        honorTitle: honor.title.name,
-                        honorGrade: grade
+                        honorTitle: honor.name,
+                        honorGrade: honor.grade
                     ) {
                         withAnimation {
                             isPresented = false
                         }
                         
                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                            isPresented = manager.hasNextPopup
-                            manager.dismissCurrentPopup()
+                            isPresented = dependencies.honorAcquisitionManager.hasNextPopup
+                            dependencies.honorAcquisitionManager.dismissCurrentPopup()
                         }
                     }
                 }
@@ -41,24 +40,24 @@ struct HonorPopupContainerView: View {
 
 @MainActor
 final class HonorAcquisitionManager: ObservableObject {
-    @Published private(set) var currentHonor: HonorHistory?
-    private var queue: [HonorHistory] = []
+    @Published private(set) var currentHonor: UserTitle?
+    private var queue: [UserTitle] = []
     
     var hasNextPopup: Bool {
         !queue.isEmpty
     }
     
-    private let honorNetwork: HonorNetworkProtocol
+    private let titleRepository: TitleRepositoryInterface
     
-    init(honorNetwork: HonorNetworkProtocol) {
-        self.honorNetwork = honorNetwork
+    init(titleRepository: TitleRepositoryInterface) {
+        self.titleRepository = titleRepository
     }
     
     func fetchUnreadHonorHistory() async {
-        let result = await honorNetwork.getUnreadHonorHistory()
+        let result = await titleRepository.getUnreadTitleHistories()
         switch result {
         case .success(let res):
-            self.queue += res.data
+            self.queue += res
             self.showNextPopupIfNeeded()
         case .failure(let err):
             Log(err)
@@ -72,19 +71,19 @@ final class HonorAcquisitionManager: ObservableObject {
     }
     
     func dismissCurrentPopup() {
-        if let historyId = currentHonor?.titleHistory?.id {
+        if let historyId = currentHonor?.titleHistoryId {
             Task {
-                await honorNetwork.readHonorHistory(historyId: historyId)
+                await titleRepository.readTitleHistory(historyId: historyId)
             }
         }
         currentHonor = nil
         showNextPopupIfNeeded()
     }
     
-    func addMockHonors() {
-        queue += HonorHistory.mockList
-        showNextPopupIfNeeded()
-    }
+//    func addMockHonors() {
+//        queue += HonorHistory.mockList
+//        showNextPopupIfNeeded()
+//    }
 }
 
 #Preview {

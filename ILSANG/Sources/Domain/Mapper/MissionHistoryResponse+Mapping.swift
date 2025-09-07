@@ -11,7 +11,7 @@ extension MissionHistoryResponse {
     func toDomain() -> MissionHistory { 
         let userTitle = user.title.flatMap { title in
             HonorGrade(rawValue: title.grade).flatMap { gradeEnum in
-                UserTitle(name: title.name, grade: gradeEnum)
+                UserTitle(titleHistoryId: title.titleHistoryId, name: title.name, grade: gradeEnum)
             }
         }
         

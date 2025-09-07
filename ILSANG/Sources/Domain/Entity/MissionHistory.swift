@@ -22,8 +22,3 @@ struct MissionHistory {
     let userTitle: UserTitle?
     let emojis: [EmojiType]
 }
-
-struct UserTitle {
-    let name: String
-    let grade: HonorGrade
-}

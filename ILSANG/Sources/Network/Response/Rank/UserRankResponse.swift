@@ -12,7 +12,7 @@ struct UserRankResponse: Decodable {
     let nickname: String
     let point: Int?
     let rank: Int?
-    let title: TitleResponse?
+    let title: UserTitleResponse?
     let pointGap: Int?
 
     enum CodingKeys: String, CodingKey {
