@@ -65,6 +65,21 @@ struct HomeView: View {
                 networkErrorView
             }
         }
+        .navigationDestination(item: $vm.selectedBanner) { banner in
+            BannerDetailView(
+                banner: banner,
+                userRepository: dependencies.userRepository,
+                questRepository: dependencies.questRepository,
+                areaRepository: dependencies.areaRepository,
+                favoriteService: dependencies.favoriteService,
+                illsangZoneManager: dependencies.illsangZoneManager
+            )
+        }
+        .navigationDestination(isPresented: $vm.showSelectMyRegionView) {
+            MyRegionAreaSelectionView(areaRepository: dependencies.areaRepository) { area in
+                vm.handleMyRegionSelection(area)
+            }
+        }
         .task {
             await vm.loadDataIfNeeded()
         }
@@ -78,23 +93,6 @@ struct HomeView: View {
                 }
             }
         )
-       
-        .navigationDestination(item: $vm.selectedBanner) { banner in
-            BannerDetailView(
-                viewModel: BannerDetailViewModel(
-                    banner: banner,
-                    userRepository: dependencies.userRepository,
-                    questRepository: dependencies.questRepository,
-                    areaRepository: dependencies.areaRepository,
-                    favoriteService: dependencies.favoriteService
-                )
-            )
-        }
-        .navigationDestination(isPresented: $vm.showSelectMyRegionView) {
-            MyRegionAreaSelectionView(areaRepository: dependencies.areaRepository) { area in
-                vm.handleMyRegionSelection(area)
-            }
-        }
     }
     
     private var header: some View {
@@ -177,22 +175,21 @@ struct HomeView: View {
     private var mainBannerSection: some View {
         let height: CGFloat = .screenWidth / 3 * 2
         return TabView(selection: $vm.currentBanner) {
-            ForEach(Array(vm.mainBanners.enumerated()), id: \.offset) { idx, item in
-                if let bannerImage = item.image {
-                    Image(uiImage: bannerImage)
-                        .resizable()
-                        .scaledToFill()
-                        .frame(maxWidth: .infinity)
-                        .frame(height: height)
-                        .onTapGesture {
-                            AnalyticsService.logEvent(.homeBannerClick(bannerId: item.id))
-                            if let tab = vm.getTabFromURL(from: item.description) { /// 해당하는 탭으로 이동
-                                sharedState.selectedTab = tab
-                            } else {
-                                vm.selectedBanner = item
-                            }
+            ForEach(Array(vm.mainBanners.enumerated()), id: \.offset) { idx, banner in
+                Image(uiImage: banner.image ?? .logo)
+                    .resizable()
+                    .scaledToFill()
+                    .frame(maxWidth: .infinity)
+                    .frame(height: height)
+                    .background()
+                    .onTapGesture {
+                        AnalyticsService.logEvent(.homeBannerClick(bannerId:  banner.id))
+                        if let tab = vm.getTabFromURL(from: banner.description) { /// 해당하는 탭으로 이동
+                            sharedState.selectedTab = tab
+                        } else {
+                            vm.selectedBanner = banner
                         }
-                }
+                    }
             }
         }
         .overlay(alignment: .bottomTrailing) {

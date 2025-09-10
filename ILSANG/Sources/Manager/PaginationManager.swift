@@ -24,6 +24,11 @@ final class PaginationManager<T> {
         self.threshold = threshold
     }
     
+    deinit {
+        print("🗑️ PaginationManager deinit")
+        loadPageData = nil
+    }
+    
     /// 인덱스 없이 데이터를 로드할 수 있는지 확인하는 메서드
     func canLoadMoreData() -> Bool {
         let canLoadMorePages = currentPage < totalPage

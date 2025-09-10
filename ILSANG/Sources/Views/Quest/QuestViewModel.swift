@@ -324,7 +324,7 @@ class QuestViewModel {
         case .event:
             result = await questRepository.getEventQuests(
                 commercialAreaCode: sharedState.selectedCommercialArea.code,
-                orderRewardDesc: nil,
+                orderRewardDesc: eventFilterState.selectedValue.orderRewardDesc,
                 orderExpiredDesc: eventFilterState.selectedValue.orderExpiredDesc,
                 page: page,
                 size: size

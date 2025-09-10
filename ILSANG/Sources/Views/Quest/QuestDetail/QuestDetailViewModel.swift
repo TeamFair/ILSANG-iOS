@@ -7,11 +7,10 @@
 
 import SwiftUI
 
-@Observable
-class QuestDetailViewModel {
+class QuestDetailViewModel: ObservableObject {
     var quest: QuestViewModelItem
     var isLoading: Bool = false
-    private let onFavorite: (QuestViewModelItem) -> Void
+    private var onFavorite: ((QuestViewModelItem) -> Void)?
 
     var approvalDescription: String = "퀘스트를 수행하고\n인증 후, 포인트를 적립받으세요"
     
@@ -21,6 +20,12 @@ class QuestDetailViewModel {
         self.quest = quest
         self.questRepository = questRepository
         self.onFavorite = onFavorite
+        print("🗑️ QuestDetailViewModel init")
+    }
+    
+    deinit {
+        onFavorite = nil
+        print("🗑️ QuestDetailViewModel deinit")
     }
     
     func updateChallengeImages() async {
@@ -30,6 +35,6 @@ class QuestDetailViewModel {
     }
     
     func toggleFavorite() {
-        onFavorite(quest)
+        onFavorite?(quest)
     }
 }

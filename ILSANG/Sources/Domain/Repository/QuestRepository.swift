@@ -16,6 +16,7 @@ protocol QuestRepositoryInterface {
     func getRecommendQuests(commercialAreaCode: String, page: Int, size: Int) async -> Result<ResponseWithPage<[Quest]>, Error>
     func getPopularQuests(commercialAreaCode: String, page: Int, size: Int) async -> Result<ResponseWithPage<[Quest]>, Error>
     func getLargeRewardQuests(commercialAreaCode: String, page: Int, size: Int) async -> Result<ResponseWithPage<[Quest]>, Error>
+    func getBannerQuests(bannerId: Int, completedYn: Bool, orderRewardDesc: Bool?, orderExpiredDesc: Bool?, page: Int, size: Int) async -> Result<ResponseWithPage<[Quest]>, Error>
     func getQuestDetail(questId: Int) async -> Result<Quest, Error>
 }
 
@@ -63,6 +64,11 @@ final class QuestRepository: QuestRepositoryInterface {
     
     func getLargeRewardQuests(commercialAreaCode: String, page: Int = 0, size: Int = 3) async -> Result<ResponseWithPage<[Quest]>, Error> {
         let res = await network.getLargeRewardQuests(commercialAreaCode: commercialAreaCode, page: page, size: size)
+        return ResponseMapper.mapPagedResponse(res)
+    }
+    
+    func getBannerQuests(bannerId: Int, completedYn: Bool, orderRewardDesc: Bool?, orderExpiredDesc: Bool?, page: Int, size: Int) async -> Result<ResponseWithPage<[Quest]>, Error> {
+        let res = await network.getBannerQuests(bannerId: bannerId, completedYn: completedYn, orderRewardDesc: orderRewardDesc, orderExpiredDesc: orderExpiredDesc, page: page, size: size)
         return ResponseMapper.mapPagedResponse(res)
     }
     
@@ -152,6 +158,10 @@ final class MockQuestRepository: QuestRepositoryInterface {
     }
     
     func getLargeRewardQuests(commercialAreaCode: String, page: Int, size: Int) async -> Result<ResponseWithPage<[Quest]>, Error> {
+        .success(ResponseWithPage(size: size, content: mockQuests, totalPages: 1, totalElements: mockQuests.count, page: page, isLast: true))
+    }
+    
+    func getBannerQuests(bannerId: Int, completedYn: Bool, orderRewardDesc: Bool?, orderExpiredDesc: Bool?, page: Int, size: Int) async -> Result<ResponseWithPage<[Quest]>, any Error> {
         .success(ResponseWithPage(size: size, content: mockQuests, totalPages: 1, totalElements: mockQuests.count, page: page, isLast: true))
     }
     

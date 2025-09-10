@@ -37,6 +37,10 @@ where Value: Hashable & CustomStringConvertible & CaseIterable {
         self.options = Array(Value.allCases)
         self.onSelectionChange = onSelectionChange
     }
+    
+    deinit {
+        onSelectionChange = nil
+    }
 }
 
 // MARK: - Dynamic State
@@ -154,6 +158,14 @@ enum EventQuestFilterType: String, Hashable, CustomStringConvertible, CaseIterab
     case popular = "인기순"
     
     var description: String { return self.rawValue }
+    
+    var orderRewardDesc: Bool? {
+        switch self {
+        case .pointHighest: return true
+        case .pointLowest:  return false
+        default: return nil
+        }
+    }
     
     var orderExpiredDesc: Bool? {
         switch self {
