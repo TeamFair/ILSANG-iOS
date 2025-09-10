@@ -37,6 +37,11 @@ class QuestRouter: ObservableObject {
         self.questRepository = questRepository
     }
     
+    deinit {
+        print("🗑️ QuestRouter deinit")
+        onFavoriteToggle = nil
+    }
+    
     // Navigation Methods
     func presentQuestDetail(
         quest: QuestViewModelItem,
@@ -46,7 +51,8 @@ class QuestRouter: ObservableObject {
         self.selectedQuest = quest  // 임시 데이터 세팅
         
         // 퀘스트 상세 정보 로드
-        Task {
+        Task { [weak self] in
+            guard let self = self else { return }
             do {
                 let questDetail = try await questRepository.getQuestDetail(questId: quest.id).get().toQuestItem()
                 if let imageId = questDetail.imageId {
@@ -67,8 +73,8 @@ class QuestRouter: ObservableObject {
             isQuestSheetPending = true
             alertType = .illsangZoneNotSelected
         } else {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                self.showQuestSheet = true
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { [weak self] in
+                self?.showQuestSheet = true
             }
         }
     }
@@ -116,8 +122,8 @@ class QuestRouter: ObservableObject {
             }
             if isQuestSheetPending {
                 isQuestSheetPending = false
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                    self.showQuestSheet = true
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { [weak self] in
+                    self?.showQuestSheet = true
                 }
             }
         default:
@@ -136,8 +142,8 @@ class QuestRouter: ObservableObject {
         case .illsangZoneSetSuccess:
             if isQuestSheetPending {
                 isQuestSheetPending = false
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                    self.showQuestSheet = true
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { [weak self] in
+                    self?.showQuestSheet = true
                 }
             }
         default:

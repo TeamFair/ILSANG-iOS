@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct QuestDetailView: View {
-    @State var vm: QuestDetailViewModel
+    @StateObject var vm: QuestDetailViewModel
     let showQuestExImageAction: () -> Void
     let questApproveAction: () -> Void
 
@@ -20,11 +20,19 @@ struct QuestDetailView: View {
     }
     
     init(
-        vm: QuestDetailViewModel,
+        quest: QuestViewModelItem,
+        questRepository: QuestRepositoryInterface,
+        onFavorite: @escaping (QuestViewModelItem) -> Void,
         showQuestExImageAction: @escaping () -> (),
         questApproveAction: @escaping () -> ()
     ) {
-        self._vm = State(wrappedValue: vm)
+        self._vm = StateObject(
+            wrappedValue: QuestDetailViewModel(
+                quest: quest,
+                questRepository: questRepository,
+                onFavorite: onFavorite
+            )
+        )
         self.questApproveAction = questApproveAction
         self.showQuestExImageAction = showQuestExImageAction
     }
@@ -107,11 +115,9 @@ struct QuestDetailView: View {
 
 #Preview {
     QuestDetailView(
-        vm: QuestDetailViewModel(
-            quest: .mockData,
-            questRepository:  QuestRepository(network: QuestNetwork()),
-            onFavorite:  { _ in }
-        ),
+        quest: .mockData,
+        questRepository:  QuestRepository(network: QuestNetwork()),
+        onFavorite:  { _ in },
         showQuestExImageAction: { },
         questApproveAction: { }
     )
@@ -121,11 +127,9 @@ struct QuestDetailView: View {
 
 #Preview {
     QuestDetailView(
-        vm: QuestDetailViewModel(
-            quest: .mockRepeatData,
-            questRepository:  QuestRepository(network: QuestNetwork()),
-            onFavorite:  { _ in }
-        ),
+        quest: .mockRepeatData,
+        questRepository:  QuestRepository(network: QuestNetwork()),
+        onFavorite:  { _ in },
         showQuestExImageAction: { },
         questApproveAction: { }
     )

@@ -112,6 +112,22 @@ final class QuestNetwork {
         return await Network.requestData(url: questUrl+"/search/reward", method: .get, parameters: parameters)
     }
     
+    /// 배너 퀘스트 조회
+    func getBannerQuests(bannerId: Int, completedYn: Bool, orderRewardDesc: Bool?, orderExpiredDesc: Bool?, page: Int, size: Int) async -> Result<ResponseWithPage<[BannerQuestResponse]>, Error> {
+        var parameters: Parameters = [
+            "completedYn": completedYn,
+            "page": page,
+            "size": size
+        ]
+        if let orderRewardDesc = orderRewardDesc {
+            parameters["orderRewardDesc"] = orderRewardDesc
+        }
+        if let orderExpiredDesc = orderExpiredDesc {
+            parameters["orderExpiredDesc"] = orderExpiredDesc
+        }
+        return await Network.requestData(url: questUrl+"/search/banner/\(bannerId)", method: .get, parameters: parameters)
+    }
+    
     /// 퀘스트 상제 정보 조회
     func getQuestDetail(questId: Int) async -> Result<QuestDetailResponse, Error> {
         return await Network.requestData(url: questUrl+"/\(questId)", method: .get)

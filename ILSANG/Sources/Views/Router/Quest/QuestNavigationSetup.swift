@@ -25,11 +25,9 @@ struct QuestNavigationSetup: ViewModifier {
                 let isTall = questRouter.selectedQuest.questType == .repeat || questRouter.selectedQuest.missionType == .photo
                 
                 QuestDetailView(
-                    vm: QuestDetailViewModel(
-                        quest: questRouter.selectedQuest,
-                        questRepository: dependencies.questRepository,
-                        onFavorite: { _ in questRouter.handleFavoriteToggle() }
-                    ),
+                    quest: questRouter.selectedQuest,
+                    questRepository: dependencies.questRepository,
+                    onFavorite: { _ in questRouter.handleFavoriteToggle() },
                     showQuestExImageAction: { questRouter.handleChallengeExImage() },
                     questApproveAction: { questRouter.handleQuestApproval() }
                 )
@@ -74,8 +72,8 @@ struct QuestNavigationSetup: ViewModifier {
                 IllsangZoneSelectionView(
                     userRepository: dependencies.userRepository,
                     areaRepository: dependencies.areaRepository
-                ) { area in
-                    questRouter.handleIllsangZoneSelection(area)
+                ) { [weak questRouter] area in
+                    questRouter?.handleIllsangZoneSelection(area)
                 }
                 .environmentObject(dependencies)
             }
@@ -87,8 +85,12 @@ struct QuestNavigationSetup: ViewModifier {
                         IllsangZoneAlertView(
                             alertType: alertType,
                             isNeverShowSelected: $questRouter.isNeverShowAlertSelected,
-                            onCancel: { questRouter.handleAlertCancel() },
-                            onConfirm: { questRouter.handleAlertConfirm() }
+                            onCancel: { [weak questRouter] in
+                                questRouter?.handleAlertCancel()
+                            },
+                            onConfirm: { [weak questRouter] in
+                                questRouter?.handleAlertConfirm()
+                            }
                         )
                     }
                 }
