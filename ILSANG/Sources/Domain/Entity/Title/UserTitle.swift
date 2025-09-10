@@ -6,7 +6,7 @@
 //
 
 struct UserTitle {
-    let titleHistoryId: Int
+    let titleHistoryId: Int?
     let name: String
     let grade: HonorGrade
 }

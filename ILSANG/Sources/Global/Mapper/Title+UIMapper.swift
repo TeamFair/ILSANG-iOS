@@ -18,7 +18,7 @@ extension Title {
             condition: condition,
             grade: grade,
             historyId: userTitle?.titleHistoryId,
-            isSelected: userTitle?.titleHistoryId == currentSelectedId
+            isSelected: (userTitle?.titleHistoryId != nil && userTitle?.titleHistoryId == currentSelectedId)
         )
     }
 }
