@@ -9,47 +9,48 @@ import SwiftUI
 
 struct SeasonPopupContainerView: View {
     @EnvironmentObject var dependencies: AppDependencies
-    @State private var isPresented: Bool? = nil
-    
+    @State private var isPresented: Bool = false
     var onTapShowRank: () -> Void
     
     var body: some View {
-        let showPopup = isPresented ?? dependencies.seasonManager.shouldShowPopup
-        
-        if showPopup, let currentSeason = dependencies.seasonManager.currentSeason {
-            AnimatedPopup(isPresented: Binding(
-                get: { self.isPresented ?? true },
-                set: { newValue in
-                    self.isPresented = false
+        ZStack {
+            if isPresented, let currentSeason = dependencies.seasonManager.currentSeason {
+                AnimatedPopup(isPresented: $isPresented) {
+                    SeasonOpenPopup(
+                        season: currentSeason.seasonNumber,
+                        seasonStartDate: currentSeason.startDate,
+                        seasonEndDate: currentSeason.endDate,
+                        onDismiss: { neverShow in
+                            if neverShow {
+                                dependencies.seasonManager.hidePopupForCurrentSeason()
+                            }
+                            withAnimation(.smooth) {
+                                isPresented = false
+                            }
+                        },
+                        onConfirm: { neverShow in
+                            if neverShow {
+                                dependencies.seasonManager.hidePopupForCurrentSeason()
+                            }
+                            withAnimation(.smooth) {
+                                isPresented = false
+                            }
+                            onTapShowRank()
+                        }
+                    )
                 }
-            )) {
-                SeasonOpenPopup(
-                    season: currentSeason.seasonNumber,
-                    seasonStartDate: currentSeason.startDate,
-                    seasonEndDate: currentSeason.endDate,
-                    onDismiss: { neverShow in
-                        withAnimation {
-                            if neverShow {
-                                dependencies.seasonManager.hidePopupForCurrentSeason()
-                            }
-                            isPresented = false
-                        }
-                        self.isPresented = false
-                    }) { neverShow in
-                        withAnimation {
-                            if neverShow {
-                                dependencies.seasonManager.hidePopupForCurrentSeason()
-                            }
-                            isPresented = false
-                        }
-                        self.isPresented = false
-                        onTapShowRank()
-                    }
             }
-            .onAppear {
-                if isPresented == nil {
-                    isPresented = true
-                }
+        }
+        .task {
+            // 로그인 직후 currentSeason이 없으면 fetch
+            if dependencies.seasonManager.seasons.isEmpty {
+                _ = await dependencies.seasonManager.getCurrentSeason()
+            }
+            
+            // fetch 완료 후 팝업 조건 체크
+            if dependencies.seasonManager.shouldShowPopup {
+                dependencies.seasonManager.markPopupAsShown()
+                isPresented = true
             }
         }
     }
