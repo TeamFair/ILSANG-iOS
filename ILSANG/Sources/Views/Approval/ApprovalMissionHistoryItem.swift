@@ -78,7 +78,7 @@ class ApprovalMissionHistoryItem: Identifiable {
             nickname: "유저1",
             profileImageId: "profile_001",
             profileImage: nil,
-            userTitle: UserTitle(titleHistoryId: 1, name: "칭호1", grade: .standard),
+            userTitle: UserTitle(titleHistoryId: 1, name: "칭호1", grade: .standard, createdAt: .now),
             emojis: .init(emojis: [.hate])
         ),
         ApprovalMissionHistoryItem(
@@ -96,7 +96,7 @@ class ApprovalMissionHistoryItem: Identifiable {
             nickname: "유저2",
             profileImageId: "profile_002",
             profileImage: nil,
-            userTitle: UserTitle(titleHistoryId: 2, name: "칭호2", grade: .legend),
+            userTitle: UserTitle(titleHistoryId: 2, name: "칭호2", grade: .legend, createdAt: .now),
             emojis: .init(emojis: [.hate])
         ),
         ApprovalMissionHistoryItem(
@@ -114,7 +114,7 @@ class ApprovalMissionHistoryItem: Identifiable {
             nickname: "유저3",
             profileImageId: "profile_003",
             profileImage: .img2,
-            userTitle: UserTitle(titleHistoryId: 3, name: "칭호3", grade: .rare),
+            userTitle: UserTitle(titleHistoryId: 3, name: "칭호3", grade: .rare, createdAt: .now),
             emojis: .init(emojis: [.hate])
         )
     ]

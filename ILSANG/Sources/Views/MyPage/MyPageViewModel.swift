@@ -30,12 +30,8 @@ struct XpStatus {
 
 @MainActor
 final class MyPageViewModel: ObservableObject {
-    @Published var userData: User?
+    @Published var currentUser: UserItem?
     @Published var xpStatus: XpStatus = XpStatus(currentXp: 0)
-    
-    @Published var honorTitle: String? = ""
-    @Published var honorType: HonorGrade?
-    @Published var userProfileImage: UIImage?
     
     @Published var pointCommercial: PointCommercialItem? // 내 일상존
     @Published var completedQuestCount: Int = 0
@@ -61,7 +57,7 @@ final class MyPageViewModel: ObservableObject {
         self.areaNameService = areaNameService
         self.seasonManager = seasonManager
         
-        self.userData = UserService.shared.currentUser
+        self.currentUser = UserService.shared.currentUser
         
         // 초기값을 -1로 통일
         seasonFilterState = DynamicFilterPickerState(
@@ -127,21 +123,14 @@ final class MyPageViewModel: ObservableObject {
     @MainActor
     func fetchUser() async {
         let res = await userRepository.getUser()
-        
         switch res {
-        case .success(let model):
-            self.userData = model
-            if let profileImage = userData?.profileImageId {
-                self.userProfileImage = await getImage(imageId: profileImage) /// 프로필 이미지 불러오기
-            } else {
-                self.userProfileImage = nil
+        case .success(let res):
+            self.currentUser = res.toItem()
+            if let profileImageId = res.profileImageId {
+                self.currentUser?.profileImage = await getImage(imageId: profileImageId)
             }
-            self.honorTitle = userData?.title?.name
-            self.honorType = HonorGrade(rawValue: userData?.title?.type ?? "")
-            UserService.shared.currentUser = model
-        case .failure(let err):
-            self.userData = nil
-            Log(err)
+        case .failure:
+            self.currentUser = nil
         }
     }
     

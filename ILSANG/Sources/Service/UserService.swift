@@ -9,7 +9,7 @@ import SwiftUI
 import AuthenticationServices
 
 final class UserService: ObservableObject {
-    let userNetwork: UserNetwork = UserNetwork()
+    let userRepository: UserRepositoryInterface = UserRepository(network: UserNetwork())
     let authService: AuthService = AuthService()
     
     @AppStorage("isLogin") var isLogin = Bool()
@@ -17,7 +17,7 @@ final class UserService: ObservableObject {
     @AppStorage("refreshToken") var refreshToken: String = ""
     @AppStorage("authChannel") var authChannel = ""
     
-    @Published var currentUser: User?
+    @Published var currentUser: UserItem?
     
     static let shared = UserService()
     
@@ -50,10 +50,14 @@ final class UserService: ObservableObject {
     
     @MainActor
     func fetchUserInfo() async {
-        let userInfo = await userNetwork.getUser()
+        let userInfo = await userRepository.getUser()
         switch userInfo {
         case .success(let res):
-            self.currentUser = res
+            self.currentUser = res.toItem()
+            // TODO: 현재 유저 프로필 이미지 접근하는 부분 페치하는거 제외하기
+            if let profileImageId = res.profileImageId {
+                self.currentUser?.profileImage = await ImageCacheService.shared.loadImageAsync(imageId: profileImageId)
+            }
         case .failure:
             self.currentUser = nil
         }

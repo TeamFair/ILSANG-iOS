@@ -53,13 +53,13 @@ struct MyPageView: View {
                 // 프로필
                 VStack(spacing: 20) {
                     MyPageProfile(
-                        nickName: vm.userData?.nickname,
-                        profileImage: vm.userProfileImage,
-                        profileImageId: vm.userData?.profileImageId,
+                        nickName: vm.currentUser?.nickname,
+                        profileImage: vm.currentUser?.profileImage,
+                        profileImageId: vm.currentUser?.profileImageId,
                         level: vm.xpStatus.currentLv,
                         progress: vm.xpStatus.progress,
-                        honorTitle: vm.honorTitle,
-                        honorType: vm.honorType
+                        honorTitle: vm.currentUser?.title?.name,
+                        honorType: vm.currentUser?.title?.grade
                     )
                     
                     HStack {
@@ -146,7 +146,7 @@ struct MyPageView: View {
                         style: .my,
                         content:
                             SeasonSummaryView(
-                                nickname: vm.userData?.nickname, season: currentSeason, summary: vm.pointSummary
+                                nickname: vm.currentUser?.nickname, season: currentSeason, summary: vm.pointSummary
                             )
                             .padding(.horizontal, 20)
                     )
