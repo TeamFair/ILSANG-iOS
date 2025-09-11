@@ -23,8 +23,8 @@ struct AppleLoginButtonView: View {
                 Log(error.localizedDescription)
             }
         }
-        .frame(height: 60)
-        .clipShape(RoundedRectangle(cornerRadius: 16))
+        .frame(width: 183, height: 44)
+        .clipShape(RoundedRectangle(cornerRadius: 30))
     }
 }
 

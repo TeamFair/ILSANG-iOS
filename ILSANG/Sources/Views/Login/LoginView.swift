@@ -18,7 +18,7 @@ struct LoginView: View {
             
             CarouselAutoSlideView(images: [.slide0, .slide1, .slide2, .slide3, .slide4])
                 .shadow(color: .primaryPurple.opacity(0.2), radius: 10, x: 0, y: 4)
-                .padding(.top, 40)
+                .padding(.top, 48)
             
             Spacer(minLength: 88)
             
@@ -37,25 +37,24 @@ struct LoginView: View {
             }
             .padding(.horizontal, 20)
         }
-        .padding(.bottom, 38)
+        .padding(.bottom, 60)
         .background(.white)
         .navigationBarBackButtonHidden()
     }
     
     private var titleView: some View {
-        VStack {
-            Text("특별한 하루를 위한")
+        VStack(spacing: 2) {
             HStack(spacing: 0) {
-                Text("작은 도전, ")
                 Text("일")
                     .foregroundColor(.primaryPurple)
                 Text("상")
                     .foregroundColor(.secondaryGreen)
-                Text("!")
+                Text("의 작은 행동이,")
             }
-            .foregroundColor(.black)
+            Text("지역을 바꿉니다")
         }
-        .font(.system(size: 23, weight: .bold))
+        .styledFont(.title1)
+        .foregroundColor(.black)
     }
 }
 
