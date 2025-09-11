@@ -20,17 +20,11 @@ struct LoginButtonView: View {
                     .frame(width: 18)
                 Text(channel.labelText)
                     .foregroundColor(channel.accentColor)
-                    .styledFont(.bold, size: 15, lineHeight: 24)
+                    .styledFont(.medium, size: 14, lineHeight: 20)
             }
-            .frame(maxWidth: .infinity)
-            .frame(height: channel == .apple ? 60 : 50)
-            .background(
-                RoundedRectangle(cornerRadius: 16)
-                    .strokeBorder(lineWidth: channel == .google ? 1 : 0)
-                    .foregroundStyle(Color.gray100)
-                    .background(channel.backgroundColor)
-                    .cornerRadius(16, corners: .allCorners)
-            )
+            .padding(.horizontal, 16)
+            .padding(.vertical, 12)
+            .roundedBackground(cornerRadius: 30, bgColor: channel.backgroundColor)
         }
     }
 }

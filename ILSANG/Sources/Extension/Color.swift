@@ -17,7 +17,7 @@ extension Color {
     static let KakakoBackground = Color("KakaoYellow")
     static let KakaoAccentColor = Color("KakaoFontWhite")
     
-    static let GoogleBackground = Color("Background")
+    static let GoogleBackground = Color("GoogleWhite")
     static let GoogleAccentColor = Color("GoogleFontBlack")
     
     static let AppleBackground = Color("AppleBlack")
