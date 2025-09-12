@@ -13,10 +13,11 @@ protocol TitleNetworkInterface{
     func getTitleHistories() async -> Result<[UserTitleResponse], Error>
     func getUnreadTitleHistories() async -> Result<[UserTitleResponse], Error>
     func readTitleHistory(historyId: Int) async -> Result<ResponseWithEmpty, Error>
+    func getLegendRank(titleId: String, page: Int, size: Int) async -> Result<ResponseWithPage<[LegendRankResponse]>, Error>
 }
 
 struct MockTitleNetwork: TitleNetworkInterface {
-    let userTitle = UserTitleResponse(titleHistoryId: 1, name: "김민준", grade: "12", type: "교내")
+    let userTitle = UserTitleResponse(titleHistoryId: 1, name: "김민준", grade: "12", type: "교내", createdAt: "")
     
     func getTitles() async -> Result<[TitleResponse], Error> {
         .success([TitleResponse.mockStandard])
@@ -32,6 +33,10 @@ struct MockTitleNetwork: TitleNetworkInterface {
     
     func readTitleHistory(historyId: Int) async -> Result<ResponseWithEmpty, any Error> {
         .success(.emptyValue())
+    }
+    
+    func getLegendRank(titleId: String, page: Int, size: Int) async -> Result<ResponseWithPage<[LegendRankResponse]>, Error> {
+        .success(.init(size: size, content: [], totalPages: 1, totalElements: 0, page: page, isLast: true))
     }
 }
 
@@ -59,9 +64,9 @@ final class TitleNetwork: TitleNetworkInterface {
         return await Network.requestData(url: userUrl+"/\(historyId)/read", method: .put)
     }
     
-    // TODO: API 추가시 스펙 대응
-//    func getLegendRank(honorId: String) async -> Result<[HistoryRank], Error> {
-//        let params = ["titleId": "\(honorId)"]
-//        return await Network.requestData(url: url+"/rank", method: .get, parameters: params, withToken: true)
-//    }
+    /// 전설 랭킹 조회
+    func getLegendRank(titleId: String, page: Int, size: Int) async -> Result<ResponseWithPage<[LegendRankResponse]>, Error> {
+        let params = ["titleId": "\(titleId)", "page": "\(page)", "size": "\(size)"]
+        return await Network.requestData(url: userUrl+"/legend", method: .get, parameters: params)
+    }
 }

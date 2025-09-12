@@ -135,12 +135,11 @@ struct MyPageHonorManageView: View {
                     honorListItemView(honor: honor)
                 }
             }
-            // TODO: 칭호 UI&API 대기
-//            .navigationDestination(isPresented: $vm.showRankingView) {
-//                if let honor = vm.selectedHonorToShowRanking  {
-//                     LegendRankingView(honorId: honor.titleId, honorName: honor.title)
-//                }
-//            }
+            .navigationDestination(isPresented: $vm.showRankingView) {
+                if let honor = vm.selectedHonorToShowRanking  {
+                    LegendRankingView(titleId: honor.titleId, titleName: honor.name, titleRepository: dependencies.titleRepository)
+                }
+            }
         }
     }
     

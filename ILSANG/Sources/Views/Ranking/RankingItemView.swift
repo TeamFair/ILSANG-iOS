@@ -15,7 +15,7 @@ struct RankingItemView: View {
         case userRank(UserRankViewModelItem)
         case areaRank(AreaRankViewModelItem)
         case currentUserRank(UserRankViewModelItem)
-        case legendRank(UserRankViewModelItem)
+        case legendRank(LegendRankItem)
     }
     
     var body: some View {
@@ -173,8 +173,7 @@ fileprivate struct CurrentUserRankItemView: View {
 }
 
 fileprivate struct LegendRankItemView: View {
-    @ObservedObject var rank: UserRankViewModelItem
-    let createdTitleAt: String? = nil // TODO: API 추가 요청
+    let rank: LegendRankItem
     
     var body: some View {
         HStack(spacing: 0) {
@@ -184,26 +183,24 @@ fileprivate struct LegendRankItemView: View {
             RankProfileImageView(image: rank.profileImage, size: 48)
                 .padding(.trailing, 16)
             
-            VStack(alignment: .leading, spacing: 0) {
+            VStack(alignment: .leading, spacing: 6) {
                 Text(rank.nickname)
                     .styledFont(.heading2)
                     .foregroundStyle(.black)
-                    .padding(.bottom, 4)
                 
                 if let title = rank.title {
                     HonorIconView(
                         honorTitle: title.name,
-                        grade: HonorGrade(rawValue: title.grade) ?? .standard,
+                        grade: title.grade,
                         imageSize: 12,
                         spacing: 4,
-                        font: .badge1,
+                        font: .badge2,
                         fgColor: .gray400
                     )
-                    .padding(.bottom, 12)
                 }
                 
-                if let createAt = createdTitleAt {
-                    Text("\(createAt.timeAgoCreatedAt()) 획득")
+                if let createAt = rank.title?.createdAt {
+                    Text("\(createAt.toDisplayFormat(.short)) 획득")
                         .styledFont(.caption1)
                         .foregroundColor(.gray400)
                 }

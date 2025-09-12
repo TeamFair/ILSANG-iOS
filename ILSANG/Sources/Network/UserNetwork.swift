@@ -11,11 +11,11 @@ import Alamofire
 final class UserNetwork {
     private let url = APIManager.makeURL(NoTarget(path: "user", version: 1))
     
-    func getUser() async -> Result<User, Error> {
+    func getUser() async -> Result<UserResponse, Error> {
         return await Network.requestData(url: url, method: .get)
     }
     
-    func getUser(userId id: String) async -> Result<User, Error> {
+    func getUser(userId id: String) async -> Result<UserResponse, Error> {
         return await Network.requestData(url: url, method: .get, parameters: ["id": id])
     }
     

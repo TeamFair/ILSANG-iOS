@@ -10,7 +10,8 @@ extension UserTitleResponse: DomainConvertible {
         UserTitle(
             titleHistoryId: titleHistoryId,
             name: name,
-            grade: HonorGrade(rawValue: grade) ?? .standard
+            grade: HonorGrade(rawValue: grade) ?? .standard,
+            createdAt: createdAt?.toISO8601Date()
         )
     }
 }

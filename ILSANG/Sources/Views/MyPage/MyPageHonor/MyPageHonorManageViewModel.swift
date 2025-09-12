@@ -25,7 +25,7 @@ final class MyPageHonorManageViewModel: ObservableObject {
     init(userNetwork: UserNetwork, titleRepository: TitleRepositoryInterface) {
         self.userNetwork = userNetwork
         self.titleRepository = titleRepository
-        self.initialHonor = UserService.shared.currentUser?.title?.toDomain() ?? nil
+        self.initialHonor = UserService.shared.currentUser?.title ?? nil
         self.initialHistoryId = initialHonor?.titleHistoryId
     }
     

@@ -77,10 +77,10 @@ struct OtherUserProfileView: View {
                     .foregroundStyle(.gray500)
                     .multilineTextAlignment(.leading)
                 
-                if let honor = vm.userData?.title, let grade = HonorGrade(rawValue: honor.type)  {
+                if let honor = vm.userData?.title {
                     HonorIconView(
                         honorTitle: honor.name,
-                        grade: grade,
+                        grade: honor.grade,
                         imageSize: 20,
                         spacing: 4,
                         font: .badge1,

@@ -29,22 +29,12 @@ final class UserRepository: UserRepositoryInterface {
     
     func getUser() async -> Result<User, Error> {
         let res = await network.getUser()
-        switch res {
-        case .success(let user):
-            return .success(user)
-        case .failure(let error):
-            return .failure(error)
-        }
+        return ResponseMapper.mapResponse(res)
     }
     
     func getUser(userId: String) async -> Result<User, Error> {
         let res = await network.getUser(userId: userId)
-        switch res {
-        case .success(let user):
-            return .success(user)
-        case .failure(let error):
-            return .failure(error)
-        }
+        return ResponseMapper.mapResponse(res)
     }
     
     func putUser(nickname: String) async -> Bool {

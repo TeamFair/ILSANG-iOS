@@ -31,9 +31,3 @@ extension TitleResponse {
     static let mockRare: TitleResponse = .mock(name: "희귀 칭호", grade: "RARE")
     static let mockLegend: TitleResponse = .mock(name: "전설 칭호", grade: "LEGEND")
 }
-
-
-struct HistoryRank: Decodable {
-    let user: User
-    let titleHistory: TitleResponse
-}

@@ -8,4 +8,5 @@
 struct UserTitleResponse: Decodable {
     let titleHistoryId: Int?
     let name, grade, type: String
+    let createdAt: String?
 }

@@ -82,6 +82,7 @@ struct HomeView: View {
         }
         .task {
             await vm.loadDataIfNeeded()
+            await dependencies.honorAcquisitionManager.fetchUnreadHonorHistory()
         }
         .background(Color.background)
         .overlay(
