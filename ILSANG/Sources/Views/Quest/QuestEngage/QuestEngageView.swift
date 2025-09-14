@@ -15,9 +15,27 @@ struct QuestEngageView: View {
     @EnvironmentObject var sharedState: SharedState
     @Environment(\.dismiss) var dismiss
     
-    init(vm: QuestEngageViewModel, submitVM: SubmitRouterViewModel) {
-        _vm = StateObject(wrappedValue: vm)
-        _submitVM = StateObject(wrappedValue: submitVM)
+    init(
+        quest: QuestViewModelItem,
+        selectedImage: UIImage?,
+        selectedQuest: QuestViewModelItem,
+        challengeNetwork: ChallengeNetwork,
+        submitService: ImageChallengeSubmitService
+    ) {
+        _vm = StateObject(
+            wrappedValue: QuestEngageViewModel(
+                quest: quest,
+                challengeNetwork: challengeNetwork
+            )
+        )
+        _submitVM = StateObject(
+            wrappedValue: SubmitRouterViewModel(
+                selectedImage: selectedImage,
+                selectedQuest: selectedQuest,
+                submitService: submitService,
+                challengeNetwork: challengeNetwork
+            )
+        )
     }
     
     var body: some View {
@@ -81,14 +99,13 @@ struct QuestEngageView: View {
 
 #Preview {
     QuestEngageView(
-        vm: QuestEngageViewModel(quest: .mockData, challengeNetwork: ChallengeNetwork()),
-        submitVM: SubmitRouterViewModel(
-            selectedImage: nil,
-            selectedQuest: .mockData,
-            submitService: ImageChallengeSubmitService(
-                imageNetwork: ImageNetwork(),
-                challengeNetwork: ChallengeNetwork()
-            ), challengeNetwork: ChallengeNetwork()
+        quest: .mockData,
+        selectedImage: nil,
+        selectedQuest: .mockData,
+        challengeNetwork: ChallengeNetwork(),
+        submitService: ImageChallengeSubmitService(
+            imageNetwork: ImageNetwork(),
+            challengeNetwork: ChallengeNetwork()
         )
     )
     // QuestEngageView(vm: QuestEngageViewModel(quest: .mockRepeatData, questNetwork: QuestNetwork()))

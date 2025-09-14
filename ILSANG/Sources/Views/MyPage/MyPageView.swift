@@ -13,9 +13,19 @@ struct MyPageView: View {
     @EnvironmentObject var sharedState: SharedState
     
     init(
-        vm: MyPageViewModel
+        userRepository: UserRepositoryInterface,
+        imageNetwork: ImageNetwork,
+        areaNameService: AreaNameProvider,
+        seasonManager: SeasonManager
     ) {
-        _vm = StateObject(wrappedValue: vm)
+        _vm = StateObject(
+            wrappedValue: MyPageViewModel(
+                userRepository: userRepository,
+                imageNetwork: imageNetwork,
+                areaNameService: areaNameService,
+                seasonManager: seasonManager
+            )
+        )
     }
     
     var body: some View {
@@ -74,12 +84,10 @@ struct MyPageView: View {
                         }
                         NavigationLink {
                             FavoriteListView(
-                                viewModel: FavoriteListViewModel(
-                                    questRepository: dependencies.questRepository,
-                                    favoriteService: dependencies.favoriteService,
-                                    selectedCommercialArea: sharedState.selectedCommercialArea
-                                ),
                                 questRepository: dependencies.questRepository,
+                                favoriteService: dependencies.favoriteService,
+                                selectedCommercialArea: sharedState.selectedCommercialArea,
+                                questSubmissionNotifier: dependencies.questSubmissionNotifier,
                                 illsangZoneManager: dependencies.illsangZoneManager
                             )
                         } label: {
@@ -204,11 +212,9 @@ struct EmptyStateView: View {
 
 #Preview {
     MyPageView(
-        vm: MyPageViewModel(
-            userRepository: UserRepository(network: UserNetwork()),
-            imageNetwork: ImageNetwork(),
-            areaNameService: AreaNameService(areaRepository: AreaRepository(network: AreaNetwork())),
-            seasonManager: SeasonManager(seasonNetwork: SeasonNetwork())
-        )
+        userRepository: UserRepository(network: UserNetwork()),
+        imageNetwork: ImageNetwork(),
+        areaNameService: AreaNameService(areaRepository: AreaRepository(network: AreaNetwork())),
+        seasonManager: SeasonManager(seasonNetwork: SeasonNetwork())
     )
 }

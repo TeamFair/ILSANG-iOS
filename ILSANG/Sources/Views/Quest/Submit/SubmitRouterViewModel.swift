@@ -24,6 +24,12 @@ class SubmitRouterViewModel: ObservableObject {
         self.selectedQuest = selectedQuest
         self.submitService = submitService
         self.challengeNetwork = challengeNetwork
+        Log("🛣️ SubmitRouterViewModel: init")
+    }
+    
+    deinit {
+        submitTask = nil
+        Log("🛣️ SubmitRouterViewModel: deinit")
     }
     
     /// 제출 요청

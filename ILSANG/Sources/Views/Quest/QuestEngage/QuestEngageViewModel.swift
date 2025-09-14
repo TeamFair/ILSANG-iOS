@@ -26,6 +26,11 @@ class QuestEngageViewModel: ObservableObject {
     init(quest: QuestViewModelItem, challengeNetwork: ChallengeNetwork) {
         self.quest = quest
         self.challengeNetwork = challengeNetwork
+        Log("🏃🏻‍♂️ QuestEngageViewModel: init")
+    }
+    
+    deinit {
+        Log("🏃🏻‍♂️ QuestEngageViewModel: deinit")
     }
     
     @MainActor

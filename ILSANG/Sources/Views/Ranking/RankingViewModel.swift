@@ -61,6 +61,13 @@ class RankingViewModel: ObservableObject {
                 self.selectedSeason = season
             }
             .store(in: &cancellables)
+        
+        Log("🏆 RankingViewModel: init")
+    }
+    
+    deinit {
+        cancellables.removeAll()
+        Log("🏆 RankingViewModel: deinit")
     }
     
     func reset() {

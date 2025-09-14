@@ -8,8 +8,7 @@
 import UIKit
 import Combine
 
-@Observable
-class QuestViewModel {
+class QuestViewModel: ObservableObject {
     // TODO: API 요청 실패 시 에러상태로 변경하기
     enum ViewStatus {
         case error
@@ -17,23 +16,22 @@ class QuestViewModel {
         case loaded
     }
     
-     var viewStatus: ViewStatus = .loading
+    @Published var viewStatus: ViewStatus = .loading
     
-    // TODO: 바뀔 때 api 요청하도록 수정 (refresh, init 고려)
-     var selectedHeader: QuestStatus = .default
+    @Published var selectedHeader: QuestStatus = .default
     
-     var showSelectMyRegionView: Bool = false
-     var alertType: AlertType? = nil
+    @Published var showSelectMyRegionView: Bool = false
+    @Published var alertType: AlertType? = nil
     
     // 필터
      var questFilterState: StaticFilterPickerState<QuestFilterType>
      var repeatFilterState: StaticFilterPickerState<RepeatType>
      var eventFilterState: StaticFilterPickerState<EventQuestFilterType>
        
-     var defaultQuestListByFilter: [QuestFilterType: [QuestViewModelItem]] = [:]
-     var repeatQuestListByFilter: [RepeatType: [QuestFilterType: [QuestViewModelItem]]] = [:]
-     var eventQuestListByFilter: [EventQuestFilterType: [QuestViewModelItem]] = [:]
-     var completedQuestList: [QuestViewModelItem] = []
+    @Published var defaultQuestListByFilter: [QuestFilterType: [QuestViewModelItem]] = [:]
+    @Published var repeatQuestListByFilter: [RepeatType: [QuestFilterType: [QuestViewModelItem]]] = [:]
+    @Published var eventQuestListByFilter: [EventQuestFilterType: [QuestViewModelItem]] = [:]
+    @Published var completedQuestList: [QuestViewModelItem] = []
 
     var currentQuests: [QuestViewModelItem] {
         switch selectedHeader {
@@ -64,6 +62,7 @@ class QuestViewModel {
     
     private let questRepository: QuestRepositoryInterface
     private let favoriteService: FavoriteService
+    private let questSubmissionNotifier: QuestSubmissionNotifier
     private let sharedState: SharedState
         
     private var cancellables = Set<AnyCancellable>()
@@ -71,10 +70,12 @@ class QuestViewModel {
     init(
         questRepository: QuestRepositoryInterface,
         favoriteService: FavoriteService,
+        questSubmissionNotifier: QuestSubmissionNotifier,
         sharedState: SharedState
     ) {
         self.questRepository = questRepository
         self.favoriteService = favoriteService
+        self.questSubmissionNotifier = questSubmissionNotifier
         self.sharedState = sharedState
         
         questFilterState = StaticFilterPickerState<QuestFilterType>(initialValue: .popular)
@@ -120,8 +121,14 @@ class QuestViewModel {
             guard let self = self else { return }
             Task { await self.repeatPaginationManager.loadData(isRefreshing: true) }
         }
-        
+        Log("🍭 QuestViewModel: init")
+
         Task { await setupBindings() }
+    }
+    
+    deinit {
+        cancellables.removeAll()
+        Log("🍭 QuestViewModel: deinit")
     }
     
     @MainActor
@@ -134,25 +141,18 @@ class QuestViewModel {
             }
             .store(in: &cancellables)
         
-//        questRouter.$showSubmitRouter
-//            .removeDuplicates()
-//            .dropFirst()
-//            .sink { [weak self] isPresented in
-//                if !isPresented {
-//                    Task { await self?.loadInitialData() }
-//                }
-//            }
-//            .store(in: &cancellables)
-//        
-//        questRouter.$showQuestEngage
-//            .removeDuplicates()
-//            .dropFirst()
-//            .sink { [weak self] isPresented in
-//                if !isPresented {
-//                    Task { await self?.loadInitialData() }
-//                }
-//            }
-//            .store(in: &cancellables)
+        // refreshTrigger가 변경될 때마다 데이터 갱신
+        questSubmissionNotifier.$refreshTrigger
+            .removeDuplicates()
+            .dropFirst()
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                Log("🏠 QuestViewModel: 퀘스트 제출 트리거 > 리프레시 예정")
+                Task {
+                    await self?.loadInitialData()
+                }
+            }
+            .store(in: &cancellables)
     }
     
     func loadDataIfNeeded() async {

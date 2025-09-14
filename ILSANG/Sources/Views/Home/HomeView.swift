@@ -9,7 +9,7 @@ import SwiftUI
 
 // TODO: 에러처리 재정의 필요
 struct HomeView: View {
-    @State var vm: HomeViewModel
+    @StateObject var vm: HomeViewModel
     @StateObject var questRouter: QuestRouter
     @StateObject var userRouter: UserRouter
     @EnvironmentObject var dependencies: AppDependencies
@@ -29,14 +29,32 @@ struct HomeView: View {
     }
     
     init(
-        vm: HomeViewModel,
+        userRepository: UserRepositoryInterface,
+        areaNameService: AreaNameProvider,
         questRepository: QuestRepositoryInterface,
+        rankRepository: RankRepositoryInterface,
+        bannerRepository: BannerRepositoryInterface,
+        favoriteService: FavoriteService,
+        questSubmissionNotifier: QuestSubmissionNotifier,
+        sharedState: SharedState,
         illsangZoneManager: IllsangZoneManager
     ) {
-        _vm = State(wrappedValue: vm)
+        self._vm = StateObject(
+            wrappedValue: HomeViewModel(
+                userRepository: userRepository,
+                areaNameService: areaNameService,
+                questRepository: questRepository,
+                rankRepository: rankRepository,
+                bannerRepository: bannerRepository,
+                favoriteService: favoriteService,
+                questSubmissionNotifier: questSubmissionNotifier,
+                sharedState: sharedState
+            )
+        )
         _questRouter = StateObject(
             wrappedValue: QuestRouter(
-                illsangZoneManager: illsangZoneManager, questRepository: questRepository
+                illsangZoneManager: illsangZoneManager,
+                questRepository: questRepository
             )
         )
         _userRouter = StateObject(wrappedValue: UserRouter())
@@ -52,11 +70,8 @@ struct HomeView: View {
                         content
                     }
                 }
-                .task {
-                    await dependencies.honorAcquisitionManager.fetchUnreadHonorHistory()
-                }
                 .refreshable {
-                    await vm.loadInitialData()
+                    await vm.loadInitialDataSafe()
                 }
                 .disabled(vm.viewStatus == .loading)
                 .withQuestNavigation(questRouter: questRouter)
@@ -72,7 +87,8 @@ struct HomeView: View {
                 questRepository: dependencies.questRepository,
                 areaRepository: dependencies.areaRepository,
                 favoriteService: dependencies.favoriteService,
-                illsangZoneManager: dependencies.illsangZoneManager
+                illsangZoneManager: dependencies.illsangZoneManager,
+                questSubmissionNotifier: dependencies.questSubmissionNotifier
             )
         }
         .navigationDestination(isPresented: $vm.showSelectMyRegionView) {
@@ -90,7 +106,7 @@ struct HomeView: View {
                 if let _ = dependencies.honorAcquisitionManager.currentHonor {
                     HonorPopupContainerView()
                 } else if let alert = vm.alertType {
-                     alertView(alert)
+                    alertView(alert)
                 }
             }
         )
@@ -120,10 +136,10 @@ struct HomeView: View {
                 if vm.showMainBanners {
                     mainBannerSection
                 }
-                if vm.showPopularRewardQuest {
+                if vm.showPopularQuest {
                     popularQuestSection
                 }
-                if vm.showRecommendRewardQuest {
+                if vm.showRecommendQuest {
                     recommendQuestSection
                 }
                 if vm.showLargestRewardQuest {
@@ -384,17 +400,15 @@ struct HomeView: View {
 }
 
 #Preview {
-    let viewModel = HomeViewModel(
+    HomeView(
         userRepository: UserRepository(network: UserNetwork()),
         areaNameService: AreaNameService(areaRepository: AreaRepository(network: AreaNetwork())),
         questRepository: QuestRepository(network: QuestNetwork()),
         rankRepository: RankRepository(network: RankNetwork()),
         bannerRepository: BannerRepository(network: BannerNetwork()),
-        favoriteService: FavoriteService(favoriteNetwork: FavoriteNetwork()), sharedState: SharedState()
-    )
-    HomeView(
-        vm: viewModel,
-        questRepository: QuestRepository(network: QuestNetwork()),
+        favoriteService: FavoriteService(favoriteNetwork: FavoriteNetwork()),
+        questSubmissionNotifier: QuestSubmissionNotifier(),
+        sharedState: SharedState(),
         illsangZoneManager: IllsangZoneManager(
             areaNameService: AreaNameService(areaRepository: AreaRepository(network: AreaNetwork())),
             seasonManager: SeasonManager(seasonNetwork: SeasonNetwork())

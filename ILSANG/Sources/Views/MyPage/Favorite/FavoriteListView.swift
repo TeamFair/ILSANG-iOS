@@ -16,11 +16,20 @@ struct FavoriteListView: View {
     @Environment(\.dismiss) var dismiss
     
     init(
-        viewModel: FavoriteListViewModel,
         questRepository: QuestRepositoryInterface,
+        favoriteService: FavoriteService,
+        selectedCommercialArea: CommercialArea,
+        questSubmissionNotifier: QuestSubmissionNotifier,
         illsangZoneManager: IllsangZoneManager
     ) {
-        self._viewModel = StateObject(wrappedValue: viewModel)
+        self._viewModel = StateObject(
+            wrappedValue: FavoriteListViewModel(
+                questRepository: questRepository,
+                favoriteService: favoriteService,
+                selectedCommercialArea: selectedCommercialArea,
+                questSubmissionNotifier: questSubmissionNotifier
+            )
+        )
         _questRouter = StateObject(
             wrappedValue: QuestRouter(
                 illsangZoneManager: illsangZoneManager, questRepository: questRepository
@@ -58,16 +67,6 @@ struct FavoriteListView: View {
         }
         .withQuestNavigation(questRouter: questRouter)
         .withUserNavigation(userRouter: userRouter)
-        .onChange(of: questRouter.showQuestEngage, { oldValue, newValue in
-            if !newValue {
-                Task { await viewModel.loadInitialData() }
-            }
-        })
-        .onChange(of: questRouter.showSubmitRouter, { oldValue, newValue in
-            if !newValue {
-                Task { await viewModel.loadInitialData() }
-            }
-        })
         // TODO: Destination으로 변경
         .sheet(isPresented: $viewModel.showSelectRegionView) {
             MyRegionAreaSelectionView(areaRepository: dependencies.areaRepository) { area in
@@ -107,7 +106,8 @@ extension FavoriteListView {
                     ForEach(viewModel.quests, id: \.id) { quest in
                         FavoriteQuestItemView(
                             quest: quest,
-                            action: {
+                            action: { [weak viewModel, weak questRouter] in
+                                guard let viewModel = viewModel, let questRouter = questRouter else { return }
                                 AnalyticsService.logEvent(.questItemClick(questId: quest.id, questType: quest.questType?.rawValue.uppercased() ?? ""))
                                 questRouter.presentQuestDetail(quest: quest) { quest in
                                     viewModel.toggleFavoriteStatus(quest: quest)
@@ -152,12 +152,10 @@ extension FavoriteListView {
 
 #Preview {
     FavoriteListView(
-        viewModel: FavoriteListViewModel(
-            questRepository: MockQuestRepository(),
-            favoriteService: FavoriteService(favoriteNetwork: FavoriteNetwork()),
-            selectedCommercialArea: .init(code: "R100", areaName: "서현", metroAreaCode: "S01")
-        ),
-        questRepository: QuestRepository(network: QuestNetwork()),
+        questRepository: MockQuestRepository(),
+        favoriteService: FavoriteService(favoriteNetwork: FavoriteNetwork()),
+        selectedCommercialArea: .init(code: "R100", areaName: "서현", metroAreaCode: "S01"),
+        questSubmissionNotifier: QuestSubmissionNotifier(),
         illsangZoneManager: IllsangZoneManager(
             areaNameService: AreaNameService(
                 areaRepository: AreaRepository(network: AreaNetwork())

@@ -22,21 +22,20 @@ enum ApprovalSource: Equatable {
     case detail(missionId: Int)
 }
 
-@Observable
-final class ApprovalViewModel {
+final class ApprovalViewModel: ObservableObject {
     enum ViewStatus {
         case error
         case loading
         case loaded
     }
     
-    var viewStatus: ViewStatus = .loading
-    var itemList: [ApprovalMissionHistoryItem] = []
+    @Published var viewStatus: ViewStatus = .loading
+    @Published var itemList: [ApprovalMissionHistoryItem] = []
     
-    var showReportAlert = false
-    var selectedChallenge: ApprovalMissionHistoryItem?
+    @Published var showReportAlert = false
+    @Published var selectedChallenge: ApprovalMissionHistoryItem?
     
-    var paginationManager: PaginationManager<ApprovalMissionHistoryItem>?    
+    var paginationManager: PaginationManager<ApprovalMissionHistoryItem>?
     let approvalSource: ApprovalSource
 
     private let emojiNetwork: EmojiNetwork
@@ -62,7 +61,13 @@ final class ApprovalViewModel {
             guard let self = self else { return ([], 0) }
             return await self.getChallengesWithImage(page: page)
         }
+        Log("✨ ApprovalViewModel: init")
     }
+    
+    deinit {
+        Log("✨ ApprovalViewModel: deinit")
+    }
+    
     
     @MainActor
     func loadDataIfNeeded() async {

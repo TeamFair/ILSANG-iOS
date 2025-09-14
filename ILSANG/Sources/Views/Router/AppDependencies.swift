@@ -41,7 +41,8 @@ class AppDependencies: ObservableObject {
     let imageChallengeSubmitService: ImageChallengeSubmitService
     let favoriteService: FavoriteService
     let honorAcquisitionManager: HonorAcquisitionManager
-    
+    let questSubmissionNotifier: QuestSubmissionNotifier
+
     init() {
         // Networks
         self.userNetwork = UserNetwork()
@@ -75,5 +76,6 @@ class AppDependencies: ObservableObject {
         self.imageChallengeSubmitService = ImageChallengeSubmitService(imageNetwork: imageNetwork, challengeNetwork: challengeNetwork)
         self.favoriteService = FavoriteService(favoriteNetwork: favoriteNetwork)
         self.honorAcquisitionManager = HonorAcquisitionManager(titleRepository: titleRepository)
+        self.questSubmissionNotifier = QuestSubmissionNotifier()
     }
 }

@@ -9,6 +9,7 @@ import SwiftUI
 
 struct SubmitAlertView: View {
     @ObservedObject var vm: SubmitRouterViewModel
+    @EnvironmentObject var dependencies: AppDependencies
     @Environment(\.scenePhase) var scenePhase
     @Environment(\.dismiss) var dismiss
     
@@ -40,6 +41,7 @@ struct SubmitAlertView: View {
         case .complete:
             SubmitCompleteView(quest: vm.selectedQuest) {
                 vm.showSubmitAlertView = false
+                dependencies.questSubmissionNotifier.markQuestAsSubmitted()
                 dismiss()
             }
         }

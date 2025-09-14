@@ -5,7 +5,7 @@
 //  Created by Lee Jinhee on 8/16/25.
 //
 
-
+import Combine
 import UIKit
 
 class BannerDetailViewModel: ObservableObject {
@@ -35,19 +35,24 @@ class BannerDetailViewModel: ObservableObject {
     private let questRepository: QuestRepositoryInterface
     private let areaRepository: AreaRepositoryInterface
     private let favoriteService: FavoriteService
+    private let questSubmissionNotifier: QuestSubmissionNotifier
     
+    private var cancellables = Set<AnyCancellable>()
+
     init(
         banner: BannerViewModelItem,
         userRepository: UserRepositoryInterface,
         questRepository: QuestRepositoryInterface,
         areaRepository: AreaRepositoryInterface,
-        favoriteService: FavoriteService
+        favoriteService: FavoriteService,
+        questSubmissionNotifier: QuestSubmissionNotifier
     ) {
         self.banner = banner
         self.userRepository = userRepository
         self.questRepository = questRepository
         self.areaRepository = areaRepository
         self.favoriteService = favoriteService
+        self.questSubmissionNotifier = questSubmissionNotifier
         
         self.eventFilterState = StaticFilterPickerState(initialValue: .upcoming)
         self.uncompletedPaginationManager = PaginationManager(size: 20, threshold: 18)
@@ -55,12 +60,15 @@ class BannerDetailViewModel: ObservableObject {
         
         setupFilterStateObserver()
         setupPaginationManagers()
+        Task { await setupBindings() }
+        Log("🎪 BannerDetailViewModel init")
     }
     
     deinit {
         refreshTask?.cancel()
         refreshTask = nil
-        print("🗑️ BannerDetailViewModel deinit")
+        cancellables.removeAll()
+        Log("🎪 BannerDetailViewModel deinit")
     }
     
     private func setupFilterStateObserver() {
@@ -81,6 +89,20 @@ class BannerDetailViewModel: ObservableObject {
             guard let self = self else { return ([], 0) }
             return await self.loadQuestListWithImage(page: page, size: 10, status: .complete)
         }
+    }
+    
+    @MainActor
+    private func setupBindings() {
+        questSubmissionNotifier.$refreshTrigger
+            .removeDuplicates()
+            .dropFirst()
+            .sink { [weak self] _ in
+                Log("🏠 BannerDetailViewModel: 퀘스트 제출 완료 > 리프레시 예정")
+                Task {
+                    self?.refreshData()
+                }
+            }
+            .store(in: &cancellables)
     }
     
     func loadDataIfNeeded() async {

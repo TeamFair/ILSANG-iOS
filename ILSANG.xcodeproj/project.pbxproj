@@ -283,6 +283,7 @@
 		60E401B42E72CED500BB0B6C /* User+UIMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60E401B32E72CED500BB0B6C /* User+UIMapper.swift */; };
 		60E401B62E72D25700BB0B6C /* LegendRankResponse+Mapping.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60E401B52E72D25700BB0B6C /* LegendRankResponse+Mapping.swift */; };
 		60E401B82E72D33000BB0B6C /* LegendRank+UIMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60E401B72E72D33000BB0B6C /* LegendRank+UIMapper.swift */; };
+		60E401BA2E74477A00BB0B6C /* QuestSubmissionNotifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60E401B92E74477A00BB0B6C /* QuestSubmissionNotifier.swift */; };
 		60FB50CD2D15CEAE00C55E82 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60FB50CC2D15CEAE00C55E82 /* HomeView.swift */; };
 		60FF5EC32E4937A6007A5B40 /* MyRegionAreaSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60FF5EC22E4937A6007A5B40 /* MyRegionAreaSelectionView.swift */; };
 		60FF5EC52E4949F8007A5B40 /* RegionPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60FF5EC42E4949F8007A5B40 /* RegionPickerView.swift */; };
@@ -620,6 +621,7 @@
 		60E401B32E72CED500BB0B6C /* User+UIMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "User+UIMapper.swift"; sourceTree = "<group>"; };
 		60E401B52E72D25700BB0B6C /* LegendRankResponse+Mapping.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LegendRankResponse+Mapping.swift"; sourceTree = "<group>"; };
 		60E401B72E72D33000BB0B6C /* LegendRank+UIMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LegendRank+UIMapper.swift"; sourceTree = "<group>"; };
+		60E401B92E74477A00BB0B6C /* QuestSubmissionNotifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestSubmissionNotifier.swift; sourceTree = "<group>"; };
 		60FB50CC2D15CEAE00C55E82 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		60FF5EC22E4937A6007A5B40 /* MyRegionAreaSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyRegionAreaSelectionView.swift; sourceTree = "<group>"; };
 		60FF5EC42E4949F8007A5B40 /* RegionPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegionPickerView.swift; sourceTree = "<group>"; };
@@ -748,6 +750,7 @@
 				6053345B2D31182500599159 /* XpLevelCalculator.swift */,
 				609197582E5C950B00F1D81B /* SeasonManager.swift */,
 				606C3EE02E662E3E0050C4D6 /* IllsangZoneManager.swift */,
+				60E401B92E74477A00BB0B6C /* QuestSubmissionNotifier.swift */,
 			);
 			path = Manager;
 			sourceTree = "<group>";
@@ -1994,6 +1997,7 @@
 				609169DE2DFD59C100A34D4F /* Notification++.swift in Sources */,
 				60E401B62E72D25700BB0B6C /* LegendRankResponse+Mapping.swift in Sources */,
 				60D8974B2E57645D006A8480 /* Reward.swift in Sources */,
+				60E401BA2E74477A00BB0B6C /* QuestSubmissionNotifier.swift in Sources */,
 				60C6B4D52C2C565700926C0E /* ChallengeNetwork.swift in Sources */,
 				605445D82DD8BD120005742D /* HonorPopupContainerView.swift in Sources */,
 				60A6B64D2E2C819E00872DE5 /* ApprovalDetailView.swift in Sources */,
