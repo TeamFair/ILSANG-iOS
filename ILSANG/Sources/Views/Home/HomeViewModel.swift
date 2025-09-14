@@ -156,6 +156,11 @@ final class HomeViewModel: ObservableObject {
             group.addTask {
                 do {
                     try await self.loadPopularQuestList()
+                    if self.popularQuestList.count < self.popularChunkSize {
+                        await MainActor.run {
+                            self.showPopularQuest = false
+                        }
+                    }
                 } catch {
                     Log("Failed to load popular quests: \(error.localizedDescription)")
                     self.errorCnt += 1
