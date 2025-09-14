@@ -240,16 +240,19 @@ struct HomeView: View {
     
     @ViewBuilder
     private var popularQuestSectionContent: some View {
-        if vm.popularQuestList.count <= vm.popularChunkSize {
-            singlePageContent
-        } else {
-            multiPageContent
+        switch vm.popularQuestList.count {
+        case 0..<vm.popularChunkSize:
+            EmptyView() // 0~3개면 미표시
+        case vm.popularChunkSize..<(vm.popularChunkSize * 2):
+            singlePageContent // 4~7개면 싱글
+        default:
+            multiPageContent  // 8개 이상이면 멀티
         }
     }
     
     private var singlePageContent: some View {
         LazyHGrid(rows: gridItem, alignment: .top, spacing: LayoutConstants.lazyHGridSpacing) {
-            ForEach(vm.popularQuestList) { quest in
+            ForEach(vm.popularQuestList[0..<vm.popularChunkSize]) { quest in
                 PopularQuestItemView(
                     quest: quest,
                     imageSize: CGSize(width: (UIScreen.main.bounds.width - 40 - 2) / 2, height: 137)
