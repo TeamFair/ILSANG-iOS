@@ -5,6 +5,7 @@
 //  Created by Lee Jinhee on 9/6/25.
 //
 
+import Combine
 import UIKit
 
 class FavoriteListViewModel: ObservableObject {
@@ -18,23 +19,50 @@ class FavoriteListViewModel: ObservableObject {
     
     private let questRepository: QuestRepositoryInterface
     private let favoriteService: FavoriteService
+    private let questSubmissionNotifier: QuestSubmissionNotifier
     
     private var refreshTask: Task<Void, Never>?
+    private var cancellables = Set<AnyCancellable>()
     
     init(
         questRepository: QuestRepositoryInterface,
         favoriteService: FavoriteService,
-        selectedCommercialArea: CommercialArea
+        selectedCommercialArea: CommercialArea,
+        questSubmissionNotifier: QuestSubmissionNotifier
     ) {
         self.questRepository = questRepository
         self.favoriteService = favoriteService
         self.selectedArea = selectedCommercialArea
+        self.questSubmissionNotifier = questSubmissionNotifier
         
         self.paginationManager = PaginationManager(size: 20, threshold: 18)
         self.paginationManager.loadPageData = { [weak self] page in
             guard let self = self else { return ([], 0) }
             return await self.loadQuestListWithImage(areaCode: selectedArea.code, page: page, size: 20)
         }
+        
+        setupBindings()
+        Log("🏠 FavoriteListViewModel: init")
+    }
+    
+    deinit {
+        Log("🏠 FavoriteListViewModel: deinit")
+        refreshTask?.cancel()
+        refreshTask = nil
+        cancellables.removeAll()
+    }
+    
+    private func setupBindings() {
+        questSubmissionNotifier.$refreshTrigger
+            .removeDuplicates()
+            .dropFirst()
+            .sink { [weak self] _ in
+                Log("🏠 FavoriteListViewModel: 퀘스트 제출 트리거 > 리프레시 예정")
+                Task {
+                    await self?.loadInitialData()
+                }
+            }
+            .store(in: &cancellables)
     }
     
     func loadDataIfNeeded() async {
@@ -46,10 +74,11 @@ class FavoriteListViewModel: ObservableObject {
     @MainActor
     func loadInitialData() async {
         refreshTask?.cancel()
-        refreshTask = Task {
-            changeViewStatus(.loading)
-            await loadQuestListWithImage(areaCode: selectedArea.code, page: 0, size: 10)
-            changeViewStatus(.loaded)
+        refreshTask = Task { [weak self] in
+            guard let areaCode = self?.selectedArea.code else { return }
+            self?.changeViewStatus(.loading)
+            await self?.loadQuestListWithImage(areaCode: areaCode, page: 0, size: 10)
+            self?.changeViewStatus(.loaded)
         }
         await refreshTask?.value
     }

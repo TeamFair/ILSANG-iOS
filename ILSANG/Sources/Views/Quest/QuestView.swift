@@ -9,18 +9,27 @@ import SwiftUI
 import Combine
 
 struct QuestView: View {
-    @State var vm: QuestViewModel
+    @StateObject var vm: QuestViewModel
     @StateObject var questRouter: QuestRouter
     @StateObject var userRouter: UserRouter
     @EnvironmentObject var dependencies: AppDependencies
     @EnvironmentObject var sharedState: SharedState
 
     init(
-        vm: QuestViewModel,
         questRepository: QuestRepositoryInterface,
-        illsangZoneManager: IllsangZoneManager
+        favoriteService: FavoriteService,
+        questSubmissionNotifier: QuestSubmissionNotifier,
+        sharedState: SharedState,
+        illsangZoneManager: IllsangZoneManager,
     ) {
-        _vm = State(wrappedValue: vm)
+        self._vm = StateObject(
+            wrappedValue: QuestViewModel(
+                questRepository: questRepository,
+                favoriteService: favoriteService,
+                questSubmissionNotifier: questSubmissionNotifier,
+                sharedState: sharedState
+            )
+        )
         _questRouter = StateObject(
             wrappedValue: QuestRouter(
                 illsangZoneManager: illsangZoneManager, questRepository: questRepository
@@ -261,14 +270,14 @@ extension QuestView {
 
 #Preview {
     QuestView(
-        vm: QuestViewModel(
-            questRepository: QuestRepository(network: QuestNetwork()),
-            favoriteService: FavoriteService(favoriteNetwork: FavoriteNetwork()),
-            sharedState: SharedState()
-        ),
         questRepository: QuestRepository(network: QuestNetwork()),
+        favoriteService: FavoriteService(favoriteNetwork: FavoriteNetwork()),
+        questSubmissionNotifier: QuestSubmissionNotifier(),
+        sharedState: SharedState(),
         illsangZoneManager: IllsangZoneManager(
-            areaNameService: AreaNameService(areaRepository: AreaRepository(network: AreaNetwork())),
+            areaNameService: AreaNameService(
+                areaRepository: AreaRepository(network: AreaNetwork())
+            ),
             seasonManager: SeasonManager(
                 seasonNetwork: SeasonNetwork()
             )

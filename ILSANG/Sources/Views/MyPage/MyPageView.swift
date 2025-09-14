@@ -74,12 +74,10 @@ struct MyPageView: View {
                         }
                         NavigationLink {
                             FavoriteListView(
-                                viewModel: FavoriteListViewModel(
-                                    questRepository: dependencies.questRepository,
-                                    favoriteService: dependencies.favoriteService,
-                                    selectedCommercialArea: sharedState.selectedCommercialArea
-                                ),
                                 questRepository: dependencies.questRepository,
+                                favoriteService: dependencies.favoriteService,
+                                selectedCommercialArea: sharedState.selectedCommercialArea,
+                                questSubmissionNotifier: dependencies.questSubmissionNotifier,
                                 illsangZoneManager: dependencies.illsangZoneManager
                             )
                         } label: {

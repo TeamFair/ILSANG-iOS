@@ -7,7 +7,6 @@
 
 import SwiftUI
 
-// TODO: 퀘스트 수행시 리프레시, 외부도 리프레시
 // TODO: 일상존 선택 시 홈뷰에서 일상존 선택 상태 변경
 struct BannerDetailView: View {
     @StateObject var viewModel: BannerDetailViewModel
@@ -22,7 +21,8 @@ struct BannerDetailView: View {
         questRepository: QuestRepositoryInterface,
         areaRepository: AreaRepositoryInterface,
         favoriteService: FavoriteService,
-        illsangZoneManager: IllsangZoneManager
+        illsangZoneManager: IllsangZoneManager,
+        questSubmissionNotifier: QuestSubmissionNotifier
     ) {
         _viewModel = StateObject(
             wrappedValue: BannerDetailViewModel(
@@ -30,7 +30,8 @@ struct BannerDetailView: View {
                 userRepository: userRepository,
                 questRepository: questRepository,
                 areaRepository: areaRepository,
-                favoriteService: favoriteService
+                favoriteService: favoriteService,
+                questSubmissionNotifier: questSubmissionNotifier
             )
         )
         self._questRouter = StateObject(
@@ -61,16 +62,6 @@ struct BannerDetailView: View {
         .withQuestNavigation(questRouter: questRouter)
         .withUserNavigation(userRouter: userRouter)
         .task { await viewModel.loadDataIfNeeded() }
-        .onChange(of: questRouter.showQuestEngage) { _, show in
-            if !show {
-                viewModel.refreshData()
-            }
-        }
-        .onChange(of: questRouter.showSubmitRouter) { _, show in
-            if !show {
-                viewModel.refreshData()
-            }
-        }
         .onChange(of: viewModel.selectedHeader) { _, _ in
             viewModel.closeFilterPicker()
         }
@@ -271,6 +262,7 @@ enum BannerQuestStatus: String, Equatable, SelectableTabItem {
         illsangZoneManager: IllsangZoneManager(
             areaNameService: AreaNameService(areaRepository: AreaRepository(network: AreaNetwork())),
             seasonManager: SeasonManager(seasonNetwork: SeasonNetwork())
-        )
+        ),
+        questSubmissionNotifier: QuestSubmissionNotifier()
     )
 }

@@ -51,16 +51,11 @@ struct QuestNavigationSetup: ViewModifier {
         // 퀘스트 참여
             .navigationDestination(isPresented: $questRouter.showQuestEngage) {
                 QuestEngageView(
-                    vm: QuestEngageViewModel(
-                        quest: questRouter.selectedQuest,
-                        challengeNetwork: dependencies.challengeNetwork
-                    ),
-                    submitVM: SubmitRouterViewModel(
-                        selectedImage: nil,
-                        selectedQuest: questRouter.selectedQuest,
-                        submitService: dependencies.imageChallengeSubmitService,
-                        challengeNetwork: dependencies.challengeNetwork
-                    )
+                    quest: questRouter.selectedQuest,
+                    selectedImage: nil,
+                    selectedQuest: questRouter.selectedQuest,
+                    challengeNetwork: dependencies.challengeNetwork,
+                    submitService: dependencies.imageChallengeSubmitService
                 )
             }
         // 도전내역 상세

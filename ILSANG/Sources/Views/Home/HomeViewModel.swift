@@ -14,10 +14,9 @@ enum ViewStatus {
     case loaded
 }
 
-@Observable
-final class HomeViewModel {
-    var viewStatus: ViewStatus = .loading
-    var userProfileImage: UIImage?
+final class HomeViewModel: ObservableObject {
+    @Published var viewStatus: ViewStatus = .loading
+    @Published var userProfileImage: UIImage?
     var recommendQuestTitle: String {
         if let nickname = UserService.shared.currentUser?.nickname {
             return nickname + "님을 위한 추천 퀘스트"
@@ -25,38 +24,33 @@ final class HomeViewModel {
             return "추천 퀘스트"
         }
     }
-    var mainBanners: [BannerViewModelItem] = []
-    var userRankList: [UserRankViewModelItem] = [] // 10개
-    var largestRewardQuestList: [QuestViewModelItem] = [] // 3*5개
-    var recommendQuestList: [QuestViewModelItem] = [] //QuestViewModelItem.mockQuestList // 10개
-    var popularQuestList: [QuestViewModelItem] = [] // 4n개
+    @Published var mainBanners: [BannerViewModelItem] = []
+    @Published var userRankList: [UserRankViewModelItem] = [] // 10개
+    @Published var largestRewardQuestList: [QuestViewModelItem] = [] // 3*5개
+    @Published var recommendQuestList: [QuestViewModelItem] = [] //QuestViewModelItem.mockQuestList // 10개
+    @Published var popularQuestList: [QuestViewModelItem] = [] // 4n개
     
-    var currentBanner: Int = 0
+    @Published var currentBanner: Int = 0
     
-    var selectedPopularTabIndex: Int = 0
+    @Published var selectedPopularTabIndex: Int = 0
     let popularChunkSize: Int = 4
     var paginatedPopularQuests: [[QuestViewModelItem]] {
         popularQuestList.chunks(of: popularChunkSize)
     }
     
-    var showSelectMyRegionView: Bool = false
-    var selectedBanner: BannerViewModelItem? = nil
+    @Published var showSelectMyRegionView: Bool = false
+    @Published var selectedBanner: BannerViewModelItem? = nil
     
-    var alertType: AlertType? = nil
-    
-//    var shouldShowIllsangZoneWarning: Bool = false
-//    
-//    private let dontShowKey = "DontShowIllsangZoneWarning"
-//    private let seasonKey = "IllsangZoneSeason"
-    
-//    let currentSeason: Int = 1 // TODO: 서버에서 가져오도록 수정
+    @Published var alertType: AlertType? = nil
     
     var errorCnt = 0
-    var showMainBanners: Bool = true
-    var showLargestRewardQuest: Bool = true
-    var showRecommendRewardQuest: Bool = true
-    var showPopularRewardQuest: Bool = true
-    var showRankList = true
+    @Published var showMainBanners: Bool = true
+    @Published var showLargestRewardQuest: Bool = true
+    @Published var showRecommendQuest: Bool = true
+    @Published var showPopularQuest: Bool = true
+    @Published var showRankList = true
+    
+    private var loadTask: Task<Void, Never>? = nil
     
     private let userRepository: UserRepositoryInterface
     private let areaNameService: AreaNameProvider
@@ -64,6 +58,7 @@ final class HomeViewModel {
     private let rankRepository: RankRepositoryInterface
     private let bannerRepository: BannerRepositoryInterface
     private let favoriteService: FavoriteService
+    private let questSubmissionNotifier: QuestSubmissionNotifier
     private let sharedState: SharedState
     
     private var cancellables = Set<AnyCancellable>()
@@ -75,6 +70,7 @@ final class HomeViewModel {
         rankRepository: RankRepositoryInterface,
         bannerRepository: BannerRepositoryInterface,
         favoriteService: FavoriteService,
+        questSubmissionNotifier: QuestSubmissionNotifier,
         sharedState: SharedState
     )  {
         self.userRepository = userRepository
@@ -83,9 +79,16 @@ final class HomeViewModel {
         self.rankRepository = rankRepository
         self.bannerRepository = bannerRepository
         self.favoriteService = favoriteService
+        self.questSubmissionNotifier = questSubmissionNotifier
         self.sharedState = sharedState
         
         Task { await setupBindings() }
+        Log("🏠 HomeViewModel: init")
+    }
+    
+    deinit {
+        Log("🏠 HomeViewModel: deinit")
+        self.cancellables.removeAll()
     }
     
     @MainActor
@@ -98,26 +101,17 @@ final class HomeViewModel {
             }
             .store(in: &cancellables)
         
-        // 퀘스트 라우터 완료 시 데이터 새로고침
-//        questRouter.$showSubmitRouter
-//            .removeDuplicates()
-//            .dropFirst()
-//            .sink { [weak self] isPresented in
-//                if !isPresented {
-//                    Task { await self?.loadInitialData() }
-//                }
-//            }
-//            .store(in: &cancellables)
-//        
-//        questRouter.$showQuestEngage
-//            .removeDuplicates()
-//            .dropFirst()
-//            .sink { [weak self] isPresented in
-//                if !isPresented {
-//                    Task { await self?.loadInitialData() }
-//                }
-//            }
-//            .store(in: &cancellables)
+        // 퀘스트 수행 후 데이터 갱신
+        questSubmissionNotifier.$refreshTrigger
+            .removeDuplicates()
+            .dropFirst()
+            .sink { [weak self] _ in
+                Log("🏠 HomeViewModel: 퀘스트 제출 트리거 > 리프레시 예정")
+                Task {
+                    await self?.loadInitialDataSafe()
+                }
+            }
+            .store(in: &cancellables)
     }
     
     @MainActor
@@ -131,13 +125,21 @@ final class HomeViewModel {
         }
     }
     
+    func loadInitialDataSafe() async {
+        loadTask?.cancel()
+        loadTask = Task {
+            await loadInitialData()
+        }
+        await loadTask?.value
+    }
+    
     @MainActor
     func loadInitialData() async {
         self.errorCnt = 0
         changeViewStatus(.loading)
         self.showMainBanners = true
-        self.showPopularRewardQuest = true
-        self.showRecommendRewardQuest = true
+        self.showPopularQuest = true
+        self.showRecommendQuest = true
         self.showLargestRewardQuest = true
         self.showRankList = true
         
@@ -157,7 +159,7 @@ final class HomeViewModel {
                 } catch {
                     Log("Failed to load popular quests: \(error.localizedDescription)")
                     self.errorCnt += 1
-                    self.showPopularRewardQuest = false
+                    self.showPopularQuest = false
                 }
             }
             group.addTask {
@@ -166,7 +168,7 @@ final class HomeViewModel {
                 } catch {
                     Log("Failed to load recommend quests: \(error.localizedDescription)")
                     self.errorCnt += 1
-                    self.showRecommendRewardQuest = false
+                    self.showRecommendQuest = false
                 }
             }
             group.addTask {
@@ -191,14 +193,14 @@ final class HomeViewModel {
         }
         
         if errorCnt >= 3 {
-             changeViewStatus(.error)
-             return
+            changeViewStatus(.error)
+            return
         }
-
+        
         if let userProfileImageId = UserService.shared.currentUser?.profileImageId {
             self.userProfileImage = await ImageCacheService.shared.loadImageAsync(imageId: userProfileImageId)
         }
-
+        
         changeViewStatus(.loaded)
     }
     
@@ -261,7 +263,7 @@ final class HomeViewModel {
     @MainActor
     func loadLargeRewardQuestList() async throws {
         let res = await questRepository.getLargeRewardQuests(commercialAreaCode: sharedState.selectedCommercialArea.code, page: 0, size: 3)
-
+        
         switch res {
         case .success(let quests):
             self.largestRewardQuestList = quests.content.map { $0.toQuestItem() }
@@ -269,7 +271,7 @@ final class HomeViewModel {
         case .failure(let error):
             throw error
         }
-    }  
+    }
     
     @MainActor
     func loadRankList() async throws {
