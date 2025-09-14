@@ -91,6 +91,13 @@ final class MyPageViewModel: ObservableObject {
                 self.updateSeasonsFromServer(seasons.map { $0.seasonNumber })
             }
             .store(in: &cancellables)
+        
+        Log("👤 MyPageViewModel: init")
+    }
+    
+    deinit {
+        cancellables.removeAll()
+        Log("👤 MyPageViewModel: deinit")
     }
     
     func updateSeasonsFromServer(_ seasonNumbers: [Int]) {

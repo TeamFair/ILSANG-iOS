@@ -8,14 +8,24 @@
 import SwiftUI
 
 struct ApprovalView: View {
-    @State var vm: ApprovalViewModel
+    @StateObject var vm: ApprovalViewModel
     @StateObject var userRouter: UserRouter
     @EnvironmentObject var dependencies: AppDependencies
     
     init(
-        vm: ApprovalViewModel,
+        approvalSource: ApprovalSource,
+        emojiNetwork: EmojiNetwork,
+        missionHistoryRepository: MissionHistoryRepository,
+        areaNameService: AreaNameProvider
     ) {
-        _vm = State(wrappedValue: vm)
+        _vm = StateObject(
+            wrappedValue: ApprovalViewModel(
+                approvalSource: approvalSource,
+                emojiNetwork: emojiNetwork,
+                missionHistoryRepository: missionHistoryRepository,
+                areaNameService: areaNameService
+            )
+        )
         _userRouter = StateObject(wrappedValue: UserRouter())
     }
     
@@ -165,12 +175,9 @@ struct ApprovalView: View {
 
 #Preview {
     ApprovalView(
-        vm:
-            ApprovalViewModel(
-                approvalSource: .tab,
-                emojiNetwork: EmojiNetwork(),
-                missionHistoryRepository: MissionHistoryRepository(network: MissionHistoryNetwork(),),
-                areaNameService: AreaNameService(areaRepository: AreaRepository(network: AreaNetwork()))
-            )
+        approvalSource: .tab,
+        emojiNetwork: EmojiNetwork(),
+        missionHistoryRepository: MissionHistoryRepository(network: MissionHistoryNetwork(),),
+        areaNameService: AreaNameService(areaRepository: AreaRepository(network: AreaNetwork()))
     )
 }

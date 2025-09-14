@@ -16,9 +16,17 @@ struct RankingView: View {
     @State private var isRefreshing = false
    
     init(
-        vm: RankingViewModel,
+        rankRepository: RankRepositoryInterface,
+        areaNameService: AreaNameProvider,
+        seasonManager: SeasonManager
     ) {
-        _vm = StateObject(wrappedValue: vm)
+        _vm = StateObject(
+            wrappedValue: RankingViewModel(
+                rankRepository: rankRepository,
+                areaNameService: areaNameService,
+                seasonManager: seasonManager
+            )
+        )
         _userRouter = StateObject(wrappedValue: UserRouter())
     }
     
@@ -332,12 +340,10 @@ extension RankingView {
 
 #Preview {
     RankingView(
-        vm: RankingViewModel(
-            rankRepository: RankRepository(network: RankNetwork()),
-            areaNameService: AreaNameService(areaRepository: AreaRepository(network: AreaNetwork())),
-            seasonManager: SeasonManager(
-                seasonNetwork: SeasonNetwork()
-            )
+        rankRepository: RankRepository(network: RankNetwork()),
+        areaNameService: AreaNameService(areaRepository: AreaRepository(network: AreaNetwork())),
+        seasonManager: SeasonManager(
+            seasonNetwork: SeasonNetwork()
         )
     )
 }

@@ -65,31 +65,25 @@ struct MainTabView: View {
             
         case .approval:
             ApprovalView(
-                vm: ApprovalViewModel(
-                    approvalSource: .tab,
-                    emojiNetwork: dependencies.emojiNetwork,
-                    missionHistoryRepository: dependencies.missionHistoryRepository,
-                    areaNameService: dependencies.areaNameService
-                )
+                approvalSource: .tab,
+                emojiNetwork: dependencies.emojiNetwork,
+                missionHistoryRepository: dependencies.missionHistoryRepository,
+                areaNameService: dependencies.areaNameService
             )
             
         case .ranking:
             RankingView(
-                vm: RankingViewModel(
-                    rankRepository: dependencies.rankRepository,
-                    areaNameService: dependencies.areaNameService,
-                    seasonManager: dependencies.seasonManager
-                )
+                rankRepository: dependencies.rankRepository,
+                areaNameService: dependencies.areaNameService,
+                seasonManager: dependencies.seasonManager
             )
             
         case .mypage:
             MyPageView(
-                vm: MyPageViewModel(
-                    userRepository: dependencies.userRepository,
-                    imageNetwork: dependencies.imageNetwork,
-                    areaNameService: dependencies.areaNameService,
-                    seasonManager: dependencies.seasonManager
-                )
+                userRepository: dependencies.userRepository,
+                imageNetwork: dependencies.imageNetwork,
+                areaNameService: dependencies.areaNameService,
+                seasonManager: dependencies.seasonManager
             )
         }
     }

@@ -13,9 +13,19 @@ struct MyPageView: View {
     @EnvironmentObject var sharedState: SharedState
     
     init(
-        vm: MyPageViewModel
+        userRepository: UserRepositoryInterface,
+        imageNetwork: ImageNetwork,
+        areaNameService: AreaNameProvider,
+        seasonManager: SeasonManager
     ) {
-        _vm = StateObject(wrappedValue: vm)
+        _vm = StateObject(
+            wrappedValue: MyPageViewModel(
+                userRepository: userRepository,
+                imageNetwork: imageNetwork,
+                areaNameService: areaNameService,
+                seasonManager: seasonManager
+            )
+        )
     }
     
     var body: some View {
@@ -202,11 +212,9 @@ struct EmptyStateView: View {
 
 #Preview {
     MyPageView(
-        vm: MyPageViewModel(
-            userRepository: UserRepository(network: UserNetwork()),
-            imageNetwork: ImageNetwork(),
-            areaNameService: AreaNameService(areaRepository: AreaRepository(network: AreaNetwork())),
-            seasonManager: SeasonManager(seasonNetwork: SeasonNetwork())
-        )
+        userRepository: UserRepository(network: UserNetwork()),
+        imageNetwork: ImageNetwork(),
+        areaNameService: AreaNameService(areaRepository: AreaRepository(network: AreaNetwork())),
+        seasonManager: SeasonManager(seasonNetwork: SeasonNetwork())
     )
 }

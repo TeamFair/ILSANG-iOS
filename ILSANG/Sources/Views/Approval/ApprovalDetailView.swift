@@ -21,12 +21,10 @@ struct ApprovalDetailView: View {
             .padding(.bottom, 8)
 
             ApprovalView(
-                vm: ApprovalViewModel(
-                    approvalSource: .detail(missionId: missionId),
-                    emojiNetwork: dependencies.emojiNetwork,
-                    missionHistoryRepository: dependencies.missionHistoryRepository,
-                    areaNameService: dependencies.areaNameService
-                )
+                approvalSource: .detail(missionId: missionId),
+                emojiNetwork: dependencies.emojiNetwork,
+                missionHistoryRepository: dependencies.missionHistoryRepository,
+                areaNameService: dependencies.areaNameService
             )
         }
         .navigationBarBackButtonHidden()
