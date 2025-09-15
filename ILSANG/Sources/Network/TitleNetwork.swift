@@ -13,6 +13,7 @@ protocol TitleNetworkInterface{
     func getTitleHistories() async -> Result<[UserTitleResponse], Error>
     func getUnreadTitleHistories() async -> Result<[UserTitleResponse], Error>
     func readTitleHistory(historyId: Int) async -> Result<ResponseWithEmpty, Error>
+    func getSeasonTitles(type: PointType) async -> Result<[TitleResponse], Error>
     func getLegendRank(titleId: String, page: Int, size: Int) async -> Result<ResponseWithPage<[LegendRankResponse]>, Error>
 }
 
@@ -33,6 +34,10 @@ struct MockTitleNetwork: TitleNetworkInterface {
     
     func readTitleHistory(historyId: Int) async -> Result<ResponseWithEmpty, any Error> {
         .success(.emptyValue())
+    }
+    
+    func getSeasonTitles(type: PointType) async -> Result<[TitleResponse], Error> {
+        .success([TitleResponse.mockStandard])
     }
     
     func getLegendRank(titleId: String, page: Int, size: Int) async -> Result<ResponseWithPage<[LegendRankResponse]>, Error> {
@@ -62,6 +67,11 @@ final class TitleNetwork: TitleNetworkInterface {
     /// 사용자 칭호 읽음 처리
     func readTitleHistory(historyId: Int) async -> Result<ResponseWithEmpty, Error> {
         return await Network.requestData(url: userUrl+"/\(historyId)/read", method: .put)
+    }
+    
+    /// 시즌  보상 조회
+    func getSeasonTitles(type: PointType) async -> Result<[TitleResponse], Error> {
+        return await Network.requestData(url: url+"/season/title/\(type.parameterText)", method: .get)
     }
     
     /// 전설 랭킹 조회

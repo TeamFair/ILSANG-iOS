@@ -12,6 +12,7 @@ protocol TitleRepositoryInterface {
     func getTitleHistories() async -> Result<[UserTitle], Error>
     func getUnreadTitleHistories() async -> Result<[UserTitle], Error>
     func readTitleHistory(historyId: Int) async -> Result<Void, Error>
+    func getSeasonTitles(type: PointType) async -> Result<[Title], Error>
     func getLegendRank(titleId: String, page: Int, size: Int) async ->  Result<(data: [LegendRank], total: Int), Error>
 }
 
@@ -45,6 +46,11 @@ final class TitleRepository: TitleRepositoryInterface {
         case .failure(let error):
             return .failure(error)
         }
+    }
+    
+    func getSeasonTitles(type: PointType) async -> Result<[Title], Error> {
+        let res = await network.getSeasonTitles(type: type)
+        return ResponseMapper.mapArrayResponse(res)
     }
     
     func getLegendRank(titleId: String, page: Int, size: Int) async ->  Result<(data: [LegendRank], total: Int), Error> {
