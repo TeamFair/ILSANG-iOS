@@ -20,6 +20,7 @@ extension QuestDetailResponse: DomainConvertible {
             repeatFrequency: self.repeatFrequency.flatMap { RepeatType(param: $0) },
             rewards: rewards.map { $0.toDomain() },
             missions: missions.map { $0.toDomain() },
+            coupons: coupons.map { $0.toDomain() },
             expireDate: date,
             imageId: imageId,
             mainImageId: mainImageId,

@@ -19,4 +19,5 @@ struct QuestDetailResponse: Decodable {
     let favoriteYn: Bool
     let rewards: [RewardResponse]
     let missions: [MissionResponse]
+    let coupons: [CouponResponse]
 }

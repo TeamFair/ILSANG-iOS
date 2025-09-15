@@ -20,6 +20,7 @@ extension BannerQuestResponse: DomainConvertible {
             repeatFrequency: repeatFrequency.flatMap { RepeatType(param: $0) },
             rewards: rewards.map { $0.toDomain() },
             missions: [],
+            coupons: [],
             expireDate: date,
             imageId: imageId,
             mainImageId: mainImageId,

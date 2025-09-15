@@ -17,7 +17,11 @@ struct UserCouponItem: Identifiable {
 
 extension UserCouponItem {
     var expireAtText: String {
-        return coupon.validTo.toDisplayFormat(.full) + " 까지"
+        if let expireAtString = coupon.validTo?.toDisplayFormat(.full) {
+            return expireAtString + " 까지"
+        } else {
+            return ""
+        }
     }
     
     var redeemedText: String {

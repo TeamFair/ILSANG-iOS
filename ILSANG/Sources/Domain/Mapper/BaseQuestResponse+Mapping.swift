@@ -20,6 +20,7 @@ extension BaseQuestResponse: DomainConvertible {
             repeatFrequency: self.repeatFrequency.flatMap { RepeatType(rawValue: $0) },
             rewards: rewards.map { $0.toDomain() },
             missions: [],
+            coupons: [],
             expireDate: date,
             imageId: imageId,
             mainImageId: mainImageId,

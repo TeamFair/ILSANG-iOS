@@ -17,6 +17,7 @@ final class QuestViewModelItemBuilder {
     private var title: String = "기본 미션 제목"
     private var writer: String = "일상"
     private var rewards: [Reward] = []
+    private var coupons: [CouponItem] = []
     private var questType: QuestType = .normal
     private var repeatType: RepeatType? = .daily
     private var expireDate: Date = .now
@@ -66,6 +67,11 @@ final class QuestViewModelItemBuilder {
     
     func setReward(_ rewards: [Reward]) -> Self {
         self.rewards = rewards
+        return self
+    }
+    
+    func setCoupons(_ coupons: [CouponItem]) -> Self {
+        self.coupons = coupons
         return self
     }
     
@@ -124,6 +130,7 @@ final class QuestViewModelItemBuilder {
             repeatType: repeatType,
             rewards: rewards,
             missions: missions,
+            coupons: coupons,
             expireDate: expireDate,
             imageId: imageId,
             image: image,
