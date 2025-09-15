@@ -32,6 +32,7 @@ class QuestViewModelItem: Hashable, Identifiable {
     let repeatType: RepeatType?
     let rewards: [Reward]?
     var missions: [Mission]
+    var coupons: [CouponItem]
     let expireDate: Date?
     let imageId: String?
     var image: UIImage?
@@ -48,6 +49,7 @@ class QuestViewModelItem: Hashable, Identifiable {
         repeatType: RepeatType?,
         rewards: [Reward]?,
         missions: [Mission],
+        coupons: [CouponItem],
         expireDate: Date?,
         imageId: String?,
         image: UIImage?,
@@ -63,6 +65,7 @@ class QuestViewModelItem: Hashable, Identifiable {
         self.repeatType = repeatType
         self.rewards = rewards
         self.missions = missions
+        self.coupons = coupons
         self.expireDate = expireDate
         self.imageId = imageId
         self.image = image

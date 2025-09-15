@@ -13,6 +13,6 @@ struct Coupon {
     let imageId: String?
     let storeName: String?
     let description: String?
-    let validFrom: Date
-    let validTo: Date
+    let validFrom: Date?
+    let validTo: Date?
 }

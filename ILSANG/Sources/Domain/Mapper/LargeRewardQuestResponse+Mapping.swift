@@ -20,6 +20,7 @@ extension LargeRewardQuestResponse: DomainConvertible {
             repeatFrequency: nil,
             rewards: rewards.map { $0.toDomain() },
             missions: [],
+            coupons: [],
             expireDate: date,
             imageId: imageId,
             mainImageId: mainImageId,

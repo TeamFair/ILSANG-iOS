@@ -15,8 +15,8 @@ extension CouponResponse: DomainConvertible {
             imageId: imageId,
             storeName: storeName,
             description: description,
-            validFrom: validFrom.toISO8601Date() ?? .now,
-            validTo: validTo.toISO8601Date() ?? .now
+            validFrom: validFrom?.toISO8601Date(),
+            validTo: validTo?.toISO8601Date()
         )
     }
 }

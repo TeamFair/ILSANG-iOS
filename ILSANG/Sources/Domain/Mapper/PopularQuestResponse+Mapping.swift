@@ -20,6 +20,7 @@ extension PopularQuestResponse: DomainConvertible {
             repeatFrequency: repeatFrequency.flatMap { RepeatType(param: $0) },
             rewards: nil,
             missions: [],
+            coupons: [],
             expireDate: date,
             imageId: imageId,
             mainImageId: mainImageId,

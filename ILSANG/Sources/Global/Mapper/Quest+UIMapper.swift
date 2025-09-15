@@ -15,6 +15,7 @@ extension Quest {
             repeatType: repeatFrequency,
             rewards: rewards,
             missions: missions,
+            coupons: coupons.map { $0.toCoupon() },
             expireDate: expireDate,
             imageId: imageId,
             image: nil,
