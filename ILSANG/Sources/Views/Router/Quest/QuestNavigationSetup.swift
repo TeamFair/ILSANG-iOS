@@ -22,8 +22,8 @@ struct QuestNavigationSetup: ViewModifier {
         content
         // 퀘스트 상세 시트
             .sheet(isPresented: $questRouter.showQuestSheet) {
-                let isTall = questRouter.selectedQuest.questType == .repeat || questRouter.selectedQuest.missionType == .photo
-                
+                let detent = PresentationDetent.heightForQuest(quest: questRouter.selectedQuest)
+
                 QuestDetailView(
                     quest: questRouter.selectedQuest,
                     questRepository: dependencies.questRepository,
@@ -33,10 +33,7 @@ struct QuestNavigationSetup: ViewModifier {
                 )
                 .presentationCornerRadius(24)
                 .presentationDragIndicator(.hidden)
-                .presentationDetents([
-                    isTall ? .height(UISheetPresentationController.Detent.questDetailDetentHeightTall)
-                    : .height(UISheetPresentationController.Detent.questDetailDetentHeightShort)
-                ])
+                .presentationDetents([detent])
             }
         
         // 도전내역 제출 라우터

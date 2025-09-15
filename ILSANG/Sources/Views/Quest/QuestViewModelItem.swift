@@ -78,6 +78,8 @@ class QuestViewModelItem: Hashable, Identifiable {
     var missionType: MissionType { missions.first?.type ?? .photo }
     var challengeImages: [UIImage] = []
     var missionId: Int { missions.first?.id ?? 0}
+    var coupon: CouponItem? { coupons.first }
+    var hasCouponReward: Bool { !coupons.isEmpty }
     
     func updateChallengeImages() async {
 //        guard let missions else { return }
@@ -123,10 +125,19 @@ extension QuestViewModelItem {
     static let mockRepeatData: QuestViewModelItem = QuestViewModelItemBuilder()
         .setTitle("러닝 30분하기")
         .setRepeatType(.daily)
+        .setCoupons([CouponItem.mockData])
         .setReward([Reward(point: 110, pointType: .metro), Reward(point: 10, pointType: .commercial), Reward(point: 10, pointType: .contribution)])
         .setFavoriteYn(true)
         .setChallengeImageIds([""])
         .setCustomerRank(2)
+        .build()
+    static let mockOXData: QuestViewModelItem = QuestViewModelItemBuilder()
+        .setTitle("러닝 30분하기")
+        .setNormalType()
+        .setCoupons([CouponItem.mockData])
+        .setMission(.init(id: 0, type: .quiz(.ox), exampleImageIds: []))
+        .setReward([Reward(point: 110, pointType: .metro), Reward(point: 10, pointType: .commercial), Reward(point: 10, pointType: .contribution)])
+        .setFavoriteYn(true)
         .build()
     
     static let mockQuestList: [QuestViewModelItem] = [mockData, mockRepeatData]

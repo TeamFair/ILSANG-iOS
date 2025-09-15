@@ -219,7 +219,7 @@
 		60ADF9C62D59D6C200556958 /* Roboto-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A1EB63392C132AC100B63F9C /* Roboto-Medium.ttf */; };
 		60ADF9C72D59D6CB00556958 /* SFPRODISPLAYREGULAR.otf in Resources */ = {isa = PBXBuildFile; fileRef = A1EB633A2C132B0800B63F9C /* SFPRODISPLAYREGULAR.otf */; };
 		60ADF9C92D5A019B00556958 /* UIApplication.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60ADF9C82D5A019A00556958 /* UIApplication.swift */; };
-		60ADF9CB2D5A01BA00556958 /* UISheetPresentationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60ADF9CA2D5A01BA00556958 /* UISheetPresentationController.swift */; };
+		60ADF9CB2D5A01BA00556958 /* PresentationDetent++.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60ADF9CA2D5A01BA00556958 /* PresentationDetent++.swift */; };
 		60ADF9CD2D5DD3D000556958 /* RoundedBackground.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60ADF9CC2D5DD3D000556958 /* RoundedBackground.swift */; };
 		60ADF9D22D5DDC5B00556958 /* QuizView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60ADF9D12D5DDC5B00556958 /* QuizView.swift */; };
 		60ADF9D42D5DDD2000556958 /* QuestEngageInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60ADF9D32D5DDD2000556958 /* QuestEngageInfoView.swift */; };
@@ -238,6 +238,7 @@
 		60C6B4D52C2C565700926C0E /* ChallengeNetwork.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60C6B4D42C2C565700926C0E /* ChallengeNetwork.swift */; };
 		60C6B4DC2C2D042700926C0E /* Image.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60C6B4DB2C2D042700926C0E /* Image.swift */; };
 		60C6B4DF2C2D053600926C0E /* SubmitRouterViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60C6B4DE2C2D053600926C0E /* SubmitRouterViewModel.swift */; };
+		60D5EB582E783EBC00C5B78F /* QuestCouponView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60D5EB572E783EBC00C5B78F /* QuestCouponView.swift */; };
 		60D897122E536D2C006A8480 /* MissionHistoryResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60D897112E536D2C006A8480 /* MissionHistoryResponse.swift */; };
 		60D8971A2E537188006A8480 /* MissionHistory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60D897182E537188006A8480 /* MissionHistory.swift */; };
 		60D8971E2E5372B3006A8480 /* MissionHistoryRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60D8971D2E5372B3006A8480 /* MissionHistoryRepository.swift */; };
@@ -553,7 +554,7 @@
 		60ADF9BE2D59D41E00556958 /* Font++.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Font++.swift"; sourceTree = "<group>"; };
 		60ADF9C12D59D47100556958 /* FontWithLineHeight.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FontWithLineHeight.swift; sourceTree = "<group>"; };
 		60ADF9C82D5A019A00556958 /* UIApplication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIApplication.swift; sourceTree = "<group>"; };
-		60ADF9CA2D5A01BA00556958 /* UISheetPresentationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UISheetPresentationController.swift; sourceTree = "<group>"; };
+		60ADF9CA2D5A01BA00556958 /* PresentationDetent++.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PresentationDetent++.swift"; sourceTree = "<group>"; };
 		60ADF9CC2D5DD3D000556958 /* RoundedBackground.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedBackground.swift; sourceTree = "<group>"; };
 		60ADF9D12D5DDC5B00556958 /* QuizView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuizView.swift; sourceTree = "<group>"; };
 		60ADF9D32D5DDD2000556958 /* QuestEngageInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestEngageInfoView.swift; sourceTree = "<group>"; };
@@ -576,6 +577,7 @@
 		60C6B4D42C2C565700926C0E /* ChallengeNetwork.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChallengeNetwork.swift; sourceTree = "<group>"; };
 		60C6B4DB2C2D042700926C0E /* Image.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Image.swift; sourceTree = "<group>"; };
 		60C6B4DE2C2D053600926C0E /* SubmitRouterViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubmitRouterViewModel.swift; sourceTree = "<group>"; };
+		60D5EB572E783EBC00C5B78F /* QuestCouponView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestCouponView.swift; sourceTree = "<group>"; };
 		60D897112E536D2C006A8480 /* MissionHistoryResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionHistoryResponse.swift; sourceTree = "<group>"; };
 		60D897182E537188006A8480 /* MissionHistory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionHistory.swift; sourceTree = "<group>"; };
 		60D8971D2E5372B3006A8480 /* MissionHistoryRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionHistoryRepository.swift; sourceTree = "<group>"; };
@@ -895,7 +897,7 @@
 				604687A72D1FD9E70056E394 /* CGFloat++.swift */,
 				60ADF9C82D5A019A00556958 /* UIApplication.swift */,
 				601BCF1F2D7C2DC100138387 /* UINavigationController.swift */,
-				60ADF9CA2D5A01BA00556958 /* UISheetPresentationController.swift */,
+				60ADF9CA2D5A01BA00556958 /* PresentationDetent++.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -910,6 +912,7 @@
 				605E81412D9FE4C400ECDB15 /* QuestDetailApprovalImageView.swift */,
 				605E81452D9FE6D800ECDB15 /* QuestDetailRepeatRankView.swift */,
 				605E81492D9FEB2300ECDB15 /* QuestDetailStatView.swift */,
+				60D5EB572E783EBC00C5B78F /* QuestCouponView.swift */,
 			);
 			path = QuestDetail;
 			sourceTree = "<group>";
@@ -1981,7 +1984,7 @@
 				60FF5EC92E4BA59E007A5B40 /* SeasonPopupContainerView.swift in Sources */,
 				60D897512E577E96006A8480 /* TrailingStarView.swift in Sources */,
 				A1C6422A2C33F55A004954CA /* QuestNetwork.swift in Sources */,
-				60ADF9CB2D5A01BA00556958 /* UISheetPresentationController.swift in Sources */,
+				60ADF9CB2D5A01BA00556958 /* PresentationDetent++.swift in Sources */,
 				60D8973F2E575052006A8480 /* PopularQuestResponse.swift in Sources */,
 				60D897432E575704006A8480 /* QuestType.swift in Sources */,
 				A1AB3D6C2C1142AA001EB9D8 /* LoginButton.swift in Sources */,
@@ -2021,6 +2024,7 @@
 				606292D82C19E70A0098B6D2 /* Network.swift in Sources */,
 				606C3ECA2E60E9C20050C4D6 /* PointCommercial.swift in Sources */,
 				A1501B0A2C48C3E5001410E1 /* MyPageInfoView.swift in Sources */,
+				60D5EB582E783EBC00C5B78F /* QuestCouponView.swift in Sources */,
 				60A2ADF32DAE62BD007AC375 /* SettingItemView.swift in Sources */,
 				609197482E5C279700F1D81B /* AreaUserRank.swift in Sources */,
 				608EBFA12C39C5BB00B862CC /* String++.swift in Sources */,
