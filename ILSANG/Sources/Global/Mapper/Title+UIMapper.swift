@@ -21,4 +21,15 @@ extension Title {
             isSelected: (userTitle?.titleHistoryId != nil && userTitle?.titleHistoryId == currentSelectedId)
         )
     }
+    
+    func toItem() -> TitleItem {
+        TitleItem(
+            titleId: id,
+            name: name,
+            condition: condition,
+            grade: grade,
+            historyId: nil,
+            isSelected: false
+        )
+    }
 }

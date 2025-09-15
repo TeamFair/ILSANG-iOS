@@ -9,9 +9,17 @@ import SwiftUI
 
 struct RankingRewardView: View {
     @Environment(\.dismiss) var dismiss
-    @State private var viewStatus: ViewStatus = .loaded
-    @State private var selectedScope: PointType = .commercial
-    @State var items: [SeasonReward] = [.init(idx: 0, honor: .init(titleId: "", name: "", condition: "조건", grade: .legend, historyId: 0, isSelected: false), subtitle: "서브타이틀")]
+    @StateObject private var viewModel: RankingRewardViewModel
+    
+    init(
+        titleRepository: TitleRepositoryInterface,
+    ) {
+        self._viewModel = StateObject(
+            wrappedValue: RankingRewardViewModel(
+                titleRepository: titleRepository
+            )
+        )
+    }
     
     var body: some View {
         VStack (spacing: 0){
@@ -22,7 +30,7 @@ struct RankingRewardView: View {
             
             selectScopeView
             
-            switch viewStatus {
+            switch viewModel.viewStatus {
             case .loading:
                 ProgressView().frame(maxHeight: .infinity)
             case .loaded:
@@ -35,15 +43,19 @@ struct RankingRewardView: View {
         .background(Color.background)
         .navigationBarBackButtonHidden()
         .task {
-            // TODO: 보상 조회 로직 추가
+            await viewModel.getRewards(pointType: viewModel.pointType)
+        }
+        .onChange(of: viewModel.pointType) { _, pointType in
+            Task {
+                await viewModel.loadRewardsIfNeeded(pointType: pointType)
+            }
         }
         .background(Color.background)
     }
     
-    
     private var selectScopeView: some View {
         ScopeHeaderView(
-            selectedScope: $selectedScope,
+            selectedScope: $viewModel.pointType,
             horizontalPadding: 0,
             height: 44,
             hasBottomLine: true
@@ -53,8 +65,8 @@ struct RankingRewardView: View {
     private var rewardListView: some View {
         ScrollView {
             LazyVStack(spacing: 8) {
-                ForEach(items, id: \.idx) { reward in
-                    rewardListItemView(reward: reward)
+                ForEach(viewModel.currentRewards, id: \.titleId) { reward in
+                    rewardListItemView(title: reward)
                 }
             }
             .padding(.top, 12)
@@ -62,38 +74,36 @@ struct RankingRewardView: View {
             .padding(.horizontal, 20)
         }
     }
-    struct SeasonReward {
-        let idx: Int
-        let honor: TitleItem
-        let subtitle: String
-    }
     
-    private func rewardListItemView(reward: SeasonReward) -> some View {
+    private func rewardListItemView(title: TitleItem) -> some View {
         VStack(spacing: 8) {
-            Image(.rank1) // TODO: 이미지 & 텍스트 변경
-                .resizable()
-                .scaledToFit()
-                .frame(30)
+            switch title.displayType {
+            case .image(let imageName):
+                Image(imageName)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(26)
+                    .frame(30)
+            case .text(let text):
+                Text(text)
+                    .styledFont(.heading2)
+                    .foregroundStyle(.gray500)
+            }
             
             HonorIconView(
-                honorTitle: reward.honor.name,
-                grade: reward.honor.grade,
+                honorTitle: title.name,
+                grade: title.grade,
                 imageSize: 20,
                 spacing: 8,
                 font: .init(size: 15, weight: .bold, lineHeight: 20, tracking: 0),
                 fgColor: .black
             )
-            
-            Text(reward.subtitle)
-                .styledFont(.regular, size: 13, lineHeight: 16)
-                .foregroundStyle(.gray400)
         }
         .frame(maxWidth: .infinity)
-        .padding(12)
-        .background(Color.white)
-        .cornerRadius(16)
-        
+        .padding(20)
+        .roundedBackground(cornerRadius: 16)
     }
+    
     private var networkErrorView: some View {
         ErrorView(
             systemImageName: "wifi.exclamationmark",
@@ -102,12 +112,16 @@ struct RankingRewardView: View {
             emoticon: "🥲"
         ) {
             Task {
-                // TODO: 재시도 로직
+                await viewModel.getRewards(pointType: viewModel.pointType)
             }
         }
     }
 }
 
 #Preview {
-    RankingRewardView()
+    RankingRewardView(
+        titleRepository: TitleRepository(
+            network: TitleNetwork()
+        )
+    )
 }

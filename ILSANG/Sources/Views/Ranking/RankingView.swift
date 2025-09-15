@@ -198,7 +198,9 @@ extension RankingView {
                     }
                     
                     NavigationLink {
-                        RankingRewardView()
+                        RankingRewardView(
+                            titleRepository: dependencies.titleRepository
+                        )
                     } label: {
                         seasonBannerButtonView(title: "시즌 보상")
                     }
