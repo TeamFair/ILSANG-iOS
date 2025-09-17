@@ -25,7 +25,6 @@ struct IllsangZoneSelectionView: View {
                     dismiss()
                 }
                 .padding(.bottom, 8)
-                .padding(.horizontal, -20)
                 
                 AreaSelectionView(
                     areas: $viewModel.areas,
@@ -35,12 +34,12 @@ struct IllsangZoneSelectionView: View {
                         viewModel.selectedArea = area
                     }
                 )
+                .padding(.trailing, 20)
             }
             .task {
                 await viewModel.loadAreas()
             }
             .navigationBarBackButtonHidden()
-            .padding(.horizontal, 20)
             .safeAreaInset(edge: .bottom, alignment: .center) {
                 if viewModel.selectedArea != nil {
                     PrimaryButton(title: "내 일상존 선택하기") {
