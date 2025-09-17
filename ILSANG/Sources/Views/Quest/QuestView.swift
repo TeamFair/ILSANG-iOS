@@ -258,9 +258,6 @@ extension QuestView {
         illsangZoneManager: IllsangZoneManager(
             areaNameService: AreaNameService(
                 areaRepository: AreaRepository(network: AreaNetwork())
-            ),
-            seasonManager: SeasonManager(
-                seasonNetwork: SeasonNetwork()
             )
         )
     )

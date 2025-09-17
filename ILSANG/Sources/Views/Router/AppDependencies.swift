@@ -72,7 +72,7 @@ class AppDependencies: ObservableObject {
         // Services
         self.areaNameService = AreaNameService(areaRepository: areaRepository)
         self.seasonManager = SeasonManager(seasonNetwork: seasonNetwork)
-        self.illsangZoneManager = IllsangZoneManager(areaNameService: areaNameService, seasonManager: seasonManager)
+        self.illsangZoneManager = IllsangZoneManager(areaNameService: areaNameService)
         self.imageChallengeSubmitService = ImageChallengeSubmitService(imageNetwork: imageNetwork, challengeNetwork: challengeNetwork)
         self.favoriteService = FavoriteService(favoriteNetwork: favoriteNetwork)
         self.honorAcquisitionManager = HonorAcquisitionManager(titleRepository: titleRepository)
