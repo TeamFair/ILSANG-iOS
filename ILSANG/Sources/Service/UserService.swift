@@ -5,8 +5,9 @@
 //  Created by Lee Jinhee on 7/10/24.
 //
 
-import SwiftUI
 import AuthenticationServices
+import Combine
+import SwiftUI
 
 final class UserService: ObservableObject {
     let userRepository: UserRepositoryInterface = UserRepository(network: UserNetwork())
@@ -20,8 +21,18 @@ final class UserService: ObservableObject {
     @Published var currentUser: UserItem?
     
     static let shared = UserService()
+    private var cancellables = Set<AnyCancellable>() // 구독 저장
     
-    private init() { }
+    private init() {
+        // 날짜 변경 감지
+        NotificationCenter.default.publisher(for: .NSCalendarDayChanged)
+            .sink { [weak self] _ in
+                Task {
+                    await self?.fetchUserInfo()
+                }
+            }
+            .store(in: &cancellables)
+    }
     
     // MARK: - 로그인
     /// 첫 애플 로그인하는 경우
