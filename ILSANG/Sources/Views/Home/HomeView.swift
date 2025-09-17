@@ -105,8 +105,6 @@ struct HomeView: View {
             Group {
                 if let _ = dependencies.honorAcquisitionManager.currentHonor {
                     HonorPopupContainerView()
-                } else if let alert = vm.alertType {
-                    alertView(alert)
                 }
             }
         )
@@ -378,16 +376,6 @@ struct HomeView: View {
                 }
                 .scrollIndicators(.never)
         )
-    }
-    
-    @ViewBuilder
-    private func alertView(_ alertType: AlertType) -> some View {
-        if alertType ==  AlertType.myRegionChangeSuccess {
-            SettingAlertView(
-                alertType: alertType,
-                onConfirm: { vm.alertType = nil }
-            )
-        }
     }
     
     private var networkErrorView: some View {
