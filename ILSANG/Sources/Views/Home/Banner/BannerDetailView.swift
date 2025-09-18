@@ -260,8 +260,7 @@ enum BannerQuestStatus: String, Equatable, SelectableTabItem {
         areaRepository: AreaRepository(network: AreaNetwork()),
         favoriteService: FavoriteService(favoriteNetwork: FavoriteNetwork()),
         illsangZoneManager: IllsangZoneManager(
-            areaNameService: AreaNameService(areaRepository: AreaRepository(network: AreaNetwork())),
-            seasonManager: SeasonManager(seasonNetwork: SeasonNetwork())
+            areaNameService: AreaNameService(areaRepository: AreaRepository(network: AreaNetwork()))
         ),
         questSubmissionNotifier: QuestSubmissionNotifier()
     )

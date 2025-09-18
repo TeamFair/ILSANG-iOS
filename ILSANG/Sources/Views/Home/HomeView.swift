@@ -163,6 +163,7 @@ struct HomeView: View {
             Text("내 일상존: ")
                 .styledFont(.caption2)
                 .foregroundStyle(.gray400)
+            // TODO: 로딩중or시즌없을경우 선택 안되도록 수정..
             Button {
                 questRouter.handleIllsangZoneButtonTap()
             } label: {
@@ -401,8 +402,7 @@ struct HomeView: View {
         questSubmissionNotifier: QuestSubmissionNotifier(),
         sharedState: SharedState(),
         illsangZoneManager: IllsangZoneManager(
-            areaNameService: AreaNameService(areaRepository: AreaRepository(network: AreaNetwork())),
-            seasonManager: SeasonManager(seasonNetwork: SeasonNetwork())
+            areaNameService: AreaNameService(areaRepository: AreaRepository(network: AreaNetwork()))
         )
     )
 }
