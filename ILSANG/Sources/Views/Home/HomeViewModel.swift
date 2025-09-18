@@ -40,9 +40,7 @@ final class HomeViewModel: ObservableObject {
     
     @Published var showSelectMyRegionView: Bool = false
     @Published var selectedBanner: BannerViewModelItem? = nil
-    
-    @Published var alertType: AlertType? = nil
-    
+        
     var errorCnt = 0
     @Published var showMainBanners: Bool = true
     @Published var showLargestRewardQuest: Bool = true
@@ -376,7 +374,6 @@ final class HomeViewModel: ObservableObject {
     // 내 지역 선택 완료 시
     func handleMyRegionSelection(_ area: CommercialArea) {
         sharedState.selectedCommercialArea = area
-        self.alertType = .myRegionChangeSuccess
     }
     
     /// 즐겨찾기 상태를 UI에 즉시 반영하고,  서버 반영은 디바운싱 처리

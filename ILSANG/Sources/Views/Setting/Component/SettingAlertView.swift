@@ -155,8 +155,6 @@ enum AlertType: AlertPresentable {
     case Withdrawal
     case Report
     case ChallengeDelete
-
-    case myRegionChangeSuccess
     
     var title: String {
         switch self {
@@ -172,7 +170,6 @@ enum AlertType: AlertPresentable {
             "신고하시겠습니까?"
         case .ChallengeDelete:
             "챌린지를 삭제 할까요?"
-        case .myRegionChangeSuccess: "내 지역이 설정되었습니다"
         }
     }
     
@@ -190,7 +187,6 @@ enum AlertType: AlertPresentable {
             "확인 후 빠른 시일 내 조치하도록 하겠습니다"
         case .ChallengeDelete:
             "삭제하면 복구가 불가합니다"
-        case .myRegionChangeSuccess: "퀘스트를 수행하러 가 볼까요?"
         }
     }
     
@@ -200,8 +196,6 @@ enum AlertType: AlertPresentable {
             "취소"
         case .Logout:
             "아니요"
-        default:
-            ""
         }
     }
     

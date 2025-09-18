@@ -21,11 +21,10 @@ struct MyRegionAreaSelectionView: View {
     var body: some View {
         ZStack {
             VStack(spacing: 0) {
-                NavigationTitleView(title: "내 지역") {
+                NavigationTitleView(title: "지역 선택") {
                     dismiss()
                 }
                 .padding(.bottom, 8)
-                .padding(.horizontal, -20)
                 
                 AreaSelectionView(
                     areas: $viewModel.areas,
@@ -35,15 +34,15 @@ struct MyRegionAreaSelectionView: View {
                         viewModel.selectedArea = area
                     }
                 )
+                .padding(.trailing, 20)
             }
             .task {
                 await viewModel.loadAreas()
             }
             .navigationBarBackButtonHidden()
-            .padding(.horizontal, 20)
             .safeAreaInset(edge: .bottom, alignment: .center) {
                 if viewModel.selectedArea != nil {
-                    PrimaryButton(title: "내 지역 선택하기") {
+                    PrimaryButton(title: "지역 선택하기") {
                         if let selectedArea = viewModel.selectedArea {
                             onSuccess?(selectedArea)
                         }
@@ -51,7 +50,6 @@ struct MyRegionAreaSelectionView: View {
                     }
                     .padding(.horizontal, 20)
                 }
-                
             }
         }
     }

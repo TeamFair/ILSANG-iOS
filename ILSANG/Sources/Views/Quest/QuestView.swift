@@ -58,13 +58,6 @@ struct QuestView: View {
         }
         .withQuestNavigation(questRouter: questRouter)
         .withUserNavigation(userRouter: userRouter)
-        .overlay(
-            Group {
-                if let alert = vm.alertType {
-                    alertView(alert)
-                }
-            }
-        )
         .navigationDestination(isPresented: $vm.showSelectMyRegionView) {
             MyRegionAreaSelectionView(areaRepository: dependencies.areaRepository) { area in
                 vm.handleMyRegionSelection(area)
@@ -234,18 +227,6 @@ extension QuestView {
     
     private var filterPickerEventView: some View {
         PickerView(state: vm.eventFilterState, width: 150)
-    }
-    
-    @ViewBuilder
-    private func alertView(_ alertType: AlertType) -> some View {
-        if alertType == .myRegionChangeSuccess {
-            SettingAlertView(
-                alertType: alertType,
-                onConfirm: {
-                    vm.alertType = nil
-                }
-            )
-        }
     }
     
     private var questListEmptyView: some View {

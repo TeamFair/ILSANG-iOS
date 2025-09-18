@@ -21,7 +21,6 @@ class QuestViewModel: ObservableObject {
     @Published var selectedHeader: QuestStatus = .default
     
     @Published var showSelectMyRegionView: Bool = false
-    @Published var alertType: AlertType? = nil
     
     // 필터
      var questFilterState: StaticFilterPickerState<QuestFilterType>
@@ -356,7 +355,6 @@ class QuestViewModel: ObservableObject {
     
     func handleMyRegionSelection(_ area: CommercialArea) {
         sharedState.selectedCommercialArea = area
-        self.alertType = .myRegionChangeSuccess
     }
     
     /// 즐겨찾기 상태를 UI에 즉시 반영하고,  서버 반영은 디바운싱 처리

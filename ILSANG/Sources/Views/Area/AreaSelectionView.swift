@@ -54,10 +54,10 @@ struct AreaSelectionView: View {
         } label: {
             Text(area.areaName)
                 .styledFont(.subTitle1)
-                .frame(width: 103, height: 54)
+                .frame(width: 124, height: 54)
                 .foregroundStyle(isSelected ? .white : .gray500)
                 .background(isSelected ? .primary300 : .clear)
-                .animation(.default, value: selectedMetroIdx)
+                .animation(.easeOut(duration: 0.2), value: selectedMetroIdx)
         }
     }
     
@@ -109,7 +109,7 @@ struct AreaSelectionView: View {
                         )
                 )
                 .padding(.trailing, 20)
-                .animation(.default, value: selectedCommercialArea)
+                .animation(.easeOut(duration: 0.2), value: selectedCommercialArea)
         }
     }
     
