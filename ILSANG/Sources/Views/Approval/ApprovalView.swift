@@ -68,12 +68,18 @@ struct ApprovalView: View {
                         width: .screenWidth - 40,
                         height: ((.screenWidth-40) / 5) * 4,
                         padding: 20,
-                        onLike: { vm.onLike(for: idx) },
-                        onHate: { vm.onHate(for: idx) },
-                        onOtherUserTapped: {
-                            userRouter.navigateToUserProfile(userId: item.userId)
+                        onAction: { action in
+                            switch action {
+                            case .like:
+                                vm.onLike(for: idx)
+                            case .hate:
+                                vm.onHate(for: idx)
+                            case .profileTapped(let userId):
+                                userRouter.navigateToUserProfile(userId: userId)
+                            }
                         }
                     )
+                    .equatable()
                     .overlay(alignment: .topTrailing) {
                         trailingButton(for: item)
                     }
