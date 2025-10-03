@@ -168,6 +168,11 @@ final class HomeViewModel: ObservableObject {
             group.addTask {
                 do {
                     try await self.loadRecommendQuestList()
+                    if self.recommendQuestList.isEmpty {
+                        await MainActor.run {
+                            self.showRecommendQuest = false
+                        }
+                    }
                 } catch {
                     Log("Failed to load recommend quests: \(error.localizedDescription)")
                     self.errorCnt += 1
@@ -177,6 +182,11 @@ final class HomeViewModel: ObservableObject {
             group.addTask {
                 do {
                     try await self.loadLargeRewardQuestList()
+                    if self.largestRewardQuestList.isEmpty {
+                        await MainActor.run {
+                            self.showLargestRewardQuest = false
+                        }
+                    }
                 } catch {
                     Log("Failed to load large reward quests: \(error.localizedDescription)")
                     self.errorCnt += 1
@@ -187,8 +197,14 @@ final class HomeViewModel: ObservableObject {
             group.addTask {
                 do {
                     try await self.loadRankList()
+                    if self.userRankList.isEmpty {
+                        await MainActor.run {
+                            self.showRankList = false
+                        }
+                    }
                 } catch {
                     Log("Failed to load large reward quests: \(error.localizedDescription)")
+                    
                     self.errorCnt += 1
                     self.showRankList = false
                 }
