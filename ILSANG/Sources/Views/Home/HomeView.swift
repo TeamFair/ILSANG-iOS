@@ -63,7 +63,9 @@ struct HomeView: View {
     var body: some View {
         Group {
             switch vm.viewStatus {
-            case .loading, .loaded:
+            case .loading:
+                ProgressView().frame(maxWidth: .infinity, maxHeight: .infinity)
+            case .loaded:
                 ScrollView {
                     VStack(spacing: 0) {
                         header
