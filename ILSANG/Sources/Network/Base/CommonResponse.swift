@@ -7,43 +7,37 @@
 
 import Alamofire
 
+// TODO: 지역시스템 > 제거
 struct Response<T: Decodable>: Decodable {
     let data: T
     let errorStatus: String?
     let errMessage: String?
-    let status, message: String
+    // let status, message: String?
     
     init(data: T, errorStatus: String?, errMessage: String?, status: String, message: String) {
         self.data = data
         self.errorStatus = errorStatus
         self.errMessage = errMessage
-        self.status = status
-        self.message = message
     }
 }
 
-struct ResponseWithPage<T: Decodable>: Decodable {
+struct ResponseWithPage<T> {
     let size: Int
-    let data: T
-    let total: Int
+    let content: T
+    let totalPages: Int
+    let totalElements: Int
     let page: Int
-    let status: String
-    let message: String
+    let isLast: Bool
 }
+
+extension ResponseWithPage: Decodable where T: Decodable {}
+
 
 struct ResponseWithoutData: Decodable {
     let data: [String: String]?
-    let errorStatus: String?
-    let errMessage: String?
-    let status: String
-    let message: String
-    
-    init(data: [String: String], errorStatus: String?, errMessage: String?, status: String, message: String) {
+   
+    init(data: [String: String]) {
         self.data = data
-        self.errorStatus = errorStatus
-        self.errMessage = errMessage
-        self.status = status
-        self.message = message
     }
 }
 
@@ -52,4 +46,10 @@ struct ResponseWithEmpty: Decodable, EmptyResponse {
     static func emptyValue() -> ResponseWithEmpty {
         return ResponseWithEmpty.init()
     }
+}
+
+struct ErrorResponse: Decodable {
+    let errMessage: String?
+    let status: String?
+    let message: String?
 }

@@ -7,13 +7,12 @@
 
 
 // Server URL
-SERVER_IP = 52.79.126.243
-ROOT_URL = http:/$()/52.79.126.243
-PORT = 8880
-
+ROOT_URL = https:/$()/api-dev.illsangtech.com
 
 // App Settings
 APP_NAME = 일상 DEV
 APP_BUNDLE_ID = com.ilsang240615.dev
 
 SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG DEV
+
+GIDClientID = 654001951429-ne4ev00taadiag4tr4euigqlv3jgkvr8.apps.googleusercontent.com

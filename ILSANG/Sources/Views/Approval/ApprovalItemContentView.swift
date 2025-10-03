@@ -12,25 +12,27 @@ import SwiftUI
 /// 18 버전 이상 > 네비게이션 이동(zoom 효과)
 struct ApprovalItemContentView: View {
     @Namespace var namespace
+    
     @State var showMagView: Bool = false
     @State var showSheetView: Bool = false
-    let item: ApprovalViewModelItem
+    let item: ApprovalMissionHistoryItem
     
     let width: CGFloat
     let height: CGFloat
     
+    let onOtherUserTapped: () -> Void
+
     var body: some View {
         NavigationStack {
             VStack(alignment: .leading, spacing: 16) {
-                NavigationLink {
-                    OtherUserProfileView(customerId: item.customerId)
+                Button {
+                    onOtherUserTapped()
                 } label: {
-                    profileView(nickname: item.nickname, honor: item.honor)
+                    profileView(nickname: item.nickname, honor: item.userTitle)
                 }
                 
                 Text(item.title)
-                    .font(.system(size: 23, weight: .bold))
-                    .frame(height: 24)
+                    .styledFont(.title1)
                     .foregroundStyle(.black)
                 
                 if #available(iOS 18.0, *) {
@@ -58,15 +60,24 @@ struct ApprovalItemContentView: View {
                         }
                 }
                 
-                Text(item.time)
-                    .font(.system(size: 12, weight: .regular))
-                    .frame(maxWidth: .infinity, alignment: .trailing)
-                    .foregroundStyle(.gray500)
-                    .padding(.trailing, 8)
+                HStack(spacing: 4) {
+                    Text(item.displayDate)
+                        .font(.system(size: 12, weight: .regular))
+                    Spacer(minLength: 0)
+                    if let commercialAreaName = item.commercialAreaName, !commercialAreaName.isEmpty {
+                        Image(.illsangRegion)
+                            .resizable()
+                            .scaledToFit()
+                            .frame(18)
+                        Text(commercialAreaName)
+                            .styledFont(.badge1)
+                    }
+                }
+                .foregroundStyle(.gray500)
                 
                 HStack(spacing: 16) {
-                    emojiView(imageName: .thumbsUp, count: item.likeCnt, alignment: .top)
-                    emojiView(imageName: .thumbsDown, count: item.hateCnt, alignment: .bottom)
+                    emojiView(imageName: .thumbsUp, count: item.likeCount, alignment: .top)
+                    emojiView(imageName: .thumbsDown, count: item.hateCount, alignment: .bottom)
                 }
             }
             .sheet(isPresented: $showSheetView, content: {
@@ -74,7 +85,7 @@ struct ApprovalItemContentView: View {
                     showSheetView.toggle()
                 }
             })
-            .navigationDestination(isPresented: $showMagView) {
+            .sheet(isPresented: $showMagView) {
                 if #available(iOS 18.0, *) {
                     ImageFullScreenView(image: item.image ?? .logo) {
                         showMagView.toggle()
@@ -89,7 +100,86 @@ struct ApprovalItemContentView: View {
         }
     }
     
-    private func profileView(nickname: String, honor: Title?) -> some View {
+    private func profileView(nickname: String, honor: UserTitle?) -> some View {
+        HStack(spacing: 10) {
+            Image(uiImage: item.profileImage ?? .profileCircle)
+                .resizable()
+                .frame(width: 35, height: 35)
+                .clipShape(.circle)
+            VStack(alignment: .leading, spacing: 4) {
+                Text(nickname)
+                    .font(.system(size: 14, weight: .semibold))
+                if let honor {
+                    HonorIconView(honorTitle: honor.name, grade: honor.grade, imageSize: 20, spacing: 4, font: .badge1, fgColor: .gray500)
+                }
+            }
+        }
+        .foregroundStyle(.gray500)
+    }
+    
+    private func emojiView(imageName: UIImage, count: Int, alignment: Alignment) -> some View {
+        HStack(spacing: 4) {
+            Image(uiImage: imageName)
+                .resizable()
+                .renderingMode(.template)
+                .scaledToFit()
+                .frame(width: 21, height: 21)
+                .foregroundStyle(.gray200)
+                .frame(width: 24, height: 24, alignment: alignment)
+            Text(String(count))
+                .monospacedDigit()
+                .font(.system(size: 15, weight: .bold))
+                .foregroundStyle(.gray300)
+        }
+        .frame(height: 24)
+    }
+}
+
+struct ApprovalItemContentShareView: View {
+    let item: ApprovalMissionHistoryItem
+    let width: CGFloat
+    let height: CGFloat
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: 16) {
+            profileView(nickname: item.nickname, honor: item.userTitle)
+
+            Text(item.title)
+                .styledFont(.title1)
+                .foregroundStyle(.black)
+            
+            Image(uiImage: item.image ?? .logo)
+                .resizable()
+                .scaledToFill()
+                .frame(width: width, height: height)
+                .clipped()
+                .contentShape(RoundedRectangle(cornerRadius: 12))
+                .clipShape(RoundedRectangle(cornerRadius: 12))
+            
+            HStack(spacing: 4) {
+                Text(item.displayDate)
+                    .font(.system(size: 12, weight: .regular))
+                Spacer(minLength: 0)
+                if let commercialAreaName = item.commercialAreaName, !commercialAreaName.isEmpty {
+                    Image(.illsangRegion)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(18)
+                    Text(commercialAreaName)
+                        .styledFont(.badge1)
+                }
+            }
+            .foregroundStyle(.gray500)
+            
+            HStack(spacing: 16) {
+                emojiView(imageName: .thumbsUp, count: item.likeCount, alignment: .top)
+                emojiView(imageName: .thumbsDown, count: item.hateCount, alignment: .bottom)
+            }
+        }
+        .background(.white)
+    }
+    
+    private func profileView(nickname: String, honor: UserTitle?) -> some View {
         HStack(spacing: 10) {
             Image(uiImage: item.profileImage ?? .profileCircle)
                 .resizable()
@@ -98,8 +188,8 @@ struct ApprovalItemContentView: View {
             VStack(alignment: .leading, spacing: 6) {
                 Text(nickname)
                     .font(.system(size: 14, weight: .semibold))
-                if let honor, let grade = HonorGrade(rawValue: honor.type) {
-                    HonorIconView(honorTitle: honor.name, grade: grade, imageSize: 20, spacing: 4, font: .badge1, fgColor: .gray500)
+                if let honor {
+                    HonorIconView(honorTitle: honor.name, grade: honor.grade, imageSize: 20, spacing: 4, font: .badge1, fgColor: .gray500)
                 }
             }
             .foregroundStyle(.gray500)
@@ -124,66 +214,11 @@ struct ApprovalItemContentView: View {
     }
 }
 
-import SwiftUI
-
-struct ApprovalItemContentShareView: View {
-    let item: ApprovalViewModelItem
-    let width: CGFloat
-    let height: CGFloat
-    
-    var body: some View {
-        VStack(alignment: .leading, spacing: 16) {
-            profileView(nickname: item.nickname, time: item.time)
-            
-            Text(item.title)
-                .font(.system(size: 23, weight: .bold))
-                .frame(height: 24)
-                .foregroundStyle(.black)
-            
-            Image(uiImage: item.image ?? .logo)
-                .resizable()
-                .scaledToFill()
-                .frame(width: width, height: height)
-                .clipped()
-                .contentShape(RoundedRectangle(cornerRadius: 12))
-                .clipShape(RoundedRectangle(cornerRadius: 12))
-            
-            HStack(spacing: 16) {
-                emojiView(imageName: .thumbsUp, count: item.likeCnt, alignment: .top)
-                emojiView(imageName: .thumbsDown, count: item.hateCnt, alignment: .bottom)
-            }
-        }
+#Preview {
+    VStack {
+        ApprovalItemContentView(item: .mockDataList[0], width: .screenWidth-40, height:  ((.screenWidth-40) / 5) * 4, onOtherUserTapped: {})
+        ApprovalItemContentShareView(item: .mockDataList[1], width: .screenWidth-40, height:  ((.screenWidth-40) / 5) * 4)
     }
-    
-    private func profileView(nickname: String, time: String) -> some View {
-        HStack(spacing: 10) {
-            Image(.profileCircle)
-                .resizable()
-                .frame(width: 35, height: 35)
-            VStack(alignment: .leading, spacing: 3) {
-                Text(nickname)
-                    .font(.system(size: 14, weight: .semibold))
-                Text(time)
-                    .font(.system(size: 12, weight: .regular))
-            }
-            .foregroundStyle(.gray500)
-        }
-    }
-    
-    private func emojiView(imageName: UIImage, count: Int, alignment: Alignment) -> some View {
-        HStack(spacing: 4) {
-            Image(uiImage: imageName)
-                .resizable()
-                .renderingMode(.template)
-                .scaledToFit()
-                .frame(width: 21, height: 21)
-                .foregroundStyle(.gray200)
-                .frame(width: 24, height: 24, alignment: alignment)
-            Text(String(count))
-                .monospacedDigit()
-                .font(.system(size: 15, weight: .bold))
-                .foregroundStyle(.gray300)
-        }
-        .frame(height: 24)
-    }
+    .frame(maxWidth: .infinity, maxHeight: .infinity)
+    .background(Color.background)
 }

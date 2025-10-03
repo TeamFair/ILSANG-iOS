@@ -9,8 +9,8 @@ import SwiftUI
 import AuthenticationServices
 
 struct AppleLoginButtonView: View {
-    @ObservedObject var vm: LoginViewModel
-    
+    let onLoginSuccess: (ASAuthorizationCredential) -> ()
+
     var body: some View {
         SignInWithAppleButton { request in
             request.requestedScopes = [.email]
@@ -18,34 +18,16 @@ struct AppleLoginButtonView: View {
         } onCompletion: { result in
             switch result {
             case .success(let authResult):
-                vm.loginWithApple(credential: authResult.credential)
+                onLoginSuccess(authResult.credential)
             case .failure(let error):
                 Log(error.localizedDescription)
             }
         }
-        .frame(height: 60)
-        .frame(maxWidth: .infinity)
-        .overlay {
-            HStack(spacing: 16) {
-                Image(LoginButton.apple.imageName)
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 18)
-                Text(LoginButton.apple.labelText)
-                    .foregroundColor(LoginButton.apple.accentColor)
-                    .font(.custom(LoginButton.apple.fontName, size: 15))
-                    .bold()
-            }
-            .padding(.horizontal, 18)
-            .frame(height: 60)
-            .frame(maxWidth: .infinity)
-            .background(LoginButton.apple.backgroundColor)
-            .allowsHitTesting(false)
-        }
-        .clipShape(RoundedRectangle(cornerRadius: 16))
+        .frame(width: 183, height: 44)
+        .clipShape(RoundedRectangle(cornerRadius: 30))
     }
 }
 
 #Preview {
-    AppleLoginButtonView(vm: LoginViewModel())
+    AppleLoginButtonView { _ in }
 }

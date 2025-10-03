@@ -13,8 +13,14 @@ struct SubmitRouterView: View {
     @StateObject var vm: SubmitRouterViewModel
     @Environment(\.dismiss) var dismiss
 
-    init(selectedQuest: QuestViewModelItem) {
-        _vm = StateObject(wrappedValue: SubmitRouterViewModel(selectedQuest: selectedQuest, submitService: ImageChallengeSubmitService(imageNetwork: ImageNetwork(), challengeNetwork: ChallengeNetwork()), quizNetwork: QuizNetwork()))
+    init(selectedQuest: QuestViewModelItem, submitService: ImageChallengeSubmitService, challengeNetwork: ChallengeNetwork) {
+        _vm = StateObject(
+            wrappedValue: SubmitRouterViewModel(
+                selectedQuest: selectedQuest,
+                submitService: submitService,
+                challengeNetwork: challengeNetwork
+            )
+        )
     }
 
     var body: some View {
@@ -74,5 +80,9 @@ extension SubmitRouterView {
 }
 
 #Preview {
-    SubmitRouterView(selectedQuest: .mockData)
+    SubmitRouterView(
+        selectedQuest: .mockData,
+        submitService: ImageChallengeSubmitService(imageNetwork: ImageNetwork(), challengeNetwork: ChallengeNetwork()),
+        challengeNetwork: ChallengeNetwork()
+    )
 }

@@ -33,20 +33,17 @@ struct TutorialView: View {
             // 스킵 버튼
             skipButton
             
+            Spacer(minLength: 16)
+                .frame(maxHeight: 48)
+            
             // 스텝, 타이틀, 이미지 콘텐츠
             TabView(selection: $viewModel.step) {
                 ForEach(viewModel.content, id: \.id) { content in
-                    ZStack(alignment: .top) {
-                        Image(.tutorialEffect)
-                            .offset(y: -30)
-                            .opacity(viewModel.isLast ? 1 : 0)
-                        
-                        TutorialContentView(
-                            step: content.id,
-                            title: content.title,
-                            image: content.image
-                        )
-                    }
+                    TutorialContentView(
+                        step: content.id,
+                        title: content.title,
+                        image: content.image
+                    )
                     .tag(content.id)
                 }
             }
@@ -54,16 +51,16 @@ struct TutorialView: View {
             .tabViewStyle(.page(indexDisplayMode: .never))
             .padding(.horizontal, -LayoutConstants.horizontalPadding)
             
-            Spacer(minLength: 0)
-            
             // 인디케이터
             paginationIndicator
+            
+            Spacer(minLength: 0)
             
             // 버튼 영역
             actionButtons
         }
         .padding(.horizontal, LayoutConstants.horizontalPadding)
-        .background(Color.white)
+        .background(Color.background)
         .onChange(of: viewModel.finish) { oldValue, newValue in
             if newValue { dismiss() }
         }
@@ -75,16 +72,15 @@ struct TutorialView: View {
         } label: {
             HStack(spacing: 0) {
                 Text("SKIP")
+                    .styledFont(.tabBold)
                 Image(.arrowRight)
                     .renderingMode(.template)
                     .frame(width: 18, height: 18)
             }
-            .font(.system(size: 14, weight: .semibold))
             .foregroundStyle(.gray300)
         }
         .frame(maxWidth: .infinity, alignment: .trailing)
-        .padding(.top, 20)
-        .padding(.bottom, 48)
+        .padding(.top, 16)
     }
     
     private var paginationIndicator: some View {
@@ -99,7 +95,7 @@ struct TutorialView: View {
                 }
             }
         }
-        .padding(.bottom, 45)
+        .padding(.bottom, 43)
     }
     
     // 기본 애니메이션이 부자연스럽게 적용되어, 분기 처리로 구현
@@ -138,26 +134,25 @@ struct TutorialContentView: View {
         VStack(spacing: 0) {
             Text("Step 0\(step+1)")
                 .foregroundStyle(.white)
-                .font(.system(size: 14, weight: .semibold))
+                .styledFont(.tabBold)
                 .frame(width: 70, height: 25)
-                .background(
-                    RoundedRectangle(cornerRadius: 12)
-                        .fill(Color.primary300)
-                )
+                .roundedBackground(cornerRadius: 12, bgColor: .primary300)
                 .padding(.bottom, 16)
             
             Text(title)
+                .styledFont(.title1)
                 .foregroundStyle(.black)
-                .font(.system(size: 23, weight: .bold))
-                .padding(.bottom, 47)
+                .padding(.bottom, 33)
+            
+            Spacer(minLength: 0)
             
             Image(uiImage: image)
                 .resizable()
                 .scaledToFit()
-                .frame(width: 225, height: 403)
-                .shadow(color: .shadow7D.opacity(0.05), radius: 16, x: 0, y: 8)
+                .frame(width: .screenWidth - 120)
+                .padding(.bottom, 4)
             
-            Spacer(minLength: 0) // 탭 뷰의 하위에 위치하기 때문에 상단으로 정렬하기 위함(탭뷰에 기본 여백이 존재)
+            Spacer(minLength: 32)
         }
     }
 }

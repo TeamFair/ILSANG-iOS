@@ -9,9 +9,11 @@ import SwiftUI
 
 // TODO: 에러처리 재정의 필요
 struct HomeView: View {
-    @Bindable var vm: HomeViewModel
+    @StateObject var vm: HomeViewModel
+    @StateObject var questRouter: QuestRouter
+    @StateObject var userRouter: UserRouter
+    @EnvironmentObject var dependencies: AppDependencies
     @EnvironmentObject var sharedState: SharedState
-    @EnvironmentObject var honorAcquisitionManager: HonorAcquisitionManager
     @Environment(\.redactionReasons) var redactionReasons
     
     private let gridItem = [GridItem(), GridItem()]
@@ -26,88 +28,94 @@ struct HomeView: View {
         static let circleSize: CGFloat = 10
     }
     
+    init(
+        userRepository: UserRepositoryInterface,
+        areaNameService: AreaNameProvider,
+        questRepository: QuestRepositoryInterface,
+        rankRepository: RankRepositoryInterface,
+        bannerRepository: BannerRepositoryInterface,
+        favoriteService: FavoriteService,
+        questSubmissionNotifier: QuestSubmissionNotifier,
+        sharedState: SharedState,
+        illsangZoneManager: IllsangZoneManager
+    ) {
+        self._vm = StateObject(
+            wrappedValue: HomeViewModel(
+                userRepository: userRepository,
+                areaNameService: areaNameService,
+                questRepository: questRepository,
+                rankRepository: rankRepository,
+                bannerRepository: bannerRepository,
+                favoriteService: favoriteService,
+                questSubmissionNotifier: questSubmissionNotifier,
+                sharedState: sharedState
+            )
+        )
+        _questRouter = StateObject(
+            wrappedValue: QuestRouter(
+                illsangZoneManager: illsangZoneManager,
+                questRepository: questRepository
+            )
+        )
+        _userRouter = StateObject(wrappedValue: UserRouter())
+    }
+    
     var body: some View {
-        NavigationStack {
+        Group {
             switch vm.viewStatus {
-            case .loading, .loaded:
+            case .loading:
+                ProgressView().frame(maxWidth: .infinity, maxHeight: .infinity)
+            case .loaded:
                 ScrollView {
-                    VStack(spacing: 23) {
+                    VStack(spacing: 0) {
                         header
                         content
                     }
                 }
-                .task {
-                    await honorAcquisitionManager.fetchUnreadHonorHistory()
-                }
                 .refreshable {
-                    Task {
-                        await vm.loadInitialData()
-                    }
+                    await vm.loadInitialDataSafe()
                 }
                 .disabled(vm.viewStatus == .loading)
+                .withQuestNavigation(questRouter: questRouter)
+                .withUserNavigation(userRouter: userRouter)
             case .error:
                 networkErrorView
             }
         }
+        .navigationDestination(item: $vm.selectedBanner) { banner in
+            BannerDetailView(
+                banner: banner,
+                userRepository: dependencies.userRepository,
+                questRepository: dependencies.questRepository,
+                areaRepository: dependencies.areaRepository,
+                favoriteService: dependencies.favoriteService,
+                illsangZoneManager: dependencies.illsangZoneManager,
+                questSubmissionNotifier: dependencies.questSubmissionNotifier
+            )
+        }
+        .navigationDestination(isPresented: $vm.showSelectMyRegionView) {
+            MyRegionAreaSelectionView(areaRepository: dependencies.areaRepository) { area in
+                vm.handleMyRegionSelection(area)
+            }
+        }
+        .task {
+            await vm.loadDataIfNeeded()
+            await dependencies.honorAcquisitionManager.fetchUnreadHonorHistory()
+        }
         .background(Color.background)
         .overlay(
             Group {
-                if let _ = honorAcquisitionManager.currentHonor {
+                if let _ = dependencies.honorAcquisitionManager.currentHonor {
                     HonorPopupContainerView()
                 }
             }
         )
-        .sheet(isPresented: $vm.showQuestSheet) {
-            let tall = vm.selectedQuest.isRepeatQuest || vm.selectedQuest.missionType == .image
-            QuestDetailView(
-                vm: QuestDetailViewModel(
-                    quest: vm.selectedQuest,
-                    questNetwork: QuestNetwork(),
-                    onUpdate: { quest in
-                        vm.toggleFavoriteStatus(quest: quest)
-                    }
-                )
-            ) {
-                vm.onQuestApprovalTapped()
-            }
-            .presentationCornerRadius(24)
-            .presentationDragIndicator(.hidden)
-            .presentationDetents([tall ? .height(UISheetPresentationController.Detent.questDetailDetentHeightTall) : .height(UISheetPresentationController.Detent.questDetailDetentHeightShort)])
-            .onAppear {
-                UIApplication.shared.updateSheetDetents(to: [tall ? .questDetailDetentTall : .questDetailDetentShort], whenCurrentDetentsAre: [.large()])
-            }
-        }
-        .fullScreenCover(isPresented: $vm.showSubmitRouterView) {
-            SubmitRouterView(selectedQuest: vm.selectedQuest)
-                .interactiveDismissDisabled()
-        }
-        .navigationDestination(isPresented: $vm.showQuestEngageView) {
-            QuestEngageView(
-                vm: QuestEngageViewModel(
-                    quest: vm.selectedQuest,
-                    quizNetwork: QuizNetwork()
-                ),
-                submitVM: SubmitRouterViewModel(
-                    selectedImage: nil,
-                    selectedQuest: vm.selectedQuest,
-                    submitService: ImageChallengeSubmitService(imageNetwork: ImageNetwork(), challengeNetwork: ChallengeNetwork()),
-                    quizNetwork: QuizNetwork()
-                )
-            )
-        }
     }
     
     private var header: some View {
         HStack(alignment: .bottom) {
             Image(.logoWithAlpha)
                 .frame(maxWidth: .infinity, alignment: .leading)
-#if DEBUG
-            Button {
-                honorAcquisitionManager.addMockHonors()
-            } label: {
-                Text("칭호 획득 팝업 보기")
-            }
-#endif
             Button {
                 sharedState.selectedTab = .mypage /// 마이 탭으로 이동
             } label: {
@@ -121,47 +129,104 @@ struct HomeView: View {
     }
     
     private var content: some View {
-        LazyVStack(spacing: LayoutConstants.sectionSpacing) {
-            if vm.showMainBanners {
-                mainBannerSection
+        VStack(spacing: 0) {
+            regionAndZoneSelectionView
+            
+            LazyVStack(spacing: LayoutConstants.sectionSpacing) {
+                if vm.showMainBanners {
+                    mainBannerSection
+                }
+                if vm.showPopularQuest {
+                    popularQuestSection
+                }
+                if vm.showRecommendQuest {
+                    recommendQuestSection
+                }
+                if vm.showLargestRewardQuest {
+                    largestRewardQuestSection
+                }
+                if vm.showRankList {
+                    userRankingSection
+                }
             }
-            if vm.showPopularRewardQuest {
-                popularQuestSection
+            .padding(.bottom, 72)
+//            .redacted(reason: vm.viewStatus == .loading ? .placeholder : [])
+//            .foregroundStyle(redactionReasons.contains(.placeholder) ? .clear: Color.gray500)
+        }
+    }
+    
+    private var regionAndZoneSelectionView: some View {
+        HStack(spacing: 4) {
+            RegionPickerView(title: sharedState.selectedCommercialArea.areaName) {
+                vm.showSelectMyRegionView = true
             }
-            if vm.showRecommendRewardQuest {
-                recommendQuestSection
-            }
-            if vm.showLargestRewardQuest {
-                largestRewardQuestSection
-            }
-            if vm.showRankList {
-                userRankingSection
+            
+            Spacer()
+            Text("내 일상존: ")
+                .styledFont(.caption2)
+                .foregroundStyle(.gray400)
+            // TODO: 로딩중or시즌없을경우 선택 안되도록 수정..
+            Button {
+                questRouter.handleIllsangZoneButtonTap()
+            } label: {
+                HStack(spacing: 0) {
+                    Text(dependencies.illsangZoneManager.currentZoneName ?? "선택하기")
+                        .styledFont(.caption1)
+                    if dependencies.illsangZoneManager.currentZoneName == nil {
+                        Image(.arrowUnder)
+                            .resizable()
+                            .scaledToFit()
+                            .frame(16)
+                            .rotationEffect(.degrees(-90))
+                    }
+                }
+                .foregroundStyle(.white)
+                .padding(.horizontal, 8)
+                .padding(.vertical, 4)
+                .roundedBackground(cornerRadius: 20, bgColor: .primaryPurple)
             }
         }
-        .padding(.bottom, 72)
-        .redacted(reason: vm.viewStatus == .loading ? .placeholder : [])
-        .foregroundStyle(redactionReasons.contains(.placeholder) ? .clear: Color.gray500)
+        .padding(.vertical, 16)
+        .padding(.horizontal, LayoutConstants.horizontalPadding)
     }
     
     private var mainBannerSection: some View {
-        let height: CGFloat = .screenWidth / 11 * 10
-        return TabView {
-            ForEach(Array(vm.mainBanners.enumerated()), id: \.offset) { idx, item in
-                if let bannerImage = item.image {
-                    Image(uiImage: bannerImage)
-                        .resizable()
-                        .scaledToFill()
-                        .frame(maxWidth: .infinity)
-                        .frame(height: height)
-                        .clipShape(RoundedRectangle(cornerRadius: 12))
-                        .onTapGesture {
-                            AnalyticsService.logEvent(.homeBannerClick(bannerId: item.id))
-                            if let tab = vm.getTabFromURL(from: item.description) { /// 해당하는 탭으로 이동
-                                sharedState.selectedTab = tab
-                            }
+        let height: CGFloat = .screenWidth / 3 * 2
+        return TabView(selection: $vm.currentBanner) {
+            ForEach(Array(vm.mainBanners.enumerated()), id: \.offset) { idx, banner in
+                Image(uiImage: banner.image ?? .logo)
+                    .resizable()
+                    .scaledToFill()
+                    .frame(maxWidth: .infinity)
+                    .frame(height: height)
+                    .background()
+                    .onTapGesture {
+                        AnalyticsService.logEvent(.homeBannerClick(bannerId:  banner.id))
+                        if let tab = vm.getTabFromURL(from: banner.description) { /// 해당하는 탭으로 이동
+                            sharedState.selectedTab = tab
+                        } else {
+                            vm.selectedBanner = banner
                         }
-                }
+                    }
             }
+        }
+        .overlay(alignment: .bottomTrailing) {
+            HStack(alignment: .center, spacing: 5) {
+                Text("\(vm.currentBanner+1)")
+                    .styledFont(.badge2)
+                    .frame(minWidth: 7)
+                    .foregroundStyle(.white)
+                Rectangle()
+                    .frame(width: 1, height: 8)
+                Text("\(vm.mainBanners.count)")
+                    .styledFont(.badge2)
+                    .frame(minWidth: 7)
+            }
+            .foregroundStyle(.gray200)
+            .padding(.vertical, 4)
+            .padding(.horizontal, 10)
+            .roundedBackground(cornerRadius: 20, bgColor: .black.opacity(0.7))
+            .padding(20)
         }
         .frame(height: height)
         .tabViewStyle(.page(indexDisplayMode: .never))
@@ -176,23 +241,27 @@ struct HomeView: View {
     
     @ViewBuilder
     private var popularQuestSectionContent: some View {
-        if vm.popularQuestList.count <= vm.popularChunkSize {
-            singlePageContent
-        } else {
-            multiPageContent
+        switch vm.popularQuestList.count {
+        case 0..<vm.popularChunkSize:
+            EmptyView() // 0~3개면 미표시
+        case vm.popularChunkSize..<(vm.popularChunkSize * 2):
+            singlePageContent // 4~7개면 싱글
+        default:
+            multiPageContent  // 8개 이상이면 멀티
         }
     }
     
     private var singlePageContent: some View {
         LazyHGrid(rows: gridItem, alignment: .top, spacing: LayoutConstants.lazyHGridSpacing) {
-            ForEach(vm.popularQuestList) { quest in
-                QuestItemView(
+            ForEach(vm.popularQuestList[0..<vm.popularChunkSize]) { quest in
+                PopularQuestItemView(
                     quest: quest,
-                    style: PopularStyle(type: quest.type, repeatType: RepeatType(rawValue: quest.target.lowercased()) ?? .daily),
-                    tagTitle: "\(quest.totalRewardXP())XP"
+                    imageSize: CGSize(width: (UIScreen.main.bounds.width - 40 - 2) / 2, height: 137)
                 ) {
                     AnalyticsService.logEvent(.homePopularQuestClick(questId: quest.id))
-                    vm.onQuestTapped(quest: quest)
+                    questRouter.presentQuestDetail(quest: quest) { quest in
+                        vm.toggleFavoriteStatus(quest: quest)
+                    }
                 }
             }
         }
@@ -205,13 +274,14 @@ struct HomeView: View {
                 ForEach(vm.paginatedPopularQuests.indices, id: \.self) { pageIndex in
                     LazyHGrid(rows: gridItem, alignment: .top, spacing: LayoutConstants.lazyHGridSpacing) {
                         ForEach(vm.paginatedPopularQuests[pageIndex]) { quest in
-                            QuestItemView(
+                            PopularQuestItemView(
                                 quest: quest,
-                                style: PopularStyle(type: quest.type, repeatType: RepeatType(rawValue: quest.target.lowercased()) ?? .daily),
-                                tagTitle: "\(quest.totalRewardXP())XP"
+                                imageSize: CGSize(width: (UIScreen.main.bounds.width - 40 - 2) / 2, height: 137)
                             ) {
                                 AnalyticsService.logEvent(.homePopularQuestClick(questId: quest.id))
-                                vm.onQuestTapped(quest: quest)
+                                questRouter.presentQuestDetail(quest: quest) { quest in
+                                    vm.toggleFavoriteStatus(quest: quest)
+                                }
                             }
                         }
                     }
@@ -247,12 +317,11 @@ struct HomeView: View {
                 ScrollView(.horizontal) {
                     HStack(spacing: 12) {
                         ForEach(vm.recommendQuestList, id: \.id) { quest in
-                            QuestItemView(
-                                quest: quest,
-                                style: RecommendStyle()
-                            ) {
+                            RecommendQuestItemView(quest: quest) {
                                 AnalyticsService.logEvent(.homeRecommendQuestClick(questId: quest.id))
-                                vm.onQuestTapped(quest: quest)
+                                questRouter.presentQuestDetail(quest: quest) { quest in
+                                    vm.toggleFavoriteStatus(quest: quest)
+                                }
                             }
                         }
                     }
@@ -266,31 +335,19 @@ struct HomeView: View {
         TitleWithContentView(
             title: "큰 보상 퀘스트",
             seeAll: (
-                .label("전체 보기"),
-                .bottomTrailing, {
-                    sharedState.selectedXpStat = vm.selectedXpStat
+                .label("더 많은 퀘스트 보기"),
+                .bottom, {
                     sharedState.selectedTab = .quest /// 퀘스트 탭(선택된 스탯)으로 이동
                 }
             ),
             content:
                 Group {
-                    StatHeaderView(
-                        selectedXpStat: $vm.selectedXpStat,
-                        horizontalPadding: LayoutConstants.horizontalPadding,
-                        height: 30,
-                        hasBottomLine: false
-                    )
-                    // TODO: (디자인 대기 중) 퀘스트 타입에 따라 다르게 보여줘야함
-                    ForEach(vm.largestRewardQuestList[vm.selectedXpStat, default: []].prefix(3), id: \.id) { quest in
-                        QuestItemView(
-                            quest: quest,
-                            style: UncompletedStyle(),
-                            tagTitle: String(quest.totalRewardXP())+"XP"
-                        ) {
-                            vm.toggleFavoriteStatus(quest: quest)
-                        } action: {
-                            AnalyticsService.logEvent(.homeBigRewardQuestClick(questId: quest.id, stat: vm.selectedXpStat.parameterText))
-                            vm.onQuestTapped(quest: quest)
+                    ForEach(vm.largestRewardQuestList.prefix(3), id: \.id) { quest in
+                        LargeRewardQuestItemView(quest: quest) {
+                            AnalyticsService.logEvent(.homeBigRewardQuestClick(questId: quest.id))
+                            questRouter.presentQuestDetail(quest: quest) { quest in
+                                vm.toggleFavoriteStatus(quest: quest)
+                            }
                         }
                     }
                 }
@@ -309,24 +366,18 @@ struct HomeView: View {
             content:
                 ScrollView(.horizontal) {
                     HStack(spacing: 8) {
-                        ForEach(Array(vm.userRankList.enumerated()), id: \.offset) { idx, rank in
+                        ForEach(vm.userRankList, id: \.userId) { rank in
                             Button {
-                                AnalyticsService.logEvent(.homeRankingClick(userId: rank.customerId))
-                                vm.selectedCustomerId = rank.customerId
-                                vm.showOtherUserProfileView = true
+                                AnalyticsService.logEvent(.homeRankingClick(userId: rank.userId))
+                                userRouter.navigateToUserProfile(userId: rank.userId)
                             } label: {
-                                RankingItemView(rank: rank.toRank(), style: .vertical)
+                                RankingItemView(style: .totalRank(rank))
                             }
                         }
                     }
                     .padding(.horizontal, LayoutConstants.horizontalPadding)
                 }
                 .scrollIndicators(.never)
-                .navigationDestination(isPresented: $vm.showOtherUserProfileView) {
-                    if let customerId = vm.selectedCustomerId {
-                        OtherUserProfileView(customerId: customerId)
-                    }
-                }
         )
     }
     
@@ -343,13 +394,19 @@ struct HomeView: View {
 }
 
 #Preview {
-    let viewModel = HomeViewModel(
-        questNetwork: QuestNetwork(),
-        rankNetwork: RankNetwork(),
-        bannerNetwork: BannerNetwork(),
-        favoriteService: FavoriteService(favoriteNetwork: FavoriteNetwork())
+    HomeView(
+        userRepository: UserRepository(network: UserNetwork()),
+        areaNameService: AreaNameService(areaRepository: AreaRepository(network: AreaNetwork())),
+        questRepository: QuestRepository(network: QuestNetwork()),
+        rankRepository: RankRepository(network: RankNetwork()),
+        bannerRepository: BannerRepository(network: BannerNetwork()),
+        favoriteService: FavoriteService(favoriteNetwork: FavoriteNetwork()),
+        questSubmissionNotifier: QuestSubmissionNotifier(),
+        sharedState: SharedState(),
+        illsangZoneManager: IllsangZoneManager(
+            areaNameService: AreaNameService(areaRepository: AreaRepository(network: AreaNetwork()))
+        )
     )
-    HomeView(vm: viewModel)
 }
 
 extension Array {

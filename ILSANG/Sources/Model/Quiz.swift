@@ -5,11 +5,18 @@
 //  Created by Lee Jinhee on 7/18/24.
 //
 
-struct Quiz: Decodable {
-    let quizId, question, hint: String
-    let answers: [Answer]
+struct QuizResponse: Decodable {
+    let quizId: Int
+    let question: String
+    let hint: String?
+    
+    enum CodingKeys: String, CodingKey {
+        case quizId = "id"
+        case question
+        case hint
+    }
 }
 
-struct Answer: Decodable {
-    let content: String
+struct ChallengeResponse: Decodable {
+    let resultCode: String
 }

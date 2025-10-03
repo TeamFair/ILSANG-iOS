@@ -10,11 +10,31 @@ import SwiftUI
 struct TitleWithContentView<Content: View>: View {
     let title: String
     var seeAll: (type: SeeAllType, alignment: SeeAllAlignment, action: () -> ())? = nil
+    var style: Style = .home
     let content: Content
 
+    enum Style {
+        case home
+        case my
+        
+        var titleFont: FontStyle {
+            switch self {
+            case .home: .init(size: 19, weight: .bold, lineHeight: 22, tracking: 0)
+            case .my: .heading1
+            }
+        }
+        
+        var spacing: CGFloat {
+            switch self {
+            case .home: 12
+            case .my: 16
+            }
+        }
+    }
+    
     enum SeeAllAlignment {
         case topTrailing
-        case bottomTrailing
+        case bottom
     }
     
     enum SeeAllType {
@@ -39,17 +59,25 @@ struct TitleWithContentView<Content: View>: View {
                         .frame(width: 7)
                         .frame(width: 20, height: 20)
                 }
-                .font(.system(size: 15, weight: .regular))
+                .padding(.vertical, 16)
+                .frame(maxWidth: .infinity)
                 .foregroundStyle(.gray500)
+                .background(
+                    RoundedRectangle(cornerRadius: 5)
+                        .fill(.white)
+                        .strokeBorder(lineWidth: 1)
+                        .foregroundStyle(Color.gray100)
+                )
+                .styledFont(.body)
             }
         }
     }
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
+        VStack(alignment: .leading, spacing: style.spacing) {
             HStack {
                 Text(title.forceCharWrapping)
-                    .font(.system(size: 19, weight: .bold))
+                    .styledFont(style.titleFont)
                 Spacer(minLength: 0)
                 if seeAll?.alignment == .topTrailing {
                     Button {
@@ -63,17 +91,15 @@ struct TitleWithContentView<Content: View>: View {
             
             content
             
-            HStack {
-                Spacer(minLength: 0)
-                if seeAll?.alignment == .bottomTrailing {
-                    Button {
-                        seeAll?.action()
-                    } label: {
-                        seeAll?.type.view
-                    }
+            if seeAll?.alignment == .bottom {
+                Button {
+                    seeAll?.action()
+                } label: {
+                    seeAll?.type.view
                 }
+                .padding(.top, 12)
+                .padding(.horizontal, 20)
             }
-            .padding(.horizontal, 20)
         }
     }
     

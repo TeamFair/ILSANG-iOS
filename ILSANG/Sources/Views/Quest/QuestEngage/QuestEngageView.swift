@@ -15,9 +15,27 @@ struct QuestEngageView: View {
     @EnvironmentObject var sharedState: SharedState
     @Environment(\.dismiss) var dismiss
     
-    init(vm: QuestEngageViewModel, submitVM: SubmitRouterViewModel) {
-        _vm = StateObject(wrappedValue: vm)
-        _submitVM = StateObject(wrappedValue: submitVM)
+    init(
+        quest: QuestViewModelItem,
+        selectedImage: UIImage?,
+        selectedQuest: QuestViewModelItem,
+        challengeNetwork: ChallengeNetwork,
+        submitService: ImageChallengeSubmitService
+    ) {
+        _vm = StateObject(
+            wrappedValue: QuestEngageViewModel(
+                quest: quest,
+                challengeNetwork: challengeNetwork
+            )
+        )
+        _submitVM = StateObject(
+            wrappedValue: SubmitRouterViewModel(
+                selectedImage: selectedImage,
+                selectedQuest: selectedQuest,
+                submitService: submitService,
+                challengeNetwork: challengeNetwork
+            )
+        )
     }
     
     var body: some View {
@@ -57,15 +75,8 @@ struct QuestEngageView: View {
                     buttonAble: vm.isSubmitAbled) {
                         submitVM.showSubmitAlertView = true
                         submitVM.submitStatus = .inProgress
-                        let isCorrectAnswer = vm.compareAnswer(userAnswer: vm.selectedAnswer)
-                        if isCorrectAnswer {
-                            DispatchQueue.main.asyncAfter(deadline: .now()+0.8) {
-                                submitVM.submit(userAnswer: vm.selectedAnswer, quizId: vm.quiz?.quizId)
-                            }
-                        } else {
-                            DispatchQueue.main.asyncAfter(deadline: .now()+1.3) {
-                                submitVM.submitStatus = .retry
-                            }
+                        DispatchQueue.main.asyncAfter(deadline: .now()+0.8) {
+                            submitVM.submit(userAnswer: vm.selectedAnswer, quizId: vm.quiz?.quizId)
                         }
                     }
                     .padding(.top, 15)
@@ -88,14 +99,13 @@ struct QuestEngageView: View {
 
 #Preview {
     QuestEngageView(
-        vm: QuestEngageViewModel(quest: .mockData, quizNetwork: QuizNetwork()),
-        submitVM: SubmitRouterViewModel(
-            selectedImage: nil,
-            selectedQuest: .mockData,
-            submitService: ImageChallengeSubmitService(
-                imageNetwork: ImageNetwork(),
-                challengeNetwork: ChallengeNetwork()
-            ), quizNetwork: QuizNetwork()
+        quest: .mockData,
+        selectedImage: nil,
+        selectedQuest: .mockData,
+        challengeNetwork: ChallengeNetwork(),
+        submitService: ImageChallengeSubmitService(
+            imageNetwork: ImageNetwork(),
+            challengeNetwork: ChallengeNetwork()
         )
     )
     // QuestEngageView(vm: QuestEngageViewModel(quest: .mockRepeatData, questNetwork: QuestNetwork()))

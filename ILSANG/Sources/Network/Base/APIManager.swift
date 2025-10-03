@@ -8,13 +8,14 @@
 import Foundation
 
 final class APIManager {
-    static let baseURL = EnvironmentConfig.rootURL + ":" + EnvironmentConfig.port
-    
-    ///개발용 토큰
-    static let authDevelopToken =    "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOiJhMTFjNDQxMS0xOTU0LTRiMWEtYjg0Ny0zYWY4NjU5MTNiM2YiLCJ1c2VyVHlwZSI6IkNVU1RPTUVSIn0.tM8UzimEvBVOH3hC-Put8J3iVU-QAeXlteRmcFjFHus"
+    static let baseURL = EnvironmentConfig.rootURL
     
     static func makeURL(_ target: APITarget) -> String {
-        baseURL + "/api/" + target.type + "/" + target.path
+        if let prefix = target.type {
+            return "\(baseURL)/api/v\(target.version)/\(target.path)/\(prefix)"
+        } else {
+            return "\(baseURL)/api/v\(target.version)/\(target.path)"
+        }
     }
 }
 
@@ -24,7 +25,6 @@ enum EnvironmentConfig {
     enum Keys {
         enum Plist {
             static let rootURL = "ROOT_URL"
-            static let port = "PORT"
         }
     }
 
@@ -43,12 +43,5 @@ enum EnvironmentConfig {
         }
    
         return rootURLstring
-    }()
-
-    static let port: String = {
-        guard let port = EnvironmentConfig.infoDictionary[Keys.Plist.port] as? String else {
-            fatalError("Port not set in plist for this environment")
-        }
-        return port
     }()
 }

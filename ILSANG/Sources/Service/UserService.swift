@@ -5,47 +5,54 @@
 //  Created by Lee Jinhee on 7/10/24.
 //
 
-import SwiftUI
 import AuthenticationServices
+import Combine
+import SwiftUI
 
 final class UserService: ObservableObject {
-    let userNetwork: UserNetwork = UserNetwork()
+    let userRepository: UserRepositoryInterface = UserRepository(network: UserNetwork())
     let authService: AuthService = AuthService()
     
     @AppStorage("isLogin") var isLogin = Bool()
-    
-    @AppStorage("authToken") var authToken: String = ""
-    @AppStorage("accessToken") var accessToken: String = ""
+    @AppStorage("accessToken") var accessToken: String = "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOiIxMDJhM2MwNC1jZTJlLTQ2ZTEtOGZmOC05ZTk5YTZiYjZhMWUiLCJ1c2VyVHlwZSI6IkNVU1RPTUVSIiwic2FsdCI6Nzk1fQ.a00LDp9nDnyUpzApojBdybDOqX0h1Ms18yevc_tPuJI"
     @AppStorage("refreshToken") var refreshToken: String = ""
-    @AppStorage("userEmail") var userEmail: String = ""
     @AppStorage("authChannel") var authChannel = ""
     
-    /// Apple Login은 1번만 emai을 제공하기 때문에 따로 관리
-    @AppStorage("appleEmail") var appleEmail: String = ""
+    @Published var currentUser: UserItem?
     
-    @Published var currentUser: User?
+    static let shared = UserService()
+    private var cancellables = Set<AnyCancellable>() // 구독 저장
     
-    static var shared = UserService()
-    
-    private init() { }
+    private init() {
+        // 날짜 변경 감지
+        NotificationCenter.default.publisher(for: .NSCalendarDayChanged)
+            .sink { [weak self] _ in
+                Task {
+                    await self?.fetchUserInfo()
+                }
+            }
+            .store(in: &cancellables)
+    }
     
     // MARK: - 로그인
     /// 첫 애플 로그인하는 경우
-    @MainActor
     func login(appleCredential: ASAuthorizationAppleIDCredential) async {
-        guard let authResult = await authService.loginWithApple(credential: appleCredential, storedEmail: appleEmail) else {
-            return
-        }
-        
-        // TODO: 애플 로그인 - 백이랑 상의해서 리프레시토큰 받아야함
-        self.authToken = authResult.authToken
-        self.authChannel = AuthChannel.Apple.stringValue
-        
-        if authResult.authUser.email != "" {
-            self.appleEmail = authResult.authUser.email
-            self.userEmail = authResult.authUser.email
-        }
-        
+        guard let authResult = await authService.loginWithApple(credential: appleCredential) else { return }
+        await handleLoginSuccess(authResult: authResult, channel: .Apple)
+    }
+    
+    /// 구글 로그인하는 경우
+    func loginWithGoogle() async {
+        guard let authResult = await authService.loginWithGoogle() else { return }
+        await handleLoginSuccess(authResult: authResult, channel: .Google)
+    }
+    
+    @MainActor
+    private func handleLoginSuccess(authResult: Auth, channel: AuthChannel) async {
+        self.accessToken = authResult.accessToken
+        self.refreshToken = authResult.refreshToken
+        self.authChannel = channel.stringValue
+
         await fetchUserInfo()
         if self.currentUser != nil {
             self.isLogin = true
@@ -54,80 +61,40 @@ final class UserService: ObservableObject {
     
     @MainActor
     func fetchUserInfo() async {
-        let userInfo = await userNetwork.getUser()
+        let userInfo = await userRepository.getUser()
         switch userInfo {
         case .success(let res):
-            self.currentUser = res.data
+            self.currentUser = res.toItem()
+            // TODO: 현재 유저 프로필 이미지 접근하는 부분 페치하는거 제외하기
+            if let profileImageId = res.profileImageId {
+                self.currentUser?.profileImage = await ImageCacheService.shared.loadImageAsync(imageId: profileImageId)
+            }
         case .failure:
             self.currentUser = nil
         }
     }
     
-    /// 갖고 있는 토큰으로 로그인 시도
-    func login() async -> Bool {
-        let authUser = AuthUser(email: userEmail, accessToken: accessToken, refreshToken: refreshToken)
-        if authToken.isEmpty {
-            await updateLoginStatus(false)
-            return false
-        }
-        dump(authUser)
-        guard let user = await authService.loginWithChannel(user: authUser, channel: AuthChannel.fromString(value: authChannel)!) else {
-            // try await logout()
-            return false
-        }
-        await updateLoginStatus(true, authToken: user.authToken)
-        await fetchUserInfo()
-        return true
+    func logout() async -> Bool {
+        if !isLogin { return true }
+        let logoutSucc = await authService.logout()
+        resetUserSession()
+        return logoutSucc
     }
     
-    /// 새로 발급 받는 토큰으로 로그인하는 경우, 아직사용하지 않음
-    func login(accessToken: String, refreshToken: String, channel: AuthChannel) async throws {
-        let authUser = AuthUser(email: userEmail, accessToken: accessToken, refreshToken: refreshToken)
-        
-        guard let user = await authService.loginWithChannel(user: authUser, channel: channel) else {
-            // try await logout()
-            await updateLoginStatus(false)
-            return
-        }
-        await updateLoginStatus(true, authToken: user.authToken)
-        await fetchUserInfo()
-    }
-    
-    @MainActor
-    func logout() {
-        // TODO: 로그아웃 로직 추가 확인 필요
-        updateLoginStatus(false, authToken: "")
-    }
-    
-    @MainActor
     func withdraw() {
-        // TODO: 회원탈퇴 로직 추가 확인 필요
-        updateLoginStatus(false, authToken: "")
+        // TODO: REVOKE
+        resetUserSession()
     }
     
-    @MainActor
-    private func updateLoginStatus(_ isLogin: Bool, authToken: String) {
-        if self.isLogin != isLogin {
-            self.isLogin = isLogin
-        }
-        self.authToken = authToken
+    private func resetUserSession() {
+        isLogin = false
+        accessToken = ""
+        refreshToken = ""
+        currentUser = nil
     }
     
-    @MainActor
-    private func updateLoginStatus(_ isLogin: Bool) {
-        if self.isLogin != isLogin {
-            self.isLogin = isLogin
-        }
+    func updateToken(accessToken: String, refreshToken: String) {
+        self.accessToken = accessToken
+        self.refreshToken = refreshToken
     }
-    
-    #if DEBUG
-    func loginWithTest() async {
-        guard let res = await authService.loginWithTest(email: "text@naver.com") else { return }
-        self.authToken = res.authToken
-        self.userEmail = "text@naver.com"
-        self.authChannel = AuthChannel.Apple.stringValue
-        await fetchUserInfo()
-        self.isLogin = true
-    }
-    #endif
 }

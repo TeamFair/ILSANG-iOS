@@ -11,47 +11,50 @@ struct LoginView: View {
     @StateObject var vm: LoginViewModel
     
     var body: some View {
-        ZStack {
-            VStack(spacing: 28) {
-                titleView
-                CarouselAutoSlideView(images: [.slide0, .slide1, .slide2, .slide3, .slide4])
-                    .shadow(color: .primaryPurple.opacity(0.2), radius: 10, x: 0, y: 4)
-            }
-            .offset(y: -80)
+        VStack(spacing: 0) {
+            Spacer(minLength: 100)
+
+            titleView
+            
+            CarouselAutoSlideView(images: [.slide0, .slide1, .slide2, .slide3, .slide4])
+                .shadow(color: .primaryPurple.opacity(0.2), radius: 10, x: 0, y: 4)
+                .padding(.top, 48)
+            
+            Spacer(minLength: 88)
             
             VStack(spacing: 16) {
-                Spacer()
-#if DEBUG
-                Text("테스트 로그인")
-                    .onTapGesture { vm.testLogin() }
-#endif
-
-                AppleLoginButtonView(vm: vm)
-                // KakaoLoginButtonView(buttonAction: vm.kakaoButtonAction)
-                // GoogleLoginButtonView(buttonAction: vm.googleButtonAction)
+                LoginButtonView(channel: .google) {
+                    vm.googleButtonAction()
+                }
+                
+                AppleLoginButtonView { credential in
+                    vm.loginWithApple(credential: credential)
+                }
+                .overlay {
+                    LoginButtonView(channel: .apple) { }
+                        .allowsHitTesting(false)
+                }
             }
             .padding(.horizontal, 20)
-            .padding(.bottom, 38)
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .padding(.bottom, 60)
         .background(.white)
         .navigationBarBackButtonHidden()
     }
     
     private var titleView: some View {
-        VStack {
-            Text("특별한 하루를 위한")
+        VStack(spacing: 2) {
             HStack(spacing: 0) {
-                Text("작은 도전, ")
                 Text("일")
                     .foregroundColor(.primaryPurple)
                 Text("상")
                     .foregroundColor(.secondaryGreen)
-                Text("!")
+                Text("의 작은 행동이,")
             }
-            .foregroundColor(.black)
+            Text("지역을 바꿉니다")
         }
-        .font(.system(size: 23, weight: .bold))
+        .styledFont(.title1)
+        .foregroundColor(.black)
     }
 }
 

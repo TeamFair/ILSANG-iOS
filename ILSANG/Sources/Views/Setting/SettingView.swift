@@ -11,6 +11,7 @@ struct SettingView: View {
     
     @Environment(\.dismiss) var dismiss
     @State private var logoutAlert = false
+    @State private var logoutFailAlert = false
     @State var selectedSetting: Setting?
     
     private let settingList: [Setting] = [
@@ -57,23 +58,27 @@ struct SettingView: View {
         .overlay {
             if logoutAlert {
                 SettingAlertView(
-                    alertType: .Logout,
+                    alertType: AlertType.Logout,
                     onCancel: { logoutAlert = false },
                     onConfirm: { logout() }
                 )
             }
         }
+        .alert(isPresented: $logoutFailAlert) {
+            Alert(
+                title: Text("로그아웃 실패"),
+                message: Text("잠시후 다시 시도해주세요."),
+                dismissButton: .default(Text("확인"))
+            )
+        }
     }
     
     private func logout() {
         Task {
-            let result = await LogoutNetwork().getLogout()
-            switch result {
-            case .success:
-                UserService.shared.logout()
-            case .failure(let err):
-                Log("로그아웃 실패 \(err.localizedDescription)")
-                logoutAlert = false
+            let logoutSucc = await UserService.shared.logout()
+            logoutAlert = false
+            if !logoutSucc {
+                logoutFailAlert = true
             }
         }
     }

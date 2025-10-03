@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct MyPageProfile: View {
+    @EnvironmentObject var dependencies: AppDependencies
     let nickName: String?
     let profileImage: UIImage?
     let profileImageId: String?
@@ -49,18 +50,27 @@ struct MyPageProfile: View {
         }
     }
     
-    @ViewBuilder
     private var honorIconView: some View {
-        if let honorTitle, let honorType {
-            NavigationLink {
-                MyPageHonorManageView()
-            } label: {
-                HonorIconView(honorTitle: honorTitle, grade: honorType, imageSize: 20, spacing: 4, font: .badge1, fgColor: .gray500)
-                    .padding(.vertical, 8)
-                    .padding(.horizontal, 10)
-                    .background(Color.white)
-                    .clipShape(.capsule)
-            }
+        NavigationLink {
+            MyPageHonorManageView(dependencies: dependencies)
+        } label: {
+            HonorIconView(
+                honorTitle: honorTitle ?? "칭호를 선택해주세요",
+                grade: honorType ?? .standard,
+                imageSize: 20,
+                spacing: 4,
+                font: .badge1,
+                fgColor: .gray500
+            )
+            .padding(.vertical, 8)
+            .padding(.horizontal, 10)
+            .background(
+                Capsule()
+                    .strokeBorder(
+                        .gray100,
+                        style: StrokeStyle(lineWidth: 1)
+                    )
+            )
         }
     }
 }

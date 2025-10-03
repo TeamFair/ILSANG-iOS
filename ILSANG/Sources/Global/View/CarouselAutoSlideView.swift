@@ -31,7 +31,7 @@ struct CarouselAutoSlideView: View {
                             .scrollTransition(.interactive(timingCurve: .circularEaseIn), axis: .horizontal) { effect, phase in
                                 effect
                                     .opacity(phase.isIdentity ? 1.0 : 0.5)
-                                    .scaleEffect(phase.isIdentity ? 1.0 : 0.83) // 약 6 : 5 비율
+                                    .scaleEffect(phase.isIdentity ? 1.0 : 0.8) // 약 6 : 5 비율
                             }
                             .id(idx)
                     }

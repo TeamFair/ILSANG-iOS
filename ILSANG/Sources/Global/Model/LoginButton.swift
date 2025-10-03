@@ -29,20 +29,9 @@ enum LoginButton {
         case .kakao:
             return "카카오로 로그인하기"
         case .google:
-            return "Google로 로그인하기"
+            return "sign in with google"
         case .apple:
-            return "Apple로 로그인하기"
-        }
-    }
-    
-    var fontName: String {
-        switch self {
-        case .kakao:
-            return "AppleSDGothicNeoR"
-        case .google:
-            return "Roboto-Medium"
-        case .apple:
-            return "SFPRODISPLAYREGULAR"
+            return "sign in with apple"
         }
     }
     

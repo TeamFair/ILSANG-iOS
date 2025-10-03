@@ -8,47 +8,41 @@
 import Alamofire
 import Foundation
 
+// TODO: 지역시스템 >> mission history로 이동 필요, url 확인 필요
 final class ChallengeNetwork {
-    private let url: String
-
-    init(url: String =  APIManager.makeURL(CustomerTarget(path: ""))) {
-        self.url = url
+    private let url: String = APIManager.makeURL(NoTarget(path: "challenge", version: 1))
+    
+    func getRandomQuiz(missionId: Int) async -> Result<QuizResponse, Error> {
+        let parameters: Parameters = ["missionId": "\(missionId)"]
+        return await Network.requestData(url: url+"/random-quiz", method: .get, parameters: parameters)
     }
     
-    func getRandomChallenges(page: Int, size: Int = 10) async -> Result<ResponseWithPage<[Challenge]>, Error> {
-        let parameters: Parameters = ["page": page, "size": size]
-        return await Network.requestData(url: url+"randomChallenge", method: .get, parameters: parameters, withToken: true)
-    }
-    
-    func getChallenges(page: Int, size: Int) async -> Result<ResponseWithPage<[Challenge]>, Error> {
-        let parameters: Parameters = ["userDataOnly": true, "page": page, "size": size]
-        return await Network.requestData(url: url+"challenge", method: .get, parameters: parameters, withToken: true)
-    }
-    
-    func getChallenges(page: Int, size: Int, userId: String) async -> Result<ResponseWithPage<[Challenge]>, Error> {
-        let parameters: Parameters = ["userDataOnly": true, "status": "APPROVED", "userId": userId, "page": page, "size": size]
-        return await Network.requestData(url: url+"challenge", method: .get, parameters: parameters, withToken: true)
-    }
-    
-    func postChallenge(questId: String, imageId: String) async -> Result<ResponseWithEmpty, Error> {
+    func postQuizChallenge(missionId: Int, quizId: Int, answer: String) async -> Result<ChallengeResponse, Error> {
         let bodyData: [String: Any] = [
-            "questId": questId,
-            "receiptImageId": imageId
+            "missionId": "\(missionId)",
+            "quizId": "\(quizId)",
+            "answer": answer
         ]
-        
-        guard let jsonData = bodyData.convertToJsonData() else {
+        return await postChallenge(body: bodyData)
+    }
+    
+    func postPhotoChallenge(missionId: Int, imageId: String) async -> Result<ChallengeResponse, Error> {
+        let bodyData: [String: Any] = [
+            "missionId": "\(missionId)",
+            "imageId": imageId
+        ]
+        return await postChallenge(body: bodyData)
+    }
+    
+    private func postChallenge(body: [String: Any]) async -> Result<ChallengeResponse,Error> {
+        guard let bodyData = body.convertToJsonData() else {
             return .failure(NetworkError.requestFailed("Fail to convert data"))
         }
-        return await Network.requestData(url: url+"challenge", method: .post, parameters: nil, body: jsonData, withToken: true)
-    }
-    
-    func patchChallenge(challengeId: String) async -> Result<ResponseWithEmpty, Error> {
-        let parameters: Parameters = ["challengeId": challengeId, "status": "REPORTED"]
-        return await Network.requestData(url: url+"status", method: .patch, parameters: parameters, withToken: true)
+        return await Network.requestData(url: url+"/mission", method: .post, body: bodyData)
     }
     
     func deleteChallenge(challengeId: String) async -> Bool {
-        let deleteUrl = APIManager.makeURL(CustomerTarget(path: challengeId))
+        let deleteUrl = APIManager.makeURL(UserTarget(path: challengeId, version: 1))
         
         let res: Result<ResponseWithoutData, Error> = await Network.requestData(url: deleteUrl, method: .delete, parameters: nil, withToken: true)
         

@@ -6,13 +6,15 @@
 //
 
 import UIKit
+import SwiftUICore
+import Combine
 
 struct XpStatus {
     let currentXp: Int
     let currentLv: Int
     let remainXp: Int
     let progress: Double
-
+    
     init(currentXp: Int) {
         self.currentXp = currentXp
         self.currentLv = XpLevelCalculator.convertXPtoLv(xp: currentXp)
@@ -28,207 +30,176 @@ struct XpStatus {
 
 @MainActor
 final class MyPageViewModel: ObservableObject {
-    @Published var userData: User?
+    @Published var currentUser: UserItem?
     @Published var xpStatus: XpStatus = XpStatus(currentXp: 0)
-
-    @Published var honorTitle: String? = ""
-    @Published var honorType: HonorGrade?
-    @Published var userProfileImage: UIImage?
     
-    @Published var selectedTab: MyPageTab = .quest
+    @Published var pointCommercial: PointCommercialItem? // 내 일상존
+    @Published var completedQuestCount: Int = 0
+    @Published var points: [PointType: Int] = [:]
+    @Published var pointSummary: PointSummaryItem? // 시즌 요약
     
-    @Published var xpStats: [XpStat: Int] = [:]
-    @Published var challengeList: [ChallengeViewModelItem] = []
-    @Published var xpLogList: [XpLog] = []
+    @Published var currentSeason: Season? = nil
+    @Published var seasonFilterState: DynamicFilterPickerState<SeasonFilterType>
+    @Published var selectedSeasonNumber: Int = -1
+    var selectedSeasonId: Int? {
+        seasonManager.seasons.first { $0.seasonNumber == selectedSeasonNumber }?.id
+    }
     
-    @Published var challengeDelete = false
-    
-    lazy var challengePaginationManager = PaginationManager<ChallengeViewModelItem>(
-        size: 10,
-        threshold: 7,
-        loadPage: { [weak self] page in
-            guard let self = self else { return ([], 0) }
-            return await loadChallengeListWithImage(page: page, size: 10)
-        }
-    )
-    
-//    lazy var xpLogPaginationManager = PaginationManager<XpLog>(
-//        size: 10,
-//        threshold: 7,
-//        loadPage: { [weak self] page in
-//            guard let self = self else { return ([], 0) }
-//            return await loadXpLogList(page: page, size: 10)
-//        }
-//    )
-    
-    private let userNetwork: UserNetwork
-    private let challengeNetwork: ChallengeNetwork
+    private let userRepository: UserRepositoryInterface
     private let imageNetwork: ImageNetwork
-    private let xpNetwork: XPNetwork
+    private let areaNameService: AreaNameProvider
+    private let seasonManager: SeasonManager
+    private var cancellables = Set<AnyCancellable>()
     
-    init(userNetwork: UserNetwork, challengeNetwork: ChallengeNetwork, imageNetwork: ImageNetwork, xpNetwork: XPNetwork) {
-        self.userNetwork = userNetwork
-        self.challengeNetwork = challengeNetwork
+    init(userRepository: UserRepositoryInterface, imageNetwork: ImageNetwork, areaNameService: AreaNameProvider, seasonManager: SeasonManager) {
+        self.userRepository = userRepository
         self.imageNetwork = imageNetwork
-        self.xpNetwork = xpNetwork
+        self.areaNameService = areaNameService
+        self.seasonManager = seasonManager
         
-        self.userData = UserService.shared.currentUser
-        self.xpStatus = XpStatus(currentXp: userData?.xpPoint ?? 0)
+        self.currentUser = UserService.shared.currentUser
+        
+        // 초기값을 -1로 통일
+        seasonFilterState = DynamicFilterPickerState(
+            initialValue: SeasonFilterType(seasonNumber: -1),
+            options: [SeasonFilterType(seasonNumber: -1)]
+        )
+        seasonFilterState.onSelectionChange = { [weak self] selectedValue in
+            guard let self = self else { return }
+            // 선택된 시즌 번호 업데이트
+            self.selectedSeasonNumber = selectedValue.seasonNumber
+            Task { await self.fetchPointAndQuestCount() }
+        }
+        
+        updateSeasonsFromServer(seasonManager.seasons.map { $0.seasonNumber })
+        selectedSeasonNumber = seasonManager.currentSeason?.seasonNumber ?? -1 // 현재시즌으로 초기화
+        
+        currentSeason = seasonManager.currentSeason ?? nil
+        seasonManager.$currentSeason
+            .dropFirst()
+            .removeDuplicates()
+            .sink { [weak self] season in
+                guard let self else { return }
+                self.currentSeason = season
+            }
+            .store(in: &cancellables)
+        seasonManager.$seasons
+            .dropFirst()
+            .removeDuplicates()
+            .sink { [weak self] seasons in
+                guard let self else { return }
+                self.updateSeasonsFromServer(seasons.map { $0.seasonNumber })
+            }
+            .store(in: &cancellables)
+        
+        Log("👤 MyPageViewModel: init")
+    }
+    
+    deinit {
+        cancellables.removeAll()
+        Log("👤 MyPageViewModel: deinit")
+    }
+    
+    func updateSeasonsFromServer(_ seasonNumbers: [Int]) {
+        let options = [SeasonFilterType(seasonNumber: -1)] + seasonNumbers.map { SeasonFilterType(seasonNumber: $0) }
+        seasonFilterState.updateOptions(options)
     }
     
     @MainActor
-    func loadDataIfNeeded() async {
-        if challengeList.isEmpty || xpLogList.isEmpty {
-            await loadInitialData()
-        }
+    func loadData() async {
+        async let user: () = fetchUser()
+        async let commercial: () = fetchUserPointCommercial()
+        async let pointAndQuest: () = fetchPointAndQuestCount()
+        async let summary: () = fetchUserPointSummary()
+        
+        _ = await (user, commercial, pointAndQuest, summary)
+        
+        self.xpStatus = XpStatus(currentXp: points.reduce(0) { $0 + $1.value })
     }
     
-    func loadInitialData() async {
-        // TODO: 도전내역 등록했을 때 재호출하도록 수정
-        await challengePaginationManager.loadData(isRefreshing: true)
-        // await xpLogPaginationManager.loadData(isRefreshing: true)
+    @MainActor
+    func refreshData() async {
+        async let user: () = fetchUser()
+        async let commercial: () = fetchUserPointCommercial()
+        async let pointAndQuest: () = fetchPointAndQuestCount()
+        async let summary: () = fetchUserPointSummary()
+        
+        _ = await (user, commercial, pointAndQuest, summary)
     }
-    
-    @discardableResult @MainActor
-    func loadChallengeListWithImage(page: Int, size: Int) async -> ([ChallengeViewModelItem], Int) {
-        let getChallengeList = await fetchChallenges(page: page, size: size)
-        let newChallengeList = getChallengeList.data
-        
-        if page == 0 {
-            self.challengeList = newChallengeList
-        } else {
-            self.challengeList += newChallengeList
-        }
-        
-        await withTaskGroup(of: (Int, UIImage?).self) { group in
-            for (index, challenge) in newChallengeList.enumerated() {
-                group.addTask {
-                    let imageId = challenge.challengeImageId
-                    var image: UIImage? = nil
-                    if let imageId {
-                        image = await ImageCacheService.shared.loadImageAsync(imageId: imageId)
-                    }
-                    return (index, image)
-                }
-            }
-            
-            for await (index, image) in group {
-                if let image = image {
-                    if page == 0 {
-                        self.challengeList[index].challengeImage = image
-                    } else {
-                        self.challengeList[challengeList.count - newChallengeList.count + index].challengeImage = image
-                    }
-                }
-            }
-        }
-        
-        return (challengeList, getChallengeList.total)
-    }
-    
-//    @discardableResult @MainActor
-//    func loadXpLogList(page: Int, size: Int) async -> ([XpLog], Int) {
-//        let getXpLogList = await fetchXpLog(page: page, size: size)
-//        
-//        if page == 0 {
-//            self.xpLogList = getXpLogList.data
-//        } else {
-//            self.xpLogList += getXpLogList.data
-//        }
-//        
-//        return (xpLogList, getXpLogList.total)
-//    }
-    
-    private func fetchChallenges(page: Int, size: Int) async -> (data: [ChallengeViewModelItem], total: Int) {
-        let response = await challengeNetwork.getChallenges(page: page, size: size)
-        
-        switch response {
-        case .success(let res):
-            // 데이터 초기화: 이미지가 없는 상태로 미리 표시
-            return (res.data.map {ChallengeViewModelItem.init(challenge: $0)}, res.total)
-        case .failure(let error):
-            Log("챌린지 조회 실패: \(error)")
-            return ([], 0)
-        }
-    }
-    
-//    private func fetchXpLog(page: Int, size: Int) async -> (data: [XpLog], total: Int) {
-//        let res = await xpNetwork.getXpHistory(page: page, size: size)
-//        
-//        switch res {
-//        case .success(let model):
-//            return (model.data, model.total)
-//        case .failure(let error):
-//            Log("XP 로그 조회 실패: \(error)")
-//            return ([], 0)
-//        }
-//    }
     
     @MainActor
     func fetchUser() async {
-        let res = await userNetwork.getUser()
+        let res = await userRepository.getUser()
+        switch res {
+        case .success(let res):
+            self.currentUser = res.toItem()
+            if let profileImageId = res.profileImageId {
+                self.currentUser?.profileImage = await getImage(imageId: profileImageId)
+            }
+        case .failure:
+            self.currentUser = nil
+        }
+    }
+    
+    func fetchUserPointCommercial() async {
+        let res = await userRepository.getUserPointCommercial(userId: nil)
         
         switch res {
-        case .success(let model):
-            self.userData = model.data
-            if let profileImage = userData?.profileImage {
-                self.userProfileImage = await getImage(imageId: profileImage) /// 프로필 이미지 불러오기
-            } else {
-                self.userProfileImage = nil
+        case .success(let res):
+            self.pointCommercial = res.toItem()
+            if let commercialAreaCode = pointCommercial?.topCommercialArea?.commercialAreaCode {
+                self.pointCommercial?.topCommercialArea?.commercialAreaName = await areaNameService.getAreaName(for: commercialAreaCode)
             }
-            self.honorTitle = userData?.title?.name
-            self.honorType = HonorGrade(rawValue: userData?.title?.type ?? "")
-            UserService.shared.currentUser = model.data
-        case .failure(let err):
-            self.userData = nil
-            Log(err)
+            for i in 0..<(self.pointCommercial?.totalOwnerContributions.count ?? 0) {
+                if let commercialAreaCode = self.pointCommercial?.totalOwnerContributions[i].commercialAreaCode {
+                    let name = await areaNameService.getAreaName(for: commercialAreaCode)
+                    self.pointCommercial?.totalOwnerContributions[i].commercialAreaName = name
+                }
+            }
+        case .failure(let error):
+            Log("일상존 포인트 조회 실패: \(error)")
         }
     }
     
     @MainActor
-    func fetchXpStats() async {
-        let res = await xpNetwork.getXpStats()
+    func fetchPointAndQuestCount() async {
+        let res = await userRepository.getUserPoint(userId: nil, seasonId: selectedSeasonId)
         
         switch res {
-        case .success(let model):
-            let xpData = model.data
-            self.xpStats = [
-                .strength: xpData.strengthStat,
-                .intellect: xpData.intellectStat,
-                .fun: xpData.funStat,
-                .charm: xpData.charmStat,
-                .sociability: xpData.sociabilityStat
+        case .success(let res):
+            self.completedQuestCount = res.completedQuestCount
+            self.points = [
+                .metro: res.metroAreaPoint,
+                .commercial: res.commercialAreaPoint,
+                .contribution: res.contributionPoint
             ]
         case .failure(let error):
-            Log("XP 스탯 조회 실패: \(error)")
+            Log("포인트 조회 실패: \(error)")
         }
     }
     
-    func updateChallengeStatus(challengeId: String, imageId: String?) async -> Bool {
-        var deleteImageRes = true  // 기본값 설정
-        if let imageId {
-            deleteImageRes = await imageNetwork.deleteImage(imageId: imageId)
+    func fetchUserPointSummary() async {
+        guard let currentSeasonId = currentSeason?.id else {
+            pointSummary = nil
+            return
         }
-        let deleteChallengeRes = await challengeNetwork.deleteChallenge(challengeId: challengeId)
+        let res = await userRepository.getUserPointSummary(seasonId: currentSeasonId)
         
-        return deleteChallengeRes && deleteImageRes
+        switch res {
+        case .success(let res):
+            self.pointSummary = res.toItem()
+            if let commercialAreaCode = pointSummary?.topCommercialAreaCode {
+                self.pointSummary?.topCommercialAreaName = await areaNameService.getAreaName(for: commercialAreaCode)
+            }
+            if let metroAreaCode = pointSummary?.topMetroAreaCode {
+                self.pointSummary?.topMetroAreaName = await areaNameService.getAreaName(for: metroAreaCode)
+            }
+        case .failure(let error):
+            Log("시즌 요약 조회 실패: \(error)")
+        }
     }
     
     func getImage(imageId: String) async -> UIImage? {
         await ImageCacheService.shared.loadImageAsync(imageId: imageId)
-    }
-    
-    func hasMorePage(for type: PaginationDataType) -> Bool {
-        switch type {
-        case .challenge:
-            return challengePaginationManager.canLoadMoreData()
-//        case .xpLog:
-//            return xpLogPaginationManager.canLoadMoreData()
-        }
-    }
-    
-    enum PaginationDataType {
-        case challenge
-//        case xpLog
     }
 }

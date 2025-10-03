@@ -9,21 +9,36 @@ import SwiftUI
 
 struct OtherUserProfileView: View {
     @StateObject var vm: OtherUserProfileViewModel
+    @EnvironmentObject var dependencies: AppDependencies
     @Environment(\.dismiss) var dismiss
     
-    init(customerId: String) {
-        _vm = StateObject(wrappedValue: OtherUserProfileViewModel(customerId: customerId, userNetwork: UserNetwork(), challengeNetwork: ChallengeNetwork(), imageNetwork: ImageNetwork(), xpNetwork: XPNetwork()))
+    init(
+        userId: String,
+        userRepository: UserRepositoryInterface,
+        missionHistoryRepository: MissionHistoryRepository,
+        areaNameService: AreaNameProvider,
+        seasonManager: SeasonManager
+    ) {
+        _vm = StateObject(
+            wrappedValue: OtherUserProfileViewModel(
+                userId: userId,
+                userRepository: userRepository,
+                missionHistoryRepository: missionHistoryRepository,
+                areaNameService: areaNameService,
+                seasonManager: seasonManager
+            )
+        )
     }
     
     var body: some View {
         VStack(spacing: 0) {
             header  // 타이틀
-            content // 프로필 & 능력별 포인트 & 도전내역 목록
+            content // 프로필 & 일상존 & 포인트 & 도전내역 목록
         }
         .background(Color.background)
         .navigationBarBackButtonHidden(true)
         .task {
-            await vm.loadInitialData()
+            await vm.loadDataIfNeeded()
         }
     }
     
@@ -36,13 +51,13 @@ struct OtherUserProfileView: View {
     
     private var content: some View {
         ScrollView {
-            VStack(spacing: 24) {
+            VStack(spacing: 48) {
                 userProfileSection
-                xpStatPolygonSection
+                illsangZoneSection
+                pointSection
                 challengeSection
             }
             .padding(.top, 16)
-            .padding(.horizontal, 20)
         }
     }
     
@@ -62,10 +77,10 @@ struct OtherUserProfileView: View {
                     .foregroundStyle(.gray500)
                     .multilineTextAlignment(.leading)
                 
-                if let honor = vm.userData?.title, let grade = HonorGrade(rawValue: honor.type)  {
+                if let honor = vm.userData?.title {
                     HonorIconView(
                         honorTitle: honor.name,
-                        grade: grade,
+                        grade: honor.grade,
                         imageSize: 20,
                         spacing: 4,
                         font: .badge1,
@@ -75,48 +90,76 @@ struct OtherUserProfileView: View {
                                     
                 HStack(alignment: .center, spacing: 6) {
                     ProgressBar(progress: vm.progress)
-                        .frame(height: 8)
 
-                    Text("\(vm.userData?.xpPoint ?? 0)XP")
+                    Text("\(vm.points.reduce(0) { $0 + $1.value })P")
                         .styledFont(.bold, size: 13, lineHeight: 13, tracking: 0)
                         .foregroundStyle(.primaryPurple)
                 }
             }
         }
-        .padding(.horizontal, 16)
-        .padding(.vertical, 18)
-        .background(
-            RoundedRectangle(cornerRadius: 12)
-                .fill(.white)
-        )
+        .padding(16)
+        .roundedBackground(cornerRadius: 12)
+        .padding(.horizontal, 20)
     }
     
-    private var xpStatPolygonSection: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Text("능력별 포인트")
-                .styledFont(.heading2)
-                .foregroundColor(.gray400)
-                .padding(.leading, 4)
-            
-            OtherUserXpStatView(xpPoint: vm.userData?.xpPoint, xpStats: vm.xpStats)
-                .zIndex(10)
+    @ViewBuilder
+    private var illsangZoneSection: some View {
+        if let pointCommercial = vm.pointCommercial, let topCommercialArea = pointCommercial.topCommercialArea {
+            TitleWithContentView(
+                title: "내 일상존",
+                style: .my,
+                content:
+                    Group {
+                        let percents = pointCommercial.totalOwnerContributions.pointRatios()
+                        let contributionsWithPercents = Array(zip(pointCommercial.totalOwnerContributions, percents))
+                        IllsangZonePointView(
+                            topCommercialArea: topCommercialArea,
+                            contributions: contributionsWithPercents,
+                            showPrimaryButton: false
+                        )
+                        .padding(.horizontal, 20)
+                    }
+            )
         }
     }
     
+    @ViewBuilder
+    private var pointSection: some View {
+        TitleWithContentView(
+            title: "내 포인트",
+            style: .my,
+            content:
+                UserPointView(
+                    seasonNumbers: dependencies.seasonManager.seasons.map { $0.seasonNumber },
+                    points: vm.points,
+                    completedQuestCount: vm.completedQuestCount,
+                    selectedSeason: $vm.selectedSeasonNumber,
+                    filterState: $vm.seasonFilterState
+                )
+                .padding(.horizontal, 20)
+        )
+    }
+        
     private var challengeSection: some View {
-        VStack(alignment: .leading, spacing: 12) {
+        VStack(alignment: .leading, spacing: 20) {
             Text("수행한 챌린지")
-                .styledFont(.heading2)
+                .styledFont(.medium, size: 14, lineHeight: 16)
                 .foregroundColor(.gray400)
                 .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(.leading, 4)
             
             OtherUserChallengeList(vm: vm)
         }
+        .padding(.horizontal, 20)
     }
 }
 
 #Preview {
-    OtherUserProfileView(customerId: "IUS0000000")
+    OtherUserProfileView(
+        userId: "",
+        userRepository: UserRepository(network: UserNetwork()),
+        missionHistoryRepository: MissionHistoryRepository(network: MissionHistoryNetwork()),
+        areaNameService: AreaNameService(areaRepository: AreaRepository(network: AreaNetwork())),
+        seasonManager: SeasonManager(seasonNetwork: SeasonNetwork())
+    )
 }
 

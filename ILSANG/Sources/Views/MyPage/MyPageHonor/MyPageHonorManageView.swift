@@ -8,11 +8,20 @@
 import SwiftUI
 
 struct MyPageHonorManageView: View {
-    @StateObject var vm: MyPageHonorManageViewModel = MyPageHonorManageViewModel(userNetwork: UserNetwork(), honorNetwork: HonorNetwork())
-    @EnvironmentObject var honorAcquisitionManager: HonorAcquisitionManager
+    @StateObject var vm: MyPageHonorManageViewModel
+    @EnvironmentObject var dependencies: AppDependencies
     @Environment(\.scenePhase) var scenePhase
     @Environment(\.dismiss) var dismiss
     private let leadingTrailingColumnWidth: CGFloat = 50
+    
+    init(dependencies: AppDependencies) {
+        _vm = StateObject(
+            wrappedValue: MyPageHonorManageViewModel(
+                userNetwork: dependencies.userNetwork,
+                titleRepository: dependencies.titleRepository
+            )
+        )
+    }
     
     var body: some View {
         VStack(spacing: 0) {
@@ -22,17 +31,19 @@ struct MyPageHonorManageView: View {
             .padding(.bottom, 8) // 세로로 긴 이미지 대응 (NavigationTitleView의 bottom 패딩과 겹침)
             
             ScrollView {
-                honorIntroSection
-                honorGradeTabSection
-                honorListSection
+                VStack(spacing: 0) {
+                    honorIntroSection
+                    honorGradeTabSection
+                    honorListSection
+                }
+                .padding(.horizontal, 20)
             }
-            .padding(.horizontal, 20)
         }
         .frame(maxWidth: .infinity)
         .background(Color.background)
         .navigationBarBackButtonHidden()
         .task {
-            await honorAcquisitionManager.fetchUnreadHonorHistory()
+            await dependencies.honorAcquisitionManager.fetchUnreadHonorHistory()
             await vm.fetchHonors()
         }
         .onDisappear {
@@ -65,7 +76,7 @@ struct MyPageHonorManageView: View {
         }
         .overlay(
             Group {
-                if let _ = honorAcquisitionManager.currentHonor {
+                if let _ = dependencies.honorAcquisitionManager.currentHonor {
                     HonorPopupContainerView()
                 }
             }
@@ -120,19 +131,19 @@ struct MyPageHonorManageView: View {
             honorHeaderView
             
             LazyVStack(spacing: 0) {
-                ForEach(vm.honors[vm.selectedHonorGrade, default: []]) { honor in
+                ForEach(vm.honors[vm.selectedHonorGrade, default: []], id: \.titleId) { honor in
                     honorListItemView(honor: honor)
                 }
             }
             .navigationDestination(isPresented: $vm.showRankingView) {
                 if let honor = vm.selectedHonorToShowRanking  {
-                    LegendRankingView(honorId: honor.titleId, honorName: honor.title)
+                    LegendRankingView(titleId: honor.titleId, titleName: honor.name, titleRepository: dependencies.titleRepository)
                 }
             }
         }
     }
     
-    private func honorListItemView(honor: HonorItem) -> some View {
+    private func honorListItemView(honor: TitleItem) -> some View {
         HonorListItemView(
             honor: honor,
             rowColumnWidth: leadingTrailingColumnWidth
@@ -161,6 +172,5 @@ struct MyPageHonorManageView: View {
 }
 
 #Preview {
-    MyPageHonorManageView()
-        .environmentObject(HonorAcquisitionManager(honorNetwork: MockHonorNetwork()))
+    MyPageHonorManageView(dependencies: AppDependencies())
 }

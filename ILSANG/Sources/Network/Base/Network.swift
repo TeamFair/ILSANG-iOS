@@ -6,7 +6,6 @@
 //
 
 import Alamofire
-import Foundation
 import UIKit
 
 final class Network {
@@ -38,20 +37,61 @@ final class Network {
     private static func buildHeaders(withToken: Bool, contentType: ContentType = .json) -> HTTPHeaders {
         var headers: HTTPHeaders = ["accept": "application/json", "Content-Type": contentType.toString]
         if withToken {
-            let token = UserService.shared.authToken
-            headers.add(.authorization(token))
+            let token = UserService.shared.accessToken
+            headers.add(.authorization(bearerToken: token))
         }
         return headers
     }
     
-    static func requestData<T: Decodable>(url: String, method: HTTPMethod, parameters: Parameters?, body: Data? = nil, withToken: Bool, page: Int? = nil, size: Int? = nil) async -> Result<T, Error> {
+    static func requestData<T: Decodable>(
+        url: String,
+        method: HTTPMethod,
+        parameters: Parameters? = nil,
+        body: Data? = nil,
+        withToken: Bool = true,
+        page: Int? = nil,
+        size: Int? = nil,
+        retryOnAuthFail: Bool = true
+    ) async -> Result<T, Error> {
+        // 1차 시도
+        let result: Result<T, Error> = await performRequest(
+            url: url, method: method, parameters: parameters, body: body, withToken: withToken, page: page, size: size
+        )
+        
+        // 401 에러인 경우, 토큰 갱신 후 재시도
+        if retryOnAuthFail,
+            case .failure(let error) = result,
+           (error as? NetworkError) == .unauthorized {
+            
+            let refreshSuccess = await TokenManager.shared.refreshTokenIfNeeded()
+            if refreshSuccess {
+                return await performRequest(
+                    url: url, method: method, parameters: parameters, body: body, withToken: withToken, page: page, size: size
+                )
+            } else {
+                return .failure(NetworkError.unauthorized)
+            }
+        }
+        
+        return result
+    }
+    
+    private static func performRequest<T: Decodable>(
+        url: String,
+        method: HTTPMethod,
+        parameters: Parameters?,
+        body: Data? = nil,
+        withToken: Bool,
+        page: Int? = nil,
+        size: Int? = nil
+    ) async -> Result<T, Error> {
         guard let fullPath = buildURL(url: url, parameters: parameters, page: page, size: size) else {
             return .failure(NetworkError.invalidURL)
         }
-        
+
         let headers = buildHeaders(withToken: withToken)
-        
         let request: DataRequest
+
         if let body = body {
             var urlRequest = URLRequest(url: fullPath)
             urlRequest.method = method
@@ -61,32 +101,40 @@ final class Network {
         } else {
             request = AF.request(fullPath, method: method, encoding: parameters != nil ? URLEncoding.queryString : JSONEncoding.default, headers: headers)
         }
-        
-        let response = await request.validate(statusCode: 200..<300)
-            .serializingDecodable(T.self, emptyResponseCodes: [200])
+
+        let response = await request
+            .responseString(encoding: .utf8) { response in
+                   switch response.result {
+                   case .success(let raw): 
+                        print("✅ [Raw Response String]:\n\(raw)")
+                   case .failure(let error):
+                       print("❌ [Raw Response String Error]: \(error)")
+                   }
+               }
+            .serializingResponse(using: DecodableResponseSerializer<T>(emptyResponseCodes: [200]))
             .response
-        
-        switch response.result {
+        let statusCode = response.response?.statusCode ?? -1
+        let responseData = try? response.result.get()
+        let result = handleStatusCode(statusCode, data: responseData, errorData: request.data)
+        switch result {
         case .success(let res):
-            Log("네트워크 요청 성공: \(fullPath), \(request.request?.httpMethod ?? "")")
+            Log("네트워크 요청 성공: \(fullPath), \(method.rawValue)")
             return .success(res)
         case .failure(let error):
+            print(response.response?.statusCode, response.result)
             Log("네트워크 요청 실패: \(fullPath), \(error.localizedDescription)")
             return .failure(error)
         }
     }
     
-    static func requestImage(url: String, withToken: Bool) async -> Result<UIImage, Error> {
-        guard let fullPath = buildURL(url: url) else {
+    static func requestImage(url: String, parameters: Parameters, withToken: Bool) async -> Result<UIImage, Error> {
+        guard let fullPath = buildURL(url: url, parameters: parameters) else {
             return .failure(NetworkError.invalidURL)
         }
         
         let headers = buildHeaders(withToken: withToken)
-        
-        let request: DataRequest
-        request = AF.request(fullPath, method: .get, headers: headers)
-        
-        let response = await request.validate(statusCode: 200..<300)
+        let response = await AF.request(fullPath, method: .get, headers: headers)
+            .validate(statusCode: 200..<300)
             .serializingData()
             .response
         
@@ -97,12 +145,13 @@ final class Network {
             }
             return .success(image)
         case .failure(let error):
+            print("이미지 로드 ERROR", fullPath, error.localizedDescription)
             return .failure(error)
         }
     }
     
-    static func postImage(url: String, image: UIImage, withToken: Bool, parameters: Parameters) async -> Result<ImageEntity, Error> {
-        guard let fullPath = buildURL(url: url, parameters: parameters) else {
+    static func postImage(url: String, image: UIImage, withToken: Bool, type: PostImageType) async -> Result<ImageEntity, Error> {
+        guard let fullPath = buildURL(url: url) else {
             return .failure(NetworkError.invalidURL)
         }
         
@@ -145,24 +194,28 @@ final class Network {
                                      withName: "file",
                                      fileName: "image.png",
                                      mimeType: "image/jpeg")
+            if let typeData = type.parameter.data(using: .utf8) {
+                multipartFormData.append(typeData, withName: "type")
+            }
         }, with: urlRequest)
-            .serializingDecodable(Response<ImageEntity>.self)
+            .serializingDecodable(ImageEntity.self)
             .response
         
         switch response.result {
         case .success(let res):
             if let statusCode = response.response?.statusCode {
-                Log("네트워크 요청 성공: \(fullPath), \(urlRequest.urlRequest?.httpMethod ?? "")")
-                return handleStatusCode(statusCode, data: res.data)
+                Log("네트워크 요청 성공: 이미지 등록 \(fullPath), \(urlRequest.urlRequest?.httpMethod ?? "")")
+                return handleStatusCode(statusCode, data: res)
             } else {
                 return .failure(NetworkError.unknownError)
             }
         case .failure(let error):
+            Log("네트워크 요청 실패: 이미지 등록 \(fullPath), \(urlRequest.urlRequest?.httpMethod ?? ""), \(error.localizedDescription)")
             return .failure(NetworkError.requestFailed(error.localizedDescription))
         }
     }
     
-    private static func handleStatusCode<T>(_ statusCode: Int, data: T?) -> Result<T, Error> {
+    private static func handleStatusCode<T>(_ statusCode: Int, data: T?, errorData: Data? = nil) -> Result<T, Error> {
         switch statusCode {
         case 200..<300:
             if let data = data {
@@ -170,13 +223,24 @@ final class Network {
             } else {
                 return .failure(NetworkError.unknownError)
             }
+        case 401:
+            return .failure(NetworkError.unauthorized)
         case 400..<500:
-            return .failure(NetworkError.clientError)
+            let message = extractErrorMessage(from: errorData) ?? "요청이 잘못되었습니다."
+            return .failure(NetworkError.clientError(message))
         case 500..<600:
-            return .failure(NetworkError.serverError)
+            let message = extractErrorMessage(from: errorData) ?? "서버에 오류가 발생했습니다."
+            return .failure(NetworkError.serverError(message))
         default:
             return .failure(NetworkError.unknownStatusCode(statusCode))
         }
+    }
+    
+    private static func extractErrorMessage(from data: Data?) -> String? {
+        guard let data = data,
+              let errorResponse = try? JSONDecoder().decode(ErrorResponse.self, from: data)
+        else { return nil }
+        return errorResponse.errMessage
     }
 }
 

@@ -8,10 +8,26 @@
 import SwiftUI
 
 struct ApprovalView: View {
-    @State var vm = ApprovalViewModel(
-        emojiNetwork: EmojiNetwork(),
-        challengeNetwork: ChallengeNetwork()
-    )
+    @StateObject var vm: ApprovalViewModel
+    @StateObject var userRouter: UserRouter
+    @EnvironmentObject var dependencies: AppDependencies
+    
+    init(
+        approvalSource: ApprovalSource,
+        emojiNetwork: EmojiNetwork,
+        missionHistoryRepository: MissionHistoryRepository,
+        areaNameService: AreaNameProvider
+    ) {
+        _vm = StateObject(
+            wrappedValue: ApprovalViewModel(
+                approvalSource: approvalSource,
+                emojiNetwork: emojiNetwork,
+                missionHistoryRepository: missionHistoryRepository,
+                areaNameService: areaNameService
+            )
+        )
+        _userRouter = StateObject(wrappedValue: UserRouter())
+    }
     
     var body: some View {
         VStack(spacing: 0) {
@@ -30,6 +46,7 @@ struct ApprovalView: View {
             await vm.loadDataIfNeeded()
         }
         .overlay { reportAlertView }
+        .withUserNavigation(userRouter: userRouter)
     }
     
     /// 퀘스트 타이틀  + 퀘스트 인증 이미지
@@ -52,7 +69,10 @@ struct ApprovalView: View {
                         height: ((.screenWidth-40) / 5) * 4,
                         padding: 20,
                         onLike: { vm.onLike(for: idx) },
-                        onHate: { vm.onHate(for: idx) }
+                        onHate: { vm.onHate(for: idx) },
+                        onOtherUserTapped: {
+                            userRouter.navigateToUserProfile(userId: item.userId)
+                        }
                     )
                     .overlay(alignment: .topTrailing) {
                         trailingButton(for: item)
@@ -64,7 +84,7 @@ struct ApprovalView: View {
                         .task { await vm.loadMoreData() }
                 }
             }
-            .padding(.top, 47)
+            .padding(.top, vm.approvalSource == .tab ? 47 : 0)
             .padding(.bottom, 72)
         }
         .refreshable {
@@ -72,7 +92,7 @@ struct ApprovalView: View {
         }
     }
     
-    private func trailingButton(for item: ApprovalViewModelItem) -> some View {
+    private func trailingButton(for item: ApprovalMissionHistoryItem) -> some View {
         Menu {
             ShareLink(item: photo, preview: SharePreview(photo.caption, image: photo.image)) {
                 Label("공유하기", image: "share")
@@ -102,7 +122,7 @@ struct ApprovalView: View {
     private var reportAlertView: some View {
         if vm.showReportAlert {
             SettingAlertView(
-                alertType: .Report,
+                alertType: AlertType.Report,
                 onCancel: { vm.dismissReportAlert() },
                 onConfirm: { Task { await vm.confirmReport() } }
             )
@@ -154,5 +174,10 @@ struct ApprovalView: View {
 }
 
 #Preview {
-    ApprovalView()
+    ApprovalView(
+        approvalSource: .tab,
+        emojiNetwork: EmojiNetwork(),
+        missionHistoryRepository: MissionHistoryRepository(network: MissionHistoryNetwork(),),
+        areaNameService: AreaNameService(areaRepository: AreaRepository(network: AreaNetwork()))
+    )
 }

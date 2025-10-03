@@ -27,7 +27,7 @@ struct NavigationTitleView: View {
                         }
                     }
                 }
-                .foregroundColor(.gray500)
+                .foregroundColor(.black)
                 .font(.system(size: 17, weight: .bold))
                 .padding(.horizontal, 20)
                 .frame(height: 45)
@@ -50,12 +50,13 @@ struct SeparatorView: View {
     }
 }
 
-// TODO: 수정
 struct XmarkButton: View {
+    var color: Color = .gray500
+    
     var body: some View {
         Image(systemName: "xmark")
-            .foregroundColor(.gray500)
-            .font(.system(size: 22))
+            .foregroundColor(color)
+            .font(.system(size: 18))
     }
 }
 

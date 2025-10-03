@@ -10,19 +10,37 @@ import Combine
 
 struct QuestView: View {
     @StateObject var vm: QuestViewModel
+    @StateObject var questRouter: QuestRouter
+    @StateObject var userRouter: UserRouter
+    @EnvironmentObject var dependencies: AppDependencies
     @EnvironmentObject var sharedState: SharedState
 
-    init(initialXpStat: XpStat) {
-        _vm = StateObject(wrappedValue: QuestViewModel(questNetwork: QuestNetwork(), favoriteService: FavoriteService(favoriteNetwork: FavoriteNetwork()), selectedXpStat: initialXpStat))
+    init(
+        questRepository: QuestRepositoryInterface,
+        favoriteService: FavoriteService,
+        questSubmissionNotifier: QuestSubmissionNotifier,
+        sharedState: SharedState,
+        illsangZoneManager: IllsangZoneManager,
+    ) {
+        self._vm = StateObject(
+            wrappedValue: QuestViewModel(
+                questRepository: questRepository,
+                favoriteService: favoriteService,
+                questSubmissionNotifier: questSubmissionNotifier,
+                sharedState: sharedState
+            )
+        )
+        _questRouter = StateObject(
+            wrappedValue: QuestRouter(
+                illsangZoneManager: illsangZoneManager, questRepository: questRepository
+            )
+        )
+        _userRouter = StateObject(wrappedValue: UserRouter())
     }
     
     var body: some View {
         VStack(spacing: 0) {
             headerView
-                
-            if vm.selectedHeader != .completed {
-                subHeaderView
-            }
             
             switch vm.viewStatus {
             case .loading:
@@ -38,56 +56,12 @@ struct QuestView: View {
         .task {
             await vm.loadDataIfNeeded()
         }
-        .onReceive(
-            vm.$selectedHeader
-                .combineLatest(vm.$selectedXpStat)
-                .combineLatest(vm.questFilterState.$selectedValue)
-                .combineLatest(vm.repeatFilterState.$selectedValue)
-                .combineLatest(vm.eventFilterState.$selectedValue)
-        ) { _ in
-            vm.closeFilterPicker()
-        }
-        .onReceive(sharedState.$selectedXpStat) { newValue in
-            // 외부에서 스탯 변경 시 기본 탭으로 변경
-            vm.selectedXpStat = newValue
-            vm.selectedHeader = .default
-        }
-        .sheet(isPresented: $vm.showQuestSheet) {
-            let tall = vm.selectedQuest.isRepeatQuest || vm.selectedQuest.missionType == .image
-            
-            QuestDetailView(
-                vm: QuestDetailViewModel(
-                    quest: vm.selectedQuest,
-                    questNetwork: QuestNetwork(),
-                    onUpdate: { quest in
-                        vm.toggleFavoriteStatus(quest: quest)
-                    })
-            ) {
-                vm.onQuestApprovalTapped()
+        .withQuestNavigation(questRouter: questRouter)
+        .withUserNavigation(userRouter: userRouter)
+        .navigationDestination(isPresented: $vm.showSelectMyRegionView) {
+            MyRegionAreaSelectionView(areaRepository: dependencies.areaRepository) { area in
+                vm.handleMyRegionSelection(area)
             }
-            .presentationCornerRadius(24)
-            .presentationDragIndicator(.hidden)
-            .presentationDetents([tall ? .height(UISheetPresentationController.Detent.questDetailDetentHeightTall) : .height(UISheetPresentationController.Detent.questDetailDetentHeightShort)])
-            .onAppear {
-                UIApplication.shared.updateSheetDetents(to: [tall ? .questDetailDetentTall : .questDetailDetentShort], whenCurrentDetentsAre: [.large()])
-            }
-        }
-        .fullScreenCover(isPresented: $vm.showSubmitRouterView) {
-            SubmitRouterView(selectedQuest: vm.selectedQuest)
-                .interactiveDismissDisabled()
-        }
-        .navigationDestination(isPresented: $vm.showQuestEngageView) {
-            let quizNetwork = QuizNetwork()
-            
-            return QuestEngageView(
-                vm: QuestEngageViewModel(quest: vm.selectedQuest, quizNetwork: quizNetwork),
-                submitVM: SubmitRouterViewModel(
-                    selectedImage: nil,
-                    selectedQuest: vm.selectedQuest,
-                    submitService: ImageChallengeSubmitService(imageNetwork: ImageNetwork(), challengeNetwork: ChallengeNetwork()),
-                    quizNetwork: quizNetwork
-                )
-            )
         }
     }
 }
@@ -112,16 +86,6 @@ extension QuestView {
         .padding(.horizontal, 20)
     }
     
-    // 서브헤더 - 5가지 스탯
-    private var subHeaderView: some View {
-        StatHeaderView(
-            selectedXpStat: $vm.selectedXpStat,
-            horizontalPadding: 0,
-            height: 44,
-            hasBottomLine: true
-        )
-    }
-    
     private var questListView: some View {
         ScrollViewReader { proxy in
             ScrollView {
@@ -138,13 +102,25 @@ extension QuestView {
                     questListEmptyView
                 }
             }
-            .onReceive(
-                vm.$selectedHeader
-                        .combineLatest(vm.$selectedXpStat)
-                        .combineLatest(vm.questFilterState.$selectedValue)
-                        .combineLatest(vm.repeatFilterState.$selectedValue)
-                        .combineLatest(vm.eventFilterState.$selectedValue)
-            ) { _ in
+            .onChange(of: vm.selectedHeader) { _, _ in
+                vm.closeFilterPicker()
+                withAnimation {
+                    proxy.scrollTo("top", anchor: .top)
+                }
+            }
+            .onChange(of: vm.questFilterState.selectedValue) {  _, _ in
+                vm.closeFilterPicker()
+                withAnimation {
+                    proxy.scrollTo("top", anchor: .top)
+                }
+            }
+            .onChange(of: vm.repeatFilterState.selectedValue) { _, _ in
+                vm.closeFilterPicker()
+                withAnimation {
+                    proxy.scrollTo("top", anchor: .top)
+                }
+            }
+            .onChange(of: vm.eventFilterState.selectedValue) { _, _ in
                 vm.closeFilterPicker()
                 withAnimation {
                     proxy.scrollTo("top", anchor: .top)
@@ -157,48 +133,47 @@ extension QuestView {
         LazyVStack(spacing: 12) {
             switch vm.selectedHeader {
             case .default: // 미완료 퀘스트
-                ForEach(vm.filteredDefaultQuestListByXpStat, id: \.id) { quest in
-                    QuestItemView(
+                ForEach(vm.currentQuests, id: \.id) { quest in
+                    DefaultQuestItemView(
                         quest: quest,
-                        style: UncompletedStyle(),
-                        tagTitle: String(quest.totalRewardXP())+"XP") {
-                            vm.toggleFavoriteStatus(quest: quest)
-                        } action: {
-                            vm.onQuestTapped(quest: quest)
-                        }
-                   
+                        action: {
+                            AnalyticsService.logEvent(.questItemClick(questId: quest.id, questType: quest.questType?.rawValue.uppercased() ?? ""))
+                            questRouter.presentQuestDetail(quest: quest) { quest in
+                                vm.toggleFavoriteStatus(quest: quest)
+                            }
+                        },
+                        favoriteAction: { vm.toggleFavoriteStatus(quest: quest) }
+                    )
                 }
             case .repeat: // 미완료 반복 퀘스트
-                ForEach(vm.filteredRepeatQuestListByXpStat, id: \.id) { quest in
-                    QuestItemView(
+                ForEach(vm.currentQuests, id: \.id) { quest in
+                    RepeatQuestItemView(
                         quest: quest,
-                        style: RepeatStyle(repeatType: vm.repeatFilterState.selectedValue),
-                        tagTitle: vm.repeatFilterState.selectedValue.description
-                    ) {
-                        vm.toggleFavoriteStatus(quest: quest)
-                    } action: {
-                        vm.onQuestTapped(quest: quest)
-                    }
+                        action: {
+                            AnalyticsService.logEvent(.questItemClick(questId: quest.id, questType: quest.questType?.rawValue.uppercased() ?? ""))
+                            questRouter.presentQuestDetail(quest: quest) { quest in
+                                vm.toggleFavoriteStatus(quest: quest)
+                            }
+                        },
+                        favoriteAction: { vm.toggleFavoriteStatus(quest: quest) }
+                    )
                 }
             case .event: // 미완료 이벤트 퀘스트
-                ForEach(vm.filteredEventQuestList, id: \.id) { quest in
-                    QuestItemView(
+                ForEach(vm.currentQuests, id: \.id) { quest in
+                    EventQuestItemView(
                         quest: quest,
-                        style: EventStyle(),
-                        tagTitle: "한정"
-                    ) {
-                        vm.toggleFavoriteStatus(quest: quest)
-                    } action: {
-                        vm.onQuestTapped(quest: quest)
-                    }
+                        action: {
+                            AnalyticsService.logEvent(.questItemClick(questId: quest.id, questType: quest.questType?.rawValue.uppercased() ?? ""))
+                            questRouter.presentQuestDetail(quest: quest) { quest in
+                                vm.toggleFavoriteStatus(quest: quest)
+                            }
+                        },
+                        favoriteAction: { vm.toggleFavoriteStatus(quest: quest) }
+                    )
                 }
             case .completed: // 완료 퀘스트
-                ForEach(vm.itemListByStatus[.completed, default: []], id: \.id) { quest in
-                    QuestItemView(
-                        quest: quest,
-                        style: CompletedStyle(),
-                        tagTitle: String(quest.totalRewardXP())+"XP"
-                    ) { } action: { }
+                ForEach(vm.currentQuests, id: \.id) { quest in
+                    CompletedQuestItemView(quest: quest)
                 }
                 
                 if vm.hasMorePage(status: .completed) {
@@ -209,53 +184,49 @@ extension QuestView {
                 }
             }
         }
-        .padding(.top, vm.selectedHeader != .completed ? 70 : 0)
+        .padding(.top, vm.selectedHeader != .completed ? 100 : 0)
         .overlay(alignment: .top) {
-            Group {
-                if (vm.selectedHeader == .default) {
-                    filterPickerDefaultView
-                } else if (vm.selectedHeader == .repeat) {
-                    HStack(alignment: .top, spacing: 8) {
-                        filterPickerRepeatView
-                        filterPickerDefaultView
+            VStack(spacing: 16) {
+                if vm.selectedHeader != .completed {
+                    RegionPickerView(title: sharedState.selectedCommercialArea.areaName) {
+                        vm.showSelectMyRegionView = true
                     }
-                } else if (vm.selectedHeader == .event) {
-                    filterPickerEventView
+                    .frame(maxWidth: .infinity, alignment: .leading)
                 }
+                Group {
+                    if (vm.selectedHeader == .default) {
+                        filterPickerDefaultView
+                    } else if (vm.selectedHeader == .repeat) {
+                        HStack(alignment: .top, spacing: 8) {
+                            filterPickerRepeatView
+                            filterPickerDefaultView
+                        }
+                    } else if (vm.selectedHeader == .event) {
+                        filterPickerEventView
+                    }
+                }
+                .frame(maxWidth: .infinity, alignment: .trailing)
             }
-            .padding(.top, 13)
-            .padding(.bottom, 16)
-            .padding(.trailing, 20)
-            .frame(maxWidth: .infinity, alignment: .trailing)
+            .padding(.horizontal, 20)
+            .padding(.top, 2)
+            .padding(.bottom, 12)
         }
         .padding(.bottom, 72)
     }
     
     private var filterPickerDefaultView: some View {
-        PickerView<QuestFilterType>(
-            status: $vm.questFilterState.pickerStatus,
-            selection: $vm.questFilterState.selectedValue,
-            width: 150
-        )
-        .onChange(of: vm.questFilterState.selectedValue) { _, newValue in
-            AnalyticsService.logEvent(.questFilterClick(filterOption: newValue.description))
-        }
+        PickerView(state: vm.questFilterState, width: 150)
+            .onChange(of: vm.questFilterState.selectedValue) { _, newValue in
+                AnalyticsService.logEvent(.questFilterClick(filterOption: newValue.description))
+            }
     }
     
     private var filterPickerRepeatView: some View {
-        PickerView<RepeatType>(
-            status: $vm.repeatFilterState.pickerStatus,
-            selection: $vm.repeatFilterState.selectedValue,
-            width: 85
-        )
+        PickerView(state: vm.repeatFilterState, width: 85)
     }
     
     private var filterPickerEventView: some View {
-        PickerView<EventQuestFilterType>(
-            status: $vm.eventFilterState.pickerStatus,
-            selection: $vm.eventFilterState.selectedValue,
-            width: 150
-        )
+        PickerView(state: vm.eventFilterState, width: 150)
     }
     
     private var questListEmptyView: some View {
@@ -279,5 +250,15 @@ extension QuestView {
 }
 
 #Preview {
-    QuestView(initialXpStat:  .charm)
+    QuestView(
+        questRepository: QuestRepository(network: QuestNetwork()),
+        favoriteService: FavoriteService(favoriteNetwork: FavoriteNetwork()),
+        questSubmissionNotifier: QuestSubmissionNotifier(),
+        sharedState: SharedState(),
+        illsangZoneManager: IllsangZoneManager(
+            areaNameService: AreaNameService(
+                areaRepository: AreaRepository(network: AreaNetwork())
+            )
+        )
+    )
 }
