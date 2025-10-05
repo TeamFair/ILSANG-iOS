@@ -33,8 +33,8 @@ extension AreaRank {
 }
 
 extension AreaUserRank {
-    func toRankItem() -> AreaUserRankViewModelItem {
-        AreaUserRankViewModelItem(
+    func toRankItem() -> AreaUserRankItem {
+        AreaUserRankItem(
             ranks: ranks.map { $0.toRankItem() },
             user: user?.toRankItem()
         )
