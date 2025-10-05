@@ -29,7 +29,7 @@ class RankingViewModel: ObservableObject {
     
     @Published var metroRank: [AreaRankViewModelItem] = []
     @Published var commercialRank: [AreaRankViewModelItem] = []
-    @Published var contributionRank: [UserRankViewModelItem] = []
+    @Published var contributionRank: [UserRankItem] = []
     
     @Published var seasons: [Season] = []
     
@@ -175,7 +175,7 @@ class RankingViewModel: ObservableObject {
     
     private func handleUserRankResult(
         _ result: Result<[UserRank], Error>,
-        assignTo keyPath: ReferenceWritableKeyPath<RankingViewModel, [UserRankViewModelItem]>
+        assignTo keyPath: ReferenceWritableKeyPath<RankingViewModel, [UserRankItem]>
     ) {
         switch result {
         case .success(let response):

@@ -25,7 +25,7 @@ final class HomeViewModel: ObservableObject {
         }
     }
     @Published var mainBanners: [BannerItem] = []
-    @Published var userRankList: [UserRankViewModelItem] = [] // 10개
+    @Published var userRankList: [UserRankItem] = [] // 10개
     @Published var largestRewardQuestList: [QuestItem] = [] // 3*5개
     @Published var recommendQuestList: [QuestItem] = [] //QuestViewModelItem.mockQuestList // 10개
     @Published var popularQuestList: [QuestItem] = [] // 4n개

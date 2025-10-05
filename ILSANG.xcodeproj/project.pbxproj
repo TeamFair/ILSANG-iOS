@@ -181,7 +181,7 @@
 		6091974A2E5C27A400F1D81B /* AreaUserRankResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 609197492E5C27A400F1D81B /* AreaUserRankResponse.swift */; };
 		6091974C2E5C27AB00F1D81B /* AreaUserRankResponse+Mapping.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6091974B2E5C27AB00F1D81B /* AreaUserRankResponse+Mapping.swift */; };
 		6091974F2E5C292F00F1D81B /* AreaRankViewModelItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6091974E2E5C292F00F1D81B /* AreaRankViewModelItem.swift */; };
-		609197512E5C295100F1D81B /* UserRankViewModelItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 609197502E5C295100F1D81B /* UserRankViewModelItem.swift */; };
+		609197512E5C295100F1D81B /* UserRankItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 609197502E5C295100F1D81B /* UserRankItem.swift */; };
 		609197532E5C2E0500F1D81B /* RankRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 609197522E5C2E0500F1D81B /* RankRepository.swift */; };
 		609197552E5C364E00F1D81B /* Rank+UIMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 609197542E5C364600F1D81B /* Rank+UIMapper.swift */; };
 		609197572E5C399000F1D81B /* AreaUserRankViewModelItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 609197562E5C398200F1D81B /* AreaUserRankViewModelItem.swift */; };
@@ -526,7 +526,7 @@
 		609197492E5C27A400F1D81B /* AreaUserRankResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AreaUserRankResponse.swift; sourceTree = "<group>"; };
 		6091974B2E5C27AB00F1D81B /* AreaUserRankResponse+Mapping.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AreaUserRankResponse+Mapping.swift"; sourceTree = "<group>"; };
 		6091974E2E5C292F00F1D81B /* AreaRankViewModelItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AreaRankViewModelItem.swift; sourceTree = "<group>"; };
-		609197502E5C295100F1D81B /* UserRankViewModelItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserRankViewModelItem.swift; sourceTree = "<group>"; };
+		609197502E5C295100F1D81B /* UserRankItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserRankItem.swift; sourceTree = "<group>"; };
 		609197522E5C2E0500F1D81B /* RankRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RankRepository.swift; sourceTree = "<group>"; };
 		609197542E5C364600F1D81B /* Rank+UIMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Rank+UIMapper.swift"; sourceTree = "<group>"; };
 		609197562E5C398200F1D81B /* AreaUserRankViewModelItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AreaUserRankViewModelItem.swift; sourceTree = "<group>"; };
@@ -1073,7 +1073,7 @@
 				60D897282E537653006A8480 /* ApprovalMissionHistoryItem.swift */,
 				607FCBE62BFD12B100BB2D04 /* QuestItem.swift */,
 				609197602E5DEB5600F1D81B /* BannerItem.swift */,
-				609197502E5C295100F1D81B /* UserRankViewModelItem.swift */,
+				609197502E5C295100F1D81B /* UserRankItem.swift */,
 				6091974E2E5C292F00F1D81B /* AreaRankViewModelItem.swift */,
 				609197562E5C398200F1D81B /* AreaUserRankViewModelItem.swift */,
 				606C3ED42E61ABAB0050C4D6 /* TopCommercialAreaItem.swift */,
@@ -2100,7 +2100,7 @@
 				60D897412E575056006A8480 /* LargeRewardQuestResponse.swift in Sources */,
 				60F352F82E91667700307BDC /* QuizResponse.swift in Sources */,
 				609197612E5DEB5600F1D81B /* BannerItem.swift in Sources */,
-				609197512E5C295100F1D81B /* UserRankViewModelItem.swift in Sources */,
+				609197512E5C295100F1D81B /* UserRankItem.swift in Sources */,
 				A10EF9392C87292C003D78A2 /* OpenSourceInfoView.swift in Sources */,
 				609197462E5C272E00F1D81B /* CommercialAreaRankResponse.swift in Sources */,
 				60E401B82E72D33000BB0B6C /* LegendRank+UIMapper.swift in Sources */,

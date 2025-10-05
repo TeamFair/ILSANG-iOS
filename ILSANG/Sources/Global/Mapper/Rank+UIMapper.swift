@@ -6,8 +6,8 @@
 //
 
 extension UserRank {
-    func toRankItem() -> UserRankViewModelItem {
-        UserRankViewModelItem(
+    func toRankItem() -> UserRankItem {
+        UserRankItem(
             userId: userId,
             profileImageId: profileImageId,
             profileImage: nil,
