@@ -9,7 +9,7 @@
 import SwiftUI
 
 final class UserMissionHistoryViewModel: ObservableObject {
-    @Published var missionHistories: [UserMissionHistoryViewModelItem] = []
+    @Published var missionHistories: [UserMissionHistoryItem] = []
     
     @Published var challengeDelete = false
     
@@ -27,13 +27,13 @@ final class UserMissionHistoryViewModel: ObservableObject {
         }
     }
     
-    var challengePaginationManager = PaginationManager<UserMissionHistoryViewModelItem>(
+    var challengePaginationManager = PaginationManager<UserMissionHistoryItem>(
         size: 10,
         threshold: 7
     )
     
     @discardableResult @MainActor
-    func loadChallengeListWithImage(page: Int, size: Int) async -> ([UserMissionHistoryViewModelItem], Int) {
+    func loadChallengeListWithImage(page: Int, size: Int) async -> ([UserMissionHistoryItem], Int) {
         let getChallengeList = await fetchChallenges(page: page, size: size)
         let newChallengeList = getChallengeList.data
         
@@ -69,7 +69,7 @@ final class UserMissionHistoryViewModel: ObservableObject {
         return (missionHistories, getChallengeList.total)
     }
     
-    private func fetchChallenges(page: Int, size: Int) async -> (data: [UserMissionHistoryViewModelItem], total: Int) {
+    private func fetchChallenges(page: Int, size: Int) async -> (data: [UserMissionHistoryItem], total: Int) {
         let response = await missionHistoryRepository.getMissionHistories(page: page, size: size, userId: nil)
         
         switch response {

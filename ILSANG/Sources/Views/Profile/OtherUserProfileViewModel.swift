@@ -24,11 +24,11 @@ final class OtherUserProfileViewModel: ObservableObject {
     @Published var pointCommercial: PointCommercialItem? // 내 일상존
     @Published var completedQuestCount: Int = 0
     @Published var points: [PointType: Int] = [:]
-    @Published var challengeList: [UserMissionHistoryViewModelItem] = []
+    @Published var challengeList: [UserMissionHistoryItem] = []
     
     @Published var seasonFilterState: DynamicFilterPickerState<SeasonFilterType>
 
-    var challengePaginationManager = PaginationManager<UserMissionHistoryViewModelItem>(
+    var challengePaginationManager = PaginationManager<UserMissionHistoryItem>(
         size: 10,
         threshold: 7)
     
@@ -104,7 +104,7 @@ final class OtherUserProfileViewModel: ObservableObject {
     }
     
     @discardableResult @MainActor
-    func loadChallengeListWithImage(page: Int, size: Int) async -> ([UserMissionHistoryViewModelItem], Int) {
+    func loadChallengeListWithImage(page: Int, size: Int) async -> ([UserMissionHistoryItem], Int) {
         let getChallengeList = await fetchChallenges(page: page, size: size)
         let newChallengeList = getChallengeList.data
         
@@ -140,7 +140,7 @@ final class OtherUserProfileViewModel: ObservableObject {
         return (challengeList, getChallengeList.total)
     }
     
-    private func fetchChallenges(page: Int, size: Int) async -> (data: [UserMissionHistoryViewModelItem], total: Int) {
+    private func fetchChallenges(page: Int, size: Int) async -> (data: [UserMissionHistoryItem], total: Int) {
         let response = await missionHistoryRepository.getMissionHistories(page: page, size: size, userId: userId)
         
         switch response {

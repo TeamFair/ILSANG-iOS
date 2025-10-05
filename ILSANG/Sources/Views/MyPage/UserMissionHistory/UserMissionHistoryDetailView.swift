@@ -112,7 +112,7 @@ struct UserMissionHistoryDetailView: View {
 
 struct ChallengeImageView: View {
     let missionImage: UIImage?
-    let challengeData : UserMissionHistoryViewModelItem
+    let challengeData : UserMissionHistoryItem
     
     var body: some View {
         if let submitImage = challengeData.submitImage {

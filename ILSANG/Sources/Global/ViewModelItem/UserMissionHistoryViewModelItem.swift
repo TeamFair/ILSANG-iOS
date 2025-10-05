@@ -8,7 +8,7 @@
 import UIKit
 
 @Observable
-class UserMissionHistoryViewModelItem {
+class UserMissionHistoryItem {
     let missionHistoryId: Int
     let title, createdAt: String
     let submitImageId: String?

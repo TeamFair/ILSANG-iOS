@@ -9,7 +9,7 @@ import SwiftUI
 
 struct OtherUserChallengeDetailView: View {
     @Environment(\.dismiss) var dismiss
-    let challenge: UserMissionHistoryViewModelItem
+    let challenge: UserMissionHistoryItem
     
     var body: some View {
         VStack {

@@ -198,7 +198,7 @@
 		6091976D2E5F8E9B00F1D81B /* UserMissionHistory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6091976C2E5F8E9B00F1D81B /* UserMissionHistory.swift */; };
 		6091976F2E5F8EC500F1D81B /* UserMissionHistoryResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6091976E2E5F8EC500F1D81B /* UserMissionHistoryResponse.swift */; };
 		609197712E5F8F4E00F1D81B /* UserMissionHistory+Mapping.swift in Sources */ = {isa = PBXBuildFile; fileRef = 609197702E5F8F4E00F1D81B /* UserMissionHistory+Mapping.swift */; };
-		609197732E5F8FAC00F1D81B /* UserMissionHistoryViewModelItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 609197722E5F8FAC00F1D81B /* UserMissionHistoryViewModelItem.swift */; };
+		609197732E5F8FAC00F1D81B /* UserMissionHistoryItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 609197722E5F8FAC00F1D81B /* UserMissionHistoryItem.swift */; };
 		609197752E5F8FF900F1D81B /* UserMissionHistory+UIMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 609197742E5F8FF900F1D81B /* UserMissionHistory+UIMapper.swift */; };
 		609197772E5FA6ED00F1D81B /* IllsangZonePointView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 609197762E5FA6ED00F1D81B /* IllsangZonePointView.swift */; };
 		60924DC92C48C00E00221072 /* Quest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60924DC82C48C00E00221072 /* Quest.swift */; };
@@ -543,7 +543,7 @@
 		6091976C2E5F8E9B00F1D81B /* UserMissionHistory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserMissionHistory.swift; sourceTree = "<group>"; };
 		6091976E2E5F8EC500F1D81B /* UserMissionHistoryResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserMissionHistoryResponse.swift; sourceTree = "<group>"; };
 		609197702E5F8F4E00F1D81B /* UserMissionHistory+Mapping.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserMissionHistory+Mapping.swift"; sourceTree = "<group>"; };
-		609197722E5F8FAC00F1D81B /* UserMissionHistoryViewModelItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserMissionHistoryViewModelItem.swift; sourceTree = "<group>"; };
+		609197722E5F8FAC00F1D81B /* UserMissionHistoryItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserMissionHistoryItem.swift; sourceTree = "<group>"; };
 		609197742E5F8FF900F1D81B /* UserMissionHistory+UIMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserMissionHistory+UIMapper.swift"; sourceTree = "<group>"; };
 		609197762E5FA6ED00F1D81B /* IllsangZonePointView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IllsangZonePointView.swift; sourceTree = "<group>"; };
 		60924DC82C48C00E00221072 /* Quest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Quest.swift; sourceTree = "<group>"; };
@@ -843,7 +843,6 @@
 			children = (
 				606C3EB32E60A2B90050C4D6 /* UserMissionHistoryView.swift */,
 				606C3EB52E60A57C0050C4D6 /* UserMissionHistoryViewModel.swift */,
-				609197722E5F8FAC00F1D81B /* UserMissionHistoryViewModelItem.swift */,
 				A1BB60272BFE129000AAADD4 /* UserMissionHistoryList.swift */,
 				601BCF172D7C0C1400138387 /* UserMissionHistoryItemView.swift */,
 				A1868C432C09B6C50020BF16 /* UserMissionHistoryDetailView.swift */,
@@ -1071,6 +1070,7 @@
 				60E401AF2E72CD7A00BB0B6C /* UserItem.swift */,
 				60E401B12E72CDD400BB0B6C /* LegendRankItem.swift */,
 				60D897282E537653006A8480 /* ApprovalMissionHistoryItem.swift */,
+				609197722E5F8FAC00F1D81B /* UserMissionHistoryItem.swift */,
 				607FCBE62BFD12B100BB2D04 /* QuestItem.swift */,
 				609197602E5DEB5600F1D81B /* BannerItem.swift */,
 				609197502E5C295100F1D81B /* UserRankItem.swift */,
@@ -1917,7 +1917,7 @@
 				601189292C3F022D0070F2AD /* LoginViewModel.swift in Sources */,
 				60D8973D2E57504C006A8480 /* RecommendQuestResponse.swift in Sources */,
 				604687A52D1FC36A0056E394 /* TitleWithContentView.swift in Sources */,
-				609197732E5F8FAC00F1D81B /* UserMissionHistoryViewModelItem.swift in Sources */,
+				609197732E5F8FAC00F1D81B /* UserMissionHistoryItem.swift in Sources */,
 				60FF5EC52E4949F8007A5B40 /* RegionPickerView.swift in Sources */,
 				609197692E5E06FB00F1D81B /* AreaResponse+Mapping.swift in Sources */,
 				60DA1D162E6CC49E00AE314E /* Title.swift in Sources */,
