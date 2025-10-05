@@ -8,7 +8,7 @@
 import Foundation
 
 protocol FavoriteServiceInterface {
-    func toggle(quest: QuestViewModelItem)
+    func toggle(quest: QuestItem)
 }
 
 final class FavoriteService: FavoriteServiceInterface {
@@ -22,7 +22,7 @@ final class FavoriteService: FavoriteServiceInterface {
         self.favoriteNetwork = favoriteNetwork
     }
     
-    func toggle(quest: QuestViewModelItem) {
+    func toggle(quest: QuestItem) {
         let questId = quest.id
         
         // 원래 상태 저장 (첫 토글일 때만)
@@ -44,7 +44,7 @@ final class FavoriteService: FavoriteServiceInterface {
     }
     
     @MainActor
-    private func sendUpdate(for quest: QuestViewModelItem) async {
+    private func sendUpdate(for quest: QuestItem) async {
         let questId = quest.id
         guard let original = originalState[questId] else { return }
         originalState[questId] = nil

@@ -147,7 +147,7 @@
 		607FCBDD2BFA686700BB2D04 /* MyPageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FCBDC2BFA686700BB2D04 /* MyPageView.swift */; };
 		607FCBE22BFA6A8300BB2D04 /* Buttons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FCBE12BFA6A8300BB2D04 /* Buttons.swift */; };
 		607FCBE42BFD124900BB2D04 /* QuestItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FCBE32BFD124900BB2D04 /* QuestItemView.swift */; };
-		607FCBE72BFD12B100BB2D04 /* QuestViewModelItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FCBE62BFD12B100BB2D04 /* QuestViewModelItem.swift */; };
+		607FCBE72BFD12B100BB2D04 /* QuestItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FCBE62BFD12B100BB2D04 /* QuestItem.swift */; };
 		607FCBE92BFE418600BB2D04 /* QuestViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FCBE82BFE418600BB2D04 /* QuestViewModel.swift */; };
 		607FCBEB2BFE44D900BB2D04 /* IconView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FCBEA2BFE44D900BB2D04 /* IconView.swift */; };
 		607FCC332C01AA7300BB2D04 /* SubmitAlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FCC322C01AA7300BB2D04 /* SubmitAlertView.swift */; };
@@ -287,7 +287,6 @@
 		60E401B62E72D25700BB0B6C /* LegendRankResponse+Mapping.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60E401B52E72D25700BB0B6C /* LegendRankResponse+Mapping.swift */; };
 		60E401B82E72D33000BB0B6C /* LegendRank+UIMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60E401B72E72D33000BB0B6C /* LegendRank+UIMapper.swift */; };
 		60E401BA2E74477A00BB0B6C /* QuestSubmissionNotifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60E401B92E74477A00BB0B6C /* QuestSubmissionNotifier.swift */; };
-		60F352F22E8FEDEA00307BDC /* RenderDebugContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60F352F12E8FEDEA00307BDC /* RenderDebugContainer.swift */; };
 		60F352F42E91644E00307BDC /* ISO8601DateFormatter++.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60F352F32E91644E00307BDC /* ISO8601DateFormatter++.swift */; };
 		60F352F62E91666900307BDC /* ChallengeResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60F352F52E91666900307BDC /* ChallengeResponse.swift */; };
 		60F352F82E91667700307BDC /* QuizResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60F352F72E91667700307BDC /* QuizResponse.swift */; };
@@ -493,7 +492,7 @@
 		607FCBDC2BFA686700BB2D04 /* MyPageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPageView.swift; sourceTree = "<group>"; };
 		607FCBE12BFA6A8300BB2D04 /* Buttons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Buttons.swift; sourceTree = "<group>"; };
 		607FCBE32BFD124900BB2D04 /* QuestItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestItemView.swift; sourceTree = "<group>"; };
-		607FCBE62BFD12B100BB2D04 /* QuestViewModelItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestViewModelItem.swift; sourceTree = "<group>"; };
+		607FCBE62BFD12B100BB2D04 /* QuestItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestItem.swift; sourceTree = "<group>"; };
 		607FCBE82BFE418600BB2D04 /* QuestViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestViewModel.swift; sourceTree = "<group>"; };
 		607FCBEA2BFE44D900BB2D04 /* IconView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconView.swift; sourceTree = "<group>"; };
 		607FCC322C01AA7300BB2D04 /* SubmitAlertView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubmitAlertView.swift; sourceTree = "<group>"; };
@@ -632,7 +631,6 @@
 		60E401B52E72D25700BB0B6C /* LegendRankResponse+Mapping.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LegendRankResponse+Mapping.swift"; sourceTree = "<group>"; };
 		60E401B72E72D33000BB0B6C /* LegendRank+UIMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LegendRank+UIMapper.swift"; sourceTree = "<group>"; };
 		60E401B92E74477A00BB0B6C /* QuestSubmissionNotifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestSubmissionNotifier.swift; sourceTree = "<group>"; };
-		60F352F12E8FEDEA00307BDC /* RenderDebugContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RenderDebugContainer.swift; sourceTree = "<group>"; };
 		60F352F32E91644E00307BDC /* ISO8601DateFormatter++.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ISO8601DateFormatter++.swift"; sourceTree = "<group>"; };
 		60F352F52E91666900307BDC /* ChallengeResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChallengeResponse.swift; sourceTree = "<group>"; };
 		60F352F72E91667700307BDC /* QuizResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuizResponse.swift; sourceTree = "<group>"; };
@@ -1073,7 +1071,7 @@
 				60E401AF2E72CD7A00BB0B6C /* UserItem.swift */,
 				60E401B12E72CDD400BB0B6C /* LegendRankItem.swift */,
 				60D897282E537653006A8480 /* ApprovalMissionHistoryItem.swift */,
-				607FCBE62BFD12B100BB2D04 /* QuestViewModelItem.swift */,
+				607FCBE62BFD12B100BB2D04 /* QuestItem.swift */,
 				609197602E5DEB5600F1D81B /* BannerViewModelItem.swift */,
 				609197502E5C295100F1D81B /* UserRankViewModelItem.swift */,
 				6091974E2E5C292F00F1D81B /* AreaRankViewModelItem.swift */,
@@ -2094,7 +2092,7 @@
 				606694F32DDA2B140000E368 /* HonorAcquisitionPopup.swift in Sources */,
 				60DA1D0F2E6CC2B700AE314E /* TitleResponse.swift in Sources */,
 				60DA1D102E6CC2B700AE314E /* UserTitleResponse.swift in Sources */,
-				607FCBE72BFD12B100BB2D04 /* QuestViewModelItem.swift in Sources */,
+				607FCBE72BFD12B100BB2D04 /* QuestItem.swift in Sources */,
 				605334552D298A1400599159 /* TutorialView.swift in Sources */,
 				A19628692C0775A70037C53A /* Setting.swift in Sources */,
 				604687A82D1FD9E70056E394 /* CGFloat++.swift in Sources */,

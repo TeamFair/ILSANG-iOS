@@ -12,10 +12,10 @@ class FavoriteListViewModel: ObservableObject {
     @Published var viewStatus: ViewStatus = .loading
     @Published var showSelectRegionView: Bool = false
     @Published var selectedArea: CommercialArea
-    @Published var quests: [QuestViewModelItem] = []
+    @Published var quests: [QuestItem] = []
     
     // TODO: 페이지네이션 수정 필요
-    let paginationManager: PaginationManager<QuestViewModelItem>
+    let paginationManager: PaginationManager<QuestItem>
     
     private let questRepository: QuestRepositoryInterface
     private let favoriteService: FavoriteService
@@ -88,12 +88,12 @@ class FavoriteListViewModel: ObservableObject {
         areaCode: String,
         page: Int,
         size: Int
-    ) async -> ([QuestViewModelItem], Int) {
+    ) async -> ([QuestItem], Int) {
         let getQuestList = await getQuestList(areaCode: areaCode, page: page, size: size)
         let newQuestList = getQuestList.data
         let existingList = quests
         
-        var mergedList: [QuestViewModelItem]
+        var mergedList: [QuestItem]
         if page == 0 {
             mergedList = newQuestList
         } else {
@@ -125,7 +125,7 @@ class FavoriteListViewModel: ObservableObject {
         return (mergedList, getQuestList.total)
     }
     
-    private func getQuestList(areaCode: String, page: Int, size: Int) async -> (data: [QuestViewModelItem], total: Int) {
+    private func getQuestList(areaCode: String, page: Int, size: Int) async -> (data: [QuestItem], total: Int) {
         switch await questRepository.getFavoriteQuests(commercialAreaCode: areaCode, page: page, size: size) {
         case .success(let response):
             return (response.content.map { $0.toQuestItem() }, response.totalElements)
@@ -142,7 +142,7 @@ class FavoriteListViewModel: ObservableObject {
     }
     
     /// 즐겨찾기 상태를 UI에 즉시 반영하고,  서버 반영은 디바운싱 처리
-    func toggleFavoriteStatus(quest: QuestViewModelItem) {
+    func toggleFavoriteStatus(quest: QuestItem) {
         favoriteService.toggle(quest: quest)
     }
     

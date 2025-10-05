@@ -16,7 +16,7 @@ struct TagConfig {
 
 // 기본 스타일
 struct BaseQuestItemView<Trailing: View>: View {
-    let quest: QuestViewModelItem
+    let quest: QuestItem
     let tagConfig: TagConfig?
     let imageSize: CGSize
     let trailingPadding: CGFloat
@@ -70,7 +70,7 @@ struct BaseQuestItemView<Trailing: View>: View {
 
 
 struct DefaultQuestItemView: View {
-    let quest: QuestViewModelItem
+    let quest: QuestItem
     let action: (() -> Void)
     let favoriteAction: (() -> Void)
     
@@ -89,7 +89,7 @@ struct DefaultQuestItemView: View {
 }
 
 struct RepeatQuestItemView: View {
-    let quest: QuestViewModelItem
+    let quest: QuestItem
     let action: (() -> Void)
     let favoriteAction: (() -> Void)
     
@@ -112,7 +112,7 @@ struct RepeatQuestItemView: View {
 }
 
 struct EventQuestItemView: View {
-    let quest: QuestViewModelItem
+    let quest: QuestItem
     let action: (() -> Void)
     let favoriteAction: (() -> Void)
     
@@ -131,7 +131,7 @@ struct EventQuestItemView: View {
 }
 
 struct UncompletedBannerQuestItemView: View {
-    let quest: QuestViewModelItem
+    let quest: QuestItem
     let action: (() -> Void)
     
     var body: some View {
@@ -170,7 +170,7 @@ struct UncompletedBannerQuestItemView: View {
 }
 
 struct FavoriteQuestItemView: View {
-    let quest: QuestViewModelItem
+    let quest: QuestItem
     let action: (() -> Void)
     let favoriteAction: (() -> Void)
 
@@ -211,7 +211,7 @@ struct FavoriteQuestItemView: View {
 }
 
 struct CompletedQuestItemView: View {
-    let quest: QuestViewModelItem
+    let quest: QuestItem
     
     var body: some View {
         BaseQuestItemView(
@@ -249,7 +249,7 @@ struct CompletedQuestItemView: View {
 }
 
 struct LargeRewardQuestItemView: View {
-    let quest: QuestViewModelItem
+    let quest: QuestItem
     let action: () -> Void
     
     var body: some View {
@@ -267,7 +267,7 @@ struct LargeRewardQuestItemView: View {
 
 // Popular 스타일
 struct PopularQuestItemView: View {
-    let quest: QuestViewModelItem
+    let quest: QuestItem
     let imageSize: CGSize
     let action: () -> Void
     
@@ -329,7 +329,7 @@ struct PopularQuestItemView: View {
 
 // Recommend 스타일
 struct RecommendQuestItemView: View {
-    let quest: QuestViewModelItem
+    let quest: QuestItem
     let action: () -> Void
     
     var body: some View {
@@ -368,8 +368,8 @@ struct RecommendQuestItemView: View {
 #Preview {
     ScrollView {
         VStack {
-            let quest = QuestViewModelItem.mockQuestList[0]
-            let repeatQuest = QuestViewModelItem.mockRepeatData
+            let quest = QuestItem.mockQuestList[0]
+            let repeatQuest = QuestItem.mockRepeatData
             Text("인기")
             PopularQuestItemView(quest: repeatQuest, imageSize: CGSize(width: 200, height: 120), action: {})
             

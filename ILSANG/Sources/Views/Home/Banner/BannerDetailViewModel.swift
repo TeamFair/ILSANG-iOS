@@ -11,13 +11,13 @@ import UIKit
 class BannerDetailViewModel: ObservableObject {
     @Published var viewStatus: ViewStatus = .loading
     @Published var banner: BannerViewModelItem
-    @Published var uncompletedQuestListByFilter: [EventQuestFilterType: [QuestViewModelItem]] = [:]
-    @Published var completedEventQuestListByFilter: [EventQuestFilterType: [QuestViewModelItem]] = [:]
+    @Published var uncompletedQuestListByFilter: [EventQuestFilterType: [QuestItem]] = [:]
+    @Published var completedEventQuestListByFilter: [EventQuestFilterType: [QuestItem]] = [:]
     
     @Published var selectedHeader: BannerQuestStatus = .uncomplete
     let eventFilterState: StaticFilterPickerState<EventQuestFilterType>
     
-    var filteredQuestList: [QuestViewModelItem] {
+    var filteredQuestList: [QuestItem] {
         return (selectedHeader == .uncomplete)
         ? uncompletedQuestListByFilter[eventFilterState.selectedValue, default: []]
         : completedEventQuestListByFilter[eventFilterState.selectedValue, default: []]
@@ -26,8 +26,8 @@ class BannerDetailViewModel: ObservableObject {
     var isFilteredListEmpty: Bool {
         filteredQuestList.isEmpty
     }
-    let uncompletedPaginationManager: PaginationManager<QuestViewModelItem>
-    let completedPaginationManager: PaginationManager<QuestViewModelItem>
+    let uncompletedPaginationManager: PaginationManager<QuestItem>
+    let completedPaginationManager: PaginationManager<QuestItem>
 
     private var refreshTask: Task<Void, Never>?
 
@@ -133,12 +133,12 @@ class BannerDetailViewModel: ObservableObject {
         page: Int,
         size: Int,
         status: BannerQuestStatus,
-    ) async -> ([QuestViewModelItem], Int) {
+    ) async -> ([QuestItem], Int) {
         let getQuestList = await getQuestList(page: page, size: size, status: status)
         let newQuestList = getQuestList.data
         
         // 현재 필터별 existingList 가져오기
-        let existingList: [QuestViewModelItem]
+        let existingList: [QuestItem]
         let filter = eventFilterState.selectedValue
         
         switch status {
@@ -148,7 +148,7 @@ class BannerDetailViewModel: ObservableObject {
             existingList = completedEventQuestListByFilter[filter] ?? []
         }
         
-        let mergedList: [QuestViewModelItem] = page == 0 ? newQuestList : existingList + newQuestList
+        let mergedList: [QuestItem] = page == 0 ? newQuestList : existingList + newQuestList
         
         await withTaskGroup(of: (Int, UIImage?).self) { group in
             for (index, quest) in newQuestList.enumerated() {
@@ -179,7 +179,7 @@ class BannerDetailViewModel: ObservableObject {
     }
     
     @MainActor
-    private func updateQuestList(_ list: [QuestViewModelItem], for filter: EventQuestFilterType, status: BannerQuestStatus) {
+    private func updateQuestList(_ list: [QuestItem], for filter: EventQuestFilterType, status: BannerQuestStatus) {
         switch status {
         case .uncomplete:
             uncompletedQuestListByFilter[filter] = list
@@ -188,7 +188,7 @@ class BannerDetailViewModel: ObservableObject {
         }
     }
     
-    private func getQuestList(page: Int, size: Int, status: BannerQuestStatus) async -> (data: [QuestViewModelItem], total: Int) {
+    private func getQuestList(page: Int, size: Int, status: BannerQuestStatus) async -> (data: [QuestItem], total: Int) {
         let result = await questRepository.getBannerQuests(
             bannerId: banner.id,
             completedYn: status == .complete,
@@ -221,7 +221,7 @@ class BannerDetailViewModel: ObservableObject {
     }
     
     /// 즐겨찾기 상태를 UI에 즉시 반영하고,  서버 반영은 디바운싱 처리
-    func toggleFavoriteStatus(quest: QuestViewModelItem) {
+    func toggleFavoriteStatus(quest: QuestItem) {
         favoriteService.toggle(quest: quest)
     }
     

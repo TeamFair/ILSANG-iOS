@@ -8,16 +8,16 @@
 import SwiftUI
 
 class QuestDetailViewModel: ObservableObject {
-    var quest: QuestViewModelItem
+    var quest: QuestItem
     var isLoading: Bool = false
     @Published var showCouponRewardView: Bool = false
-    private var onFavorite: ((QuestViewModelItem) -> Void)?
+    private var onFavorite: ((QuestItem) -> Void)?
 
     var approvalDescription: String = "퀘스트를 수행하고\n인증 후, 포인트를 적립받으세요"
     
     private let questRepository: QuestRepositoryInterface
     
-    init(quest: QuestViewModelItem, questRepository: QuestRepositoryInterface, onFavorite: @escaping (QuestViewModelItem) -> Void) {
+    init(quest: QuestItem, questRepository: QuestRepositoryInterface, onFavorite: @escaping (QuestItem) -> Void) {
         self.quest = quest
         self.questRepository = questRepository
         self.onFavorite = onFavorite

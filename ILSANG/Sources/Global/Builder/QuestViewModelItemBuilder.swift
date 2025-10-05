@@ -10,7 +10,7 @@ import UIKit
 final class QuestViewModelItemBuilder {
     private var id: Int = 0
     private var image: UIImage? = nil
-    private var imageId: String = QuestViewModelItem.mockImageId
+    private var imageId: String = QuestItem.mockImageId
     private var mainImage: UIImage? = nil
     private var mainImageId: String = "default_main_image_id"
     private var missions: [Mission] = [Mission(id: 0, type: .photo, exampleImageIds: [])]
@@ -121,8 +121,8 @@ final class QuestViewModelItemBuilder {
         return self
     }
         
-    func build() -> QuestViewModelItem {
-        return QuestViewModelItem(
+    func build() -> QuestItem {
+        return QuestItem(
             id: id,
             title: title,
             writer: writer,
