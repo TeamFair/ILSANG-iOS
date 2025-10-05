@@ -89,13 +89,13 @@ class QuestItem: Hashable, Identifiable {
 extension QuestItem {
     static let mockImageId = "IMQU2024071520500801"
     
-    static let mockData: QuestItem = QuestViewModelItemBuilder()
+    static let mockData: QuestItem = QuestItemBuilder()
         .setTitle("러닝 30분하기")
         .setReward([Reward(point: 110, pointType: .metro), Reward(point: 10, pointType: .commercial), Reward(point: 10, pointType: .contribution)])
         .setFavoriteYn(true)
         .setChallengeImageIds([""])
         .build()
-    static let mockRepeatData: QuestItem = QuestViewModelItemBuilder()
+    static let mockRepeatData: QuestItem = QuestItemBuilder()
         .setTitle("러닝 30분하기")
         .setRepeatType(.daily)
         .setCoupons([CouponItem.mockData])
@@ -104,7 +104,7 @@ extension QuestItem {
         .setChallengeImageIds([""])
         .setCustomerRank(2)
         .build()
-    static let mockOXData: QuestItem = QuestViewModelItemBuilder()
+    static let mockOXData: QuestItem = QuestItemBuilder()
         .setTitle("러닝 30분하기")
         .setNormalType()
         .setCoupons([CouponItem.mockData])

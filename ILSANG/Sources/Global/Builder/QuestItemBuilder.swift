@@ -1,5 +1,5 @@
 //
-//  QuestViewModelItemBuilder.swift
+//  QuestItemBuilder.swift
 //  ILSANG
 //
 //  Created by Lee Jinhee on 5/19/25.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class QuestViewModelItemBuilder {
+final class QuestItemBuilder {
     private var id: Int = 0
     private var image: UIImage? = nil
     private var imageId: String = QuestItem.mockImageId
