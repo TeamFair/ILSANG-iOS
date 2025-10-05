@@ -8,8 +8,8 @@
 import Foundation
 
 extension Banner {
-    func toBanner() -> BannerViewModelItem {
-        BannerViewModelItem(
+    func toBanner() -> BannerItem {
+        BannerItem(
             id: id,
             title: title,
             navigationTitle: navigationTitle,

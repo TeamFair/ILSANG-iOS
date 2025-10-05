@@ -10,7 +10,7 @@ import UIKit
 
 class BannerDetailViewModel: ObservableObject {
     @Published var viewStatus: ViewStatus = .loading
-    @Published var banner: BannerViewModelItem
+    @Published var banner: BannerItem
     @Published var uncompletedQuestListByFilter: [EventQuestFilterType: [QuestItem]] = [:]
     @Published var completedEventQuestListByFilter: [EventQuestFilterType: [QuestItem]] = [:]
     
@@ -40,7 +40,7 @@ class BannerDetailViewModel: ObservableObject {
     private var cancellables = Set<AnyCancellable>()
 
     init(
-        banner: BannerViewModelItem,
+        banner: BannerItem,
         userRepository: UserRepositoryInterface,
         questRepository: QuestRepositoryInterface,
         areaRepository: AreaRepositoryInterface,

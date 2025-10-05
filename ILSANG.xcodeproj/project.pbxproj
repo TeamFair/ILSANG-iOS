@@ -189,7 +189,7 @@
 		6091975B2E5DE8F600F1D81B /* BannerResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6091975A2E5DE8C800F1D81B /* BannerResponse.swift */; };
 		6091975D2E5DE9C100F1D81B /* BannerResponse+Mapping.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6091975C2E5DE9C100F1D81B /* BannerResponse+Mapping.swift */; };
 		6091975F2E5DEA2B00F1D81B /* BannerRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6091975E2E5DEA2B00F1D81B /* BannerRepository.swift */; };
-		609197612E5DEB5600F1D81B /* BannerViewModelItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 609197602E5DEB5600F1D81B /* BannerViewModelItem.swift */; };
+		609197612E5DEB5600F1D81B /* BannerItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 609197602E5DEB5600F1D81B /* BannerItem.swift */; };
 		609197632E5DEC0F00F1D81B /* Banner+UIMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 609197622E5DEC0F00F1D81B /* Banner+UIMapper.swift */; };
 		609197652E5E02CD00F1D81B /* AreaRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 609197642E5E02CD00F1D81B /* AreaRepository.swift */; };
 		609197672E5E069600F1D81B /* Area.swift in Sources */ = {isa = PBXBuildFile; fileRef = 609197662E5E069400F1D81B /* Area.swift */; };
@@ -534,7 +534,7 @@
 		6091975A2E5DE8C800F1D81B /* BannerResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BannerResponse.swift; sourceTree = "<group>"; };
 		6091975C2E5DE9C100F1D81B /* BannerResponse+Mapping.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BannerResponse+Mapping.swift"; sourceTree = "<group>"; };
 		6091975E2E5DEA2B00F1D81B /* BannerRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BannerRepository.swift; sourceTree = "<group>"; };
-		609197602E5DEB5600F1D81B /* BannerViewModelItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BannerViewModelItem.swift; sourceTree = "<group>"; };
+		609197602E5DEB5600F1D81B /* BannerItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BannerItem.swift; sourceTree = "<group>"; };
 		609197622E5DEC0F00F1D81B /* Banner+UIMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Banner+UIMapper.swift"; sourceTree = "<group>"; };
 		609197642E5E02CD00F1D81B /* AreaRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AreaRepository.swift; sourceTree = "<group>"; };
 		609197662E5E069400F1D81B /* Area.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Area.swift; sourceTree = "<group>"; };
@@ -1072,7 +1072,7 @@
 				60E401B12E72CDD400BB0B6C /* LegendRankItem.swift */,
 				60D897282E537653006A8480 /* ApprovalMissionHistoryItem.swift */,
 				607FCBE62BFD12B100BB2D04 /* QuestItem.swift */,
-				609197602E5DEB5600F1D81B /* BannerViewModelItem.swift */,
+				609197602E5DEB5600F1D81B /* BannerItem.swift */,
 				609197502E5C295100F1D81B /* UserRankViewModelItem.swift */,
 				6091974E2E5C292F00F1D81B /* AreaRankViewModelItem.swift */,
 				609197562E5C398200F1D81B /* AreaUserRankViewModelItem.swift */,
@@ -2099,7 +2099,7 @@
 				603CF4E32D732DA100A2D19E /* ApprovalItemContentView.swift in Sources */,
 				60D897412E575056006A8480 /* LargeRewardQuestResponse.swift in Sources */,
 				60F352F82E91667700307BDC /* QuizResponse.swift in Sources */,
-				609197612E5DEB5600F1D81B /* BannerViewModelItem.swift in Sources */,
+				609197612E5DEB5600F1D81B /* BannerItem.swift in Sources */,
 				609197512E5C295100F1D81B /* UserRankViewModelItem.swift in Sources */,
 				A10EF9392C87292C003D78A2 /* OpenSourceInfoView.swift in Sources */,
 				609197462E5C272E00F1D81B /* CommercialAreaRankResponse.swift in Sources */,

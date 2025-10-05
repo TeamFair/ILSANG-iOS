@@ -16,7 +16,7 @@ struct BannerDetailView: View {
     @Environment(\.dismiss) var dismiss
     
     init(
-        banner: BannerViewModelItem,
+        banner: BannerItem,
         userRepository: UserRepositoryInterface,
         questRepository: QuestRepositoryInterface,
         areaRepository: AreaRepositoryInterface,

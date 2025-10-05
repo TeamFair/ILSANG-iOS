@@ -1,5 +1,5 @@
 //
-//  BannerViewModelItem.swift
+//  BannerItem.swift
 //  ILLSANG
 //
 //  Created by Lee Jinhee on 8/26/25.
@@ -8,8 +8,8 @@
 import UIKit
 
 @Observable
-class BannerViewModelItem: Hashable, Identifiable {
-    static func == (lhs: BannerViewModelItem, rhs: BannerViewModelItem) -> Bool {
+class BannerItem: Hashable, Identifiable {
+    static func == (lhs: BannerItem, rhs: BannerItem) -> Bool {
         lhs.id == rhs.id && lhs.image == rhs.image
     }
     

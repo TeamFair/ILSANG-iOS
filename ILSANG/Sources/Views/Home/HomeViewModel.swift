@@ -24,7 +24,7 @@ final class HomeViewModel: ObservableObject {
             return "추천 퀘스트"
         }
     }
-    @Published var mainBanners: [BannerViewModelItem] = []
+    @Published var mainBanners: [BannerItem] = []
     @Published var userRankList: [UserRankViewModelItem] = [] // 10개
     @Published var largestRewardQuestList: [QuestItem] = [] // 3*5개
     @Published var recommendQuestList: [QuestItem] = [] //QuestViewModelItem.mockQuestList // 10개
@@ -39,7 +39,7 @@ final class HomeViewModel: ObservableObject {
     }
     
     @Published var showSelectMyRegionView: Bool = false
-    @Published var selectedBanner: BannerViewModelItem? = nil
+    @Published var selectedBanner: BannerItem? = nil
         
     var errorCnt = 0
     @Published var showMainBanners: Bool = true
