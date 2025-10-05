@@ -180,7 +180,7 @@
 		609197482E5C279700F1D81B /* AreaUserRank.swift in Sources */ = {isa = PBXBuildFile; fileRef = 609197472E5C279700F1D81B /* AreaUserRank.swift */; };
 		6091974A2E5C27A400F1D81B /* AreaUserRankResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 609197492E5C27A400F1D81B /* AreaUserRankResponse.swift */; };
 		6091974C2E5C27AB00F1D81B /* AreaUserRankResponse+Mapping.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6091974B2E5C27AB00F1D81B /* AreaUserRankResponse+Mapping.swift */; };
-		6091974F2E5C292F00F1D81B /* AreaRankViewModelItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6091974E2E5C292F00F1D81B /* AreaRankViewModelItem.swift */; };
+		6091974F2E5C292F00F1D81B /* AreaRankItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6091974E2E5C292F00F1D81B /* AreaRankItem.swift */; };
 		609197512E5C295100F1D81B /* UserRankItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 609197502E5C295100F1D81B /* UserRankItem.swift */; };
 		609197532E5C2E0500F1D81B /* RankRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 609197522E5C2E0500F1D81B /* RankRepository.swift */; };
 		609197552E5C364E00F1D81B /* Rank+UIMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 609197542E5C364600F1D81B /* Rank+UIMapper.swift */; };
@@ -525,7 +525,7 @@
 		609197472E5C279700F1D81B /* AreaUserRank.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AreaUserRank.swift; sourceTree = "<group>"; };
 		609197492E5C27A400F1D81B /* AreaUserRankResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AreaUserRankResponse.swift; sourceTree = "<group>"; };
 		6091974B2E5C27AB00F1D81B /* AreaUserRankResponse+Mapping.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AreaUserRankResponse+Mapping.swift"; sourceTree = "<group>"; };
-		6091974E2E5C292F00F1D81B /* AreaRankViewModelItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AreaRankViewModelItem.swift; sourceTree = "<group>"; };
+		6091974E2E5C292F00F1D81B /* AreaRankItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AreaRankItem.swift; sourceTree = "<group>"; };
 		609197502E5C295100F1D81B /* UserRankItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserRankItem.swift; sourceTree = "<group>"; };
 		609197522E5C2E0500F1D81B /* RankRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RankRepository.swift; sourceTree = "<group>"; };
 		609197542E5C364600F1D81B /* Rank+UIMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Rank+UIMapper.swift"; sourceTree = "<group>"; };
@@ -1074,7 +1074,7 @@
 				607FCBE62BFD12B100BB2D04 /* QuestItem.swift */,
 				609197602E5DEB5600F1D81B /* BannerItem.swift */,
 				609197502E5C295100F1D81B /* UserRankItem.swift */,
-				6091974E2E5C292F00F1D81B /* AreaRankViewModelItem.swift */,
+				6091974E2E5C292F00F1D81B /* AreaRankItem.swift */,
 				609197562E5C398200F1D81B /* AreaUserRankViewModelItem.swift */,
 				606C3ED42E61ABAB0050C4D6 /* TopCommercialAreaItem.swift */,
 				606C3ED62E61ACCF0050C4D6 /* PointSummaryItem.swift */,
@@ -1948,7 +1948,7 @@
 				603F04132C26ADC6008A2332 /* CommonResponse.swift in Sources */,
 				606C3EC22E60E9290050C4D6 /* PointResponse.swift in Sources */,
 				609197632E5DEC0F00F1D81B /* Banner+UIMapper.swift in Sources */,
-				6091974F2E5C292F00F1D81B /* AreaRankViewModelItem.swift in Sources */,
+				6091974F2E5C292F00F1D81B /* AreaRankItem.swift in Sources */,
 				60D897202E5372BE006A8480 /* MissionHistoryResponse+Mapping.swift in Sources */,
 				606C3EE52E674B360050C4D6 /* UserRouter.swift in Sources */,
 				607FCBE42BFD124900BB2D04 /* QuestItemView.swift in Sources */,

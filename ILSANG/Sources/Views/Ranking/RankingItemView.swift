@@ -13,7 +13,7 @@ struct RankingItemView: View {
     enum RankingItemStyle {
         case totalRank(UserRankItem)
         case userRank(UserRankItem)
-        case areaRank(AreaRankViewModelItem)
+        case areaRank(AreaRankItem)
         case currentUserRank(UserRankItem)
         case legendRank(LegendRankItem)
     }
@@ -74,7 +74,7 @@ fileprivate struct UserRankItemView: View {
 }
 
 fileprivate struct AreaRankItemView: View {
-    let rank: AreaRankViewModelItem
+    let rank: AreaRankItem
     
     var body: some View {
         HStack(spacing: 10) {

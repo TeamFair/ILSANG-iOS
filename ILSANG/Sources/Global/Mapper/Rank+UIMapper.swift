@@ -21,8 +21,8 @@ extension UserRank {
 }
 
 extension AreaRank {
-    func toRankItem() -> AreaRankViewModelItem {
-        AreaRankViewModelItem(
+    func toRankItem() -> AreaRankItem {
+        AreaRankItem(
             areaCode: areaCode,
             areaName: areaName,
             point: point,
