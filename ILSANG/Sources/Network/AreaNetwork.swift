@@ -6,8 +6,6 @@
 //
 
 
-import Alamofire
-
 final class AreaNetwork {
     private let url: String = APIManager.makeURL(NoTarget(path: "area/metro", version: 1))
     

@@ -6,9 +6,7 @@
 //
 
 import Alamofire
-import Foundation
 
-// TODO: 지역시스템 >> mission history로 이동 필요, url 확인 필요
 final class ChallengeNetwork {
     private let url: String = APIManager.makeURL(NoTarget(path: "challenge", version: 1))
     
@@ -39,20 +37,5 @@ final class ChallengeNetwork {
             return .failure(NetworkError.requestFailed("Fail to convert data"))
         }
         return await Network.requestData(url: url+"/mission", method: .post, body: bodyData)
-    }
-    
-    func deleteChallenge(challengeId: String) async -> Bool {
-        let deleteUrl = APIManager.makeURL(UserTarget(path: challengeId, version: 1))
-        
-        let res: Result<ResponseWithoutData, Error> = await Network.requestData(url: deleteUrl, method: .delete, parameters: nil, withToken: true)
-        
-        switch res {
-        case .success:
-            Log(res)
-            return true
-        case .failure:
-            Log(res)
-            return false
-        }
     }
 }

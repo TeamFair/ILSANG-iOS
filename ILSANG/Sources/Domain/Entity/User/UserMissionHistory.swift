@@ -5,8 +5,6 @@
 //  Created by Lee Jinhee on 8/28/25.
 //
 
-import Foundation
-
 struct UserMissionHistory {
     let missionHistoryId: Int
     let title, createdAt: String

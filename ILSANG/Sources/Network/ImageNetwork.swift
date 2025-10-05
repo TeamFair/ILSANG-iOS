@@ -20,7 +20,6 @@ final class ImageNetwork {
         return await Network.postImage(url: url, image: image, withToken: true, type: type)
     }
     
-    // TODO: 지역시스템 > 삭제/유지 결정 필요
     func deleteImage(imageId: String) async -> Bool {
         let res: Result<ResponseWithoutData, Error> = await Network.requestData(url: url, method: .delete, parameters: nil, withToken: true)
         switch res {
@@ -30,20 +29,6 @@ final class ImageNetwork {
         case .failure:
             Log(res)
             return false
-        }
-    }
-}
-
-enum PostImageType {
-    case receipt
-    case userProfileImage
-    
-    var parameter: String {
-        switch self {
-        case .receipt:
-            return "RECEIPT"
-        case .userProfileImage:
-            return "USER_PROFILE_IMAGE"
         }
     }
 }

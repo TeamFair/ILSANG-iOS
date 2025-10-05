@@ -1,9 +1,10 @@
 //
-//  Quiz.swift
+//  QuizResponse.swift
 //  ILSANG
 //
-//  Created by Lee Jinhee on 7/18/24.
+//  Created by Lee Jinhee on 10/4/25.
 //
+
 
 struct QuizResponse: Decodable {
     let quizId: Int
@@ -15,8 +16,4 @@ struct QuizResponse: Decodable {
         case question
         case hint
     }
-}
-
-struct ChallengeResponse: Decodable {
-    let resultCode: String
 }

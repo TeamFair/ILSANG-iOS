@@ -7,7 +7,6 @@
 
 import UIKit
 
-
 struct UserEmojis {
     var emojis: Set<EmojiType> = []
     

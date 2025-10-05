@@ -6,7 +6,6 @@
 //
 
 
-
 extension RecommendQuestResponse: DomainConvertible {
     func toDomain() -> Quest {
         Quest(

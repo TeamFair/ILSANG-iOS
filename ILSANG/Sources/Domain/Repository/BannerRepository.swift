@@ -5,8 +5,6 @@
 //  Created by Lee Jinhee on 8/26/25.
 //
 
-import Foundation
-
 protocol BannerRepositoryInterface {
     func getBanner() async -> Result<[Banner], Error>
 }

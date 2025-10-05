@@ -33,12 +33,3 @@ final class EmojiNetwork {
         }
     }
 }
-
-enum EmojiType: String, Decodable {
-    case like = "LIKE"
-    case hate = "HATE"
-    
-    var serverValue: String {
-        rawValue.uppercased()
-    }
-}
