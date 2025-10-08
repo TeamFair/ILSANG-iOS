@@ -20,9 +20,9 @@ struct QuestDetailView: View {
     }
     
     init(
-        quest: QuestViewModelItem,
+        quest: QuestItem,
         questRepository: QuestRepositoryInterface,
-        onFavorite: @escaping (QuestViewModelItem) -> Void,
+        onFavorite: @escaping (QuestItem) -> Void,
         showQuestExImageAction: @escaping () -> (),
         questApproveAction: @escaping () -> ()
     ) {

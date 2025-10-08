@@ -6,8 +6,8 @@
 //
 
 extension UserRank {
-    func toRankItem() -> UserRankViewModelItem {
-        UserRankViewModelItem(
+    func toRankItem() -> UserRankItem {
+        UserRankItem(
             userId: userId,
             profileImageId: profileImageId,
             profileImage: nil,
@@ -21,8 +21,8 @@ extension UserRank {
 }
 
 extension AreaRank {
-    func toRankItem() -> AreaRankViewModelItem {
-        AreaRankViewModelItem(
+    func toRankItem() -> AreaRankItem {
+        AreaRankItem(
             areaCode: areaCode,
             areaName: areaName,
             point: point,
@@ -33,8 +33,8 @@ extension AreaRank {
 }
 
 extension AreaUserRank {
-    func toRankItem() -> AreaUserRankViewModelItem {
-        AreaUserRankViewModelItem(
+    func toRankItem() -> AreaUserRankItem {
+        AreaUserRankItem(
             ranks: ranks.map { $0.toRankItem() },
             user: user?.toRankItem()
         )

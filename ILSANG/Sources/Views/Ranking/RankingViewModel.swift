@@ -25,11 +25,11 @@ class RankingViewModel: ObservableObject {
     }
     @Published var showSelectSeasonView = false
     @Published var showRankingDetailView = false
-    @Published var selectedRank: AreaRankViewModelItem?
+    @Published var selectedRank: AreaRankItem?
     
-    @Published var metroRank: [AreaRankViewModelItem] = []
-    @Published var commercialRank: [AreaRankViewModelItem] = []
-    @Published var contributionRank: [UserRankViewModelItem] = []
+    @Published var metroRank: [AreaRankItem] = []
+    @Published var commercialRank: [AreaRankItem] = []
+    @Published var contributionRank: [UserRankItem] = []
     
     @Published var seasons: [Season] = []
     
@@ -157,7 +157,7 @@ class RankingViewModel: ObservableObject {
     // MARK: - 헬퍼
     private func handleAreaRankResult(
         _ result: Result<[AreaRank], Error>,
-        assignTo keyPath: ReferenceWritableKeyPath<RankingViewModel, [AreaRankViewModelItem]>
+        assignTo keyPath: ReferenceWritableKeyPath<RankingViewModel, [AreaRankItem]>
     ) {
         switch result {
         case .success(let response):
@@ -175,7 +175,7 @@ class RankingViewModel: ObservableObject {
     
     private func handleUserRankResult(
         _ result: Result<[UserRank], Error>,
-        assignTo keyPath: ReferenceWritableKeyPath<RankingViewModel, [UserRankViewModelItem]>
+        assignTo keyPath: ReferenceWritableKeyPath<RankingViewModel, [UserRankItem]>
     ) {
         switch result {
         case .success(let response):

@@ -8,8 +8,8 @@
 import UIKit
 
 @Observable
-class QuestViewModelItem: Hashable, Identifiable {
-    static func == (lhs: QuestViewModelItem, rhs: QuestViewModelItem) -> Bool {
+class QuestItem: Hashable, Identifiable {
+    static func == (lhs: QuestItem, rhs: QuestItem) -> Bool {
         lhs.id == rhs.id &&
         lhs.questType == rhs.questType &&
         lhs.repeatType == rhs.repeatType &&
@@ -81,9 +81,11 @@ class QuestViewModelItem: Hashable, Identifiable {
     var coupon: CouponItem? { coupons.first }
     var hasCouponReward: Bool { !coupons.isEmpty }
     
+    func totalRewardPoint() -> Int {
+        self.rewards?.reduce(0) { $0 + $1.point } ?? 0
+    }
+    
     func updateChallengeImages() async {
-//        guard let missions else { return }
-        
         let challengeImageIds = missions
             .compactMap { $0.exampleImageIds }
             .flatMap { $0 }
@@ -107,22 +109,18 @@ class QuestViewModelItem: Hashable, Identifiable {
         }
         self.challengeImages = newImages
     }
-    
-    func totalRewardPoint() -> Int {
-        self.rewards?.reduce(0) { $0 + $1.point } ?? 0
-    }
 }
 
-extension QuestViewModelItem {
+extension QuestItem {
     static let mockImageId = "IMQU2024071520500801"
     
-    static let mockData: QuestViewModelItem = QuestViewModelItemBuilder()
+    static let mockData: QuestItem = QuestItemBuilder()
         .setTitle("러닝 30분하기")
         .setReward([Reward(point: 110, pointType: .metro), Reward(point: 10, pointType: .commercial), Reward(point: 10, pointType: .contribution)])
         .setFavoriteYn(true)
         .setChallengeImageIds([""])
         .build()
-    static let mockRepeatData: QuestViewModelItem = QuestViewModelItemBuilder()
+    static let mockRepeatData: QuestItem = QuestItemBuilder()
         .setTitle("러닝 30분하기")
         .setRepeatType(.daily)
         .setCoupons([CouponItem.mockData])
@@ -131,7 +129,7 @@ extension QuestViewModelItem {
         .setChallengeImageIds([""])
         .setCustomerRank(2)
         .build()
-    static let mockOXData: QuestViewModelItem = QuestViewModelItemBuilder()
+    static let mockOXData: QuestItem = QuestItemBuilder()
         .setTitle("러닝 30분하기")
         .setNormalType()
         .setCoupons([CouponItem.mockData])
@@ -140,5 +138,5 @@ extension QuestViewModelItem {
         .setFavoriteYn(true)
         .build()
     
-    static let mockQuestList: [QuestViewModelItem] = [mockData, mockRepeatData]
+    static let mockQuestList: [QuestItem] = [mockData, mockRepeatData]
 }

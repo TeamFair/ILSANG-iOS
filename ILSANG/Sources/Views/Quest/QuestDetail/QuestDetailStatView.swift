@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct QuestDetailStatView: View {
-    let quest: QuestViewModelItem
+    let quest: QuestItem
     
     var body: some View {
         VStack(spacing: 16) {

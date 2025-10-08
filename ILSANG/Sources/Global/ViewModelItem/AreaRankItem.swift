@@ -1,5 +1,5 @@
 //
-//  AreaRankViewModelItem.swift
+//  AreaRankItem.swift
 //  ILSANG
 //
 //  Created by Lee Jinhee on 8/25/25.
@@ -8,8 +8,8 @@
 
 import UIKit
 
-class AreaRankViewModelItem: ObservableObject, Identifiable, Hashable {
-    static func == (lhs: AreaRankViewModelItem, rhs: AreaRankViewModelItem) -> Bool {
+class AreaRankItem: ObservableObject, Identifiable, Hashable {
+    static func == (lhs: AreaRankItem, rhs: AreaRankItem) -> Bool {
         lhs.areaCode == rhs.areaCode && lhs.rank == rhs.rank
     }
     func hash(into hasher: inout Hasher) {
@@ -57,8 +57,8 @@ class AreaRankViewModelItem: ObservableObject, Identifiable, Hashable {
     }
 }
 
-extension AreaRankViewModelItem {
-    static let mockData1 = AreaRankViewModelItem(areaCode: "", areaName: "서현", point: 10000, imageIds: [], rank: 1)
-    static let mockData100 = AreaRankViewModelItem(areaCode: "", areaName: "서현", point: 10000, imageIds: [], rank: 100)
-    static let mockData1000 = AreaRankViewModelItem(areaCode: "", areaName: "서현", point: 100, imageIds: [], rank: 1000)
+extension AreaRankItem {
+    static let mockData1 = AreaRankItem(areaCode: "", areaName: "서현", point: 10000, imageIds: [], rank: 1)
+    static let mockData100 = AreaRankItem(areaCode: "", areaName: "서현", point: 10000, imageIds: [], rank: 100)
+    static let mockData1000 = AreaRankItem(areaCode: "", areaName: "서현", point: 100, imageIds: [], rank: 1000)
 }

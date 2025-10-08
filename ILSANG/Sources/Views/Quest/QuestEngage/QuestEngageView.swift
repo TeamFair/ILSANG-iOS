@@ -16,9 +16,9 @@ struct QuestEngageView: View {
     @Environment(\.dismiss) var dismiss
     
     init(
-        quest: QuestViewModelItem,
+        quest: QuestItem,
         selectedImage: UIImage?,
-        selectedQuest: QuestViewModelItem,
+        selectedQuest: QuestItem,
         challengeNetwork: ChallengeNetwork,
         submitService: ImageChallengeSubmitService
     ) {

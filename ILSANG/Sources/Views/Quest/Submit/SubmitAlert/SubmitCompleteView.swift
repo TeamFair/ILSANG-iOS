@@ -22,7 +22,7 @@ struct SubmitCompleteView: View {
     @State var animateToggleOpacity: Bool = false
     @State var animateToggle2: Bool = false
     
-    init(quest: QuestViewModelItem, action: @escaping ()->()) {
+    init(quest: QuestItem, action: @escaping ()->()) {
         self.totalPoint = quest.totalRewardPoint()
         var rewardDict: [PointType: Int] = [:]
         if let rewards = quest.rewards {

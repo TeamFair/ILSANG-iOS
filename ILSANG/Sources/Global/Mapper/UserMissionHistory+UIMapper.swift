@@ -8,8 +8,8 @@
 import Foundation
 
 extension UserMissionHistory {
-    func toItem() -> UserMissionHistoryViewModelItem {
-        UserMissionHistoryViewModelItem(
+    func toItem() -> UserMissionHistoryItem {
+        UserMissionHistoryItem(
             missionHistoryId: missionHistoryId,
             title: title,
             createdAt: createdAt,

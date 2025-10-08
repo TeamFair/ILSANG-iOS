@@ -8,13 +8,13 @@
 import UIKit
 
 @Observable
-class UserMissionHistoryViewModelItem {
+class UserMissionHistoryItem {
     let missionHistoryId: Int
     let title, createdAt: String
     let submitImageId: String?
-     var submitImage: UIImage?
+    var submitImage: UIImage?
     let questImageId: String?
-     var questImage: UIImage?
+    var questImage: UIImage?
     let viewCount: Int
     var likeCount: Int
     

@@ -6,8 +6,8 @@
 //
 
 extension Quest {
-    func toQuestItem() -> QuestViewModelItem {
-        return QuestViewModelItem(
+    func toQuestItem() -> QuestItem {
+        return QuestItem(
             id: id,
             title: title,
             writer: writer,

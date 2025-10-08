@@ -23,14 +23,14 @@ class QuestRouter: ObservableObject {
     @Published var isQuestSheetPending: Bool = false
     
     // Data
-    @Published var selectedQuest: QuestViewModelItem = .mockData
+    @Published var selectedQuest: QuestItem = .mockData
     
     // Dependencies
     private let illsangZoneManager: IllsangZoneManager
     private let questRepository: QuestRepositoryInterface
     
     // Callbacks
-    private var onFavoriteToggle: ((QuestViewModelItem) -> Void)?
+    private var onFavoriteToggle: ((QuestItem) -> Void)?
     
     init(illsangZoneManager: IllsangZoneManager, questRepository: QuestRepositoryInterface) {
         self.illsangZoneManager = illsangZoneManager
@@ -44,8 +44,8 @@ class QuestRouter: ObservableObject {
     
     // Navigation Methods
     func presentQuestDetail(
-        quest: QuestViewModelItem,
-        onFavoriteToggle: @escaping (QuestViewModelItem) -> Void
+        quest: QuestItem,
+        onFavoriteToggle: @escaping (QuestItem) -> Void
     ) {
         self.onFavoriteToggle = onFavoriteToggle
         self.selectedQuest = quest  // 임시 데이터 세팅

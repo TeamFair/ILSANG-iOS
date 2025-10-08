@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct UserMissionHistoryItemView: View {
-    let challenge: UserMissionHistoryViewModelItem
+    let challenge: UserMissionHistoryItem
     
     var body: some View {
         ZStack {

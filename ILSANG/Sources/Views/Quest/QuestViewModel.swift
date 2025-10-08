@@ -27,12 +27,12 @@ class QuestViewModel: ObservableObject {
      var repeatFilterState: StaticFilterPickerState<RepeatType>
      var eventFilterState: StaticFilterPickerState<EventQuestFilterType>
        
-    @Published var defaultQuestListByFilter: [QuestFilterType: [QuestViewModelItem]] = [:]
-    @Published var repeatQuestListByFilter: [RepeatType: [QuestFilterType: [QuestViewModelItem]]] = [:]
-    @Published var eventQuestListByFilter: [EventQuestFilterType: [QuestViewModelItem]] = [:]
-    @Published var completedQuestList: [QuestViewModelItem] = []
+    @Published var defaultQuestListByFilter: [QuestFilterType: [QuestItem]] = [:]
+    @Published var repeatQuestListByFilter: [RepeatType: [QuestFilterType: [QuestItem]]] = [:]
+    @Published var eventQuestListByFilter: [EventQuestFilterType: [QuestItem]] = [:]
+    @Published var completedQuestList: [QuestItem] = []
 
-    var currentQuests: [QuestViewModelItem] {
+    var currentQuests: [QuestItem] {
         switch selectedHeader {
         case .default:
             return defaultQuestListByFilter[questFilterState.selectedValue] ?? []
@@ -50,10 +50,10 @@ class QuestViewModel: ObservableObject {
     }
     
     // TODO: 페이지네이션 로직 수정 필요
-    let defaultPaginationManager: PaginationManager<QuestViewModelItem>
-    let repeatPaginationManager: PaginationManager<QuestViewModelItem>
-    let eventPaginationManager: PaginationManager<QuestViewModelItem>
-    let completedPaginationManager: PaginationManager<QuestViewModelItem>
+    let defaultPaginationManager: PaginationManager<QuestItem>
+    let repeatPaginationManager: PaginationManager<QuestItem>
+    let eventPaginationManager: PaginationManager<QuestItem>
+    let completedPaginationManager: PaginationManager<QuestItem>
     
     // MARK: throttle 관련
     let throttleInterval: TimeInterval = 2.0
@@ -203,12 +203,12 @@ class QuestViewModel: ObservableObject {
         page: Int,
         size: Int,
         status: QuestStatus,
-    ) async -> ([QuestViewModelItem], Int) {
+    ) async -> ([QuestItem], Int) {
         let getQuestList = await getQuestList(page: page, size: size, status: status)
         var newQuestList = getQuestList.data
         
         // 현재 필터별 existingList 가져오기
-        let existingList: [QuestViewModelItem]
+        let existingList: [QuestItem]
         switch status {
         case .default:
             existingList = defaultQuestListByFilter[questFilterState.selectedValue] ?? []
@@ -235,7 +235,7 @@ class QuestViewModel: ObservableObject {
             }
         }
         
-        var mergedList: [QuestViewModelItem]
+        var mergedList: [QuestItem]
         if page == 0 {
             mergedList = newQuestList
         } else {
@@ -281,13 +281,13 @@ class QuestViewModel: ObservableObject {
     }
     
     /// uncompleted 상태의 기본 퀘스트 목록을 XpStat별로 분류하여 defaultQuestListByXpStat 딕셔너리에 매핑합니다.
-    private func mapDefaultQuestByFilter(list: [QuestViewModelItem], filter: QuestFilterType) {
+    private func mapDefaultQuestByFilter(list: [QuestItem], filter: QuestFilterType) {
         var mapped = defaultQuestListByFilter
         mapped[filter] = list
         self.defaultQuestListByFilter = mapped
     }
     
-    private func mapRepeatQuestByFilter(list: [QuestViewModelItem], repeatType: RepeatType, filter: QuestFilterType) {
+    private func mapRepeatQuestByFilter(list: [QuestItem], repeatType: RepeatType, filter: QuestFilterType) {
         var mapped = repeatQuestListByFilter
         var subMapped = mapped[repeatType] ?? [:]
         subMapped[filter] = list
@@ -295,13 +295,13 @@ class QuestViewModel: ObservableObject {
         self.repeatQuestListByFilter = mapped
     }
     
-    private func mapEventQuestByFilter(list: [QuestViewModelItem], filter: EventQuestFilterType) {
+    private func mapEventQuestByFilter(list: [QuestItem], filter: EventQuestFilterType) {
         var mapped = eventQuestListByFilter
         mapped[filter] = list
         self.eventQuestListByFilter = mapped
     }
     
-    private func getQuestList(page: Int, size: Int, status: QuestStatus) async -> (data: [QuestViewModelItem], total: Int) {
+    private func getQuestList(page: Int, size: Int, status: QuestStatus) async -> (data: [QuestItem], total: Int) {
         let result: Result<ResponseWithPage<[Quest]>, Error>
         
         switch status {
@@ -358,7 +358,7 @@ class QuestViewModel: ObservableObject {
     }
     
     /// 즐겨찾기 상태를 UI에 즉시 반영하고,  서버 반영은 디바운싱 처리
-    func toggleFavoriteStatus(quest: QuestViewModelItem) {
+    func toggleFavoriteStatus(quest: QuestItem) {
         favoriteService.toggle(quest: quest)
     }
     
