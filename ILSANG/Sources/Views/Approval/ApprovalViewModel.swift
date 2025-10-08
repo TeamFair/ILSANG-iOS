@@ -237,9 +237,6 @@ final class ApprovalViewModel: ObservableObject {
         case .hate:
             item.hateCount = newCount(item.hateCount, isSelected: item.emojis.isSelected(.hate))
         }
-        
-        // 리스트 업데이트
-        itemList[idx] = item
     }
     
     /// 신고 확인 버튼을 눌렀을 때 호출됩니다.
