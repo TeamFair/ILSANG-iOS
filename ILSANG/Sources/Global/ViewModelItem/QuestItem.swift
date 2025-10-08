@@ -84,6 +84,31 @@ class QuestItem: Hashable, Identifiable {
     func totalRewardPoint() -> Int {
         self.rewards?.reduce(0) { $0 + $1.point } ?? 0
     }
+    
+    func updateChallengeImages() async {
+        let challengeImageIds = missions
+            .compactMap { $0.exampleImageIds }
+            .flatMap { $0 }
+        
+        let newImages = await withTaskGroup(of: UIImage?.self) { group -> [UIImage] in
+            var images: [UIImage] = []
+            
+            for challengeImageId in challengeImageIds {
+                group.addTask {
+                    await ImageCacheService.shared.loadImageAsync(imageId: challengeImageId)
+                }
+            }
+            
+            for await image in group {
+                if let image = image {
+                    images.append(image)
+                }
+            }
+            
+            return images
+        }
+        self.challengeImages = newImages
+    }
 }
 
 extension QuestItem {
