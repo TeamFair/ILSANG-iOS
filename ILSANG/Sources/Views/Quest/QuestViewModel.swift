@@ -30,8 +30,7 @@ class QuestViewModel: ObservableObject {
     @Published var defaultQuestListByFilter: [QuestFilterType: [QuestItem]] = [:]
     @Published var repeatQuestListByFilter: [RepeatType: [QuestFilterType: [QuestItem]]] = [:]
     @Published var eventQuestListByFilter: [EventQuestFilterType: [QuestItem]] = [:]
-    @Published var completedQuestList: [QuestItem] = []
-
+    
     var currentQuests: [QuestItem] {
         switch selectedHeader {
         case .default:
@@ -40,8 +39,6 @@ class QuestViewModel: ObservableObject {
             return repeatQuestListByFilter[repeatFilterState.selectedValue]?[questFilterState.selectedValue] ?? []
         case .event:
             return eventQuestListByFilter[eventFilterState.selectedValue] ?? []
-        case .completed:
-            return completedQuestList
         }
     }
     
@@ -53,7 +50,6 @@ class QuestViewModel: ObservableObject {
     let defaultPaginationManager: PaginationManager<QuestItem>
     let repeatPaginationManager: PaginationManager<QuestItem>
     let eventPaginationManager: PaginationManager<QuestItem>
-    let completedPaginationManager: PaginationManager<QuestItem>
     
     // MARK: throttle 관련
     let throttleInterval: TimeInterval = 2.0
@@ -84,7 +80,6 @@ class QuestViewModel: ObservableObject {
         self.defaultPaginationManager = PaginationManager(size: 20, threshold: 18)
         self.repeatPaginationManager = PaginationManager(size: 20, threshold: 18)
         self.eventPaginationManager = PaginationManager(size: 20, threshold: 18)
-        self.completedPaginationManager = PaginationManager(size: 20, threshold: 18)
         self.defaultPaginationManager.loadPageData = { [weak self] page in
             guard let self = self else { return ([], 0) }
             return await self.loadQuestListWithImage(page: page, size: 20, status: .default)
@@ -96,10 +91,6 @@ class QuestViewModel: ObservableObject {
         self.eventPaginationManager.loadPageData = { [weak self] page in
             guard let self = self else { return ([], 0) }
             return await self.loadQuestListWithImage(page: page, size: 20, status: .event)
-        }
-        self.completedPaginationManager.loadPageData = { [weak self] page in
-            guard let self = self else { return ([], 0) }
-            return await self.loadQuestListWithImage(page: page, size: 10, status: .completed)
         }
         
         questFilterState.onSelectionChange = { [weak self] _ in
@@ -165,8 +156,7 @@ class QuestViewModel: ObservableObject {
         async let defaultLoad: () = defaultPaginationManager.loadData(isRefreshing: true)
         async let repeatLoad: () = repeatPaginationManager.loadData(isRefreshing: true)
         async let eventLoad: () = eventPaginationManager.loadData(isRefreshing: true)
-        async let completedLoad: () = completedPaginationManager.loadData(isRefreshing: true)
-        _ = await (defaultLoad, repeatLoad, eventLoad, completedLoad)
+        _ = await (defaultLoad, repeatLoad, eventLoad)
         await changeViewStatus(.loaded)
     }
     
@@ -186,8 +176,6 @@ class QuestViewModel: ObservableObject {
             await repeatPaginationManager.loadData(isRefreshing: true)
         case .event:
             await eventPaginationManager.loadData(isRefreshing: true)
-        case .completed:
-            await completedPaginationManager.loadData(isRefreshing: true)
         }
         
         lastRefreshTime = Date()
@@ -219,8 +207,6 @@ class QuestViewModel: ObservableObject {
         case .event:
             let filter = eventFilterState.selectedValue
             existingList = eventQuestListByFilter[filter] ?? []
-        case .completed:
-            existingList = completedQuestList
         }
         
         // 중복된 항목 제거
@@ -273,8 +259,6 @@ class QuestViewModel: ObservableObject {
             mapRepeatQuestByFilter(list: mergedList, repeatType: repeatFilterState.selectedValue, filter: questFilterState.selectedValue)
         case .event:
             mapEventQuestByFilter(list: mergedList, filter: eventFilterState.selectedValue)
-        case .completed:
-            completedQuestList = mergedList
         }
         
         return (mergedList, getQuestList.total)
@@ -328,8 +312,6 @@ class QuestViewModel: ObservableObject {
                 page: page,
                 size: size
             )
-        case .completed:
-            result = await questRepository.getCompletedQuests(page: page, size: size)
         }
         
         switch result {
@@ -348,8 +330,6 @@ class QuestViewModel: ObservableObject {
             return repeatPaginationManager.canLoadMoreData()
         case .event:
             return eventPaginationManager.canLoadMoreData()
-        case .completed:
-            return completedPaginationManager.canLoadMoreData()
         }
     }
     

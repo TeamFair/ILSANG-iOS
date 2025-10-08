@@ -388,7 +388,7 @@ struct RecommendQuestItemView: View {
             Text("이벤트")
             EventQuestItemView(quest: quest, action: {}, favoriteAction: {})
             
-            Text("완료, 배너 완료")
+            Text("배너 완료")
             CompletedQuestItemView(quest: repeatQuest)
             
             Text("배너 미완료")

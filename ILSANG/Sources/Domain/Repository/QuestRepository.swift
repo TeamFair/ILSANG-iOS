@@ -11,7 +11,6 @@ protocol QuestRepositoryInterface {
     func getDefaultQuests(commercialAreaCode: String, orderRewardDesc: Bool?, page: Int, size: Int) async -> Result<ResponseWithPage<[Quest]>, Error>
     func getRepeatQuests(commercialAreaCode: String, repeatFrequency: RepeatType, orderRewardDesc: Bool?, page: Int, size: Int) async -> Result<ResponseWithPage<[Quest]>, Error>
     func getEventQuests(commercialAreaCode: String, orderRewardDesc: Bool?, orderExpiredDesc: Bool?, page: Int, size: Int) async -> Result<ResponseWithPage<[Quest]>, Error>
-    func getCompletedQuests(page: Int, size: Int) async -> Result<ResponseWithPage<[Quest]>, Error>
     func getFavoriteQuests(commercialAreaCode: String, page: Int, size: Int) async -> Result<ResponseWithPage<[Quest]>, Error>
     func getRecommendQuests(commercialAreaCode: String, page: Int, size: Int) async -> Result<ResponseWithPage<[Quest]>, Error>
     func getPopularQuests(commercialAreaCode: String, page: Int, size: Int) async -> Result<ResponseWithPage<[Quest]>, Error>
@@ -39,11 +38,6 @@ final class QuestRepository: QuestRepositoryInterface {
     
     func getEventQuests(commercialAreaCode: String, orderRewardDesc: Bool?, orderExpiredDesc: Bool?, page: Int, size: Int) async -> Result<ResponseWithPage<[Quest]>, Error> {
         let res = await network.getEventQuests(commercialAreaCode: commercialAreaCode, orderRewardDesc: orderRewardDesc, orderExpiredDesc: orderExpiredDesc, page: page, size: size)
-        return ResponseMapper.mapPagedResponse(res)
-    }
-    
-    func getCompletedQuests(page: Int, size: Int) async -> Result<ResponseWithPage<[Quest]>, Error> {
-        let res = await network.getCompletedQuests(page: page, size: size)
         return ResponseMapper.mapPagedResponse(res)
     }
     
@@ -142,10 +136,6 @@ final class MockQuestRepository: QuestRepositoryInterface {
     
     func getEventQuests(commercialAreaCode: String, orderRewardDesc: Bool?, orderExpiredDesc: Bool?, page: Int, size: Int) async -> Result<ResponseWithPage<[Quest]>, Error> {
         .success(ResponseWithPage(size: size, content: mockEventQuests, totalPages: 1, totalElements: mockQuests.count, page: page, isLast: true))
-    }
-    
-    func getCompletedQuests(page: Int, size: Int) async -> Result<ResponseWithPage<[Quest]>, Error> {
-        .success(ResponseWithPage(size: size, content: mockQuests+mockRepeatQuests+mockEventQuests, totalPages: 1, totalElements: mockQuests.count, page: page, isLast: true))
     }
     
     func getFavoriteQuests(commercialAreaCode: String, page: Int, size: Int) async -> Result<ResponseWithPage<[Quest]>, any Error> {
