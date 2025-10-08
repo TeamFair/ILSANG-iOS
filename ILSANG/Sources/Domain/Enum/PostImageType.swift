@@ -6,9 +6,6 @@
 //
 
 
-import Alamofire
-import UIKit
-
 enum PostImageType {
     case receipt
     case userProfileImage
