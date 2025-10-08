@@ -171,28 +171,16 @@ extension QuestView {
                         favoriteAction: { vm.toggleFavoriteStatus(quest: quest) }
                     )
                 }
-            case .completed: // 완료 퀘스트
-                ForEach(vm.currentQuests, id: \.id) { quest in
-                    CompletedQuestItemView(quest: quest)
-                }
-                
-                if vm.hasMorePage(status: .completed) {
-                    ProgressView()
-                        .task {
-                            await vm.completedPaginationManager.loadData(isRefreshing: false)
-                        }
-                }
             }
         }
-        .padding(.top, vm.selectedHeader != .completed ? 100 : 0)
+        .padding(.top, 100)
         .overlay(alignment: .top) {
             VStack(spacing: 16) {
-                if vm.selectedHeader != .completed {
-                    RegionPickerView(title: sharedState.selectedCommercialArea.areaName) {
-                        vm.showSelectMyRegionView = true
-                    }
-                    .frame(maxWidth: .infinity, alignment: .leading)
+                RegionPickerView(title: sharedState.selectedCommercialArea.areaName) {
+                    vm.showSelectMyRegionView = true
                 }
+                .frame(maxWidth: .infinity, alignment: .leading)
+                
                 Group {
                     if (vm.selectedHeader == .default) {
                         filterPickerDefaultView
