@@ -7,7 +7,15 @@
 
 import Foundation
 
-final class MissionHistoryRepository {
+protocol MissionHistoryRepositoryInterface {
+    func getRandomMissionHistories(page: Int, size: Int) async -> Result<(data: [MissionHistory], total: Int), Error>
+    func getMissionHistories(missionId: Int, page: Int, size: Int) async -> Result<(data: [MissionHistory], total: Int), Error>
+    func getMissionHistories(page: Int, size: Int, userId: String?) async -> Result<(data: [UserMissionHistory], total: Int), Error>
+    func deleteMissionHistory(missionHistoryId: Int) async -> Bool
+    func putMissionHistory(missionHistoryId: Int) async -> Result<Void, Error>
+}
+
+final class MissionHistoryRepository: MissionHistoryRepositoryInterface {
     private let network: MissionHistoryNetwork
     
     init(network: MissionHistoryNetwork) {
@@ -67,5 +75,57 @@ final class MissionHistoryRepository {
         case .failure(let error):
             return .failure(error)
         }
+    }
+}
+
+final class MockMissionHistoryRepository: MissionHistoryRepositoryInterface {
+    private let mockMissionHistory: [MissionHistory] = [
+        MissionHistory(
+            id: 0,
+            title: "미션 타이틀",
+            createdAt: .now,
+            likeCount: 2,
+            hateCount: 0,
+            viewCount: 0,
+            imageId: "",
+            commercialAreaCode: "R100",
+            userId: "",
+            nickname: "닉네임",
+            profileImageId: "",
+            userTitle: nil,
+            emojis: [.hate]
+        )
+    ]
+    
+    private let mockUserMissionHistory: [UserMissionHistory] = [
+        UserMissionHistory(
+            missionHistoryId: 1,
+            title: "미션 타이틀",
+            createdAt: "",
+            submitImageId: nil,
+            questImageId: nil,
+            viewCount: 0,
+            likeCount: 0
+        )
+    ]
+    
+    func getRandomMissionHistories(page: Int, size: Int) async -> Result<(data: [MissionHistory], total: Int), any Error> {
+        .success((data: mockMissionHistory, total: mockMissionHistory.count))
+    }
+    
+    func getMissionHistories(missionId: Int, page: Int, size: Int) async -> Result<(data: [MissionHistory], total: Int), any Error> {
+        .success((data: mockMissionHistory, total: mockMissionHistory.count))
+    }
+    
+    func getMissionHistories(page: Int, size: Int, userId: String?) async -> Result<(data: [UserMissionHistory], total: Int), any Error> {
+        .success((data: mockUserMissionHistory, total: mockMissionHistory.count))
+    }
+    
+    func deleteMissionHistory(missionHistoryId: Int) async -> Bool {
+        true
+    }
+    
+    func putMissionHistory(missionHistoryId: Int) async -> Result<Void, any Error> {
+        .success(())
     }
 }

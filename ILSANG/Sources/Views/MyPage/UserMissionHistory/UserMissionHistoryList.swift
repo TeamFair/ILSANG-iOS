@@ -29,13 +29,8 @@ struct UserMissionHistoryList: View {
     }
 }
 
-//#Preview {
-//    MyPageChallengeList(
-//        vm: MyPageViewModel(
-//            userNetwork: UserNetwork(),
-//            challengeNetwork: ChallengeNetwork(),
-//            imageNetwork: ImageNetwork(),
-//            pointNetwork: PointNetwork()
-//        )
-//    )
-//}
+#Preview {
+    UserMissionHistoryList(
+        vm: UserMissionHistoryViewModel(missionHistoryRepository: MockMissionHistoryRepository())
+    )
+}

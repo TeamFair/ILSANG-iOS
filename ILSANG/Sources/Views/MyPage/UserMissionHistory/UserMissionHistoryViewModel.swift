@@ -17,9 +17,9 @@ final class UserMissionHistoryViewModel: ObservableObject {
         challengePaginationManager.canLoadMoreData()
     }
     
-    let missionHistoryRepository: MissionHistoryRepository
+    private let missionHistoryRepository: MissionHistoryRepositoryInterface
     
-    init(missionHistoryRepository: MissionHistoryRepository, challengeDelete: Bool = false) {
+    init(missionHistoryRepository: MissionHistoryRepositoryInterface, challengeDelete: Bool = false) {
         self.missionHistoryRepository = missionHistoryRepository
         challengePaginationManager.loadPageData = { [weak self] page in
             guard let self = self else { return ([], 0) }
