@@ -12,12 +12,7 @@ struct UserMissionHistoryDetailView: View {
     @Environment(\.dismiss) var dismiss
     @ObservedObject var vm: UserMissionHistoryViewModel
     
-    let idx: Int
-    
-    init(vm: UserMissionHistoryViewModel, idx: Int) {
-        self.vm = vm
-        self.idx = idx
-    }
+    let missionHistory: UserMissionHistoryItem
     
     var body: some View {
         VStack(spacing: 0) {
@@ -29,17 +24,15 @@ struct UserMissionHistoryDetailView: View {
             }
             .padding(.bottom, 8) // 세로로 긴 이미지 대응 (NavigationTitleView의 bottom 패딩과 겹침)
             
-            if vm.missionHistories.indices.contains(idx) {
-                if let missionImage = vm.missionHistories[idx].submitImage {
-                    ChallengeImageView(missionImage: missionImage, challengeData: vm.missionHistories[idx])
-                } else if vm.missionHistories[idx].submitImage == nil {
-                    ChallengeImageView(missionImage: nil, challengeData: vm.missionHistories[idx])
-                } else {
-                    ErrorView(title: "챌린지 정보를 불러오지 못했어요", subTitle: "챌린지 정보를 불러오는 데 실패했어요.\n인터넷 연결 상태 확인 후 다시 시도해주세요.") {
-                        Task {
-                            if let submitImageId = vm.missionHistories[idx].submitImageId {
-                                vm.missionHistories[idx].submitImage = await vm.getImage(imageId: submitImageId)
-                            }
+            if let missionImage = missionHistory.submitImage {
+                ChallengeImageView(missionImage: missionImage, challengeData: missionHistory)
+            } else if missionHistory.submitImage == nil {
+                ChallengeImageView(missionImage: nil, challengeData: missionHistory)
+            } else {
+                ErrorView(title: "챌린지 정보를 불러오지 못했어요", subTitle: "챌린지 정보를 불러오는 데 실패했어요.\n인터넷 연결 상태 확인 후 다시 시도해주세요.") {
+                    Task {
+                        if let submitImageId = missionHistory.submitImageId {
+                            missionHistory.submitImage = await vm.getImage(imageId: submitImageId)
                         }
                     }
                 }
@@ -48,8 +41,8 @@ struct UserMissionHistoryDetailView: View {
         .background(Color.background)
         .navigationBarBackButtonHidden()
         .task {
-            if let questImageId = vm.missionHistories[idx].questImageId {
-                self.vm.missionHistories[idx].questImage = await vm.getImage(imageId: questImageId)
+            if let questImageId = missionHistory.questImageId, missionHistory.questImage == nil {
+                self.missionHistory.questImage = await vm.getImage(imageId: questImageId)
             }
         }
         .overlay {
@@ -59,7 +52,7 @@ struct UserMissionHistoryDetailView: View {
                     onCancel: { vm.challengeDelete = false },
                     onConfirm: {
                         Task {
-                            if await vm.deleteMissionHistory(id: vm.missionHistories[idx].missionHistoryId) {
+                            if await vm.deleteMissionHistory(id: missionHistory.missionHistoryId) {
                                 vm.challengeDelete = false
                                 dismiss()
                             } else {
@@ -98,12 +91,8 @@ struct UserMissionHistoryDetailView: View {
     }
     
     private var dailyShareUIImage: UIImage {
-        guard vm.missionHistories.indices.contains(idx) else {
-            return UIImage()
-        }
-        
         let renderer = ImageRenderer(
-            content: ChallengeImageView(missionImage: vm.missionHistories[idx].submitImage ?? .logo, challengeData: vm.missionHistories[idx]).frame(width: 440)
+            content: ChallengeImageView(missionImage: missionHistory.submitImage ?? .logo, challengeData: missionHistory).frame(width: 440)
         )
         renderer.scale = 3.0
         return renderer.uiImage ?? .init()

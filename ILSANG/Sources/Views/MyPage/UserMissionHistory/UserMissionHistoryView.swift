@@ -20,7 +20,9 @@ struct UserMissionHistoryView: View {
         .background(Color.background)
         .navigationBarBackButtonHidden(true)
         .task {
-            await vm.challengePaginationManager.loadData(isRefreshing: true)
+            if vm.missionHistories.isEmpty {
+                await vm.challengePaginationManager.loadData(isRefreshing: true)
+            }
         }
     }
     
