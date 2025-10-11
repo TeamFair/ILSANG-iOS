@@ -64,7 +64,7 @@ struct OtherUserProfileView: View {
     private var userProfileSection: some View {
         HStack(spacing: 16) {
             // 프로필 이미지
-            ProfileImageView(profileImage: vm.userProfileIamge, imageSize: 57)
+            ProfileImageView(profileImage: vm.userProfileImage, imageSize: 57)
                 .overlay {
                     TagView(title: "LV.\(vm.currentLv)", tagStyle: .levelStroke)
                         .offset(y: 24)

@@ -14,7 +14,7 @@ final class OtherUserProfileViewModel: ObservableObject {
 
     @Published var userData: User?
     @Published var userTotalPoint: Int?
-    @Published var userProfileIamge: UIImage?
+    @Published var userProfileImage: UIImage?
     
     @Published var selectedSeasonNumber: Int = -1
     var selectedSeasonId: Int? {
@@ -71,21 +71,12 @@ final class OtherUserProfileViewModel: ObservableObject {
         }
         
         updateSeasonsFromServer(seasonManager.seasons.map { $0.seasonNumber })
-//        seasonManager.$seasons
-//            .removeDuplicates { $0.map(\.seasonNumber) == $1.map(\.seasonNumber) }
-//            .dropFirst()
-//            .sink { [weak self] seasons in
-//                guard let self else { return }
-//                self.updateSeasonsFromServer(seasons.map { $0.seasonNumber })
-//            }
-//            .store(in: &cancellables)
         
         challengePaginationManager.loadPageData = { [weak self] page in
             guard let self = self else { return ([], 0) }
             return await loadChallengeListWithImage(page: page, size: 10)
         }
     }
-
     
     func loadDataIfNeeded() async {
         if userData != nil {
@@ -103,7 +94,7 @@ final class OtherUserProfileViewModel: ObservableObject {
         _ = await (user, commercial, pointAndQuest, history)
     }
     
-    @discardableResult @MainActor
+    @discardableResult
     func loadChallengeListWithImage(page: Int, size: Int) async -> ([UserMissionHistoryItem], Int) {
         let getChallengeList = await fetchChallenges(page: page, size: size)
         let newChallengeList = getChallengeList.data
@@ -153,14 +144,13 @@ final class OtherUserProfileViewModel: ObservableObject {
         }
     }
     
-    @MainActor
     func fetchUser(userId: String) async {
         let res = await userRepository.getUser(userId: userId)
         
         switch res {
         case .success(let res):
             self.userData = res
-            self.userProfileIamge = await ImageCacheService.shared.loadImageAsync(imageId: res.profileImageId ?? "")
+            self.userProfileImage = await ImageCacheService.shared.loadImageAsync(imageId: res.profileImageId ?? "")
         case .failure(let error):
             self.userData = nil
             Log("사용자 정보 조회 실패: \(error)")
@@ -187,7 +177,6 @@ final class OtherUserProfileViewModel: ObservableObject {
         }
     }
     
-    @MainActor
     func fetchPointAndQuestCount() async {
         let res = await userRepository.getUserPoint(userId: userId, seasonId: selectedSeasonId)
         
