@@ -99,33 +99,27 @@ final class OtherUserProfileViewModel: ObservableObject {
         let getChallengeList = await fetchChallenges(page: page, size: size)
         let newChallengeList = getChallengeList.data
         
-        if page == 0 {
-            self.challengeList = newChallengeList
-        } else {
-            self.challengeList += newChallengeList
-        }
-        
         await withTaskGroup(of: (Int, UIImage?).self) { group in
             for (index, challenge) in newChallengeList.enumerated() {
                 group.addTask {
                     let imageId = challenge.submitImageId
-                    var image: UIImage? = nil
-                    if let imageId {
-                        image = await ImageCacheService.shared.loadImageAsync(imageId: imageId)
-                    }
+                    guard let imageId else { return (index, nil) }
+                    let image = await ImageCacheService.shared.loadImageAsync(imageId: imageId)
                     return (index, image)
                 }
             }
-            
+
             for await (index, image) in group {
-                if let image = image {
-                    if page == 0 {
-                        self.challengeList[index].submitImage = image
-                    } else {
-                        self.challengeList[challengeList.count - newChallengeList.count + index].submitImage = image
-                    }
+                if let image {
+                    newChallengeList[index].submitImage = image
                 }
             }
+        }
+        
+        if page == 0 {
+            self.challengeList = newChallengeList
+        } else {
+            self.challengeList += newChallengeList
         }
         
         return (challengeList, getChallengeList.total)

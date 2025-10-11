@@ -19,26 +19,24 @@ struct OtherUserChallengeList: View {
             )
             .frame(minHeight: 353)
         } else {
-            ScrollView {
-                LazyVStack(spacing: 9) {
-                    ForEach(Array(vm.challengeList.enumerated()), id: \.offset) { idx, challenge in
-                        NavigationLink {
-                            OtherUserChallengeDetailView(challenge: challenge)
-                        } label: {
-                            UserMissionHistoryItemView(challenge: challenge)
-                        }
-                    }
-                    
-                    if vm.hasMorePage() {
-                        ProgressView()
-                            .padding(.top, 12)
-                            .task {
-                                await vm.challengePaginationManager.loadData(isRefreshing: false)
-                            }
+            LazyVStack(spacing: 9) {
+                ForEach(vm.challengeList, id: \.missionHistoryId) { challenge in
+                    NavigationLink {
+                        OtherUserChallengeDetailView(challenge: challenge)
+                    } label: {
+                        UserMissionHistoryItemView(challenge: challenge)
                     }
                 }
-                .padding(.bottom, 72)
+                
+                if vm.hasMorePage() {
+                    ProgressView()
+                        .padding(.top, 12)
+                        .task {
+                            await vm.challengePaginationManager.loadData(isRefreshing: false)
+                        }
+                }
             }
+            .padding(.bottom, 72)
         }
     }
 }
