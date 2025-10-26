@@ -59,8 +59,7 @@ struct BaseQuestItemView<Trailing: View>: View {
             .padding(.vertical, 20)
             .padding(.leading, 20)
             .padding(.trailing, trailingPadding)
-            .background(.white)
-            .cornerRadius(12)
+            .roundedBackground(cornerRadius: 12)
             .shadow(color: .shadow7D.opacity(0.05), radius: 20, x: 0, y: 10)
             .padding(.horizontal, 20)
         }

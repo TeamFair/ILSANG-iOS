@@ -20,9 +20,11 @@ struct UserMissionHistoryView: View {
         .background(Color.background)
         .navigationBarBackButtonHidden(true)
         .task {
-            if vm.missionHistories.isEmpty {
-                await vm.challengePaginationManager.loadData(isRefreshing: true)
-            }
+            await vm.loadDataIfNeeded()
+        }
+        .onChange(of: vm.selectedMissionType) { _, _ in
+            vm.closeFilterPicker()
+            Task { await vm.loadCurrentData() }
         }
     }
     
@@ -35,31 +37,49 @@ struct UserMissionHistoryView: View {
     
     @ViewBuilder
     private var content: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            Text("수행한 챌린지")
-                .font(.system(size: 14, weight: .medium))
-                .foregroundColor(.gray400)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(.top, 20)
-                .padding(.leading, 20)
+        VStack(alignment: .leading, spacing: 0) {
+            SelectableTabHeader(
+                selectedItem: $vm.selectedMissionType,
+                items: MissionType.allCases,
+                horizontalPadding: 0,
+                height: 44,
+                hasBottomLine: true
+            )
             
-            if vm.missionHistories.isEmpty {
-                ErrorView(
-                    title: "아직 수행한 퀘스트가 없어요!",
-                    subTitle: "내 지역의 퀘스트를\n수행해 보세요",
-                    buttonTitle: "퀘스트 바로가기"
-                ) {
-                    sharedState.selectedTab = .home
-                    dismiss()
+            ScrollView {
+                VStack(alignment: .leading, spacing: 0) {
+                    Text("수행한 퀘스트")
+                        .font(.system(size: 14, weight: .medium))
+                        .foregroundColor(.gray400)
+                        .frame(height: 40)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding(.leading, 20)
+                    
+                    if vm.currentMissionHistories.isEmpty {
+                        ErrorView(
+                            title: "아직 수행한 퀘스트가 없어요!",
+                            subTitle: "내 지역의 퀘스트를\n수행해 보세요",
+                            buttonTitle: "퀘스트 바로가기"
+                        ) {
+                            sharedState.selectedTab = .home
+                            dismiss()
+                        }
+                        .frame(maxWidth: .infinity, minHeight: 600, maxHeight: .infinity, alignment: .center)
+                    } else {
+                        UserMissionHistoryList(vm: vm)
+                            .padding(.top, 24)
+                            .padding(.horizontal, 20)
+                    }
                 }
-                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
-            } else {
-                ScrollView {
-                    UserMissionHistoryList(vm: vm)
-                        .padding(.top, 20)
-                        .padding(.horizontal, 20)
+                .overlay(alignment: .topTrailing) {
+                    PickerView(state: vm.filterState, width: 150)
+                        .padding(.trailing, 20)
                 }
+                .zIndex(1)
+                .padding(.top, 20)
+                .padding(.bottom, 72)
             }
+            .scrollDisabled(vm.currentMissionHistories.isEmpty)
         }
     }
 }
@@ -67,9 +87,8 @@ struct UserMissionHistoryView: View {
 #Preview {
     UserMissionHistoryView(
         vm: UserMissionHistoryViewModel(
-            missionHistoryRepository: MissionHistoryRepository(
-                network: MissionHistoryNetwork()
-            )
+            missionHistoryRepository: MockMissionHistoryRepository()
         )
     )
+    .environmentObject(SharedState())
 }

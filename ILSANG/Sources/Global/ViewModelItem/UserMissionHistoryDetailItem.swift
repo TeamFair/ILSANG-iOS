@@ -1,51 +1,55 @@
 //
-//  UserMissionHistoryItem.swift
+//  UserMissionHistoryDetailItem.swift
 //  ILLSANG
 //
-//  Created by Lee Jinhee on 8/28/25.
+//  Created by Lee Jinhee on 10/25/25.
 //
 
 import UIKit
 
 @Observable
-class UserMissionHistoryItem {
+class UserMissionHistoryDetailItem {
     let missionHistoryId: Int
     let title, createdAt: String
     let submitImageId: String?
     var submitImage: UIImage?
-    let questImageId: String?
-    var questImage: UIImage?
-    let viewCount: Int
     let likeCount: Int
+    let writerName: String
     let questType: QuestType?
     let repeatType: RepeatType?
     let missionType: MissionType
+    let commercialGainPoint, metroGainPoint, contributionGainPoint: Int
+    let quizList: [MissionHistoryQuiz]?
     
     init(
         missionHistoryId: Int,
         title: String,
         createdAt: String,
         submitImageId: String?,
-        submitImage: UIImage?,
-        questImageId: String?,
-        questImage: UIImage?,
-        viewCount: Int,
+        submitImage: UIImage? = nil,
         likeCount: Int,
+        writerName: String,
         questType: QuestType?,
         repeatType: RepeatType?,
-        missionType: MissionType
+        missionType: MissionType,
+        commercialGainPoint: Int,
+        metroGainPoint: Int,
+        contributionGainPoint: Int,
+        quizList: [MissionHistoryQuiz]?
     ) {
         self.missionHistoryId = missionHistoryId
         self.title = title
         self.createdAt = createdAt
         self.submitImageId = submitImageId
         self.submitImage = submitImage
-        self.questImageId = questImageId
-        self.questImage = questImage
-        self.viewCount = viewCount
         self.likeCount = likeCount
+        self.writerName = writerName
         self.questType = questType
         self.repeatType = repeatType
         self.missionType = missionType
+        self.commercialGainPoint = commercialGainPoint
+        self.metroGainPoint = metroGainPoint
+        self.contributionGainPoint = contributionGainPoint
+        self.quizList = quizList
     }
 }

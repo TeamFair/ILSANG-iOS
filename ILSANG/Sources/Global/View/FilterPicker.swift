@@ -175,6 +175,29 @@ enum EventQuestFilterType: String, Hashable, CustomStringConvertible, CaseIterab
     }
 }
 
+enum MissionHistoryFilterType: String, Hashable, CustomStringConvertible, CaseIterable {
+    case latest = "최신순"
+    case pointHighest = "포인트 높은 순"
+    case pointLowest = "포인트 낮은 순"
+    
+    var description: String { return self.rawValue }
+    
+    var orderRewardDesc: Bool? {
+        switch self {
+        case .pointHighest: return true
+        case .pointLowest:  return false
+        default: return nil
+        }
+    }
+    
+    var latest: Bool? {
+        switch self {
+        case .latest: return true
+        default: return nil
+        }
+    }
+}
+
 struct SeasonFilterType: Hashable, CustomStringConvertible {
     let seasonNumber: Int   // -1 = 전체
     var description: String { seasonNumber == -1 ? "전체" : "시즌 \(seasonNumber)" }
