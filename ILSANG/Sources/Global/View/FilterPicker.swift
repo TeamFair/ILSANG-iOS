@@ -75,7 +75,6 @@ where Value: Hashable & CustomStringConvertible {
 // MARK: - PickerView
 struct PickerView<State>: View where State: PickerStateProtocol {
     @ObservedObject var state: State
-    var showBorder: Bool = false
     let width: CGFloat
 
     var body: some View {
@@ -96,10 +95,7 @@ struct PickerView<State>: View where State: PickerStateProtocol {
             .background(
                 RoundedRectangle(cornerRadius: 8)
                     .fill(.white)
-                    .stroke(
-                        showBorder ? .gray200 : .clear,
-                        style: StrokeStyle(lineWidth: 1)
-                    )
+                    .stroke(.gray100, style: StrokeStyle(lineWidth: 1))
             )
             .onTapGesture { state.pickerStatus.toggle() }
             .shadow(color: .shadow7D.opacity(0.05), radius: 20, x: 0, y: 10)
@@ -121,11 +117,22 @@ struct PickerView<State>: View where State: PickerStateProtocol {
                                 .background(Color.white)
                                 .padding(.horizontal, 12)
                         }
+                        .overlay(alignment: .bottom) {
+                            if idx != list.count - 1 {
+                                Rectangle()
+                                    .frame(height: 1)
+                                    .frame(maxWidth: .infinity)
+                                    .foregroundStyle(.gray100)
+                            }
+                        }
                     }
                 }
                 .frame(width: width)
-                .background(Color.white)
-                .clipShape(RoundedRectangle(cornerRadius: 8))
+                .background(
+                    RoundedRectangle(cornerRadius: 8)
+                        .fill(.white)
+                        .stroke(.gray100, style: StrokeStyle(lineWidth: 1))
+                )
                 .shadow(color: .shadow7D.opacity(0.05), radius: 20, x: 0, y: 10)
                 .padding(.top, 44)
                 .zIndex(1)
