@@ -12,7 +12,7 @@ enum RepeatType: String, Hashable, CustomStringConvertible, CaseIterable {
     case weekly
     case monthly
     
-    init?(param: String) {
+    init?(param: String) { // FIXME: rawValue 활용
         self.init(rawValue: param.lowercased())
     }
     

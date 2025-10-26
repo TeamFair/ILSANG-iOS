@@ -14,4 +14,8 @@ struct UserMissionHistoryResponse: Decodable {
     let questImageId: String?
     let viewCount: Int
     let likeCount: Int
+    let questType: String
+    let repeatFrequency: String?
+    let missionType: String
+    let commercialAreaCode: String
 }

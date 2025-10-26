@@ -12,9 +12,11 @@ struct UserMissionHistoryList: View {
     
     var body: some View {
         LazyVStack(spacing: 9) {
-            ForEach(vm.missionHistories, id: \.missionHistoryId) { missionHistory in
-                NavigationLink(destination: UserMissionHistoryDetailView(vm: vm, missionHistory: missionHistory)) {
-                    UserMissionHistoryItemView(challenge: missionHistory)
+            ForEach(vm.currentMissionHistories, id: \.missionHistoryId) { missionHistory in
+                NavigationLink(
+                    destination: UserMissionHistoryDetailView(vm: vm, missionHistory: missionHistory)
+                ) {
+                    UserMissionHistoryItemView(missionHistory: missionHistory)
                 }
             }
             
@@ -22,7 +24,7 @@ struct UserMissionHistoryList: View {
                 ProgressView()
                     .padding(.top, 12)
                     .task {
-                        await vm.challengePaginationManager.loadData(isRefreshing: false)
+                        await vm.paginationManager(for: vm.selectedMissionType).loadData(isRefreshing: false)
                     }
             }
         }

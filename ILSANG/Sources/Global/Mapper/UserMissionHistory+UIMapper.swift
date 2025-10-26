@@ -18,7 +18,10 @@ extension UserMissionHistory {
             questImageId: questImageId,
             questImage: nil,
             viewCount: viewCount,
-            likeCount: likeCount
+            likeCount: likeCount,
+            questType: questType,
+            repeatType: repeatType,
+            missionType: missionType
         )
     }
 }

@@ -184,12 +184,14 @@ struct ReactionView: View, Equatable {
     }
     
     let likeCount: Int
-    let hateCount: Int
+    var hateCount: Int? = nil
     
     var body: some View {
         HStack(spacing: 16) {
             emojiView(imageName: .thumbsUp, count: likeCount, alignment: .top)
-            emojiView(imageName: .thumbsDown, count: hateCount, alignment: .bottom)
+            if let hateCount {
+                emojiView(imageName: .thumbsDown, count: hateCount, alignment: .bottom)
+            }
         }
     }
     
@@ -202,9 +204,9 @@ struct ReactionView: View, Equatable {
                 .frame(width: 21, height: 21)
                 .foregroundStyle(.gray200)
                 .frame(width: 24, height: 24, alignment: alignment)
-            Text(String(count))
+            Text("\(count)")
                 .monospacedDigit()
-                .font(.system(size: 15, weight: .bold))
+                .styledFont(.heading2)
                 .foregroundStyle(.gray300)
         }
         .frame(height: 24)
