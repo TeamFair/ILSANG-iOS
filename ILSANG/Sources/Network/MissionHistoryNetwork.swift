@@ -23,14 +23,28 @@ final class MissionHistoryNetwork {
     
     /// 수행한 퀘스트 이력(미션) 조회
     /// useId가 nil이면 현재 유저 정보
-    func getMissionHistories(page: Int, size: Int, userId: String?) async -> Result<ResponseWithPage<[UserMissionHistoryResponse]>, Error> {
-        var parameters: Parameters = ["page": page, "size": size]
+    func getMissionHistories(page: Int, size: Int, userId: String?, missionType: MissionType, orderRewardDesc: Bool?, orderCreatedAtDesc: Bool?) async -> Result<ResponseWithPage<[UserMissionHistoryResponse]>, Error> {
+        var parameters: Parameters = [
+            "page": page,
+            "size": size,
+            "missionType": missionType.parameterText
+        ]
         if let userId {
             parameters["userId"] = userId
+        }
+        if let orderRewardDesc {
+            parameters["orderRewardDesc"] = orderRewardDesc
+        }
+        if let orderCreatedAtDesc {
+            parameters["orderCreatedAtDesc"] = orderCreatedAtDesc
         }
         return await Network.requestData(url: url+"/history", method: .get, parameters: parameters)
     }
     
+    func getMissionHistoryDetail(missionHistoryId: Int) async -> Result<UserMissionHistoryDetailResponse, Error> {
+        let parameters: Parameters = ["missionHistoryId": missionHistoryId]
+        return await Network.requestData(url: url+"/history/detail", method: .get, parameters: parameters)
+    }
     /// 신고하기
     func putMissionHistory(missionHistoryId: Int) async -> Result<ResponseWithEmpty, Error> {
         return await Network.requestData(url: url+"/history/\(missionHistoryId)", method: .put)

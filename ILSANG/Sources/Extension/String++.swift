@@ -64,8 +64,25 @@ extension String {
         return formattedDate
     }
     
+    func timeAgoSinceDate() -> String {
+        let date = self.split(separator: ".")
+        
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
+        
+        guard let date = dateFormatter.date(from: String(date[0])) else { return "" }
+        
+        // 날짜 포맷 설정
+        let dateFormat = "yyyy년 M월 d일"
+        
+        // 설정한 포맷으로 변환
+        dateFormatter.dateFormat = dateFormat
+        let formattedDate = dateFormatter.string(from: date)
+        
+        return formattedDate
+    }
+    
     /// 서버에서 보내주는 시간을 "2024.12.31" 형식으로 날짜 포맷 변환.
-    /// 현재와 년도가 다를 경우 "2024.12.31"로 변환.
     func timeAgoCreatedAt() -> String {
         // 날짜 문자열을 "."로 분리하여 첫 번째 부분 사용
         let dateComponents = self.split(separator: ".")
@@ -76,19 +93,9 @@ extension String {
         
         // 문자열을 Date 객체로 변환
         guard let date = dateFormatter.date(from: String(dateComponents[0])) else { return "" }
-        
-        // 현재 연도와 날짜의 연도 비교
-        let currentYear = Calendar.current.component(.year, from: Date())
-        let dateYear = Calendar.current.component(.year, from: date)
-        
-        // 날짜 포맷 설정
-        var dateFormat = "yyyy.MM.dd"
-        if currentYear != dateYear {
-            dateFormat = "yyyy.MM.dd"
-        }
-        
-        // 설정한 포맷으로 변환
-        dateFormatter.dateFormat = dateFormat
+
+        // 날짜 포맷으로 변환
+        dateFormatter.dateFormat = "yyyy.MM.dd"
         let formattedDate = dateFormatter.string(from: date)
         
         return formattedDate

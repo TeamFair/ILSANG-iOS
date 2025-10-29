@@ -10,7 +10,8 @@ import Foundation
 protocol MissionHistoryRepositoryInterface {
     func getRandomMissionHistories(page: Int, size: Int) async -> Result<(data: [MissionHistory], total: Int), Error>
     func getMissionHistories(missionId: Int, page: Int, size: Int) async -> Result<(data: [MissionHistory], total: Int), Error>
-    func getMissionHistories(page: Int, size: Int, userId: String?) async -> Result<(data: [UserMissionHistory], total: Int), Error>
+    func getMissionHistories(page: Int, size: Int, userId: String?, missionType: MissionType, filterType: MissionHistoryFilterType) async -> Result<(data: [UserMissionHistory], total: Int), Error>
+    func getMissionHistoryDetail(missionHistoryId: Int) async -> Result<UserMissionHistoryDetail, Error>
     func deleteMissionHistory(missionHistoryId: Int) async -> Bool
     func putMissionHistory(missionHistoryId: Int) async -> Result<Void, Error>
 }
@@ -45,12 +46,22 @@ final class MissionHistoryRepository: MissionHistoryRepositoryInterface {
         }
     }
     
-    func getMissionHistories(page: Int, size: Int, userId: String?) async -> Result<(data: [UserMissionHistory], total: Int), Error> {
-        let res = await network.getMissionHistories(page: page, size: size, userId: userId)
+    func getMissionHistories(page: Int, size: Int, userId: String?, missionType: MissionType, filterType: MissionHistoryFilterType) async -> Result<(data: [UserMissionHistory], total: Int), Error> {
+        let res = await network.getMissionHistories(page: page, size: size, userId: userId, missionType: missionType, orderRewardDesc: filterType.orderRewardDesc, orderCreatedAtDesc: filterType.latest)
         switch res {
         case .success(let response):
             let domainModels = response.content.map { $0.toDomain() }
             return .success((domainModels, response.totalElements))
+        case .failure(let error):
+            return .failure(error)
+        }
+    }
+    
+    func getMissionHistoryDetail(missionHistoryId: Int) async -> Result<UserMissionHistoryDetail, Error> {
+        let res = await network.getMissionHistoryDetail(missionHistoryId: missionHistoryId)
+        switch res {
+        case .success(let response):
+            return .success(response.toDomain())
         case .failure(let error):
             return .failure(error)
         }
@@ -105,7 +116,10 @@ final class MockMissionHistoryRepository: MissionHistoryRepositoryInterface {
             submitImageId: nil,
             questImageId: nil,
             viewCount: 0,
-            likeCount: 0
+            likeCount: 0,
+            questType: .normal,
+            repeatType: nil,
+            missionType: .photo
         )
     ]
     
@@ -117,8 +131,12 @@ final class MockMissionHistoryRepository: MissionHistoryRepositoryInterface {
         .success((data: mockMissionHistory, total: mockMissionHistory.count))
     }
     
-    func getMissionHistories(page: Int, size: Int, userId: String?) async -> Result<(data: [UserMissionHistory], total: Int), any Error> {
+    func getMissionHistories(page: Int, size: Int, userId: String?, missionType: MissionType, filterType: MissionHistoryFilterType) async -> Result<(data: [UserMissionHistory], total: Int), any Error> {
         .success((data: mockUserMissionHistory, total: mockMissionHistory.count))
+    }
+    
+    func getMissionHistoryDetail(missionHistoryId: Int) async -> Result<UserMissionHistoryDetail, Error> {
+        .success(.mockData)
     }
     
     func deleteMissionHistory(missionHistoryId: Int) async -> Bool {

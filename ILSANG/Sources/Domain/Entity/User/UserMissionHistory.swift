@@ -12,4 +12,7 @@ struct UserMissionHistory {
     let questImageId: String?
     let viewCount: Int
     let likeCount: Int
+    let questType: QuestType
+    let repeatType: RepeatType?
+    let missionType: MissionType
 }

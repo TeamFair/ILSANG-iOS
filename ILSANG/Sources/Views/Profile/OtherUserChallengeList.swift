@@ -11,33 +11,42 @@ struct OtherUserChallengeList: View {
     @ObservedObject var vm: OtherUserProfileViewModel
     
     var body: some View {
-        if vm.challengeList.isEmpty {
-            ErrorView(
-                title: "완료된 퀘스트가 없어요",
-                subTitle: "사용자가 아직 퀘스트를\n수행하지 않았어요",
-                showButton: false
-            )
-            .frame(minHeight: 353)
-        } else {
-            LazyVStack(spacing: 9) {
-                ForEach(vm.challengeList, id: \.missionHistoryId) { challenge in
-                    NavigationLink {
-                        OtherUserChallengeDetailView(challenge: challenge)
-                    } label: {
-                        UserMissionHistoryItemView(challenge: challenge)
+        switch vm.missionHistoryViewStatus {
+        case .error:
+            EmptyView() // TODO: 변경
+        case .loading: // page 0을 불러올 때만 프로그레스뷰 표시
+            ProgressView().frame(maxWidth: .infinity, minHeight: 300)
+        case .loaded:
+            if vm.currentMissionHistories.isEmpty {
+                ErrorView(
+                    title: "완료된 퀘스트가 없어요",
+                    subTitle: "사용자가 아직 퀘스트를\n수행하지 않았어요",
+                    showButton: false
+                )
+                .frame(minHeight: 353)
+            } else {
+                LazyVStack(spacing: 9) {
+                    ForEach(vm.currentMissionHistories, id: \.missionHistoryId) { missionHistory in
+                        NavigationLink {
+                            OtherUserChallengeDetailView(vm: vm, missionHistory: missionHistory)
+                        } label: {
+                            UserMissionHistoryItemView(missionHistory: missionHistory)
+                        }
+                    }
+                    
+                    if vm.hasMorePage {
+                        ProgressView()
+                            .padding(.top, 12)
+                            .task {
+                                await vm.photoPaginationManager.loadData(isRefreshing: false)
+                            }
                     }
                 }
-                
-                if vm.hasMorePage() {
-                    ProgressView()
-                        .padding(.top, 12)
-                        .task {
-                            await vm.challengePaginationManager.loadData(isRefreshing: false)
-                        }
-                }
+                .padding(.bottom, 72)
+                .frame(minHeight: 300, alignment: .top)
             }
-            .padding(.bottom, 72)
         }
+        
     }
 }
 
