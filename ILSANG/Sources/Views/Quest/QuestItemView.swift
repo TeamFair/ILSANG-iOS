@@ -48,6 +48,18 @@ struct BaseQuestItemView<Trailing: View>: View {
                         .foregroundColor(.gray400)
                         .padding(.bottom, 8)
                     RewardTagRow(rewards: quest.rewards ?? [])
+                    
+                    if let repeatStatusText = quest.repeatStatusText {
+                        Text(repeatStatusText)
+                            .styledFont(.caption2)
+                            .foregroundStyle(.black)
+                            .padding(.vertical, 2)
+                            .padding(.horizontal, 8)
+                            .background(
+                                Capsule().fill(.gray300)
+                            )
+                            .padding(.top, 8)
+                    }
                 }
                 Spacer(minLength: 0)
                 
@@ -59,7 +71,10 @@ struct BaseQuestItemView<Trailing: View>: View {
             .padding(.vertical, 20)
             .padding(.leading, 20)
             .padding(.trailing, trailingPadding)
-            .roundedBackground(cornerRadius: 12)
+            .roundedBackground(
+                cornerRadius: 12,
+                bgColor: (quest.isRepeatDisabled ? Color.gray200 : Color.white)
+            )
             .shadow(color: .shadow7D.opacity(0.05), radius: 20, x: 0, y: 10)
             .padding(.horizontal, 20)
         }

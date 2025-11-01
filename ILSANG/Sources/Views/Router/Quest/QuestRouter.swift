@@ -58,6 +58,7 @@ class QuestRouter: ObservableObject {
                 if let imageId = questDetail.imageId {
                     questDetail.image = await ImageCacheService.shared.loadImageAsync(imageId: imageId)
                 }
+                questDetail.lastCompleteDate = quest.lastCompleteDate // 마지막 수행일 업데이트
                 self.selectedQuest = questDetail
                 
                 // 일상존 체크 후 시트 표시
