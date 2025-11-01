@@ -9,10 +9,7 @@ import Foundation
 
 extension LargeRewardQuestResponse: DomainConvertible {
     func toDomain() -> Quest {
-        let formatter = ISO8601DateFormatter()
-        let date = formatter.date(from: expireDate) ?? Date()
-        
-        return Quest(
+        Quest(
             id: questId,
             title: title,
             writer: writerName,
@@ -21,11 +18,12 @@ extension LargeRewardQuestResponse: DomainConvertible {
             rewards: rewards.map { $0.toDomain() },
             missions: [],
             coupons: [],
-            expireDate: date,
+            expireDate: expireDate.toISO8601Date(),
             imageId: imageId,
             mainImageId: mainImageId,
             userRank: nil,
-            favoriteYn: nil
+            favoriteYn: nil,
+            lastCompleteDate: nil
         )
     }
 }

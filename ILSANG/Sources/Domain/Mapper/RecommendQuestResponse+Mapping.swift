@@ -21,7 +21,8 @@ extension RecommendQuestResponse: DomainConvertible {
             imageId: imageId,
             mainImageId: mainImageId,
             userRank: nil,
-            favoriteYn: nil
+            favoriteYn: nil,
+            lastCompleteDate: nil
         )
     }
 }

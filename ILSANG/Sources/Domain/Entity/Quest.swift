@@ -21,4 +21,5 @@ struct Quest {
     let mainImageId: String?
     let userRank: Int?
     let favoriteYn: Bool?
+    let lastCompleteDate: Date?
 }

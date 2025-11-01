@@ -32,7 +32,6 @@ final class QuestNetwork {
     func getRepeatQuests(commercialAreaCode: String, repeatFrequency: RepeatType, orderRewardDesc: Bool?, page: Int, size: Int) async -> Result<ResponseWithPage<[BaseQuestResponse]>, Error> {
         var parameters: Parameters = [
             "questType": "REPEAT",
-            "completedYn": false,
             "commercialAreaCode": commercialAreaCode,
             "repeatFrequency": repeatFrequency.toParam(),
             "page": page,
@@ -78,7 +77,6 @@ final class QuestNetwork {
     /// 즐겨찾기 퀘스트 조회
     func getFavoriteQuests(commercialAreaCode: String, page: Int, size: Int) async -> Result<ResponseWithPage<[BaseQuestResponse]>, Error> {
         let parameters: Parameters = [
-            "completedYn": false,
             "favoriteYn": true,
             "commercialAreaCode": commercialAreaCode,
             "page": page,

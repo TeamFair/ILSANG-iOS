@@ -108,7 +108,10 @@ struct QuestDetailView: View {
             .background(Color.white)
         }
         .safeAreaInset(edge: .bottom) {
-            PrimaryButton(title: "퀘스트 인증하기") {
+            PrimaryButton(
+                title: "퀘스트 인증하기",
+                buttonAble: vm.approvalButtonAble
+            ) {
                 questApproveAction()
             }
             .padding(.bottom, 4)

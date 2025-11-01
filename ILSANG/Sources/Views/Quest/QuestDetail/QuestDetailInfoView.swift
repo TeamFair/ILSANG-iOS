@@ -45,6 +45,17 @@ struct QuestDetailInfoView: View {
                     .styledFont(.title2)
                     .lineLimit(2)
                 
+                if let repeatStatusText = quest.repeatStatusText {
+                    Text(repeatStatusText)
+                        .styledFont(.caption2)
+                        .foregroundStyle(.black)
+                        .padding(.vertical, 2)
+                        .padding(.horizontal, 8)
+                        .background(
+                            Capsule().fill(.gray300)
+                        )
+                }
+                
                 if quest.questType == .event, let date = quest.expireDate {
                     Text(date.toDisplayFormat(.short)+"까지")
                         .styledFont(.caption2)

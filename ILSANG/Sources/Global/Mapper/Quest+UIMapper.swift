@@ -22,7 +22,8 @@ extension Quest {
             mainImageId: mainImageId,
             mainImage: nil,
             userRank: userRank,
-            favoriteYn: favoriteYn ?? false
+            favoriteYn: favoriteYn ?? false,
+            lastCompleteDate: lastCompleteDate
         )
     }
 }

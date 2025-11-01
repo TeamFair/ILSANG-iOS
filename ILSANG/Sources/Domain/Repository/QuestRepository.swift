@@ -87,7 +87,8 @@ final class MockQuestRepository: QuestRepositoryInterface {
             imageId: "IMQU/2025082308223895",
             mainImageId: "IMQU/2025082308223895",
             userRank: nil,
-            favoriteYn: false
+            favoriteYn: false,
+            lastCompleteDate: nil
         )
     ]
     private let mockRepeatQuests: [Quest] = [
@@ -104,7 +105,8 @@ final class MockQuestRepository: QuestRepositoryInterface {
             imageId: "IMQU/2025082308223895",
             mainImageId: "IMQU/2025082308223895",
             userRank: nil,
-            favoriteYn: false
+            favoriteYn: false,
+            lastCompleteDate: .now.addingTimeInterval(-10000)
         )
     ]
     
@@ -122,7 +124,8 @@ final class MockQuestRepository: QuestRepositoryInterface {
             imageId: "",
             mainImageId: "",
             userRank: nil,
-            favoriteYn: false
+            favoriteYn: false,
+            lastCompleteDate: nil
         )
     ]
     
