@@ -15,7 +15,6 @@ class QuestDetailViewModel: ObservableObject {
 
     var approvalDescription: String = "퀘스트를 수행하고\n인증 후, 포인트를 적립받으세요"
     var approvalButtonAble: Bool {
-        // FIXME: 조건 점검하기
         if quest.questType == .repeat { // 반복 퀘스트인 경우
             return !quest.isRepeatDisabled
         } else {
