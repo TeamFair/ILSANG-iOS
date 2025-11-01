@@ -22,4 +22,5 @@ struct Quest {
     let userRank: Int?
     let favoriteYn: Bool?
     let lastCompleteDate: Date?
+    let commercialAreaCode: String?
 }

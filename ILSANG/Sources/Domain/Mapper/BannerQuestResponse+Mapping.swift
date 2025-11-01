@@ -23,7 +23,8 @@ extension BannerQuestResponse: DomainConvertible {
             mainImageId: mainImageId,
             userRank: nil,
             favoriteYn: nil,
-            lastCompleteDate: lastCompleteDate?.toISO8601Date()
+            lastCompleteDate: lastCompleteDate?.toISO8601Date(),
+            commercialAreaCode: commercialAreaCode
         )
     }
 }

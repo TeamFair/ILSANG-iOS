@@ -20,6 +20,7 @@ class UserMissionHistoryDetailItem {
     let missionType: MissionType
     let commercialGainPoint, metroGainPoint, contributionGainPoint: Int
     let quizList: [MissionHistoryQuiz]?
+    let contributionDoublePointYn: Bool
     
     init(
         missionHistoryId: Int,
@@ -35,6 +36,7 @@ class UserMissionHistoryDetailItem {
         commercialGainPoint: Int,
         metroGainPoint: Int,
         contributionGainPoint: Int,
+        contributionDoublePointYn: Bool,
         quizList: [MissionHistoryQuiz]?
     ) {
         self.missionHistoryId = missionHistoryId
@@ -50,6 +52,7 @@ class UserMissionHistoryDetailItem {
         self.commercialGainPoint = commercialGainPoint
         self.metroGainPoint = metroGainPoint
         self.contributionGainPoint = contributionGainPoint
+        self.contributionDoublePointYn = contributionDoublePointYn
         self.quizList = quizList
     }
 }

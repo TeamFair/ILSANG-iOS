@@ -41,6 +41,8 @@ class QuestItem: Hashable, Identifiable {
     let userRank: Int?
     var favoriteYn: Bool
     var lastCompleteDate: Date?
+    var commercialAreaCode: String?
+    let isMyIllsangZone: Bool
     
     init(
         id: Int,
@@ -58,7 +60,9 @@ class QuestItem: Hashable, Identifiable {
         mainImage: UIImage?,
         userRank: Int?,
         favoriteYn: Bool,
-        lastCompleteDate: Date?
+        lastCompleteDate: Date?,
+        commercialAreaCode: String?,
+        isMyIllsangZone: Bool
     ) {
         self.id = id
         self.title = title
@@ -76,6 +80,8 @@ class QuestItem: Hashable, Identifiable {
         self.userRank = userRank
         self.favoriteYn = favoriteYn
         self.lastCompleteDate = lastCompleteDate
+        self.commercialAreaCode = commercialAreaCode
+        self.isMyIllsangZone = isMyIllsangZone
     }
     
     var missionType: MissionType { missions.first?.type ?? .photo }
@@ -85,7 +91,17 @@ class QuestItem: Hashable, Identifiable {
     var hasCouponReward: Bool { !coupons.isEmpty }
     
     func totalRewardPoint() -> Int {
-        self.rewards?.reduce(0) { $0 + $1.point } ?? 0
+        guard let rewards else { return 0 }
+        return rewards.reduce(0) { total, reward in
+            var point = reward.point
+            
+            // 내 일상존이고, contribution 포인트면 두 배로 계산
+            if isMyIllsangZone, reward.pointType == .contribution {
+                point *= 2
+            }
+            
+            return total + point
+        }
     }
     
     /// 반복 퀘스트가 현재 잠금 상태인지 여부

@@ -18,14 +18,14 @@ struct QuestDetailStatView: View {
             HStack(spacing: 20) {
                 ForEach(PointType.sorted, id: \.rawValue) { type in
                     if let point = quest.rewards?.first(where: { $0.pointType == type }) {
-                        pointTagView(type: type, point: point.point)
+                        pointTagView(type: type, point: point.point, showDoublePoint: quest.isMyIllsangZone && type == .contribution)
                     }
                 }
             }
         }
     }
     
-    private func pointTagView(type: PointType, point: Int) -> some View {
+    private func pointTagView(type: PointType, point: Int, showDoublePoint: Bool) -> some View {
         VStack(spacing: 8) {
             Text(type.headerText)
                 .font(.system(size: 12, weight: .bold))
@@ -49,6 +49,9 @@ struct QuestDetailStatView: View {
                         .scaledToFit()
                         .frame(width: 12)
                         .frame(width: 20, height: 20)
+                    if showDoublePoint {
+                        DoublePointView(style: .background)
+                    }
                 }
                 .frame(height: 20)
             }

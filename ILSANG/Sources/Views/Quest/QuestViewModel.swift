@@ -57,6 +57,7 @@ class QuestViewModel: ObservableObject {
     
     private let questRepository: QuestRepositoryInterface
     private let favoriteService: FavoriteService
+    private let illsangZoneManager: IllsangZoneManager
     private let questSubmissionNotifier: QuestSubmissionNotifier
     private let sharedState: SharedState
         
@@ -65,11 +66,13 @@ class QuestViewModel: ObservableObject {
     init(
         questRepository: QuestRepositoryInterface,
         favoriteService: FavoriteService,
+        illsangZoneManager: IllsangZoneManager,
         questSubmissionNotifier: QuestSubmissionNotifier,
         sharedState: SharedState
     ) {
         self.questRepository = questRepository
         self.favoriteService = favoriteService
+        self.illsangZoneManager = illsangZoneManager
         self.questSubmissionNotifier = questSubmissionNotifier
         self.sharedState = sharedState
         
@@ -286,19 +289,21 @@ class QuestViewModel: ObservableObject {
     }
     
     private func getQuestList(page: Int, size: Int, status: QuestStatus) async -> (data: [QuestItem], total: Int) {
+        let myCommercialCode = await MainActor.run { illsangZoneManager.currentZoneCode }
+        let selectedCommercialCode = sharedState.selectedCommercialArea.code
         let result: Result<ResponseWithPage<[Quest]>, Error>
         
         switch status {
         case .default:
             result = await questRepository.getDefaultQuests(
-                commercialAreaCode: sharedState.selectedCommercialArea.code,
+                commercialAreaCode: selectedCommercialCode,
                 orderRewardDesc: questFilterState.selectedValue.orderRewardDesc,
                 page: page,
                 size: size
             )
         case .repeat:
             result = await questRepository.getRepeatQuests(
-                commercialAreaCode: sharedState.selectedCommercialArea.code,
+                commercialAreaCode: selectedCommercialCode,
                 repeatFrequency: repeatFilterState.selectedValue,
                 orderRewardDesc: questFilterState.selectedValue.orderRewardDesc,
                 page: page,
@@ -306,7 +311,7 @@ class QuestViewModel: ObservableObject {
             )
         case .event:
             result = await questRepository.getEventQuests(
-                commercialAreaCode: sharedState.selectedCommercialArea.code,
+                commercialAreaCode: selectedCommercialCode,
                 orderRewardDesc: eventFilterState.selectedValue.orderRewardDesc,
                 orderExpiredDesc: eventFilterState.selectedValue.orderExpiredDesc,
                 page: page,
@@ -314,9 +319,10 @@ class QuestViewModel: ObservableObject {
             )
         }
         
+
         switch result {
         case .success(let response):
-            return (response.content.map { $0.toQuestItem() }, response.totalElements)
+            return (response.content.map { $0.toQuestItem(myCommercialCode: myCommercialCode, questCommercialCode: selectedCommercialCode) }, response.totalElements)
         case .failure:
             return ([], 0)
         }

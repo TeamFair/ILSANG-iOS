@@ -26,6 +26,7 @@ struct QuestView: View {
             wrappedValue: QuestViewModel(
                 questRepository: questRepository,
                 favoriteService: favoriteService,
+                illsangZoneManager: illsangZoneManager,
                 questSubmissionNotifier: questSubmissionNotifier,
                 sharedState: sharedState
             )

@@ -26,6 +26,7 @@ struct FavoriteListView: View {
             wrappedValue: FavoriteListViewModel(
                 questRepository: questRepository,
                 favoriteService: favoriteService,
+                illsangZoneManager: illsangZoneManager,
                 selectedCommercialArea: selectedCommercialArea,
                 questSubmissionNotifier: questSubmissionNotifier
             )

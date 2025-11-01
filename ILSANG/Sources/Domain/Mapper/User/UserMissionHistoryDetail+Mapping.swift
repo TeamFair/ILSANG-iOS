@@ -28,6 +28,7 @@ extension UserMissionHistoryDetailResponse: DomainConvertible {
             commercialGainPoint: commercialGainPoint,
             metroGainPoint: metroGainPoint,
             contributionGainPoint: contributionGainPoint,
+            contributionDoublePointYn: contributionDoublePointYn,
             quizList: quizList?.map { $0.toDomain() }
         )
     }

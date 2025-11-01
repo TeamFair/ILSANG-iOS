@@ -54,7 +54,10 @@ class QuestRouter: ObservableObject {
         Task { [weak self] in
             guard let self = self else { return }
             do {
-                let questDetail = try await questRepository.getQuestDetail(questId: quest.id).get().toQuestItem()
+                let questDetail = try await questRepository
+                    .getQuestDetail(questId: quest.id)
+                    .get()
+                    .toQuestItem(isMyIllsangZone: quest.isMyIllsangZone) // 상위에서 세팅된 commercialAreaCode 재사용
                 if let imageId = questDetail.imageId {
                     questDetail.image = await ImageCacheService.shared.loadImageAsync(imageId: imageId)
                 }

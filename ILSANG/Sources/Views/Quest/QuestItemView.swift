@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct TagConfig {
-    let style: TagView.TagStyle
+    let style: TagStyle
     let image: ImageResource?
     let offset: (x: CGFloat, y: CGFloat)
     let title: String
@@ -47,6 +47,10 @@ struct BaseQuestItemView<Trailing: View>: View {
                         .styledFont(.regular, size: 11, lineHeight: 16)
                         .foregroundColor(.gray400)
                         .padding(.bottom, 8)
+                    RewardTagRow(
+                        rewards: quest.rewards ?? [],
+                        isMyIllsangZone: quest.isMyIllsangZone
+                    )
                     RewardTagRow(rewards: quest.rewards ?? [])
                     
                     if let repeatStatusText = quest.repeatStatusText {
@@ -187,7 +191,7 @@ struct FavoriteQuestItemView: View {
     let quest: QuestItem
     let action: (() -> Void)
     let favoriteAction: (() -> Void)
-
+    
     var body: some View {
         BaseQuestItemView(
             quest: quest,
@@ -232,7 +236,7 @@ struct CompletedQuestItemView: View {
             quest: quest,
             tagConfig: tagConfig(for: quest.questType ?? .normal),
             imageSize: .init(width: 60, height: 60),
-            trailingPadding: 16,
+            trailingPadding: 14,
             isDisabled: true,
             trailingView:
                 VStack(spacing: 7) {
