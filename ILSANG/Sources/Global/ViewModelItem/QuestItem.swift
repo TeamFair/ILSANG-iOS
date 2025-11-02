@@ -154,11 +154,17 @@ class QuestItem: Hashable, Identifiable {
             }
 
         case .weekly:
-            // 다음 주 월요일 00:00
-            let nextWeek = calendar.date(byAdding: .weekOfYear, value: 1, to: date) ?? date
-            var components = calendar.dateComponents([.yearForWeekOfYear, .weekOfYear], from: nextWeek)
-            components.weekday = 2 // 월요일 (1=일요일, 2=월요일)
-            return calendar.date(from: components).flatMap { calendar.startOfDay(for: $0) } ?? date
+            // 다음 월요일 00:00 계산
+            let components = calendar.dateComponents([.weekday], from: date)
+            let weekday = components.weekday ?? 1
+            // 월요일(2) 기준으로 남은 일수 계산
+            let daysUntilNextMonday = (9 - weekday) % 7
+            // 만약 오늘이 월요일이라면 → 다음주 월요일로 (7일 뒤)
+            let offset = daysUntilNextMonday == 0 ? 7 : daysUntilNextMonday
+
+            if let nextMonday = calendar.date(byAdding: .day, value: offset, to: date) {
+                return calendar.startOfDay(for: nextMonday)
+            }
 
         case .monthly:
             // 다음달 1일 00:00
