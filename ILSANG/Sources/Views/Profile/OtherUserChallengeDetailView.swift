@@ -38,7 +38,7 @@ struct OtherUserChallengeDetailView: View {
                             metroPoint: detailItem.metroGainPoint,
                             commercialPoint: detailItem.commercialGainPoint,
                             contributionPoint: detailItem.contributionGainPoint,
-                            isMyIllsangZone: detailItem.isMyIllsangZone,
+                            isMyIllsangZone: detailItem.contributionDoublePointYn,
                             writer: detailItem.writerName,
                             createdAt: detailItem.createdAt.timeAgoCreatedAt(),
                         )

@@ -51,7 +51,6 @@ struct BaseQuestItemView<Trailing: View>: View {
                         rewards: quest.rewards ?? [],
                         isMyIllsangZone: quest.isMyIllsangZone
                     )
-                    RewardTagRow(rewards: quest.rewards ?? [])
                     
                     if let repeatStatusText = quest.repeatStatusText {
                         Text(repeatStatusText)
