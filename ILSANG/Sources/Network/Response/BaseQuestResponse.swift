@@ -18,5 +18,6 @@ struct BaseQuestResponse: Decodable {
     let favoriteYn: Bool
     let rewards: [RewardResponse]
     let lastCompleteDate: String?
+    let commercialAreaCode: String?
 }
 

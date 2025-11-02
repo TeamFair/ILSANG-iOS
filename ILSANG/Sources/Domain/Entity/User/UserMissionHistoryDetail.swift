@@ -17,6 +17,7 @@ struct UserMissionHistoryDetail {
     let repeatType: RepeatType?
     let writerName: String
     let commercialGainPoint, metroGainPoint, contributionGainPoint: Int
+    let contributionDoublePointYn: Bool
     let quizList: [MissionHistoryQuiz]?
 }
 
@@ -36,6 +37,7 @@ extension UserMissionHistoryDetail {
         commercialGainPoint: 10,
         metroGainPoint: 10,
         contributionGainPoint: 10,
+        contributionDoublePointYn: true,
         quizList: []
     )
 }

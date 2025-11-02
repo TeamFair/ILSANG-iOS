@@ -25,6 +25,8 @@ final class QuestItemBuilder {
     private var userRank: Int = 0
     private var favoriteYn: Bool = false
     private var lastCompleteDate: Date = .now.addingTimeInterval(-20000)
+    private var commercialAreaCode: String = "R100"
+    private var isMyIllsangZone: Bool = true
     
     func setId(_ id: Int) -> Self {
         self.id = id
@@ -139,7 +141,9 @@ final class QuestItemBuilder {
             mainImage: mainImage,
             userRank: userRank,
             favoriteYn: favoriteYn,
-            lastCompleteDate: lastCompleteDate
+            lastCompleteDate: lastCompleteDate,
+            commercialAreaCode: commercialAreaCode,
+            isMyIllsangZone: isMyIllsangZone
         )
     }
 }

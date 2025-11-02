@@ -53,6 +53,7 @@
 		603CF4F52D79A90100A2D19E /* SubmitCompleteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 603CF4F42D79A90100A2D19E /* SubmitCompleteView.swift */; };
 		603F040B2C2416D2008A2332 /* ImageNetwork.swift in Sources */ = {isa = PBXBuildFile; fileRef = 603F040A2C2416D2008A2332 /* ImageNetwork.swift */; };
 		603F04132C26ADC6008A2332 /* CommonResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 603F04122C26ADC6008A2332 /* CommonResponse.swift */; };
+		6040AA3A2EAFA34500CBDF9C /* DoublePointView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6040AA392EAFA34500CBDF9C /* DoublePointView.swift */; };
 		6044B71D2C32B6A4002C13A0 /* UIImage++.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6044B71C2C32B6A4002C13A0 /* UIImage++.swift */; };
 		6044B7332C33F754002C13A0 /* ErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6044B7322C33F754002C13A0 /* ErrorView.swift */; };
 		6044B7352C3442E6002C13A0 /* NetworkError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6044B7342C3442E6002C13A0 /* NetworkError.swift */; };
@@ -401,6 +402,7 @@
 		603CF4F42D79A90100A2D19E /* SubmitCompleteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubmitCompleteView.swift; sourceTree = "<group>"; };
 		603F040A2C2416D2008A2332 /* ImageNetwork.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageNetwork.swift; sourceTree = "<group>"; };
 		603F04122C26ADC6008A2332 /* CommonResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonResponse.swift; sourceTree = "<group>"; };
+		6040AA392EAFA34500CBDF9C /* DoublePointView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DoublePointView.swift; sourceTree = "<group>"; };
 		6044B71C2C32B6A4002C13A0 /* UIImage++.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage++.swift"; sourceTree = "<group>"; };
 		6044B7322C33F754002C13A0 /* ErrorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorView.swift; sourceTree = "<group>"; };
 		6044B7342C3442E6002C13A0 /* NetworkError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkError.swift; sourceTree = "<group>"; };
@@ -1609,6 +1611,7 @@
 				A19628742C08648C0037C53A /* NavigationTitleView.swift */,
 				6044B7322C33F754002C13A0 /* ErrorView.swift */,
 				606132772CD68FE300830948 /* TagView.swift */,
+				6040AA392EAFA34500CBDF9C /* DoublePointView.swift */,
 				609197192E59AD7200F1D81B /* ChevronCircleView.swift */,
 				604687A92D1FDA090056E394 /* CarouselAutoSlideView.swift */,
 				60FF5EC42E4949F8007A5B40 /* RegionPickerView.swift */,
@@ -2083,6 +2086,7 @@
 				606C3ED72E61ACCF0050C4D6 /* PointSummaryItem.swift in Sources */,
 				60C0F4242CCE9B2F00DB19AB /* UIDevice++.swift in Sources */,
 				60D897492E576302006A8480 /* Mission.swift in Sources */,
+				6040AA3A2EAFA34500CBDF9C /* DoublePointView.swift in Sources */,
 				A1F770642C2AABCE00DB24A0 /* MyPageViewModel.swift in Sources */,
 				606132782CD68FE300830948 /* TagView.swift in Sources */,
 				60DA1D1C2E6CC6C200AE314E /* UserTitleResponse+Mapping.swift in Sources */,

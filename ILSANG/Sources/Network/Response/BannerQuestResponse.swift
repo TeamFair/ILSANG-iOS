@@ -17,4 +17,5 @@ struct BannerQuestResponse: Decodable {
     let questType: String
     let repeatFrequency: String?
     let lastCompleteDate: String?
+    let commercialAreaCode: String?
 }

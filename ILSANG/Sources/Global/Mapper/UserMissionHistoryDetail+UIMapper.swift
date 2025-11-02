@@ -23,6 +23,7 @@ extension UserMissionHistoryDetail {
             commercialGainPoint: commercialGainPoint,
             metroGainPoint: metroGainPoint,
             contributionGainPoint: contributionGainPoint,
+            contributionDoublePointYn: contributionDoublePointYn,
             quizList: quizList
         )
     }

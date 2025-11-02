@@ -23,7 +23,8 @@ extension QuestDetailResponse: DomainConvertible {
             mainImageId: mainImageId,
             userRank: userRank,
             favoriteYn: favoriteYn,
-            lastCompleteDate: nil
+            lastCompleteDate: nil,
+            commercialAreaCode: nil
         )
     }
 }

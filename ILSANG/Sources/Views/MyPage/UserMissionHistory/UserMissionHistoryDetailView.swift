@@ -40,6 +40,7 @@ struct UserMissionHistoryDetailView: View {
                                     metroPoint: detailItem.metroGainPoint,
                                     commercialPoint: detailItem.commercialGainPoint,
                                     contributionPoint: detailItem.contributionGainPoint,
+                                    isMyIllsangZone: detailItem.contributionDoublePointYn,
                                     writer: detailItem.writerName,
                                     createdAt: detailItem.createdAt.timeAgoCreatedAt()
                                 )
@@ -51,6 +52,7 @@ struct UserMissionHistoryDetailView: View {
                                 metroPoint: detailItem.metroGainPoint,
                                 commercialPoint: detailItem.commercialGainPoint,
                                 contributionPoint: detailItem.contributionGainPoint,
+                                isMyIllsangZone: detailItem.contributionDoublePointYn,
                                 writer: detailItem.writerName,
                                 createdAt: detailItem.createdAt.timeAgoCreatedAt()
                             )
@@ -193,6 +195,7 @@ struct UserMissionHistoryInfoSectionView: View {
     let metroPoint: Int
     let commercialPoint: Int
     let contributionPoint: Int
+    let isMyIllsangZone: Bool
     let writer: String
     let createdAt: String
     
@@ -208,7 +211,7 @@ struct UserMissionHistoryInfoSectionView: View {
                     VStack(spacing: 8) {
                         reward(title: "일상지역", metroPoint)
                         reward(title: "일상존", commercialPoint)
-                        reward(title: "기여도", contributionPoint)
+                        reward(title: "기여도", contributionPoint, showDoublePoint: isMyIllsangZone)
                     }
             )
             
@@ -265,12 +268,15 @@ struct UserMissionHistoryInfoSectionView: View {
         .roundedBackground(cornerRadius: 12)
     }
 
-    private func reward(title: String, _ point: Int) -> some View {
-        HStack {
+    private func reward(title: String, _ point: Int, showDoublePoint: Bool = false) -> some View {
+        HStack(spacing: 0) {
             Text(title)
                 .styledFont(.subTitle2)
                 .foregroundColor(.gray500)
             Spacer()
+            if showDoublePoint {
+                DoublePointView(style: .text)
+            }
             Text("+\(point)P")
                 .styledFont(.title2)
                 .foregroundColor(.primaryPurple)

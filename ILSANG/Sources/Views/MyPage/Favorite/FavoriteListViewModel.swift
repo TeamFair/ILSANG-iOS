@@ -19,6 +19,7 @@ class FavoriteListViewModel: ObservableObject {
     
     private let questRepository: QuestRepositoryInterface
     private let favoriteService: FavoriteService
+    private let illsangZoneManager: IllsangZoneManager
     private let questSubmissionNotifier: QuestSubmissionNotifier
     
     private var refreshTask: Task<Void, Never>?
@@ -27,11 +28,13 @@ class FavoriteListViewModel: ObservableObject {
     init(
         questRepository: QuestRepositoryInterface,
         favoriteService: FavoriteService,
+        illsangZoneManager: IllsangZoneManager,
         selectedCommercialArea: CommercialArea,
         questSubmissionNotifier: QuestSubmissionNotifier
     ) {
         self.questRepository = questRepository
         self.favoriteService = favoriteService
+        self.illsangZoneManager = illsangZoneManager
         self.selectedArea = selectedCommercialArea
         self.questSubmissionNotifier = questSubmissionNotifier
         
@@ -126,9 +129,11 @@ class FavoriteListViewModel: ObservableObject {
     }
     
     private func getQuestList(areaCode: String, page: Int, size: Int) async -> (data: [QuestItem], total: Int) {
+        let myCommercialCode = await MainActor.run { illsangZoneManager.currentZoneCode }
+
         switch await questRepository.getFavoriteQuests(commercialAreaCode: areaCode, page: page, size: size) {
         case .success(let response):
-            return (response.content.map { $0.toQuestItem() }, response.totalElements)
+            return (response.content.map { $0.toQuestItem(myCommercialCode: myCommercialCode, questCommercialCode: areaCode) }, response.totalElements)
         case .failure:
             return ([], 0)
         }

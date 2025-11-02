@@ -47,6 +47,7 @@ struct HomeView: View {
                 rankRepository: rankRepository,
                 bannerRepository: bannerRepository,
                 favoriteService: favoriteService,
+                illsangZoneManager: illsangZoneManager,
                 questSubmissionNotifier: questSubmissionNotifier,
                 sharedState: sharedState
             )

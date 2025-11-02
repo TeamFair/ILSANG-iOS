@@ -35,6 +35,7 @@ class BannerDetailViewModel: ObservableObject {
     private let questRepository: QuestRepositoryInterface
     private let areaRepository: AreaRepositoryInterface
     private let favoriteService: FavoriteService
+    private let illsangZoneManager: IllsangZoneManager
     private let questSubmissionNotifier: QuestSubmissionNotifier
     
     private var cancellables = Set<AnyCancellable>()
@@ -45,6 +46,7 @@ class BannerDetailViewModel: ObservableObject {
         questRepository: QuestRepositoryInterface,
         areaRepository: AreaRepositoryInterface,
         favoriteService: FavoriteService,
+        illsangZoneManager: IllsangZoneManager,
         questSubmissionNotifier: QuestSubmissionNotifier
     ) {
         self.banner = banner
@@ -52,6 +54,7 @@ class BannerDetailViewModel: ObservableObject {
         self.questRepository = questRepository
         self.areaRepository = areaRepository
         self.favoriteService = favoriteService
+        self.illsangZoneManager = illsangZoneManager
         self.questSubmissionNotifier = questSubmissionNotifier
         
         self.eventFilterState = StaticFilterPickerState(initialValue: .upcoming)
@@ -197,10 +200,11 @@ class BannerDetailViewModel: ObservableObject {
             page: page,
             size: size
         )
-        
+        let myCommercialCode = await MainActor.run { illsangZoneManager.currentZoneCode }
+
         switch result {
         case .success(let response):
-            return (response.content.map { $0.toQuestItem() }, response.totalElements)
+            return (response.content.map { $0.toQuestItem(myCommercialCode: myCommercialCode, questCommercialCode: nil) }, response.totalElements)
         case .failure:
             // TODO: error 화면 변경
             return ([], 0)

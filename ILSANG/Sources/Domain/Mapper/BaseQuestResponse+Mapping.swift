@@ -23,7 +23,8 @@ extension BaseQuestResponse: DomainConvertible {
             mainImageId: mainImageId,
             userRank: nil,
             favoriteYn: favoriteYn,
-            lastCompleteDate: lastCompleteDate?.toISO8601Date()
+            lastCompleteDate: lastCompleteDate?.toISO8601Date(),
+            commercialAreaCode: commercialAreaCode,
         )
     }
 }

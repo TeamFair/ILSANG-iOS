@@ -31,6 +31,7 @@ struct BannerDetailView: View {
                 questRepository: questRepository,
                 areaRepository: areaRepository,
                 favoriteService: favoriteService,
+                illsangZoneManager: illsangZoneManager,
                 questSubmissionNotifier: questSubmissionNotifier
             )
         )
