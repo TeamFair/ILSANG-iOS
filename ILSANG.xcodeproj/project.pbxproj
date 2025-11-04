@@ -43,7 +43,7 @@
 		602988222D041DDC00903806 /* RepeatType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 602988212D041DDC00903806 /* RepeatType.swift */; };
 		60299E312CBFFF160039663F /* TransferableUIImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60299E302CBFFF160039663F /* TransferableUIImage.swift */; };
 		60299E392CC13DEC0039663F /* ImageCacheService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60299E382CC13DEC0039663F /* ImageCacheService.swift */; };
-		602A541B2EBA02D50094A33E /* AppLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 602A541A2EBA02C60094A33E /* AppLayout.swift */; };
+		602A541B2EBA02D50094A33E /* LayoutInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 602A541A2EBA02C60094A33E /* LayoutInfo.swift */; };
 		602A541D2EBA0FDD0094A33E /* HonorGrade.swift in Sources */ = {isa = PBXBuildFile; fileRef = 602A541C2EBA0FDD0094A33E /* HonorGrade.swift */; };
 		603CF4CB2D7057BF00A2D19E /* ImageChallengeSubmitService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 603CF4CA2D7057BF00A2D19E /* ImageChallengeSubmitService.swift */; };
 		603CF4E32D732DA100A2D19E /* ApprovalItemContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 603CF4E22D732DA100A2D19E /* ApprovalItemContentView.swift */; };
@@ -391,7 +391,7 @@
 		602988212D041DDC00903806 /* RepeatType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepeatType.swift; sourceTree = "<group>"; };
 		60299E302CBFFF160039663F /* TransferableUIImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferableUIImage.swift; sourceTree = "<group>"; };
 		60299E382CC13DEC0039663F /* ImageCacheService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCacheService.swift; sourceTree = "<group>"; };
-		602A541A2EBA02C60094A33E /* AppLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppLayout.swift; sourceTree = "<group>"; };
+		602A541A2EBA02C60094A33E /* LayoutInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LayoutInfo.swift; sourceTree = "<group>"; };
 		602A541C2EBA0FDD0094A33E /* HonorGrade.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HonorGrade.swift; sourceTree = "<group>"; };
 		603CF4CA2D7057BF00A2D19E /* ImageChallengeSubmitService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageChallengeSubmitService.swift; sourceTree = "<group>"; };
 		603CF4E22D732DA100A2D19E /* ApprovalItemContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApprovalItemContentView.swift; sourceTree = "<group>"; };
@@ -1586,7 +1586,7 @@
 		A19628732C08647F0037C53A /* View */ = {
 			isa = PBXGroup;
 			children = (
-				602A541A2EBA02C60094A33E /* AppLayout.swift */,
+				602A541A2EBA02C60094A33E /* LayoutInfo.swift */,
 				606694F12DDA2B030000E368 /* HonorPopup */,
 				60FF5EC82E4BA59E007A5B40 /* SeasonPopupContainerView.swift */,
 				60FF5ED22E4CDC57007A5B40 /* SeasonOpenPopup.swift */,
@@ -1983,7 +1983,7 @@
 				609197752E5F8FF900F1D81B /* UserMissionHistory+UIMapper.swift in Sources */,
 				60246FA82D91E57E007C05B3 /* AnalyticsService.swift in Sources */,
 				60B392E02EABEC94005C4A88 /* UserMissionHistoryDetailResponse.swift in Sources */,
-				602A541B2EBA02D50094A33E /* AppLayout.swift in Sources */,
+				602A541B2EBA02D50094A33E /* LayoutInfo.swift in Sources */,
 				609197362E5C25F400F1D81B /* UserRank.swift in Sources */,
 				A1868C442C09B6C50020BF16 /* UserMissionHistoryDetailView.swift in Sources */,
 				6044B71D2C32B6A4002C13A0 /* UIImage++.swift in Sources */,

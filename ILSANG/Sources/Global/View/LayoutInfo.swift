@@ -1,5 +1,5 @@
 //
-//  AppLaayout.swift
+//  LayoutInfo.swift
 //  ILSANG
 //
 //  Created by Lee Jinhee on 11/4/25.
