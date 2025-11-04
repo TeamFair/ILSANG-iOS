@@ -64,7 +64,6 @@ struct ApprovalItemView: View, Equatable {
         .padding(padding)
         .background(Color.white)
         .cornerRadius(12)
-        
     }
     
     private func emojiButton(

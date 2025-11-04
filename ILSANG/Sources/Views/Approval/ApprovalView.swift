@@ -11,6 +11,7 @@ struct ApprovalView: View {
     @StateObject var vm: ApprovalViewModel
     @StateObject var userRouter: UserRouter
     @EnvironmentObject var dependencies: AppDependencies
+    @Environment(\.layout) var layout
     
     init(
         approvalSource: ApprovalSource,
@@ -65,9 +66,9 @@ struct ApprovalView: View {
                 ForEach(Array(vm.itemList.enumerated()), id: \.element.id) { idx, item in
                     ApprovalItemView(
                         item: item,
-                        width: .screenWidth - 40,
-                        height: ((.screenWidth-40) / 5) * 4,
-                        padding: 20,
+                        width: .screenWidth - layout.horizontalPadding * 2,
+                        height: ((.screenWidth-layout.horizontalPadding * 2) / 5) * 4,
+                        padding: layout.horizontalPadding,
                         onAction: { action in
                             switch action {
                             case .like:
@@ -91,7 +92,7 @@ struct ApprovalView: View {
                 }
             }
             .padding(.top, vm.approvalSource == .tab ? 47 : 0)
-            .padding(.bottom, 72)
+            .padding(.bottom, layout.bottomSpacing)
         }
         .refreshable {
             await vm.loadInitialData()
@@ -121,7 +122,7 @@ struct ApprovalView: View {
                 .foregroundStyle(.gray500)
                 .frame(height: 35)
         }
-        .padding(20)
+        .padding(layout.horizontalPadding)
     }
     
     @ViewBuilder

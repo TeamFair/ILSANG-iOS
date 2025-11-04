@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct SettingToggleItemView<Content: View>: View {
+    @Environment(\.layout) var layout
     let title: String
     var subtitle: String? = nil
     let isExpanded: Bool
@@ -35,7 +36,7 @@ struct SettingToggleItemView<Content: View>: View {
                 }
             }
             .frame(height: subtitle == nil ? 52 : 72)
-            .padding(.horizontal, 20)
+            .padding(.horizontal, layout.horizontalPadding)
             .background(Color.white)
             
             if isExpanded {

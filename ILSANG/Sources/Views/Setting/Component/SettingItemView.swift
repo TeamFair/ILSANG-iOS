@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct SettingItemView: View {
+    @Environment(\.layout) var layout
     let item: Setting
     let action: (() -> ())?
     
@@ -37,7 +38,7 @@ struct SettingItemView: View {
                     .monospacedDigit()
             }
         }
-        .padding(.horizontal, 20)
+        .padding(.horizontal, layout.horizontalPadding)
         .frame(height: 36) // 터치영역 좁혀주기 위함
         .frame(maxWidth: .infinity)
         .background()

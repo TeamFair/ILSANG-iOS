@@ -8,8 +8,8 @@
 import SwiftUI
 
 struct DeleteAccountView: View {
+    @Environment(\.layout) var layout
     @Environment(\.dismiss) var dismiss
-
     @State private var isChecked = false
     @State private var delAlert = false
     @State private var showErrorAlert = false
@@ -88,7 +88,8 @@ struct DeleteAccountView: View {
                             .background(isChecked ? Color.accentColor : Color.gray300)
                             .cornerRadius(12)
                     }
-                    .padding(.horizontal, 20).padding(.bottom, 42)
+                    .padding(.horizontal, layout.horizontalPadding)
+                    .padding(.bottom, 42)
                     .disabled(!isChecked)
                     .alert(Text("회원탈퇴에 실패했습니다"), isPresented: $showErrorAlert) {
                         Button("확인") {

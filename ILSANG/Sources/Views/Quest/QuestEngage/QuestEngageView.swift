@@ -14,6 +14,7 @@ struct QuestEngageView: View {
     
     @EnvironmentObject var sharedState: SharedState
     @Environment(\.dismiss) var dismiss
+    @Environment(\.layout) var layout
     
     init(
         quest: QuestItem,
@@ -60,10 +61,10 @@ struct QuestEngageView: View {
                     }
                 }
                 .padding(.top, 30)
-                .padding(.bottom ,72)
+                .padding(.bottom, layout.bottomSpacing)
             }
             .padding(.top, 8)
-            .padding(.horizontal, 20)
+            .padding(.horizontal, layout.horizontalPadding)
             .scrollIndicators(.never)
             .scrollDismissesKeyboard(.immediately)
             .onTapGesture {
@@ -79,10 +80,9 @@ struct QuestEngageView: View {
                             submitVM.submit(userAnswer: vm.selectedAnswer, quizId: vm.quiz?.quizId)
                         }
                     }
-                    .padding(.top, 15)
-                    .padding(.horizontal, 20)
+                    .padding(.bottom, layout.buttonBottomPadding)
+                    .padding(.horizontal, layout.horizontalPadding)
                     .frame(alignment: .top)
-                    .background(Color.background)
                     .opacity(vm.isKeyboardVisible ? 0 : 1)
             }
         }

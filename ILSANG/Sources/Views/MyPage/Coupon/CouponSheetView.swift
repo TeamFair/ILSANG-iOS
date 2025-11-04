@@ -10,6 +10,7 @@ import SwiftUI
 
 struct CouponSheetView: View {
     @ObservedObject var viewModel: CouponListViewModel
+    @Environment(\.layout) var layout
     let item: UserCouponItem
     
     var body: some View {
@@ -108,6 +109,6 @@ struct CouponSheetView: View {
             }
             .padding(.bottom, 8)
         }
-        .padding(.horizontal, 20)
+        .padding(.horizontal, layout.horizontalPadding)
     }
 }

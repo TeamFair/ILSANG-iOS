@@ -14,6 +14,7 @@ struct BannerDetailView: View {
     @StateObject var userRouter: UserRouter
     @EnvironmentObject var dependencies: AppDependencies
     @Environment(\.dismiss) var dismiss
+    @Environment(\.layout) var layout
     
     init(
         banner: BannerItem,
@@ -95,7 +96,7 @@ struct BannerDetailView: View {
                     .foregroundColor(.gray500)
                     .padding(.bottom, 16)
             }
-            .padding(.horizontal, 20)
+            .padding(.horizontal, layout.horizontalPadding)
         }
     }
     
@@ -118,7 +119,7 @@ struct BannerDetailView: View {
                         filterPickerEventView
                             .zIndex(10)
                     }
-                    .padding(.horizontal, 20)
+                    .padding(.horizontal, layout.horizontalPadding)
                     .padding(.vertical, 24)
                 
                 switch viewModel.viewStatus {
@@ -142,7 +143,7 @@ struct BannerDetailView: View {
                     height: 44,
                     hasBottomLine: true
                 )
-                .padding(.horizontal, -20)
+                .padding(.horizontal, -layout.horizontalPadding)
                 .background(Color.background)
             }
         }
@@ -186,7 +187,7 @@ struct BannerDetailView: View {
             }
         }
         .zIndex(-1)
-        .padding(.bottom, 72)
+        .padding(.bottom, layout.bottomSpacing)
     }
     
     private var filterPickerEventView: some View {

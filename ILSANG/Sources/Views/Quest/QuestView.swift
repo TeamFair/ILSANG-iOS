@@ -14,7 +14,8 @@ struct QuestView: View {
     @StateObject var userRouter: UserRouter
     @EnvironmentObject var dependencies: AppDependencies
     @EnvironmentObject var sharedState: SharedState
-
+    @Environment(\.layout) var layout
+    
     init(
         questRepository: QuestRepositoryInterface,
         favoriteService: FavoriteService,
@@ -84,7 +85,7 @@ extension QuestView {
             Spacer()
         }
         .frame(height: 50)
-        .padding(.horizontal, 20)
+        .padding(.horizontal, layout.horizontalPadding)
     }
     
     private var questListView: some View {
@@ -196,11 +197,11 @@ extension QuestView {
                 }
                 .frame(maxWidth: .infinity, alignment: .trailing)
             }
-            .padding(.horizontal, 20)
+            .padding(.horizontal, layout.horizontalPadding)
             .padding(.top, 2)
             .padding(.bottom, 12)
         }
-        .padding(.bottom, 72)
+        .padding(.bottom, layout.bottomSpacing)
     }
     
     private var filterPickerDefaultView: some View {

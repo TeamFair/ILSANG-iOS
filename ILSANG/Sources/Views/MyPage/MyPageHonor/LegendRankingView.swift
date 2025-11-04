@@ -9,6 +9,7 @@ import SwiftUI
 
 struct LegendRankingView: View {
     @StateObject var vm: LegendRankingViewModel
+    @Environment(\.layout) var layout
     @Environment(\.dismiss) var dismiss
     private let leadingTrailingColumnWidth: CGFloat = 50
     
@@ -43,7 +44,7 @@ struct LegendRankingView: View {
                         }
                     }
                     .padding(.top, 16)
-                    .padding(.bottom, 72)
+                    .padding(.bottom, layout.bottomSpacing)
                 }
             }
         }

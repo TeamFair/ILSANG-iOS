@@ -12,6 +12,7 @@ struct RankingView: View {
     @StateObject var userRouter: UserRouter
     @EnvironmentObject var dependencies: AppDependencies
     @EnvironmentObject var sharedState: SharedState
+    @Environment(\.layout) var layout
     
     @State private var isRefreshing = false
    
@@ -76,8 +77,8 @@ struct RankingView: View {
             if let currentSeason = vm.seasonManager.currentSeason,
             let targetDate = currentSeason.endDate.toISO8601Date() {
                 SeasonTimerView(season: currentSeason.seasonNumber, targetDate: targetDate)
-                    .padding(.horizontal, 20)
-                    .padding(.bottom, 20)
+                    .padding(.horizontal, layout.horizontalPadding)
+                    .padding(.bottom, layout.horizontalPadding)
             }
         }
         .overlay {
@@ -111,7 +112,7 @@ extension RankingView {
             .foregroundColor(.gray500)
             .frame(maxWidth: .infinity, alignment: .leading)
             .frame(height: 50)
-            .padding(.horizontal, 20)
+            .padding(.horizontal, layout.horizontalPadding)
             .background(Color.white)
     }
     
@@ -138,7 +139,7 @@ extension RankingView {
                 }
                 .foregroundStyle(.gray500)
                 .frame(height: 44)
-                .padding(.horizontal, 20)
+                .padding(.horizontal, layout.horizontalPadding)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             .background(Color.white)
@@ -163,7 +164,7 @@ extension RankingView {
                             }
                         }
                     }
-                    .padding(.horizontal, 20)
+                    .padding(.horizontal, layout.horizontalPadding)
                 }
                 .frame(maxHeight: 170)
                 .fixedSize(horizontal: false, vertical: true) // 콘텐츠 크기만큼 늘어나도록
@@ -218,7 +219,7 @@ extension RankingView {
         .padding(20)
         .background(.primaryPurple)
         .cornerRadius(12)
-        .padding(.horizontal)
+        .padding(.horizontal, layout.horizontalPadding)
         .padding(.bottom, 24)
         .background(.white)
     }

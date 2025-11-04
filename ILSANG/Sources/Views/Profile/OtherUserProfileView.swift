@@ -10,6 +10,7 @@ import SwiftUI
 struct OtherUserProfileView: View {
     @StateObject var vm: OtherUserProfileViewModel
     @EnvironmentObject var dependencies: AppDependencies
+    @Environment(\.layout) var layout
     @Environment(\.dismiss) var dismiss
     
     init(
@@ -103,7 +104,7 @@ struct OtherUserProfileView: View {
         }
         .padding(16)
         .roundedBackground(cornerRadius: 12)
-        .padding(.horizontal, 20)
+        .padding(.horizontal, layout.horizontalPadding)
     }
     
     @ViewBuilder
@@ -123,7 +124,7 @@ struct OtherUserProfileView: View {
                             contributions: contributionsWithPercents,
                             showPrimaryButton: false
                         )
-                        .padding(.horizontal, 20)
+                        .padding(.horizontal, layout.horizontalPadding)
                     }
             )
         }
@@ -144,7 +145,7 @@ struct OtherUserProfileView: View {
                     selectedSeason: $vm.selectedSeasonNumber,
                     filterState: $vm.seasonFilterState
                 )
-                .padding(.horizontal, 20)
+                .padding(.horizontal, layout.horizontalPadding)
         )
     }
     
@@ -167,7 +168,7 @@ struct OtherUserProfileView: View {
                     
                     OtherUserChallengeList(vm: vm)
                 }
-                .padding(.horizontal, 20)
+                .padding(.horizontal, layout.horizontalPadding)
         )
     }
 }

@@ -11,6 +11,7 @@ struct MyPageHonorManageView: View {
     @StateObject var vm: MyPageHonorManageViewModel
     @EnvironmentObject var dependencies: AppDependencies
     @Environment(\.scenePhase) var scenePhase
+    @Environment(\.layout) var layout
     @Environment(\.dismiss) var dismiss
     private let leadingTrailingColumnWidth: CGFloat = 50
     
@@ -36,7 +37,7 @@ struct MyPageHonorManageView: View {
                     honorGradeTabSection
                     honorListSection
                 }
-                .padding(.horizontal, 20)
+                .padding(.horizontal, layout.horizontalPadding)
             }
         }
         .frame(maxWidth: .infinity)

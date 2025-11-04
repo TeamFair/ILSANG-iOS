@@ -15,17 +15,28 @@ struct HomeView: View {
     @EnvironmentObject var dependencies: AppDependencies
     @EnvironmentObject var sharedState: SharedState
     @Environment(\.redactionReasons) var redactionReasons
-    
+    @Environment(\.layout) var layout
+
     private let gridItem = [GridItem(), GridItem()]
     
+    private var layoutConstants: LayoutConstants {
+        LayoutConstants(layout: layout)
+    }
+    
     private struct LayoutConstants {
-        static let sectionSpacing: CGFloat = 36
-        static let vStackSpacing: CGFloat = 26
-        static let lazyHGridSpacing: CGFloat = 9
-        static let horizontalPadding: CGFloat = 20
-        static let tabViewHeight: CGFloat = 450
-        static let paginationSpacing: CGFloat = 4
-        static let circleSize: CGFloat = 10
+        let sectionSpacing: CGFloat = 36
+        let vStackSpacing: CGFloat = 26
+        let lazyHGridSpacing: CGFloat = 9
+        let horizontalPadding: CGFloat
+        let hStackSpacing: CGFloat = 12
+        let tabViewHeight: CGFloat = 450
+        let paginationSpacing: CGFloat = 4
+        let circleSize: CGFloat = 10
+        
+        init(layout: LayoutInfo) {
+            dump(layout)
+            self.horizontalPadding = layout.horizontalPadding
+        }
     }
     
     init(
@@ -126,14 +137,14 @@ struct HomeView: View {
                     .clipShape(Circle())
             }
         }
-        .padding(.horizontal, LayoutConstants.horizontalPadding)
+        .padding(.horizontal, layoutConstants.horizontalPadding)
     }
     
     private var content: some View {
         VStack(spacing: 0) {
             regionAndZoneSelectionView
             
-            LazyVStack(spacing: LayoutConstants.sectionSpacing) {
+            LazyVStack(spacing: layoutConstants.sectionSpacing) {
                 if vm.showMainBanners {
                     mainBannerSection
                 }
@@ -188,7 +199,7 @@ struct HomeView: View {
             }
         }
         .padding(.vertical, 16)
-        .padding(.horizontal, LayoutConstants.horizontalPadding)
+        .padding(.horizontal, layoutConstants.horizontalPadding)
     }
     
     private var mainBannerSection: some View {
@@ -253,11 +264,11 @@ struct HomeView: View {
     }
     
     private var singlePageContent: some View {
-        LazyHGrid(rows: gridItem, alignment: .top, spacing: LayoutConstants.lazyHGridSpacing) {
+        LazyHGrid(rows: gridItem, alignment: .top, spacing: layoutConstants.lazyHGridSpacing) {
             ForEach(vm.popularQuestList[0..<vm.popularChunkSize]) { quest in
                 PopularQuestItemView(
                     quest: quest,
-                    imageSize: CGSize(width: (UIScreen.main.bounds.width - 40 - 2) / 2, height: 137)
+                    imageSize: CGSize(width: (UIScreen.main.bounds.width - layoutConstants.horizontalPadding*2 - 2) / 2, height: 137)
                 ) {
                     AnalyticsService.logEvent(.homePopularQuestClick(questId: quest.id))
                     questRouter.presentQuestDetail(quest: quest) { quest in
@@ -266,18 +277,18 @@ struct HomeView: View {
                 }
             }
         }
-        .padding(.horizontal, LayoutConstants.horizontalPadding)
+        .padding(.horizontal, layoutConstants.horizontalPadding)
     }
     
     private var multiPageContent: some View {
-        VStack(spacing: LayoutConstants.vStackSpacing) {
+        VStack(spacing: layoutConstants.vStackSpacing) {
             TabView(selection: $vm.selectedPopularTabIndex) {
                 ForEach(vm.paginatedPopularQuests.indices, id: \.self) { pageIndex in
-                    LazyHGrid(rows: gridItem, alignment: .top, spacing: LayoutConstants.lazyHGridSpacing) {
+                    LazyHGrid(rows: gridItem, alignment: .top, spacing: layoutConstants.lazyHGridSpacing) {
                         ForEach(vm.paginatedPopularQuests[pageIndex]) { quest in
                             PopularQuestItemView(
                                 quest: quest,
-                                imageSize: CGSize(width: (UIScreen.main.bounds.width - 40 - 2) / 2, height: 137)
+                                imageSize: CGSize(width: (UIScreen.main.bounds.width - layoutConstants.horizontalPadding*2 - 2) / 2, height: 137)
                             ) {
                                 AnalyticsService.logEvent(.homePopularQuestClick(questId: quest.id))
                                 questRouter.presentQuestDetail(quest: quest) { quest in
@@ -286,11 +297,11 @@ struct HomeView: View {
                             }
                         }
                     }
-                    .padding(.horizontal, LayoutConstants.horizontalPadding)
+                    .padding(.horizontal, layoutConstants.horizontalPadding)
                     .tag(pageIndex)
                 }
             }
-            .frame(height: LayoutConstants.tabViewHeight)
+            .frame(height: layoutConstants.tabViewHeight)
             .tabViewStyle(.page(indexDisplayMode: .never))
             
             paginationIndicator
@@ -298,12 +309,12 @@ struct HomeView: View {
     }
     
     private var paginationIndicator: some View {
-        HStack(spacing: LayoutConstants.paginationSpacing) {
+        HStack(spacing: layoutConstants.paginationSpacing) {
             let pageCount = Int(vm.popularQuestList.count / vm.popularChunkSize)
             if pageCount >= 2 {
                 ForEach(0..<pageCount, id: \.self) { index in
                     Circle()
-                        .frame(width: LayoutConstants.circleSize, height: LayoutConstants.circleSize)
+                        .frame(width: layoutConstants.circleSize, height: layoutConstants.circleSize)
                         .foregroundStyle(index == vm.selectedPopularTabIndex ? Color.gray500 : Color.gray100)
                         .animation(.default, value: index)
                 }
@@ -316,7 +327,7 @@ struct HomeView: View {
             title: vm.recommendQuestTitle,
             content:
                 ScrollView(.horizontal) {
-                    HStack(spacing: 12) {
+                    HStack(spacing: layoutConstants.hStackSpacing) {
                         ForEach(vm.recommendQuestList, id: \.id) { quest in
                             RecommendQuestItemView(quest: quest) {
                                 AnalyticsService.logEvent(.homeRecommendQuestClick(questId: quest.id))
@@ -326,7 +337,7 @@ struct HomeView: View {
                             }
                         }
                     }
-                    .padding(.horizontal, LayoutConstants.horizontalPadding)
+                    .padding(.horizontal, layoutConstants.horizontalPadding)
                 }
                 .scrollIndicators(.hidden)
         )
@@ -376,7 +387,7 @@ struct HomeView: View {
                             }
                         }
                     }
-                    .padding(.horizontal, LayoutConstants.horizontalPadding)
+                    .padding(.horizontal, layoutConstants.horizontalPadding)
                 }
                 .scrollIndicators(.never)
         )
