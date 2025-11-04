@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ProfileEditView: View {
     @StateObject private var viewModel: ProfileEditViewModel
-    
+    @Environment(\.layout) var layout
     @Environment(\.dismiss) var dismiss
     
     private let profileImageSize: CGFloat = 80
@@ -30,7 +30,7 @@ struct ProfileEditView: View {
                     }
                 }
                 .padding(.bottom, 8)
-                .padding(.horizontal, -20)
+                .padding(.horizontal, -layout.horizontalPadding)
                 
                 profileImageSection
                 nicknameInputSection
@@ -38,7 +38,7 @@ struct ProfileEditView: View {
                 updateButton
             }
             .navigationBarBackButtonHidden()
-            .padding(.horizontal, 20)
+            .padding(.horizontal, layout.horizontalPadding)
             .padding(.bottom, 8)
             
             if viewModel.showAlert {

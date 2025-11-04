@@ -8,8 +8,9 @@
 import SwiftUI
 
 struct RankingRewardView: View {
-    @Environment(\.dismiss) var dismiss
     @StateObject private var viewModel: RankingRewardViewModel
+    @Environment(\.layout) var layout
+    @Environment(\.dismiss) var dismiss
     
     init(
         titleRepository: TitleRepositoryInterface,
@@ -70,8 +71,8 @@ struct RankingRewardView: View {
                 }
             }
             .padding(.top, 12)
-            .padding(.bottom, 72)
-            .padding(.horizontal, 20)
+            .padding(.bottom, layout.bottomSpacing)
+            .padding(.horizontal, layout.horizontalPadding)
         }
     }
     

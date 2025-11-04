@@ -13,6 +13,7 @@ struct FavoriteListView: View {
     @StateObject var userRouter: UserRouter
     @EnvironmentObject var sharedState: SharedState
     @EnvironmentObject var dependencies: AppDependencies
+    @Environment(\.layout) var layout
     @Environment(\.dismiss) var dismiss
     
     init(
@@ -91,7 +92,7 @@ extension FavoriteListView {
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(.top, 14)
-        .padding(.leading, 20)
+        .padding(.leading, layout.horizontalPadding)
     }
     
     @ViewBuilder
@@ -123,8 +124,8 @@ extension FavoriteListView {
                             .task { await viewModel.loadMoreData() }
                     }
                 }
-                .padding(.top, 20)
-                .padding(.bottom, 72)
+                .padding(.top, layout.horizontalPadding)
+                .padding(.bottom, layout.bottomSpacing)
             }
         }
     }

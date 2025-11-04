@@ -53,19 +53,26 @@ struct ILSANGApp: App {
     
     var body: some Scene {
         WindowGroup {
-            ZStack {
-                if isSplashScreenVisible {
-                    SplashScreenView()
-                } else if !isLogin {
-                    LoginView(vm: LoginViewModel())
-                } else {
-                    MainTabView()
-                        .environmentObject(dependencies)
-                        .environmentObject(sharedState)
-                        .fullScreenCover(isPresented: $isTutorialVisible) {
-                            TutorialView()
-                        }
+            GeometryReader { proxy in
+                let size = proxy.size
+                let layout = LayoutInfo.forSize(size)
+
+                ZStack {
+                    if isSplashScreenVisible {
+                        SplashScreenView()
+                    } else if !isLogin {
+                        LoginView(vm: LoginViewModel())
+                    } else {
+                        MainTabView()
+                            .environmentObject(dependencies)
+                            .environmentObject(sharedState)
+                            .fullScreenCover(isPresented: $isTutorialVisible) {
+                                TutorialView()
+                            }
+                    }
                 }
+                .ignoresSafeArea()
+                .environment(\.layout, layout) // 레이아웃 환경 주입
             }
 #if !RELEASE
             .overlay(alignment: .topLeading) {
@@ -108,6 +115,7 @@ struct ILSANGApp: App {
     private var loginInfoView: some View {
         ScrollView {
             VStack(spacing: 20) {
+                showItems("Provider", UserService.shared.currentUser?.email ?? "")
                 showItems("Provider", UserService.shared.authChannel)
                 showItems("AuthToken", UserService.shared.accessToken)
                 showItems("RefreshToken", UserService.shared.refreshToken)

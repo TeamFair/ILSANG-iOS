@@ -158,6 +158,7 @@ struct SubmittedImageView: View {
 }
 
 struct UserMissionHistoryInfoView: View {
+    @Environment(\.layout) var layout
     let missionHistory : UserMissionHistoryDetailItem
     
     var body: some View {
@@ -182,12 +183,15 @@ struct UserMissionHistoryInfoView: View {
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(20)
+        .padding(.vertical, 20)
+        .padding(.horizontal, layout.horizontalPadding)
         .background(.white)
     }
 }
 
 struct UserMissionHistoryInfoSectionView: View {
+    @Environment(\.layout) var layout
+    
     var quizType: QuizType? = nil
     var question: String? = nil
     var answer: String? = nil
@@ -231,8 +235,9 @@ struct UserMissionHistoryInfoSectionView: View {
                     .foregroundColor(.black)
             )
         }
-        .padding(20)
-        .padding(.bottom, 72)
+        .padding(.top, 20)
+        .padding(.horizontal,layout.horizontalPadding)
+        .padding(.bottom, layout.bottomSpacing)
         .background(Color.background)
     }
     

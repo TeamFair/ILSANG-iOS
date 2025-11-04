@@ -9,6 +9,7 @@ import SwiftUI
 
 struct OtherUserChallengeList: View {
     @ObservedObject var vm: OtherUserProfileViewModel
+    @Environment(\.layout) var layout
     
     var body: some View {
         switch vm.missionHistoryViewStatus {
@@ -42,11 +43,10 @@ struct OtherUserChallengeList: View {
                             }
                     }
                 }
-                .padding(.bottom, 72)
+                .padding(.bottom, layout.bottomSpacing)
                 .frame(minHeight: 300, alignment: .top)
             }
         }
-        
     }
 }
 

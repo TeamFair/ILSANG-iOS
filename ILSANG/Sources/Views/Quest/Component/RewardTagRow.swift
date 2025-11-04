@@ -10,9 +10,10 @@ import SwiftUI
 struct RewardTagRow: View {
     let rewards: [Reward]
     let isMyIllsangZone: Bool
+    private let isSmallDevice: Bool = CGFloat.isSmallDevice
     
     var body: some View {
-        HStack(spacing: 4) {
+        HStack(spacing: isSmallDevice ? 3 : 4) {
             ForEach(Array(PointType.sorted), id: \.rawValue) { type in
                 if let reward = rewards.first(where: { $0.pointType == type }) {
                     if reward.pointType == .contribution && isMyIllsangZone {

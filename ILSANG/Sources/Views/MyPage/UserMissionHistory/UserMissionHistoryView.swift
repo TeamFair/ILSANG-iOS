@@ -10,6 +10,7 @@ import SwiftUI
 struct UserMissionHistoryView: View {
     @StateObject var vm: UserMissionHistoryViewModel
     @EnvironmentObject var sharedState: SharedState
+    @Environment(\.layout) var layout
     @Environment(\.dismiss) var dismiss
     
     var body: some View {
@@ -53,7 +54,7 @@ struct UserMissionHistoryView: View {
                         .foregroundColor(.gray400)
                         .frame(height: 40)
                         .frame(maxWidth: .infinity, alignment: .leading)
-                        .padding(.leading, 20)
+                        .padding(.leading, layout.horizontalPadding)
                     
                     if vm.currentMissionHistories.isEmpty {
                         ErrorView(
@@ -68,16 +69,16 @@ struct UserMissionHistoryView: View {
                     } else {
                         UserMissionHistoryList(vm: vm)
                             .padding(.top, 24)
-                            .padding(.horizontal, 20)
+                            .padding(.horizontal, layout.horizontalPadding)
                     }
                 }
                 .overlay(alignment: .topTrailing) {
                     PickerView(state: vm.filterState, width: 150)
-                        .padding(.trailing, 20)
+                        .padding(.trailing, layout.horizontalPadding)
                 }
                 .zIndex(1)
                 .padding(.top, 20)
-                .padding(.bottom, 72)
+                .padding(.bottom, layout.bottomSpacing)
             }
             .scrollDisabled(vm.currentMissionHistories.isEmpty)
         }

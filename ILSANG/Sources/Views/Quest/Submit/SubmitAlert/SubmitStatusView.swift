@@ -47,10 +47,7 @@ struct SubmitStatusView: View {
         }
         .padding(.top, status == .inProgress ? 90 : 30)
         .frame(width: 260, height: 240)
-        .background(
-            RoundedRectangle(cornerRadius: 16)
-                .foregroundStyle(.white)
-        )
+        .roundedBackground(cornerRadius: 16)
     }
 }
 

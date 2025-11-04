@@ -9,14 +9,15 @@ import SwiftUI
 
 struct QuestDetailView: View {
     @StateObject var vm: QuestDetailViewModel
+    @Environment(\.layout) var layout
+
     let showQuestExImageAction: () -> Void
     let questApproveAction: () -> Void
     
     private let imageSpacing: CGFloat = 8
-    private let horizontalPadding: CGFloat = 20
     
     private var contentWidth: CGFloat {
-        (.screenWidth - (horizontalPadding * 2) - (imageSpacing * 2)) / 3
+        (.screenWidth - (layout.horizontalPadding * 2) - (imageSpacing * 2)) / 3
     }
     
     init(
@@ -114,9 +115,9 @@ struct QuestDetailView: View {
             ) {
                 questApproveAction()
             }
-            .padding(.bottom, 4)
+            .padding(.bottom, layout.buttonBottomPadding)
         }
-        .padding(.horizontal, 20)
+        .padding(.horizontal, layout.horizontalPadding)
         .background(Color.white)
         .overlay {
             if let coupon = vm.quest.coupon, vm.showCouponRewardView {
@@ -126,7 +127,7 @@ struct QuestDetailView: View {
                         vm.showCouponRewardView = false
                     }
                 )
-                .padding(20)
+                .padding(layout.horizontalPadding)
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .ignoresSafeArea()
                 .background(Color.black.opacity(0.3))
