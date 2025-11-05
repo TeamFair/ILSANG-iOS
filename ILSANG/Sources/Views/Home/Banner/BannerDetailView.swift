@@ -151,9 +151,9 @@ struct BannerDetailView: View {
     
     private var questListView: some View {
         LazyVStack(alignment: .leading, spacing: 12) {
-            switch viewModel.selectedHeader {
-            case .uncomplete:
-                ForEach(viewModel.filteredQuestList, id: \.id) { quest in
+            ForEach(Array(viewModel.filteredQuestList.enumerated()), id: \.1.id) { index, quest in
+                switch viewModel.selectedHeader {
+                case .uncomplete:
                     UncompletedBannerQuestItemView(quest: quest) { [weak viewModel, weak questRouter] in
                         guard let viewModel = viewModel, let questRouter = questRouter else { return }
                         AnalyticsService.logEvent(.questItemClick(questId: quest.id, questType: quest.questType?.rawValue.uppercased() ?? ""))
@@ -161,29 +161,20 @@ struct BannerDetailView: View {
                         questRouter.presentQuestDetail(quest: quest) { [weak viewModel] quest in
                             viewModel?.toggleFavoriteStatus(quest: quest)
                         }
-                        
                     }
-                }
-                if viewModel.uncompletedPaginationManager.canLoadMoreData() {
-                    ProgressView()
-                        .onAppear {
-                            Task { [viewModel] in
-                                await viewModel.uncompletedPaginationManager.loadData(isRefreshing: false)
-                            }
-                        }
-                }
-            case .complete:
-                ForEach(viewModel.filteredQuestList, id: \.id) { quest in
+                    .task {
+                        await viewModel.loadMoreDataIfNeeded(index: index)
+                    }
+                case .complete:
                     CompletedQuestItemView(quest: quest)
-                }
-                if viewModel.completedPaginationManager.canLoadMoreData() {
-                    ProgressView()
-                        .onAppear {
-                            Task { [viewModel] in
-                                await viewModel.completedPaginationManager.loadData(isRefreshing: false)
-                            }
+                        .task {
+                            await viewModel.loadMoreDataIfNeeded(index: index)
                         }
                 }
+            }
+            if viewModel.hasMorePage {
+                ProgressView()
+                    .padding(.top, 12)
             }
         }
         .zIndex(-1)

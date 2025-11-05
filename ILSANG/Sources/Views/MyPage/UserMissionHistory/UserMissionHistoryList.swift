@@ -12,20 +12,18 @@ struct UserMissionHistoryList: View {
     
     var body: some View {
         LazyVStack(spacing: 9) {
-            ForEach(vm.currentMissionHistories, id: \.missionHistoryId) { missionHistory in
+            ForEach(Array(vm.currentMissionHistories.enumerated()), id: \.1.missionHistoryId) { index, missionHistory in
                 NavigationLink(
                     destination: UserMissionHistoryDetailView(vm: vm, missionHistory: missionHistory)
                 ) {
                     UserMissionHistoryItemView(missionHistory: missionHistory)
+                        .task { await vm.loadMoreDataIfNeeded(index: index ) }
                 }
             }
             
             if vm.hasMorePage {
                 ProgressView()
                     .padding(.top, 12)
-                    .task {
-                        await vm.paginationManager(for: vm.selectedMissionType).loadData(isRefreshing: false)
-                    }
             }
         }
     }

@@ -133,46 +133,11 @@ extension QuestView {
     
     private var questListContent: some View {
         LazyVStack(spacing: 12) {
-            switch vm.selectedHeader {
-            case .default: // 미완료 퀘스트
-                ForEach(vm.currentQuests, id: \.id) { quest in
-                    DefaultQuestItemView(
-                        quest: quest,
-                        action: {
-                            AnalyticsService.logEvent(.questItemClick(questId: quest.id, questType: quest.questType?.rawValue.uppercased() ?? ""))
-                            questRouter.presentQuestDetail(quest: quest) { quest in
-                                vm.toggleFavoriteStatus(quest: quest)
-                            }
-                        },
-                        favoriteAction: { vm.toggleFavoriteStatus(quest: quest) }
-                    )
-                }
-            case .repeat: // 미완료 반복 퀘스트
-                ForEach(vm.currentQuests, id: \.id) { quest in
-                    RepeatQuestItemView(
-                        quest: quest,
-                        action: {
-                            AnalyticsService.logEvent(.questItemClick(questId: quest.id, questType: quest.questType?.rawValue.uppercased() ?? ""))
-                            questRouter.presentQuestDetail(quest: quest) { quest in
-                                vm.toggleFavoriteStatus(quest: quest)
-                            }
-                        },
-                        favoriteAction: { vm.toggleFavoriteStatus(quest: quest) }
-                    )
-                }
-            case .event: // 미완료 이벤트 퀘스트
-                ForEach(vm.currentQuests, id: \.id) { quest in
-                    EventQuestItemView(
-                        quest: quest,
-                        action: {
-                            AnalyticsService.logEvent(.questItemClick(questId: quest.id, questType: quest.questType?.rawValue.uppercased() ?? ""))
-                            questRouter.presentQuestDetail(quest: quest) { quest in
-                                vm.toggleFavoriteStatus(quest: quest)
-                            }
-                        },
-                        favoriteAction: { vm.toggleFavoriteStatus(quest: quest) }
-                    )
-                }
+            questListView(for: vm.selectedHeader)
+
+            if vm.hasMorePage {
+                ProgressView()
+                    .padding(.top, 12)
             }
         }
         .padding(.top, 100)
@@ -202,6 +167,42 @@ extension QuestView {
             .padding(.bottom, 12)
         }
         .padding(.bottom, layout.bottomSpacing)
+    }
+
+    /// 중복 제거: 헤더 타입에 따라 적절한 ItemView를 반환
+    @ViewBuilder
+    private func questListView(for header: QuestStatus) -> some View {
+        ForEach(Array(vm.currentQuests.enumerated()), id: \.1.id) { index, quest in
+            questItemView(for: header, quest: quest)
+                .task {
+                    await vm.loadMoreDataIfNeeded(index: index)
+                }
+        }
+    }
+
+    /// 각 타입별 QuestItemView를 통합 관리
+    @ViewBuilder
+    private func questItemView(for header: QuestStatus, quest: QuestItem) -> some View {
+        let action = {
+            AnalyticsService.logEvent(.questItemClick(
+                questId: quest.id,
+                questType: quest.questType?.rawValue.uppercased() ?? ""
+            ))
+            questRouter.presentQuestDetail(quest: quest) { updatedQuest in
+                vm.toggleFavoriteStatus(quest: updatedQuest)
+            }
+        }
+
+        let favoriteAction = { vm.toggleFavoriteStatus(quest: quest) }
+
+        switch header {
+        case .default:
+            DefaultQuestItemView(quest: quest, action: action, favoriteAction: favoriteAction)
+        case .repeat:
+            RepeatQuestItemView(quest: quest, action: action, favoriteAction: favoriteAction)
+        case .event:
+            EventQuestItemView(quest: quest, action: action, favoriteAction: favoriteAction)
+        }
     }
     
     private var filterPickerDefaultView: some View {

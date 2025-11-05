@@ -25,6 +25,10 @@ class FavoriteListViewModel: ObservableObject {
     private var refreshTask: Task<Void, Never>?
     private var cancellables = Set<AnyCancellable>()
     
+    var hasMorePage: Bool {
+        self.paginationManager.canLoadMoreData()
+    }
+    
     init(
         questRepository: QuestRepositoryInterface,
         favoriteService: FavoriteService,
@@ -38,10 +42,10 @@ class FavoriteListViewModel: ObservableObject {
         self.selectedArea = selectedCommercialArea
         self.questSubmissionNotifier = questSubmissionNotifier
         
-        self.paginationManager = PaginationManager(size: 20, threshold: 18)
-        self.paginationManager.loadPageData = { [weak self] page in
-            guard let self = self else { return ([], 0) }
-            return await self.loadQuestListWithImage(areaCode: selectedArea.code, page: page, size: 20)
+        self.paginationManager = PaginationManager(size: 10, threshold: 2)
+        self.paginationManager.loadPageData = { [weak self] page, size in
+            guard let self = self else { return true }
+            return await self.loadQuestListWithImage(areaCode: selectedArea.code, page: page, size: size)
         }
         
         setupBindings()
@@ -80,7 +84,7 @@ class FavoriteListViewModel: ObservableObject {
         refreshTask = Task { [weak self] in
             guard let areaCode = self?.selectedArea.code else { return }
             self?.changeViewStatus(.loading)
-            await self?.loadQuestListWithImage(areaCode: areaCode, page: 0, size: 10)
+            await self?.paginationManager.loadData(isRefreshing: true)
             self?.changeViewStatus(.loaded)
         }
         await refreshTask?.value
@@ -91,7 +95,7 @@ class FavoriteListViewModel: ObservableObject {
         areaCode: String,
         page: Int,
         size: Int
-    ) async -> ([QuestItem], Int) {
+    ) async -> Bool {
         let getQuestList = await getQuestList(areaCode: areaCode, page: page, size: size)
         let newQuestList = getQuestList.data
         let existingList = quests
@@ -125,17 +129,17 @@ class FavoriteListViewModel: ObservableObject {
             }
         }
         self.quests = mergedList
-        return (mergedList, getQuestList.total)
+        return getQuestList.isLast
     }
     
-    private func getQuestList(areaCode: String, page: Int, size: Int) async -> (data: [QuestItem], total: Int) {
+    private func getQuestList(areaCode: String, page: Int, size: Int) async -> (data: [QuestItem], isLast: Bool) {
         let myCommercialCode = await MainActor.run { illsangZoneManager.currentZoneCode }
 
         switch await questRepository.getFavoriteQuests(commercialAreaCode: areaCode, page: page, size: size) {
         case .success(let response):
-            return (response.content.map { $0.toQuestItem(myCommercialCode: myCommercialCode, questCommercialCode: areaCode) }, response.totalElements)
+            return (response.content.map { $0.toQuestItem(myCommercialCode: myCommercialCode, questCommercialCode: areaCode) }, response.isLast)
         case .failure:
-            return ([], 0)
+            return ([], true)
         }
     }
     
@@ -151,9 +155,10 @@ class FavoriteListViewModel: ObservableObject {
         favoriteService.toggle(quest: quest)
     }
     
-    func loadMoreData() async {
-        guard paginationManager.canLoadMoreData() else { return }
-        await paginationManager.loadData(isRefreshing: false)
+    func loadMoreDataIfNeeded(index: Int) async {
+        if paginationManager.canLoadMoreData(index: index, currentCount: quests.count) {
+            await paginationManager.loadData(isRefreshing: false)
+        }
     }
     
     @MainActor

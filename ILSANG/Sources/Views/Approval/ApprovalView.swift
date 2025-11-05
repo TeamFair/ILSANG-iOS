@@ -84,11 +84,11 @@ struct ApprovalView: View {
                     .overlay(alignment: .topTrailing) {
                         trailingButton(for: item)
                     }
+                    .task { await vm.loadMoreDataIfNeeded(index: idx ) }
                 }
                 
-                if let manager = vm.paginationManager, manager.canLoadMoreData() {
+                if vm.hasMorePage {
                     ProgressView()
-                        .task { await vm.loadMoreData() }
                 }
             }
             .padding(.top, vm.approvalSource == .tab ? 47 : 0)

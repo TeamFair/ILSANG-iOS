@@ -46,7 +46,10 @@ class QuestViewModel: ObservableObject {
         currentQuests.isEmpty
     }
     
-    // TODO: 페이지네이션 로직 수정 필요
+    var hasMorePage: Bool {
+        self.paginationManager(for: selectedHeader).canLoadMoreData()
+    }
+    
     let defaultPaginationManager: PaginationManager<QuestItem>
     let repeatPaginationManager: PaginationManager<QuestItem>
     let eventPaginationManager: PaginationManager<QuestItem>
@@ -80,20 +83,20 @@ class QuestViewModel: ObservableObject {
         eventFilterState = StaticFilterPickerState<EventQuestFilterType>(initialValue: .popular)
         repeatFilterState = StaticFilterPickerState<RepeatType>(initialValue: .daily)
         
-        self.defaultPaginationManager = PaginationManager(size: 20, threshold: 18)
-        self.repeatPaginationManager = PaginationManager(size: 20, threshold: 18)
-        self.eventPaginationManager = PaginationManager(size: 20, threshold: 18)
-        self.defaultPaginationManager.loadPageData = { [weak self] page in
-            guard let self = self else { return ([], 0) }
-            return await self.loadQuestListWithImage(page: page, size: 20, status: .default)
+        self.defaultPaginationManager = PaginationManager(size: 10, threshold: 2)
+        self.repeatPaginationManager = PaginationManager(size: 10, threshold: 2)
+        self.eventPaginationManager = PaginationManager(size: 10, threshold: 2)
+        self.defaultPaginationManager.loadPageData = { [weak self] page, size in
+            guard let self = self else { return true }
+            return await self.loadQuestListWithImage(page: page, size: size, status: .default)
         }
-        self.repeatPaginationManager.loadPageData = { [weak self] page in
-            guard let self = self else { return ([], 0) }
-            return await self.loadQuestListWithImage(page: page, size: 20, status: .repeat)
+        self.repeatPaginationManager.loadPageData = { [weak self] page, size in
+            guard let self = self else { return true }
+            return await self.loadQuestListWithImage(page: page, size: size, status: .repeat)
         }
-        self.eventPaginationManager.loadPageData = { [weak self] page in
-            guard let self = self else { return ([], 0) }
-            return await self.loadQuestListWithImage(page: page, size: 20, status: .event)
+        self.eventPaginationManager.loadPageData = { [weak self] page, size in
+            guard let self = self else { return true }
+            return await self.loadQuestListWithImage(page: page, size: size, status: .event)
         }
         
         questFilterState.onSelectionChange = { [weak self] _ in
@@ -163,6 +166,12 @@ class QuestViewModel: ObservableObject {
         await changeViewStatus(.loaded)
     }
     
+    func loadMoreDataIfNeeded(index: Int) async {
+        if paginationManager(for: selectedHeader).canLoadMoreData(index: index, currentCount: currentQuests.count) {
+            await paginationManager(for: selectedHeader).loadData(isRefreshing: false)
+        }
+    }
+    
     func refreshData() async {
         // 마지막 새로고침으로부터 throttleInterval 이내에 새로 고침 시도를 방지
         let now = Date()
@@ -194,7 +203,7 @@ class QuestViewModel: ObservableObject {
         page: Int,
         size: Int,
         status: QuestStatus,
-    ) async -> ([QuestItem], Int) {
+    ) async -> Bool {
         let getQuestList = await getQuestList(page: page, size: size, status: status)
         var newQuestList = getQuestList.data
         
@@ -264,7 +273,7 @@ class QuestViewModel: ObservableObject {
             mapEventQuestByFilter(list: mergedList, filter: eventFilterState.selectedValue)
         }
         
-        return (mergedList, getQuestList.total)
+        return getQuestList.isLast
     }
     
     /// uncompleted 상태의 기본 퀘스트 목록을 XpStat별로 분류하여 defaultQuestListByXpStat 딕셔너리에 매핑합니다.
@@ -288,7 +297,7 @@ class QuestViewModel: ObservableObject {
         self.eventQuestListByFilter = mapped
     }
     
-    private func getQuestList(page: Int, size: Int, status: QuestStatus) async -> (data: [QuestItem], total: Int) {
+    private func getQuestList(page: Int, size: Int, status: QuestStatus) async -> (data: [QuestItem], isLast: Bool) {
         let myCommercialCode = await MainActor.run { illsangZoneManager.currentZoneCode }
         let selectedCommercialCode = sharedState.selectedCommercialArea.code
         let result: Result<ResponseWithPage<[Quest]>, Error>
@@ -319,23 +328,19 @@ class QuestViewModel: ObservableObject {
             )
         }
         
-
         switch result {
         case .success(let response):
-            return (response.content.map { $0.toQuestItem(myCommercialCode: myCommercialCode, questCommercialCode: selectedCommercialCode) }, response.totalElements)
+            return (response.content.map { $0.toQuestItem(myCommercialCode: myCommercialCode, questCommercialCode: selectedCommercialCode) }, response.isLast)
         case .failure:
-            return ([], 0)
+            return ([], true)
         }
     }
     
-    func hasMorePage(status: QuestStatus) -> Bool {
+    func paginationManager(for status: QuestStatus) -> PaginationManager<QuestItem> {
         switch status {
-        case .default:
-            return defaultPaginationManager.canLoadMoreData()
-        case .repeat:
-            return repeatPaginationManager.canLoadMoreData()
-        case .event:
-            return eventPaginationManager.canLoadMoreData()
+        case .default: return defaultPaginationManager
+        case .repeat: return repeatPaginationManager
+        case .event: return eventPaginationManager
         }
     }
     

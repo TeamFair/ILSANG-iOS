@@ -29,6 +29,10 @@ class BannerDetailViewModel: ObservableObject {
     let uncompletedPaginationManager: PaginationManager<QuestItem>
     let completedPaginationManager: PaginationManager<QuestItem>
 
+    var hasMorePage: Bool {
+        self.paginationManager(for: selectedHeader).canLoadMoreData()
+    }
+    
     private var refreshTask: Task<Void, Never>?
 
     private let userRepository: UserRepositoryInterface
@@ -58,8 +62,8 @@ class BannerDetailViewModel: ObservableObject {
         self.questSubmissionNotifier = questSubmissionNotifier
         
         self.eventFilterState = StaticFilterPickerState(initialValue: .upcoming)
-        self.uncompletedPaginationManager = PaginationManager(size: 20, threshold: 18)
-        self.completedPaginationManager = PaginationManager(size: 20, threshold: 18)
+        self.uncompletedPaginationManager = PaginationManager(size: 10, threshold: 2)
+        self.completedPaginationManager = PaginationManager(size: 10, threshold: 2)
         
         setupFilterStateObserver()
         setupPaginationManagers()
@@ -83,14 +87,14 @@ class BannerDetailViewModel: ObservableObject {
     }
     
     private func setupPaginationManagers() {
-        uncompletedPaginationManager.loadPageData = { [weak self] page in
-            guard let self = self else { return ([], 0) }
-            return await self.loadQuestListWithImage(page: page, size: 20, status: .uncomplete)
+        uncompletedPaginationManager.loadPageData = { [weak self] page, size in
+            guard let self = self else { return true }
+            return await self.loadQuestListWithImage(page: page, size: size, status: .uncomplete)
         }
         
-        completedPaginationManager.loadPageData = { [weak self] page in
-            guard let self = self else { return ([], 0) }
-            return await self.loadQuestListWithImage(page: page, size: 10, status: .complete)
+        completedPaginationManager.loadPageData = { [weak self] page, size in
+            guard let self = self else { return true }
+            return await self.loadQuestListWithImage(page: page, size: size, status: .complete)
         }
     }
     
@@ -130,13 +134,18 @@ class BannerDetailViewModel: ObservableObject {
         await changeViewStatus(.loaded)
     }
     
+    func loadMoreDataIfNeeded(index: Int) async {
+        if paginationManager(for: selectedHeader).canLoadMoreData(index: index, currentCount: filteredQuestList.count) {
+            await paginationManager(for: selectedHeader).loadData(isRefreshing: false)
+        }
+    }
     
     @discardableResult @MainActor
     private func loadQuestListWithImage(
         page: Int,
         size: Int,
         status: BannerQuestStatus,
-    ) async -> ([QuestItem], Int) {
+    ) async -> Bool {
         let getQuestList = await getQuestList(page: page, size: size, status: status)
         let newQuestList = getQuestList.data
         
@@ -178,7 +187,7 @@ class BannerDetailViewModel: ObservableObject {
         // 상태별 필터 매핑
         updateQuestList(mergedList, for: eventFilterState.selectedValue, status: status)
         
-        return (mergedList, getQuestList.total)
+        return getQuestList.isLast
     }
     
     @MainActor
@@ -191,7 +200,7 @@ class BannerDetailViewModel: ObservableObject {
         }
     }
     
-    private func getQuestList(page: Int, size: Int, status: BannerQuestStatus) async -> (data: [QuestItem], total: Int) {
+    private func getQuestList(page: Int, size: Int, status: BannerQuestStatus) async -> (data: [QuestItem], isLast: Bool) {
         let result = await questRepository.getBannerQuests(
             bannerId: banner.id,
             completedYn: status == .complete,
@@ -204,19 +213,19 @@ class BannerDetailViewModel: ObservableObject {
 
         switch result {
         case .success(let response):
-            return (response.content.map { $0.toQuestItem(myCommercialCode: myCommercialCode, questCommercialCode: nil) }, response.totalElements)
+            return (response.content.map { $0.toQuestItem(myCommercialCode: myCommercialCode, questCommercialCode: nil) }, response.isLast)
         case .failure:
             // TODO: error 화면 변경
-            return ([], 0)
+            return ([], true)
         }
     }
     
-    func hasMorePage(status: BannerQuestStatus) -> Bool {
+    func paginationManager(for status: BannerQuestStatus) -> PaginationManager<QuestItem> {
         switch status {
         case .uncomplete:
-            return uncompletedPaginationManager.canLoadMoreData()
+            return uncompletedPaginationManager
         case .complete:
-            return completedPaginationManager.canLoadMoreData()
+            return completedPaginationManager
         }
     }
     

@@ -27,20 +27,20 @@ struct OtherUserChallengeList: View {
                 .frame(minHeight: 353)
             } else {
                 LazyVStack(spacing: 9) {
-                    ForEach(vm.currentMissionHistories, id: \.missionHistoryId) { missionHistory in
+                    ForEach(Array(vm.currentMissionHistories.enumerated()), id: \.1.missionHistoryId) { index, missionHistory in
                         NavigationLink {
                             OtherUserChallengeDetailView(vm: vm, missionHistory: missionHistory)
                         } label: {
                             UserMissionHistoryItemView(missionHistory: missionHistory)
+                                .task {
+                                    await vm.loadMoreDataIfNeeded(index: index)
+                                }
                         }
                     }
                     
                     if vm.hasMorePage {
                         ProgressView()
                             .padding(.top, 12)
-                            .task {
-                                await vm.photoPaginationManager.loadData(isRefreshing: false)
-                            }
                     }
                 }
                 .padding(.bottom, layout.bottomSpacing)

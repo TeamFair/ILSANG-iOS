@@ -90,17 +90,17 @@ final class OtherUserProfileViewModel: ObservableObject {
         
         updateSeasonsFromServer(seasonManager.seasons.map { $0.seasonNumber })
         
-        self.photoPaginationManager.loadPageData = { [weak self] page in
-            guard let self = self else { return ([], 0) }
-            return await loadPhotoMissionHistory(page: page, size: 10)
+        self.photoPaginationManager.loadPageData = { [weak self] page, size in
+            guard let self = self else { return true }
+            return await loadPhotoMissionHistory(page: page, size: size)
         }
-        self.oxPaginationManager.loadPageData = { [weak self] page in
-            guard let self = self else { return ([], 0) }
-            return await loadQuizMissionHistory(page: page, size: 10, quizType: .ox)
+        self.oxPaginationManager.loadPageData = { [weak self] page, size in
+            guard let self = self else { return true }
+            return await loadQuizMissionHistory(page: page, size: size, quizType: .ox)
         }
-        self.textPaginationManager.loadPageData = { [weak self] page in
-            guard let self = self else { return ([], 0) }
-            return await loadQuizMissionHistory(page: page, size: 10, quizType: .text)
+        self.textPaginationManager.loadPageData = { [weak self] page, size in
+            guard let self = self else { return true }
+            return await loadQuizMissionHistory(page: page, size: size, quizType: .text)
         }
     }
     
@@ -116,7 +116,7 @@ final class OtherUserProfileViewModel: ObservableObject {
         async let user: () = fetchUser(userId: userId)
         async let commercial: () = fetchUserPointCommercial()
         async let pointAndQuest: () = fetchPointAndQuestCount()
-        async let history: () =  photoPaginationManager.loadData(isRefreshing: true)
+        async let history: () = photoPaginationManager.loadData(isRefreshing: true)
         _ = await (user, commercial, pointAndQuest, history)
     }
     
@@ -126,8 +126,16 @@ final class OtherUserProfileViewModel: ObservableObject {
         }
     }
     
+    func loadMoreDataIfNeeded(index: Int) async {
+        if paginationManager(for: selectedMissionType)
+            .canLoadMoreData(index: index, currentCount: currentMissionHistories.count) {
+            await paginationManager(for: selectedMissionType)
+                .loadData(isRefreshing: false)
+        }
+    }
+    
     @discardableResult
-    func loadPhotoMissionHistory(page: Int, size: Int) async -> ([UserMissionHistoryItem], Int) {
+    func loadPhotoMissionHistory(page: Int, size: Int) async -> Bool {
         if page == 0 {
             missionHistoryViewStatus = .loading
         }
@@ -158,11 +166,11 @@ final class OtherUserProfileViewModel: ObservableObject {
             self.missionHistories[.photo, default: []] += newItems
         }
         
-        return (missionHistories[.photo, default: []], response.total)
+        return response.isLast
     }
     
     @discardableResult /*@MainActor*/
-    private func loadQuizMissionHistory(page: Int, size: Int, quizType: QuizType) async -> ([UserMissionHistoryItem], Int) {
+    private func loadQuizMissionHistory(page: Int, size: Int, quizType: QuizType) async -> Bool {
         if page == 0 {
             missionHistoryViewStatus = .loading
         }
@@ -176,19 +184,19 @@ final class OtherUserProfileViewModel: ObservableObject {
             self.missionHistories[.quiz(quizType), default: []]  += newItems
         }
         
-        return (missionHistories[.quiz(quizType), default: []] , response.total)
+        return response.isLast
     }
     
-    private func fetchMissionHistories(page: Int, size: Int, missionType: MissionType) async -> (data: [UserMissionHistoryItem], total: Int) {
+    private func fetchMissionHistories(page: Int, size: Int, missionType: MissionType) async -> (data: [UserMissionHistoryItem], isLast: Bool) {
         let response = await missionHistoryRepository.getMissionHistories(page: page, size: size, userId: userId, missionType: missionType, filterType: .latest)
         
         switch response {
         case .success(let res):
             // 데이터 초기화: 이미지가 없는 상태로 미리 표시
-            return (res.data.map { $0.toItem() } , res.total)
+            return (res.data.map { $0.toItem() }, res.isLast)
         case .failure(let error):
             Log("챌린지 조회 실패: \(error)")
-            return ([], 0)
+            return ([], true)
         }
     }
     

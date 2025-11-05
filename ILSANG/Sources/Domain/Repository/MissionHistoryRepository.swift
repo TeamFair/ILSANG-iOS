@@ -8,9 +8,9 @@
 import Foundation
 
 protocol MissionHistoryRepositoryInterface {
-    func getRandomMissionHistories(page: Int, size: Int) async -> Result<(data: [MissionHistory], total: Int), Error>
-    func getMissionHistories(missionId: Int, page: Int, size: Int) async -> Result<(data: [MissionHistory], total: Int), Error>
-    func getMissionHistories(page: Int, size: Int, userId: String?, missionType: MissionType, filterType: MissionHistoryFilterType) async -> Result<(data: [UserMissionHistory], total: Int), Error>
+    func getRandomMissionHistories(page: Int, size: Int) async -> Result<(data: [MissionHistory], isLast: Bool), Error>
+    func getMissionHistories(missionId: Int, page: Int, size: Int) async -> Result<(data: [MissionHistory], isLast: Bool), Error>
+    func getMissionHistories(page: Int, size: Int, userId: String?, missionType: MissionType, filterType: MissionHistoryFilterType) async -> Result<(data: [UserMissionHistory], isLast: Bool), Error>
     func getMissionHistoryDetail(missionHistoryId: Int) async -> Result<UserMissionHistoryDetail, Error>
     func deleteMissionHistory(missionHistoryId: Int) async -> Bool
     func putMissionHistory(missionHistoryId: Int) async -> Result<Void, Error>
@@ -23,35 +23,35 @@ final class MissionHistoryRepository: MissionHistoryRepositoryInterface {
         self.network = network
     }
     
-    func getRandomMissionHistories(page: Int, size: Int) async -> Result<(data: [MissionHistory], total: Int), Error> {
+    func getRandomMissionHistories(page: Int, size: Int) async -> Result<(data: [MissionHistory], isLast: Bool), Error> {
         let res = await network.getRandomMissionHistories(page: page, size: size)
         switch res {
         case .success(let response):
             let domainModels = response.content.map { $0.toDomain() }
-            return .success((domainModels, response.totalElements))
+            return .success((domainModels, response.isLast))
         case .failure(let error):
             return .failure(error)
         }
     }
     
     /// 미션 아이디별 조회 - 퀘스트 인증 예시 화면에서 사용
-    func getMissionHistories(missionId: Int, page: Int, size: Int) async -> Result<(data: [MissionHistory], total: Int), Error> {
+    func getMissionHistories(missionId: Int, page: Int, size: Int) async -> Result<(data: [MissionHistory], isLast: Bool), Error> {
         let res = await network.getMissionHistories(missionId: missionId, page: page, size: size)
         switch res {
         case .success(let response):
             let domainModels = response.content.map { $0.toDomain() }
-            return .success((domainModels, response.totalElements))
+            return .success((domainModels, response.isLast))
         case .failure(let error):
             return .failure(error)
         }
     }
     
-    func getMissionHistories(page: Int, size: Int, userId: String?, missionType: MissionType, filterType: MissionHistoryFilterType) async -> Result<(data: [UserMissionHistory], total: Int), Error> {
+    func getMissionHistories(page: Int, size: Int, userId: String?, missionType: MissionType, filterType: MissionHistoryFilterType) async -> Result<(data: [UserMissionHistory], isLast: Bool), Error> {
         let res = await network.getMissionHistories(page: page, size: size, userId: userId, missionType: missionType, orderRewardDesc: filterType.orderRewardDesc, orderCreatedAtDesc: filterType.latest)
         switch res {
         case .success(let response):
             let domainModels = response.content.map { $0.toDomain() }
-            return .success((domainModels, response.totalElements))
+            return .success((domainModels, response.isLast))
         case .failure(let error):
             return .failure(error)
         }
@@ -123,16 +123,16 @@ final class MockMissionHistoryRepository: MissionHistoryRepositoryInterface {
         )
     ]
     
-    func getRandomMissionHistories(page: Int, size: Int) async -> Result<(data: [MissionHistory], total: Int), any Error> {
-        .success((data: mockMissionHistory, total: mockMissionHistory.count))
+    func getRandomMissionHistories(page: Int, size: Int) async -> Result<(data: [MissionHistory], isLast: Bool), any Error> {
+        .success((data: mockMissionHistory,  isLast: true))
     }
     
-    func getMissionHistories(missionId: Int, page: Int, size: Int) async -> Result<(data: [MissionHistory], total: Int), any Error> {
-        .success((data: mockMissionHistory, total: mockMissionHistory.count))
+    func getMissionHistories(missionId: Int, page: Int, size: Int) async -> Result<(data: [MissionHistory], isLast: Bool), any Error> {
+        .success((data: mockMissionHistory, isLast: true))
     }
     
-    func getMissionHistories(page: Int, size: Int, userId: String?, missionType: MissionType, filterType: MissionHistoryFilterType) async -> Result<(data: [UserMissionHistory], total: Int), any Error> {
-        .success((data: mockUserMissionHistory, total: mockMissionHistory.count))
+    func getMissionHistories(page: Int, size: Int, userId: String?, missionType: MissionType, filterType: MissionHistoryFilterType) async -> Result<(data: [UserMissionHistory], isLast: Bool), any Error> {
+        .success((data: mockUserMissionHistory, isLast: true))
     }
     
     func getMissionHistoryDetail(missionHistoryId: Int) async -> Result<UserMissionHistoryDetail, Error> {

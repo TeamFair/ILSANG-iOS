@@ -105,7 +105,7 @@ extension FavoriteListView {
                 selectScopeView
                 
                 LazyVStack(spacing: 8) {
-                    ForEach(viewModel.quests, id: \.id) { quest in
+                    ForEach(Array(viewModel.quests.enumerated()), id: \.1.id) { index, quest in
                         FavoriteQuestItemView(
                             quest: quest,
                             action: { [weak viewModel, weak questRouter] in
@@ -117,11 +117,11 @@ extension FavoriteListView {
                             },
                             favoriteAction: { viewModel.toggleFavoriteStatus(quest: quest) }
                         )
+                        .task { await viewModel.loadMoreDataIfNeeded(index: index ) }
                     }
                     
-                    if viewModel.paginationManager.canLoadMoreData() {
+                    if viewModel.hasMorePage {
                         ProgressView()
-                            .task { await viewModel.loadMoreData() }
                     }
                 }
                 .padding(.top, layout.horizontalPadding)
