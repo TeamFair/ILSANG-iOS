@@ -57,9 +57,9 @@ struct FavoriteListView: View {
                     networkErrorView
                 }
             }
-            .scrollDisabled(viewModel.viewStatus != .loaded || viewModel.quests.isEmpty)
+            .scrollDisabled(viewModel.viewStatus != .loaded || viewModel.currentItems.isEmpty)
             .refreshable {
-                await viewModel.loadInitialData()
+                await viewModel.loadInitialDataWithLoadingState()
             }
         }
         .background(Color.background)
@@ -97,7 +97,7 @@ extension FavoriteListView {
     
     @ViewBuilder
     private var questListView: some View {
-        if viewModel.quests.isEmpty {
+        if viewModel.currentItems.isEmpty {
             selectScopeView
             emptyView
         } else {
@@ -105,7 +105,7 @@ extension FavoriteListView {
                 selectScopeView
                 
                 LazyVStack(spacing: 8) {
-                    ForEach(viewModel.quests, id: \.id) { quest in
+                    ForEach(Array(viewModel.currentItems.enumerated()), id: \.1.id) { index, quest in
                         FavoriteQuestItemView(
                             quest: quest,
                             action: { [weak viewModel, weak questRouter] in
@@ -117,12 +117,11 @@ extension FavoriteListView {
                             },
                             favoriteAction: { viewModel.toggleFavoriteStatus(quest: quest) }
                         )
+                        .task { await viewModel.loadMoreDataIfNeeded(at: index) }
                     }
                     
-                    if viewModel.paginationManager.canLoadMoreData() {
-                        ProgressView()
-                            .task { await viewModel.loadMoreData() }
-                    }
+                    LoadMoreIndicatorView(isVisible: viewModel.canLoadMore)
+
                 }
                 .padding(.top, layout.horizontalPadding)
                 .padding(.bottom, layout.bottomSpacing)
@@ -147,7 +146,7 @@ extension FavoriteListView {
             subTitle: "네트워크 연결 상태가 좋지 않아\n퀘스트를 불러올 수 없어요",
             emoticon: "🥲"
         ) {
-            Task { await viewModel.loadInitialData() }
+            Task { await viewModel.loadInitialDataWithLoadingState() }
         }
     }
 }

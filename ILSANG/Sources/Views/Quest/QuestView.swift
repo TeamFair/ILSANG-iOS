@@ -74,10 +74,10 @@ extension QuestView {
         HStack(spacing: 16) {
             ForEach(QuestStatus.allCases, id: \.headerText) { status in
                 Button {
-                    vm.selectedHeader = status
+                    vm.currentCategory = status
                 } label: {
                     Text(status.headerText)
-                        .foregroundColor(status == vm.selectedHeader ? .gray500 : .gray300)
+                        .foregroundColor(status == vm.currentCategory ? .gray500 : .gray300)
                         .font(.system(size: 21, weight: .bold))
                         .frame(height: 30)
                 }
@@ -96,7 +96,7 @@ extension QuestView {
                 questListContent
             }
             .refreshable {
-                await vm.refreshData()
+                await vm.reloadData()
             }
             .frame(maxWidth: .infinity)
             .overlay {
@@ -104,7 +104,7 @@ extension QuestView {
                     questListEmptyView
                 }
             }
-            .onChange(of: vm.selectedHeader) { _, _ in
+            .onChange(of: vm.currentCategory) { _, _ in
                 vm.closeFilterPicker()
                 withAnimation {
                     proxy.scrollTo("top", anchor: .top)
@@ -133,47 +133,9 @@ extension QuestView {
     
     private var questListContent: some View {
         LazyVStack(spacing: 12) {
-            switch vm.selectedHeader {
-            case .default: // 미완료 퀘스트
-                ForEach(vm.currentQuests, id: \.id) { quest in
-                    DefaultQuestItemView(
-                        quest: quest,
-                        action: {
-                            AnalyticsService.logEvent(.questItemClick(questId: quest.id, questType: quest.questType?.rawValue.uppercased() ?? ""))
-                            questRouter.presentQuestDetail(quest: quest) { quest in
-                                vm.toggleFavoriteStatus(quest: quest)
-                            }
-                        },
-                        favoriteAction: { vm.toggleFavoriteStatus(quest: quest) }
-                    )
-                }
-            case .repeat: // 미완료 반복 퀘스트
-                ForEach(vm.currentQuests, id: \.id) { quest in
-                    RepeatQuestItemView(
-                        quest: quest,
-                        action: {
-                            AnalyticsService.logEvent(.questItemClick(questId: quest.id, questType: quest.questType?.rawValue.uppercased() ?? ""))
-                            questRouter.presentQuestDetail(quest: quest) { quest in
-                                vm.toggleFavoriteStatus(quest: quest)
-                            }
-                        },
-                        favoriteAction: { vm.toggleFavoriteStatus(quest: quest) }
-                    )
-                }
-            case .event: // 미완료 이벤트 퀘스트
-                ForEach(vm.currentQuests, id: \.id) { quest in
-                    EventQuestItemView(
-                        quest: quest,
-                        action: {
-                            AnalyticsService.logEvent(.questItemClick(questId: quest.id, questType: quest.questType?.rawValue.uppercased() ?? ""))
-                            questRouter.presentQuestDetail(quest: quest) { quest in
-                                vm.toggleFavoriteStatus(quest: quest)
-                            }
-                        },
-                        favoriteAction: { vm.toggleFavoriteStatus(quest: quest) }
-                    )
-                }
-            }
+            questListView(for: vm.currentCategory)
+
+            LoadMoreIndicatorView(isVisible: vm.canLoadMore)
         }
         .padding(.top, 100)
         .overlay(alignment: .top) {
@@ -184,14 +146,14 @@ extension QuestView {
                 .frame(maxWidth: .infinity, alignment: .leading)
                 
                 Group {
-                    if (vm.selectedHeader == .default) {
+                    if (vm.currentCategory == .default) {
                         filterPickerDefaultView
-                    } else if (vm.selectedHeader == .repeat) {
+                    } else if (vm.currentCategory == .repeat) {
                         HStack(alignment: .top, spacing: 8) {
                             filterPickerRepeatView
                             filterPickerDefaultView
                         }
-                    } else if (vm.selectedHeader == .event) {
+                    } else if (vm.currentCategory == .event) {
                         filterPickerEventView
                     }
                 }
@@ -202,6 +164,42 @@ extension QuestView {
             .padding(.bottom, 12)
         }
         .padding(.bottom, layout.bottomSpacing)
+    }
+
+    /// 중복 제거: 헤더 타입에 따라 적절한 ItemView를 반환
+    @ViewBuilder
+    private func questListView(for header: QuestStatus) -> some View {
+        ForEach(Array(vm.currentItems.enumerated()), id: \.1.id) { index, quest in
+            questItemView(for: header, quest: quest)
+                .task {
+                    await vm.loadMoreDataIfNeeded(at: index)
+                }
+        }
+    }
+
+    /// 각 타입별 QuestItemView를 통합 관리
+    @ViewBuilder
+    private func questItemView(for header: QuestStatus, quest: QuestItem) -> some View {
+        let action = {
+            AnalyticsService.logEvent(.questItemClick(
+                questId: quest.id,
+                questType: quest.questType?.rawValue.uppercased() ?? ""
+            ))
+            questRouter.presentQuestDetail(quest: quest) { updatedQuest in
+                vm.toggleFavoriteStatus(quest: updatedQuest)
+            }
+        }
+
+        let favoriteAction = { vm.toggleFavoriteStatus(quest: quest) }
+
+        switch header {
+        case .default:
+            DefaultQuestItemView(quest: quest, action: action, favoriteAction: favoriteAction)
+        case .repeat:
+            RepeatQuestItemView(quest: quest, action: action, favoriteAction: favoriteAction)
+        case .event:
+            EventQuestItemView(quest: quest, action: action, favoriteAction: favoriteAction)
+        }
     }
     
     private var filterPickerDefaultView: some View {
@@ -221,8 +219,8 @@ extension QuestView {
     
     private var questListEmptyView: some View {
         ErrorView(
-            title: vm.selectedHeader.emptyTitle,
-            subTitle: vm.selectedHeader.emptySubTitle,
+            title: vm.currentCategory.emptyTitle,
+            subTitle: vm.currentCategory.emptySubTitle,
             showButton: false
         )
     }
@@ -231,10 +229,10 @@ extension QuestView {
         ErrorView(
             systemImageName: "wifi.exclamationmark",
             title: "네트워크 연결 상태를 확인해주세요",
-            subTitle: "네트워크 연결 상태가 좋지 않아\n퀘스트를 불러올 수 없어요 ",
+            subTitle: "네트워크 연결 상태가 좋지 않아\n퀘스트를 불러올 수 없어요",
             emoticon: "🥲"
         ) {
-            Task { await vm.loadInitialData() }
+            Task { await vm.loadDataIfNeeded() }
         }
     }
 }

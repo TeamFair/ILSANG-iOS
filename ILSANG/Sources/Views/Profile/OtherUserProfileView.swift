@@ -43,7 +43,7 @@ struct OtherUserProfileView: View {
         }
         .onChange(of: vm.selectedMissionType) { _, _ in
             // TODO: scroll to top
-            Task { await vm.loadCurrentData() }
+            Task { await vm.loadMissionDataIfNeeded() }
         }
     }
     

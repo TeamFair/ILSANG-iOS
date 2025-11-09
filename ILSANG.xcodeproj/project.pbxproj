@@ -84,6 +84,7 @@
 		605DA0D12C0711CA00CC9450 /* CameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605DA0D02C0711CA00CC9450 /* CameraView.swift */; };
 		605DA0D32C0711E900CC9450 /* CameraViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605DA0D22C0711E900CC9450 /* CameraViewModel.swift */; };
 		605DA0D62C07123400CC9450 /* View++.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605DA0D52C07123400CC9450 /* View++.swift */; };
+		605E14792EBB926200196D07 /* PaginationLoadable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605E14782EBB926200196D07 /* PaginationLoadable.swift */; };
 		605E813D2D9F1B9900ECDB15 /* QuestDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605E813C2D9F1B9900ECDB15 /* QuestDetailViewModel.swift */; };
 		605E81402D9FE45C00ECDB15 /* QuestDetailInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605E813F2D9FE45C00ECDB15 /* QuestDetailInfoView.swift */; };
 		605E81422D9FE4D300ECDB15 /* QuestDetailApprovalImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605E81412D9FE4C400ECDB15 /* QuestDetailApprovalImageView.swift */; };
@@ -245,6 +246,7 @@
 		60C6B4D52C2C565700926C0E /* ChallengeNetwork.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60C6B4D42C2C565700926C0E /* ChallengeNetwork.swift */; };
 		60C6B4DC2C2D042700926C0E /* Image.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60C6B4DB2C2D042700926C0E /* Image.swift */; };
 		60C6B4DF2C2D053600926C0E /* SubmitRouterViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60C6B4DE2C2D053600926C0E /* SubmitRouterViewModel.swift */; };
+		60C7A1682EC0DFA900E86291 /* LoadMoreIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60C7A1672EC0DFA900E86291 /* LoadMoreIndicatorView.swift */; };
 		60D5EB582E783EBC00C5B78F /* QuestCouponView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60D5EB572E783EBC00C5B78F /* QuestCouponView.swift */; };
 		60D5EB5A2E78668E00C5B78F /* RankingRewardViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60D5EB592E78668E00C5B78F /* RankingRewardViewModel.swift */; };
 		60D897122E536D2C006A8480 /* MissionHistoryResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60D897112E536D2C006A8480 /* MissionHistoryResponse.swift */; };
@@ -432,6 +434,7 @@
 		605DA0D02C0711CA00CC9450 /* CameraView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraView.swift; sourceTree = "<group>"; };
 		605DA0D22C0711E900CC9450 /* CameraViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraViewModel.swift; sourceTree = "<group>"; };
 		605DA0D52C07123400CC9450 /* View++.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View++.swift"; sourceTree = "<group>"; };
+		605E14782EBB926200196D07 /* PaginationLoadable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaginationLoadable.swift; sourceTree = "<group>"; };
 		605E813C2D9F1B9900ECDB15 /* QuestDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestDetailViewModel.swift; sourceTree = "<group>"; };
 		605E813F2D9FE45C00ECDB15 /* QuestDetailInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestDetailInfoView.swift; sourceTree = "<group>"; };
 		605E81412D9FE4C400ECDB15 /* QuestDetailApprovalImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestDetailApprovalImageView.swift; sourceTree = "<group>"; };
@@ -595,6 +598,7 @@
 		60C6B4D42C2C565700926C0E /* ChallengeNetwork.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChallengeNetwork.swift; sourceTree = "<group>"; };
 		60C6B4DB2C2D042700926C0E /* Image.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Image.swift; sourceTree = "<group>"; };
 		60C6B4DE2C2D053600926C0E /* SubmitRouterViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubmitRouterViewModel.swift; sourceTree = "<group>"; };
+		60C7A1672EC0DFA900E86291 /* LoadMoreIndicatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadMoreIndicatorView.swift; sourceTree = "<group>"; };
 		60D5EB572E783EBC00C5B78F /* QuestCouponView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestCouponView.swift; sourceTree = "<group>"; };
 		60D5EB592E78668E00C5B78F /* RankingRewardViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RankingRewardViewModel.swift; sourceTree = "<group>"; };
 		60D897112E536D2C006A8480 /* MissionHistoryResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionHistoryResponse.swift; sourceTree = "<group>"; };
@@ -912,6 +916,14 @@
 				60F352F32E91644E00307BDC /* ISO8601DateFormatter++.swift */,
 			);
 			path = Extension;
+			sourceTree = "<group>";
+		};
+		605E147A2EBB926700196D07 /* Protocol */ = {
+			isa = PBXGroup;
+			children = (
+				605E14782EBB926200196D07 /* PaginationLoadable.swift */,
+			);
+			path = Protocol;
 			sourceTree = "<group>";
 		};
 		605E813E2D9FE36800ECDB15 /* QuestDetail */ = {
@@ -1340,6 +1352,7 @@
 		60B8BA132BF9F07D005F6DE3 /* Sources */ = {
 			isa = PBXGroup;
 			children = (
+				605E147A2EBB926700196D07 /* Protocol */,
 				600D83A22C7B1F7E005C93E2 /* Manager */,
 				6011891B2C3E8B2B0070F2AD /* Service */,
 				606292D62C19E6C00098B6D2 /* Network */,
@@ -1586,6 +1599,7 @@
 		A19628732C08647F0037C53A /* View */ = {
 			isa = PBXGroup;
 			children = (
+				60C7A1672EC0DFA900E86291 /* LoadMoreIndicatorView.swift */,
 				602A541A2EBA02C60094A33E /* LayoutInfo.swift */,
 				606694F12DDA2B030000E368 /* HonorPopup */,
 				60FF5EC82E4BA59E007A5B40 /* SeasonPopupContainerView.swift */,
@@ -1900,6 +1914,7 @@
 				60A2ADF52DAE66BD007AC375 /* SettingToggleItemView.swift in Sources */,
 				60E401B02E72CD7A00BB0B6C /* UserItem.swift in Sources */,
 				A1AB3D6A2C1141B3001EB9D8 /* AppleLoginButtonView.swift in Sources */,
+				605E14792EBB926200196D07 /* PaginationLoadable.swift in Sources */,
 				60D8972B2E53B5AE006A8480 /* MissionHistoryNetwork.swift in Sources */,
 				600211EC2C1EEED7000CC02E /* APIManager.swift in Sources */,
 				60FB50CD2D15CEAE00C55E82 /* HomeView.swift in Sources */,
@@ -2042,6 +2057,7 @@
 				6091971A2E59AD7200F1D81B /* ChevronCircleView.swift in Sources */,
 				602988222D041DDC00903806 /* RepeatType.swift in Sources */,
 				606C3EF42E69F05F0050C4D6 /* CouponResponse.swift in Sources */,
+				60C7A1682EC0DFA900E86291 /* LoadMoreIndicatorView.swift in Sources */,
 				60D897122E536D2C006A8480 /* MissionHistoryResponse.swift in Sources */,
 				60FF5ED32E4CDC57007A5B40 /* SeasonOpenPopup.swift in Sources */,
 				60D897392E575038006A8480 /* RewardResponse.swift in Sources */,
