@@ -87,10 +87,7 @@ struct ApprovalView: View {
                     .task { await vm.loadMoreDataIfNeeded(at: idx ) }
                 }
                 
-                if vm.canLoadMore {
-                    ProgressView()
-                        .padding(.top, 12)
-                }
+                LoadMoreIndicatorView(isVisible: vm.canLoadMore)
             }
             .padding(.top, vm.approvalSource == .tab ? 47 : 0)
             .padding(.bottom, layout.bottomSpacing)

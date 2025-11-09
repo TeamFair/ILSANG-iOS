@@ -135,10 +135,7 @@ extension QuestView {
         LazyVStack(spacing: 12) {
             questListView(for: vm.currentCategory)
 
-            if vm.canLoadMore {
-                ProgressView()
-                    .padding(.top, 12)
-            }
+            LoadMoreIndicatorView(isVisible: vm.canLoadMore)
         }
         .padding(.top, 100)
         .overlay(alignment: .top) {

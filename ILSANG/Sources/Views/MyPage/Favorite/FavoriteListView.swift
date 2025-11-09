@@ -120,10 +120,8 @@ extension FavoriteListView {
                         .task { await viewModel.loadMoreDataIfNeeded(at: index) }
                     }
                     
-                    if viewModel.canLoadMore {
-                        ProgressView()
-                            .padding(.top, 12)
-                    }
+                    LoadMoreIndicatorView(isVisible: viewModel.canLoadMore)
+
                 }
                 .padding(.top, layout.horizontalPadding)
                 .padding(.bottom, layout.bottomSpacing)

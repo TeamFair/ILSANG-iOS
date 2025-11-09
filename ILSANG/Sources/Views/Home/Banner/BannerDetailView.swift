@@ -172,10 +172,8 @@ struct BannerDetailView: View {
                         }
                 }
             }
-            if viewModel.canLoadMore {
-                ProgressView()
-                    .padding(.top, 12)
-            }
+            
+            LoadMoreIndicatorView(isVisible: viewModel.canLoadMore)
         }
         .zIndex(-1)
         .padding(.bottom, layout.bottomSpacing)

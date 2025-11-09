@@ -246,6 +246,7 @@
 		60C6B4D52C2C565700926C0E /* ChallengeNetwork.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60C6B4D42C2C565700926C0E /* ChallengeNetwork.swift */; };
 		60C6B4DC2C2D042700926C0E /* Image.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60C6B4DB2C2D042700926C0E /* Image.swift */; };
 		60C6B4DF2C2D053600926C0E /* SubmitRouterViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60C6B4DE2C2D053600926C0E /* SubmitRouterViewModel.swift */; };
+		60C7A1682EC0DFA900E86291 /* LoadMoreIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60C7A1672EC0DFA900E86291 /* LoadMoreIndicatorView.swift */; };
 		60D5EB582E783EBC00C5B78F /* QuestCouponView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60D5EB572E783EBC00C5B78F /* QuestCouponView.swift */; };
 		60D5EB5A2E78668E00C5B78F /* RankingRewardViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60D5EB592E78668E00C5B78F /* RankingRewardViewModel.swift */; };
 		60D897122E536D2C006A8480 /* MissionHistoryResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60D897112E536D2C006A8480 /* MissionHistoryResponse.swift */; };
@@ -597,6 +598,7 @@
 		60C6B4D42C2C565700926C0E /* ChallengeNetwork.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChallengeNetwork.swift; sourceTree = "<group>"; };
 		60C6B4DB2C2D042700926C0E /* Image.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Image.swift; sourceTree = "<group>"; };
 		60C6B4DE2C2D053600926C0E /* SubmitRouterViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubmitRouterViewModel.swift; sourceTree = "<group>"; };
+		60C7A1672EC0DFA900E86291 /* LoadMoreIndicatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadMoreIndicatorView.swift; sourceTree = "<group>"; };
 		60D5EB572E783EBC00C5B78F /* QuestCouponView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestCouponView.swift; sourceTree = "<group>"; };
 		60D5EB592E78668E00C5B78F /* RankingRewardViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RankingRewardViewModel.swift; sourceTree = "<group>"; };
 		60D897112E536D2C006A8480 /* MissionHistoryResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionHistoryResponse.swift; sourceTree = "<group>"; };
@@ -1597,6 +1599,7 @@
 		A19628732C08647F0037C53A /* View */ = {
 			isa = PBXGroup;
 			children = (
+				60C7A1672EC0DFA900E86291 /* LoadMoreIndicatorView.swift */,
 				602A541A2EBA02C60094A33E /* LayoutInfo.swift */,
 				606694F12DDA2B030000E368 /* HonorPopup */,
 				60FF5EC82E4BA59E007A5B40 /* SeasonPopupContainerView.swift */,
@@ -2054,6 +2057,7 @@
 				6091971A2E59AD7200F1D81B /* ChevronCircleView.swift in Sources */,
 				602988222D041DDC00903806 /* RepeatType.swift in Sources */,
 				606C3EF42E69F05F0050C4D6 /* CouponResponse.swift in Sources */,
+				60C7A1682EC0DFA900E86291 /* LoadMoreIndicatorView.swift in Sources */,
 				60D897122E536D2C006A8480 /* MissionHistoryResponse.swift in Sources */,
 				60FF5ED32E4CDC57007A5B40 /* SeasonOpenPopup.swift in Sources */,
 				60D897392E575038006A8480 /* RewardResponse.swift in Sources */,

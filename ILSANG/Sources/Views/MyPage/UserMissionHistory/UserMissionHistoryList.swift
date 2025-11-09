@@ -21,10 +21,7 @@ struct UserMissionHistoryList: View {
                 }
             }
             
-            if vm.canLoadMore {
-                ProgressView()
-                    .padding(.top, 12)
-            }
+            LoadMoreIndicatorView(isVisible: vm.canLoadMore)
         }
     }
 }

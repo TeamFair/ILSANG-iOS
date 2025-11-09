@@ -38,10 +38,7 @@ struct OtherUserChallengeList: View {
                         }
                     }
                     
-                    if vm.canLoadMore {
-                        ProgressView()
-                            .padding(.top, 12)
-                    }
+                    LoadMoreIndicatorView(isVisible: vm.canLoadMore)
                 }
                 .padding(.bottom, layout.bottomSpacing)
                 .frame(minHeight: 300, alignment: .top)
