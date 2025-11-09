@@ -146,12 +146,6 @@ struct SubmittedImageView: View {
                     .resizable()
                     .scaledToFit()
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
-            } else {
-                Image(uiImage: .logoWithAlpha)
-                    .resizable()
-                    .scaledToFit()
-                    .frame(height: 72)
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
         }
     }
