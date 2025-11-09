@@ -8,14 +8,18 @@
 import Combine
 import UIKit
 
-class FavoriteListViewModel: ObservableObject {
-    @Published var viewStatus: ViewStatus = .loading
-    @Published var showSelectRegionView: Bool = false
-    @Published var selectedArea: CommercialArea
-    @Published var quests: [QuestItem] = []
+class FavoriteListViewModel: ObservableObject, SinglePaginationLoadable {
+    // MARK: - Typealias
+    typealias Item = QuestItem
     
-    // TODO: 페이지네이션 수정 필요
-    let paginationManager: PaginationManager<QuestItem>
+    // MARK: - Published Properties
+    @Published private(set) var viewStatus: ViewStatus = .loading
+    @Published private(set) var currentItems: [Item] = []
+    @Published private(set) var selectedArea: CommercialArea
+    @Published var showSelectRegionView: Bool = false
+    
+    // MARK: - Stored Properties
+    internal let paginationManager: PaginationManager<Item> = PaginationManager(size: 10, threshold: 2)
     
     private let questRepository: QuestRepositoryInterface
     private let favoriteService: FavoriteService
@@ -24,10 +28,6 @@ class FavoriteListViewModel: ObservableObject {
     
     private var refreshTask: Task<Void, Never>?
     private var cancellables = Set<AnyCancellable>()
-    
-    var hasMorePage: Bool {
-        self.paginationManager.canLoadMoreData()
-    }
     
     init(
         questRepository: QuestRepositoryInterface,
@@ -42,13 +42,8 @@ class FavoriteListViewModel: ObservableObject {
         self.selectedArea = selectedCommercialArea
         self.questSubmissionNotifier = questSubmissionNotifier
         
-        self.paginationManager = PaginationManager(size: 10, threshold: 2)
-        self.paginationManager.loadPageData = { [weak self] page, size in
-            guard let self = self else { return true }
-            return await self.loadQuestListWithImage(areaCode: selectedArea.code, page: page, size: size)
-        }
-        
         setupBindings()
+        setupPaginationManagers()
         Log("🏠 FavoriteListViewModel: init")
     }
     
@@ -72,35 +67,44 @@ class FavoriteListViewModel: ObservableObject {
             .store(in: &cancellables)
     }
     
+    private func setupPaginationManagers() {
+        self.paginationManager.loadPageData = { [weak self] page, size in
+            guard let self = self else { return true }
+            return await self.loadPageData(page: page, size: size)
+        }
+    }
+    
     func loadDataIfNeeded() async {
-        if quests.isEmpty {
-            await loadInitialData()
+        if isCurrentListEmpty {
+            await loadInitialDataWithLoadingState()
         }
     }
     
     @MainActor
-    func loadInitialData() async {
+    func loadInitialDataWithLoadingState() async {
         refreshTask?.cancel()
         refreshTask = Task { [weak self] in
-            guard let areaCode = self?.selectedArea.code else { return }
-            self?.changeViewStatus(.loading)
-            await self?.paginationManager.loadData(isRefreshing: true)
-            self?.changeViewStatus(.loaded)
+            guard let self else { return }
+            changeViewStatus(.loading)
+            let minimumDelay: UInt64 = 300_000_000 // 최소 응답 지연 시간 추가 (0.3초)
+            async let dataLoad: Void = loadInitialData()
+            async let delay: Void = Task.sleep(nanoseconds: minimumDelay)
+            _ = try? await (dataLoad, delay)
+            changeViewStatus(.loaded)
         }
         await refreshTask?.value
     }
     
-    @discardableResult @MainActor
-    func loadQuestListWithImage(
-        areaCode: String,
+    @MainActor
+    func loadPageData(
         page: Int,
         size: Int
     ) async -> Bool {
-        let getQuestList = await getQuestList(areaCode: areaCode, page: page, size: size)
+        let getQuestList = await getQuestList(areaCode: selectedArea.code, page: page, size: size)
         let newQuestList = getQuestList.data
-        let existingList = quests
+        let existingList = currentItems
         
-        var mergedList: [QuestItem]
+        var mergedList: [Item]
         if page == 0 {
             mergedList = newQuestList
         } else {
@@ -128,11 +132,11 @@ class FavoriteListViewModel: ObservableObject {
                 }
             }
         }
-        self.quests = mergedList
+        self.currentItems = mergedList
         return getQuestList.isLast
     }
     
-    private func getQuestList(areaCode: String, page: Int, size: Int) async -> (data: [QuestItem], isLast: Bool) {
+    private func getQuestList(areaCode: String, page: Int, size: Int) async -> (data: [Item], isLast: Bool) {
         let myCommercialCode = await MainActor.run { illsangZoneManager.currentZoneCode }
 
         switch await questRepository.getFavoriteQuests(commercialAreaCode: areaCode, page: page, size: size) {
@@ -151,24 +155,12 @@ class FavoriteListViewModel: ObservableObject {
     }
     
     /// 즐겨찾기 상태를 UI에 즉시 반영하고,  서버 반영은 디바운싱 처리
-    func toggleFavoriteStatus(quest: QuestItem) {
+    func toggleFavoriteStatus(quest: Item) {
         favoriteService.toggle(quest: quest)
-    }
-    
-    func loadMoreDataIfNeeded(index: Int) async {
-        if paginationManager.canLoadMoreData(index: index, currentCount: quests.count) {
-            await paginationManager.loadData(isRefreshing: false)
-        }
     }
     
     @MainActor
     func changeViewStatus(_ viewStatus: ViewStatus) {
         self.viewStatus = viewStatus
-    }
-    
-    enum ViewStatus {
-        case error
-        case loading
-        case loaded
     }
 }

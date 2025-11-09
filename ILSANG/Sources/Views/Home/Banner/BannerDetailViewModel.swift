@@ -8,33 +8,35 @@
 import Combine
 import UIKit
 
-class BannerDetailViewModel: ObservableObject {
+class BannerDetailViewModel: ObservableObject, CategoryPaginationLoadable {
+    // MARK: - Typealias
+    typealias Item = QuestItem
+    typealias Category = BannerQuestStatus
+    
+    // MARK: - Published Properties
     @Published var viewStatus: ViewStatus = .loading
     @Published var banner: BannerItem
-    @Published var uncompletedQuestListByFilter: [EventQuestFilterType: [QuestItem]] = [:]
-    @Published var completedEventQuestListByFilter: [EventQuestFilterType: [QuestItem]] = [:]
+    @Published private var uncompletedQuestListByFilter: [EventQuestFilterType: [QuestItem]] = [:]
+    @Published private var completedEventQuestListByFilter: [EventQuestFilterType: [QuestItem]] = [:]
+    @Published var currentCategory: Category = .uncomplete
     
-    @Published var selectedHeader: BannerQuestStatus = .uncomplete
-    let eventFilterState: StaticFilterPickerState<EventQuestFilterType>
-    
-    var filteredQuestList: [QuestItem] {
-        return (selectedHeader == .uncomplete)
+    // MARK: - Computed Properties
+    var currentItems: [QuestItem] {
+        (currentCategory == .uncomplete)
         ? uncompletedQuestListByFilter[eventFilterState.selectedValue, default: []]
         : completedEventQuestListByFilter[eventFilterState.selectedValue, default: []]
     }
     
-    var isFilteredListEmpty: Bool {
-        filteredQuestList.isEmpty
-    }
-    let uncompletedPaginationManager: PaginationManager<QuestItem>
-    let completedPaginationManager: PaginationManager<QuestItem>
-
-    var hasMorePage: Bool {
-        self.paginationManager(for: selectedHeader).canLoadMoreData()
-    }
+    // MARK: - Stored Properties
+    let eventFilterState: StaticFilterPickerState<EventQuestFilterType>
+    
+    private let uncompletedPaginationManager: PaginationManager<QuestItem>
+    private let completedPaginationManager: PaginationManager<QuestItem>
     
     private var refreshTask: Task<Void, Never>?
-
+    private var cancellables = Set<AnyCancellable>()
+    
+    // MARK: - Dependencies
     private let userRepository: UserRepositoryInterface
     private let questRepository: QuestRepositoryInterface
     private let areaRepository: AreaRepositoryInterface
@@ -42,8 +44,6 @@ class BannerDetailViewModel: ObservableObject {
     private let illsangZoneManager: IllsangZoneManager
     private let questSubmissionNotifier: QuestSubmissionNotifier
     
-    private var cancellables = Set<AnyCancellable>()
-
     init(
         banner: BannerItem,
         userRepository: UserRepositoryInterface,
@@ -88,13 +88,13 @@ class BannerDetailViewModel: ObservableObject {
     
     private func setupPaginationManagers() {
         uncompletedPaginationManager.loadPageData = { [weak self] page, size in
-            guard let self = self else { return true }
-            return await self.loadQuestListWithImage(page: page, size: size, status: .uncomplete)
+            guard let self else { return true }
+            return await self.loadPageData(page: page, size: size, category: .uncomplete)
         }
         
         completedPaginationManager.loadPageData = { [weak self] page, size in
-            guard let self = self else { return true }
-            return await self.loadQuestListWithImage(page: page, size: size, status: .complete)
+            guard let self else { return true }
+            return await self.loadPageData(page: page, size: size, category: .complete)
         }
     }
     
@@ -113,8 +113,8 @@ class BannerDetailViewModel: ObservableObject {
     }
     
     func loadDataIfNeeded() async {
-        if isFilteredListEmpty {
-            await loadInitialData()
+        if isCurrentListEmpty {
+            await loadAllInitialData()
         }
     }
     
@@ -122,11 +122,11 @@ class BannerDetailViewModel: ObservableObject {
     func refreshData() {
         refreshTask?.cancel()
         refreshTask = Task { [weak self] in
-            await self?.loadInitialData()
+            await self?.loadAllInitialData()
         }
     }
     
-    func loadInitialData() async {
+    func loadAllInitialData() async {
         await changeViewStatus(.loading)
         async let eventLoad: () = uncompletedPaginationManager.loadData(isRefreshing: true)
         async let completedLoad: () = completedPaginationManager.loadData(isRefreshing: true)
@@ -134,26 +134,20 @@ class BannerDetailViewModel: ObservableObject {
         await changeViewStatus(.loaded)
     }
     
-    func loadMoreDataIfNeeded(index: Int) async {
-        if paginationManager(for: selectedHeader).canLoadMoreData(index: index, currentCount: filteredQuestList.count) {
-            await paginationManager(for: selectedHeader).loadData(isRefreshing: false)
-        }
-    }
-    
-    @discardableResult @MainActor
-    private func loadQuestListWithImage(
+    @MainActor
+    func loadPageData(
         page: Int,
         size: Int,
-        status: BannerQuestStatus,
+        category: Category,
     ) async -> Bool {
-        let getQuestList = await getQuestList(page: page, size: size, status: status)
+        let getQuestList = await getQuestList(page: page, size: size, category: category)
         let newQuestList = getQuestList.data
         
         // 현재 필터별 existingList 가져오기
         let existingList: [QuestItem]
         let filter = eventFilterState.selectedValue
         
-        switch status {
+        switch category {
         case .uncomplete:
             existingList = uncompletedQuestListByFilter[filter] ?? []
         case .complete:
@@ -185,14 +179,14 @@ class BannerDetailViewModel: ObservableObject {
         }
         
         // 상태별 필터 매핑
-        updateQuestList(mergedList, for: eventFilterState.selectedValue, status: status)
+        updateQuestList(mergedList, for: eventFilterState.selectedValue, category: category)
         
         return getQuestList.isLast
     }
     
     @MainActor
-    private func updateQuestList(_ list: [QuestItem], for filter: EventQuestFilterType, status: BannerQuestStatus) {
-        switch status {
+    private func updateQuestList(_ list: [QuestItem], for filter: EventQuestFilterType, category: BannerQuestStatus) {
+        switch category {
         case .uncomplete:
             uncompletedQuestListByFilter[filter] = list
         case .complete:
@@ -200,7 +194,7 @@ class BannerDetailViewModel: ObservableObject {
         }
     }
     
-    private func getQuestList(page: Int, size: Int, status: BannerQuestStatus) async -> (data: [QuestItem], isLast: Bool) {
+    private func getQuestList(page: Int, size: Int, category status: Category) async -> (data: [Item], isLast: Bool) {
         let result = await questRepository.getBannerQuests(
             bannerId: banner.id,
             completedYn: status == .complete,
@@ -210,7 +204,7 @@ class BannerDetailViewModel: ObservableObject {
             size: size
         )
         let myCommercialCode = await MainActor.run { illsangZoneManager.currentZoneCode }
-
+        
         switch result {
         case .success(let response):
             return (response.content.map { $0.toQuestItem(myCommercialCode: myCommercialCode, questCommercialCode: nil) }, response.isLast)
@@ -220,7 +214,7 @@ class BannerDetailViewModel: ObservableObject {
         }
     }
     
-    func paginationManager(for status: BannerQuestStatus) -> PaginationManager<QuestItem> {
+    func paginationManager(for status: BannerQuestStatus) -> PaginationManager<Item> {
         switch status {
         case .uncomplete:
             return uncompletedPaginationManager

@@ -84,6 +84,7 @@
 		605DA0D12C0711CA00CC9450 /* CameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605DA0D02C0711CA00CC9450 /* CameraView.swift */; };
 		605DA0D32C0711E900CC9450 /* CameraViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605DA0D22C0711E900CC9450 /* CameraViewModel.swift */; };
 		605DA0D62C07123400CC9450 /* View++.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605DA0D52C07123400CC9450 /* View++.swift */; };
+		605E14792EBB926200196D07 /* PaginationLoadable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605E14782EBB926200196D07 /* PaginationLoadable.swift */; };
 		605E813D2D9F1B9900ECDB15 /* QuestDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605E813C2D9F1B9900ECDB15 /* QuestDetailViewModel.swift */; };
 		605E81402D9FE45C00ECDB15 /* QuestDetailInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605E813F2D9FE45C00ECDB15 /* QuestDetailInfoView.swift */; };
 		605E81422D9FE4D300ECDB15 /* QuestDetailApprovalImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605E81412D9FE4C400ECDB15 /* QuestDetailApprovalImageView.swift */; };
@@ -432,6 +433,7 @@
 		605DA0D02C0711CA00CC9450 /* CameraView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraView.swift; sourceTree = "<group>"; };
 		605DA0D22C0711E900CC9450 /* CameraViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraViewModel.swift; sourceTree = "<group>"; };
 		605DA0D52C07123400CC9450 /* View++.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View++.swift"; sourceTree = "<group>"; };
+		605E14782EBB926200196D07 /* PaginationLoadable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaginationLoadable.swift; sourceTree = "<group>"; };
 		605E813C2D9F1B9900ECDB15 /* QuestDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestDetailViewModel.swift; sourceTree = "<group>"; };
 		605E813F2D9FE45C00ECDB15 /* QuestDetailInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestDetailInfoView.swift; sourceTree = "<group>"; };
 		605E81412D9FE4C400ECDB15 /* QuestDetailApprovalImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestDetailApprovalImageView.swift; sourceTree = "<group>"; };
@@ -914,6 +916,14 @@
 			path = Extension;
 			sourceTree = "<group>";
 		};
+		605E147A2EBB926700196D07 /* Protocol */ = {
+			isa = PBXGroup;
+			children = (
+				605E14782EBB926200196D07 /* PaginationLoadable.swift */,
+			);
+			path = Protocol;
+			sourceTree = "<group>";
+		};
 		605E813E2D9FE36800ECDB15 /* QuestDetail */ = {
 			isa = PBXGroup;
 			children = (
@@ -1340,6 +1350,7 @@
 		60B8BA132BF9F07D005F6DE3 /* Sources */ = {
 			isa = PBXGroup;
 			children = (
+				605E147A2EBB926700196D07 /* Protocol */,
 				600D83A22C7B1F7E005C93E2 /* Manager */,
 				6011891B2C3E8B2B0070F2AD /* Service */,
 				606292D62C19E6C00098B6D2 /* Network */,
@@ -1900,6 +1911,7 @@
 				60A2ADF52DAE66BD007AC375 /* SettingToggleItemView.swift in Sources */,
 				60E401B02E72CD7A00BB0B6C /* UserItem.swift in Sources */,
 				A1AB3D6A2C1141B3001EB9D8 /* AppleLoginButtonView.swift in Sources */,
+				605E14792EBB926200196D07 /* PaginationLoadable.swift in Sources */,
 				60D8972B2E53B5AE006A8480 /* MissionHistoryNetwork.swift in Sources */,
 				600211EC2C1EEED7000CC02E /* APIManager.swift in Sources */,
 				60FB50CD2D15CEAE00C55E82 /* HomeView.swift in Sources */,

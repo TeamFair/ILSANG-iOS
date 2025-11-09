@@ -18,7 +18,7 @@ struct OtherUserChallengeList: View {
         case .loading: // page 0을 불러올 때만 프로그레스뷰 표시
             ProgressView().frame(maxWidth: .infinity, minHeight: 300)
         case .loaded:
-            if vm.currentMissionHistories.isEmpty {
+            if vm.isCurrentListEmpty {
                 ErrorView(
                     title: "완료된 퀘스트가 없어요",
                     subTitle: "사용자가 아직 퀘스트를\n수행하지 않았어요",
@@ -27,18 +27,18 @@ struct OtherUserChallengeList: View {
                 .frame(minHeight: 353)
             } else {
                 LazyVStack(spacing: 9) {
-                    ForEach(Array(vm.currentMissionHistories.enumerated()), id: \.1.missionHistoryId) { index, missionHistory in
+                    ForEach(Array(vm.currentItems.enumerated()), id: \.1.missionHistoryId) { index, missionHistory in
                         NavigationLink {
                             OtherUserChallengeDetailView(vm: vm, missionHistory: missionHistory)
                         } label: {
                             UserMissionHistoryItemView(missionHistory: missionHistory)
                                 .task {
-                                    await vm.loadMoreDataIfNeeded(index: index)
+                                    await vm.loadMoreDataIfNeeded(at: index)
                                 }
                         }
                     }
                     
-                    if vm.hasMorePage {
+                    if vm.canLoadMore {
                         ProgressView()
                             .padding(.top, 12)
                     }

@@ -74,10 +74,10 @@ extension QuestView {
         HStack(spacing: 16) {
             ForEach(QuestStatus.allCases, id: \.headerText) { status in
                 Button {
-                    vm.selectedHeader = status
+                    vm.currentCategory = status
                 } label: {
                     Text(status.headerText)
-                        .foregroundColor(status == vm.selectedHeader ? .gray500 : .gray300)
+                        .foregroundColor(status == vm.currentCategory ? .gray500 : .gray300)
                         .font(.system(size: 21, weight: .bold))
                         .frame(height: 30)
                 }
@@ -96,7 +96,7 @@ extension QuestView {
                 questListContent
             }
             .refreshable {
-                await vm.refreshData()
+                await vm.reloadData()
             }
             .frame(maxWidth: .infinity)
             .overlay {
@@ -104,7 +104,7 @@ extension QuestView {
                     questListEmptyView
                 }
             }
-            .onChange(of: vm.selectedHeader) { _, _ in
+            .onChange(of: vm.currentCategory) { _, _ in
                 vm.closeFilterPicker()
                 withAnimation {
                     proxy.scrollTo("top", anchor: .top)
@@ -133,9 +133,9 @@ extension QuestView {
     
     private var questListContent: some View {
         LazyVStack(spacing: 12) {
-            questListView(for: vm.selectedHeader)
+            questListView(for: vm.currentCategory)
 
-            if vm.hasMorePage {
+            if vm.canLoadMore {
                 ProgressView()
                     .padding(.top, 12)
             }
@@ -149,14 +149,14 @@ extension QuestView {
                 .frame(maxWidth: .infinity, alignment: .leading)
                 
                 Group {
-                    if (vm.selectedHeader == .default) {
+                    if (vm.currentCategory == .default) {
                         filterPickerDefaultView
-                    } else if (vm.selectedHeader == .repeat) {
+                    } else if (vm.currentCategory == .repeat) {
                         HStack(alignment: .top, spacing: 8) {
                             filterPickerRepeatView
                             filterPickerDefaultView
                         }
-                    } else if (vm.selectedHeader == .event) {
+                    } else if (vm.currentCategory == .event) {
                         filterPickerEventView
                     }
                 }
@@ -172,10 +172,10 @@ extension QuestView {
     /// 중복 제거: 헤더 타입에 따라 적절한 ItemView를 반환
     @ViewBuilder
     private func questListView(for header: QuestStatus) -> some View {
-        ForEach(Array(vm.currentQuests.enumerated()), id: \.1.id) { index, quest in
+        ForEach(Array(vm.currentItems.enumerated()), id: \.1.id) { index, quest in
             questItemView(for: header, quest: quest)
                 .task {
-                    await vm.loadMoreDataIfNeeded(index: index)
+                    await vm.loadMoreDataIfNeeded(at: index)
                 }
         }
     }
@@ -222,8 +222,8 @@ extension QuestView {
     
     private var questListEmptyView: some View {
         ErrorView(
-            title: vm.selectedHeader.emptyTitle,
-            subTitle: vm.selectedHeader.emptySubTitle,
+            title: vm.currentCategory.emptyTitle,
+            subTitle: vm.currentCategory.emptySubTitle,
             showButton: false
         )
     }
@@ -232,10 +232,10 @@ extension QuestView {
         ErrorView(
             systemImageName: "wifi.exclamationmark",
             title: "네트워크 연결 상태를 확인해주세요",
-            subTitle: "네트워크 연결 상태가 좋지 않아\n퀘스트를 불러올 수 없어요 ",
+            subTitle: "네트워크 연결 상태가 좋지 않아\n퀘스트를 불러올 수 없어요",
             emoticon: "🥲"
         ) {
-            Task { await vm.loadInitialData() }
+            Task { await vm.loadDataIfNeeded() }
         }
     }
 }

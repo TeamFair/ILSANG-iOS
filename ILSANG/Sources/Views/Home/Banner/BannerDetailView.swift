@@ -64,7 +64,7 @@ struct BannerDetailView: View {
         .withQuestNavigation(questRouter: questRouter)
         .withUserNavigation(userRouter: userRouter)
         .task { await viewModel.loadDataIfNeeded() }
-        .onChange(of: viewModel.selectedHeader) { _, _ in
+        .onChange(of: viewModel.currentCategory) { _, _ in
             viewModel.closeFilterPicker()
         }
         .onChange(of: viewModel.eventFilterState.selectedValue) { _, _ in
@@ -129,7 +129,7 @@ struct BannerDetailView: View {
                     ProgressView()
                         .frame(maxHeight: .infinity, alignment: .center)
                 case .loaded:
-                    if viewModel.isFilteredListEmpty {
+                    if viewModel.isCurrentListEmpty {
                         questListEmptyView
                     } else {
                         questListView
@@ -137,7 +137,7 @@ struct BannerDetailView: View {
                 }
             } header: {
                 SelectableTabHeader(
-                    selectedItem: $viewModel.selectedHeader,
+                    selectedItem: $viewModel.currentCategory,
                     items: BannerQuestStatus.allCases,
                     horizontalPadding: 0,
                     height: 44,
@@ -151,8 +151,8 @@ struct BannerDetailView: View {
     
     private var questListView: some View {
         LazyVStack(alignment: .leading, spacing: 12) {
-            ForEach(Array(viewModel.filteredQuestList.enumerated()), id: \.1.id) { index, quest in
-                switch viewModel.selectedHeader {
+            ForEach(Array(viewModel.currentItems.enumerated()), id: \.1.id) { index, quest in
+                switch viewModel.currentCategory {
                 case .uncomplete:
                     UncompletedBannerQuestItemView(quest: quest) { [weak viewModel, weak questRouter] in
                         guard let viewModel = viewModel, let questRouter = questRouter else { return }
@@ -163,16 +163,16 @@ struct BannerDetailView: View {
                         }
                     }
                     .task {
-                        await viewModel.loadMoreDataIfNeeded(index: index)
+                        await viewModel.loadMoreDataIfNeeded(at: index)
                     }
                 case .complete:
                     CompletedQuestItemView(quest: quest)
                         .task {
-                            await viewModel.loadMoreDataIfNeeded(index: index)
+                            await viewModel.loadMoreDataIfNeeded(at: index)
                         }
                 }
             }
-            if viewModel.hasMorePage {
+            if viewModel.canLoadMore {
                 ProgressView()
                     .padding(.top, 12)
             }
@@ -187,8 +187,8 @@ struct BannerDetailView: View {
     
     private var questListEmptyView: some View {
         ErrorView(
-            title: viewModel.selectedHeader.emptyTitle,
-            subTitle: viewModel.selectedHeader.emptySubTitle,
+            title: viewModel.currentCategory.emptyTitle,
+            subTitle: viewModel.currentCategory.emptySubTitle,
             showButton: false
         )
         .frame(height: 320, alignment: .center)

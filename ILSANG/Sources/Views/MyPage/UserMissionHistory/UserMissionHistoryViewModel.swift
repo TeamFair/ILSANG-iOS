@@ -6,16 +6,23 @@
 //
 
 
-import SwiftUI
-
-@MainActor
-final class UserMissionHistoryViewModel: ObservableObject {
-    @Published var missionHistories: [MissionType: [UserMissionHistoryItem]] = [:]
+import UIKit
+// 미션 타입이 변할 때 -> 데이터가 비어있을 경우에만 API 호출
+// 필터 타입이 변할 때 -> API 호출
+final class UserMissionHistoryViewModel: ObservableObject, CategoryPaginationLoadable {
+    // MARK: - Typealias
+    typealias Item = UserMissionHistoryItem
+    typealias Category = MissionType
+    
+    // MARK: - Published Properties
+    @Published var viewStatus: ViewStatus = .loading
+    @Published var missionHistories: [MissionType: [Item]] = [:]
     @Published var selectedMissionHistoryDetail: UserMissionHistoryDetailItem?
     @Published var selectedMissionType: MissionType = .photo
     @Published var challengeDelete = false
     
-    var currentMissionHistories: [UserMissionHistoryItem] {
+    // MARK: - Computed Properties
+    var currentItems: [Item] {
         switch selectedMissionType {
         case .photo:
             return missionHistories[.photo, default: []]
@@ -26,98 +33,94 @@ final class UserMissionHistoryViewModel: ObservableObject {
         }
     }
     
-    var isCurrentListEmpty: Bool {
-        currentMissionHistories.isEmpty
-    }
+    // MARK: - Stored Properties
+    var filterState = StaticFilterPickerState<MissionHistoryFilterType>(initialValue: .latest)
     
-    var hasMorePage: Bool {
-        self.paginationManager(for: selectedMissionType).canLoadMoreData()
-    }
-    
-    var filterState: StaticFilterPickerState<MissionHistoryFilterType>
+    private let photoPaginationManager = PaginationManager<Item>(size: 10, threshold: 3)
+    private let oxPaginationManager = PaginationManager<Item>(size: 10, threshold: 3)
+    private let textPaginationManager = PaginationManager<Item>(size: 10, threshold: 3)
     
     private let missionHistoryRepository: MissionHistoryRepositoryInterface
     
     init(missionHistoryRepository: MissionHistoryRepositoryInterface, challengeDelete: Bool = false) {
         self.missionHistoryRepository = missionHistoryRepository
-        filterState = StaticFilterPickerState<MissionHistoryFilterType>(initialValue: .latest)
+        setupFilterStateObserver()
+        setupPaginationManagers()
+    }
+    
+    private func setupFilterStateObserver() {
         filterState.onSelectionChange = { [weak self] _ in
             guard let self = self else { return }
             Task {
-                await self.paginationManager(for: self.selectedMissionType).loadData(isRefreshing: true)
+                await self.loadInitialDataWithLoadingState()
             }
         }
-        
+    }
+    
+    private func setupPaginationManagers() {
         self.photoPaginationManager.loadPageData = { [weak self] page, size in
             guard let self = self else { return true }
-            return await loadPhotoMissionHistory(page: page, size: size)
+            return await loadPageData(page: page, size: size, category: selectedMissionType)
         }
         self.oxPaginationManager.loadPageData = { [weak self] page, size in
             guard let self = self else { return true }
-            return await loadQuizMissionHistory(page: page, size: size, quizType: .ox, filterType: self.filterState.selectedValue)
+            return await loadPageData(page: page, size: size, category: selectedMissionType)
         }
         self.textPaginationManager.loadPageData = { [weak self] page, size in
             guard let self = self else { return true }
-            return await loadQuizMissionHistory(page: page, size: size, quizType: .text, filterType: self.filterState.selectedValue)
+            return await loadPageData(page: page, size: size, category: selectedMissionType)
         }
     }
-    
-    private var photoPaginationManager = PaginationManager<UserMissionHistoryItem>(size: 10, threshold: 7)
-    private var oxPaginationManager = PaginationManager<UserMissionHistoryItem>(size: 10, threshold: 7)
-    private var textPaginationManager = PaginationManager<UserMissionHistoryItem>(size: 10, threshold: 7)
     
     func loadDataIfNeeded() async {
         if isCurrentListEmpty {
-            await loadInitialData()
+            await loadInitialDataWithLoadingState()
         }
     }
     
-    func loadInitialData() async {
-        async let photoLoad: () = photoPaginationManager.loadData(isRefreshing: true)
-        //        async let oxLoad: () = oxPaginationManager.loadData(isRefreshing: true)
-        //        async let textLoad: () = textPaginationManager.loadData(isRefreshing: true)
-        _ = await (photoLoad/*, oxLoad, textLoad*/)
+    private func loadInitialDataWithLoadingState() async {
+        await changeViewStatus(.loading)
+        let minimumDelay: UInt64 = 300_000_000 // 최소 응답 지연 시간 추가 (0.3초)
+        async let dataLoad: Void = loadInitialData()
+        async let delay: Void = Task.sleep(nanoseconds: minimumDelay)
+        _ = try? await (dataLoad, delay)
+        await changeViewStatus(.loaded)
     }
     
-    func loadCurrentData() async {
-        if isCurrentListEmpty {
-            await self.paginationManager(for: self.selectedMissionType).loadData(isRefreshing: true)
-        }
-    }
-    
-    func loadMoreDataIfNeeded(index: Int) async {
-        if paginationManager(for: selectedMissionType)
-            .canLoadMoreData(index: index, currentCount: currentMissionHistories.count) {
-            await paginationManager(for: selectedMissionType)
-                .loadData(isRefreshing: false)
-        }
-    }
-    
-    @discardableResult
-    private func loadPhotoMissionHistory(page: Int, size: Int) async -> Bool {
-        let response = await fetchMissionHistories(page: page, size: size, missionType: .photo, filterType: filterState.selectedValue)
+    @MainActor
+    func loadPageData(page: Int, size: Int, category: Category) async -> Bool {
+        let response = await fetchMissionHistories(
+            page: page,
+            size: size,
+            missionType: category,
+            filterType: filterState.selectedValue
+        )
+        
         let newItems = response.data
         
+        // 현재 카테고리에 맞는 기존 데이터
         if page == 0 {
-            self.missionHistories[.photo, default: []] = newItems
+            self.missionHistories[category, default: []] = newItems
         } else {
-            self.missionHistories[.photo, default: []] += newItems
+            self.missionHistories[category, default: []] += newItems
         }
         
-        await withTaskGroup(of: (Int, UIImage?).self) { group in
-            for (index, challenge) in newItems.enumerated() {
-                group.addTask {
-                    let imageId = challenge.submitImageId
-                    var image: UIImage? = nil
-                    if let imageId {
-                        image = await ImageCacheService.shared.loadImageAsync(imageId: imageId)
+        // category가 .photo일 때만 이미지 로딩 수행
+        if case .photo = category {
+            await withTaskGroup(of: (Int, UIImage?).self) { group in
+                for (index, challenge) in newItems.enumerated() {
+                    group.addTask {
+                        guard let imageId = challenge.submitImageId else {
+                            return (index, nil)
+                        }
+                        let image = await ImageCacheService.shared.loadImageAsync(imageId: imageId)
+                        return (index, image)
                     }
-                    return (index, image)
                 }
-            }
-            
-            for await (index, image) in group {
-                if let image = image {
+                
+                for await (index, image) in group {
+                    guard let image else { continue }
+                    
                     if page == 0 {
                         self.missionHistories[.photo, default: []][index].submitImage = image
                     } else {
@@ -134,21 +137,7 @@ final class UserMissionHistoryViewModel: ObservableObject {
         return response.isLast
     }
     
-    @discardableResult
-    private func loadQuizMissionHistory(page: Int, size: Int, quizType: QuizType, filterType: MissionHistoryFilterType) async -> Bool {
-        let response = await fetchMissionHistories(page: page, size: size, missionType: .quiz(quizType), filterType: filterType)
-        let newItems = response.data
-        
-        if page == 0 {
-            self.missionHistories[.quiz(quizType), default: []] = newItems
-        } else {
-            self.missionHistories[.quiz(quizType), default: []] += newItems
-        }
-        
-        return response.isLast
-    }
-    
-    private func fetchMissionHistories(page: Int, size: Int, missionType: MissionType, filterType: MissionHistoryFilterType) async -> (data: [UserMissionHistoryItem], isLast: Bool) {
+    private func fetchMissionHistories(page: Int, size: Int, missionType: MissionType, filterType: MissionHistoryFilterType) async -> (data: [Item], isLast: Bool) {
         let response = await missionHistoryRepository.getMissionHistories(page: page, size: size, userId: nil, missionType: missionType, filterType: filterType)
         
         switch response {
@@ -161,6 +150,7 @@ final class UserMissionHistoryViewModel: ObservableObject {
         }
     }
     
+    @MainActor
     func fetchMissionHistoryDetail(id: Int, submitImage: UIImage?) async {
         let response = await missionHistoryRepository.getMissionHistoryDetail(missionHistoryId: id)
         switch response {
@@ -171,7 +161,7 @@ final class UserMissionHistoryViewModel: ObservableObject {
             Log("챌린지 상세 조회 실패: \(error)")
         }
     }
-     
+    
     func deleteMissionHistory(id: Int) async -> Bool {
         return await missionHistoryRepository.deleteMissionHistory(missionHistoryId: id)
     }
@@ -180,8 +170,8 @@ final class UserMissionHistoryViewModel: ObservableObject {
         await ImageCacheService.shared.loadImageAsync(imageId: imageId)
     }
     
-    func paginationManager(for type: MissionType) -> PaginationManager<UserMissionHistoryItem> {
-        switch type {
+    func paginationManager(for category: Category) -> PaginationManager<Item> {
+        switch category {
         case .photo: return photoPaginationManager
         case .quiz(.ox): return oxPaginationManager
         case .quiz(.text): return textPaginationManager
@@ -190,5 +180,17 @@ final class UserMissionHistoryViewModel: ObservableObject {
     
     func closeFilterPicker() {
         self.filterState.pickerStatus  = .close
+    }
+    
+    @MainActor
+    func changeViewStatus(_ viewStatus: ViewStatus) {
+        self.viewStatus = viewStatus
+    }
+}
+
+extension UserMissionHistoryViewModel {
+    var currentCategory: Category {
+        get { selectedMissionType }
+        set { selectedMissionType = newValue }
     }
 }

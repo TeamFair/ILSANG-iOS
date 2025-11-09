@@ -5,34 +5,30 @@
 //  Created by Lee Jinhee on 5/23/24.
 //
 
-import UIKit
 import Combine
+import UIKit
 
-class QuestViewModel: ObservableObject {
-    // TODO: API 요청 실패 시 에러상태로 변경하기
-    enum ViewStatus {
-        case error
-        case loading
-        case loaded
+final class QuestViewModel: ObservableObject, CategoryPaginationLoadable {
+    // MARK: - Typealias
+    typealias Item = QuestItem
+    typealias Category = QuestStatus
+    
+    // MARK: - Published Properties
+    @Published private(set) var viewStatus: ViewStatus = .loading
+    @Published var currentCategory: Category = .default {
+        didSet {
+            Task { await loadDataIfNeeded() }
+        }
     }
+    @Published var showSelectMyRegionView = false
     
-    @Published var viewStatus: ViewStatus = .loading
+    @Published private var defaultQuestListByFilter: [QuestFilterType: [QuestItem]] = [:]
+    @Published private var repeatQuestListByFilter: [RepeatType: [QuestFilterType: [QuestItem]]] = [:]
+    @Published private var eventQuestListByFilter: [EventQuestFilterType: [QuestItem]] = [:]
     
-    @Published var selectedHeader: QuestStatus = .default
-    
-    @Published var showSelectMyRegionView: Bool = false
-    
-    // 필터
-     var questFilterState: StaticFilterPickerState<QuestFilterType>
-     var repeatFilterState: StaticFilterPickerState<RepeatType>
-     var eventFilterState: StaticFilterPickerState<EventQuestFilterType>
-       
-    @Published var defaultQuestListByFilter: [QuestFilterType: [QuestItem]] = [:]
-    @Published var repeatQuestListByFilter: [RepeatType: [QuestFilterType: [QuestItem]]] = [:]
-    @Published var eventQuestListByFilter: [EventQuestFilterType: [QuestItem]] = [:]
-    
-    var currentQuests: [QuestItem] {
-        switch selectedHeader {
+    // MARK: - Computed Properties
+    var currentItems: [QuestItem] {
+        switch currentCategory {
         case .default:
             return defaultQuestListByFilter[questFilterState.selectedValue] ?? []
         case .repeat:
@@ -42,29 +38,26 @@ class QuestViewModel: ObservableObject {
         }
     }
     
-    var isCurrentListEmpty: Bool {
-        currentQuests.isEmpty
-    }
+    // MARK: - Stored Properties
+    let questFilterState: StaticFilterPickerState<QuestFilterType>
+    let repeatFilterState: StaticFilterPickerState<RepeatType>
+    let eventFilterState: StaticFilterPickerState<EventQuestFilterType>
     
-    var hasMorePage: Bool {
-        self.paginationManager(for: selectedHeader).canLoadMoreData()
-    }
+    private let defaultPaginationManager = PaginationManager<Item>(size: 10, threshold: 2)
+    private let repeatPaginationManager = PaginationManager<Item>(size: 10, threshold: 2)
+    private let eventPaginationManager = PaginationManager<Item>(size: 10, threshold: 2)
     
-    let defaultPaginationManager: PaginationManager<QuestItem>
-    let repeatPaginationManager: PaginationManager<QuestItem>
-    let eventPaginationManager: PaginationManager<QuestItem>
+    private let throttleInterval: TimeInterval = 2.0
+    private var lastRefreshTime: Date?
     
-    // MARK: throttle 관련
-    let throttleInterval: TimeInterval = 2.0
-    var lastRefreshTime: Date? = nil
+    private var cancellables = Set<AnyCancellable>()
     
+    // MARK: - Dependencies
     private let questRepository: QuestRepositoryInterface
     private let favoriteService: FavoriteService
     private let illsangZoneManager: IllsangZoneManager
     private let questSubmissionNotifier: QuestSubmissionNotifier
     private let sharedState: SharedState
-        
-    private var cancellables = Set<AnyCancellable>()
     
     init(
         questRepository: QuestRepositoryInterface,
@@ -79,52 +72,50 @@ class QuestViewModel: ObservableObject {
         self.questSubmissionNotifier = questSubmissionNotifier
         self.sharedState = sharedState
         
-        questFilterState = StaticFilterPickerState<QuestFilterType>(initialValue: .popular)
-        eventFilterState = StaticFilterPickerState<EventQuestFilterType>(initialValue: .popular)
-        repeatFilterState = StaticFilterPickerState<RepeatType>(initialValue: .daily)
+        self.questFilterState = StaticFilterPickerState<QuestFilterType>(initialValue: .popular)
+        self.eventFilterState = StaticFilterPickerState<EventQuestFilterType>(initialValue: .popular)
+        self.repeatFilterState = StaticFilterPickerState<RepeatType>(initialValue: .daily)
+      
+        setupFilterStateObserver()
+        setupPaginationManagers()
         
-        self.defaultPaginationManager = PaginationManager(size: 10, threshold: 2)
-        self.repeatPaginationManager = PaginationManager(size: 10, threshold: 2)
-        self.eventPaginationManager = PaginationManager(size: 10, threshold: 2)
-        self.defaultPaginationManager.loadPageData = { [weak self] page, size in
-            guard let self = self else { return true }
-            return await self.loadQuestListWithImage(page: page, size: size, status: .default)
-        }
-        self.repeatPaginationManager.loadPageData = { [weak self] page, size in
-            guard let self = self else { return true }
-            return await self.loadQuestListWithImage(page: page, size: size, status: .repeat)
-        }
-        self.eventPaginationManager.loadPageData = { [weak self] page, size in
-            guard let self = self else { return true }
-            return await self.loadQuestListWithImage(page: page, size: size, status: .event)
-        }
-        
-        questFilterState.onSelectionChange = { [weak self] _ in
-            guard let self = self else { return }
-            switch selectedHeader {
-            case .default:
-                Task { await self.defaultPaginationManager.loadData(isRefreshing: true) }
-            case .repeat:
-                Task { await self.repeatPaginationManager.loadData(isRefreshing: true) }
-            default: break
-            }
-        }
-        eventFilterState.onSelectionChange = { [weak self] _ in
-            guard let self = self else { return }
-            Task { await self.eventPaginationManager.loadData(isRefreshing: true) }
-        }
-        repeatFilterState.onSelectionChange = { [weak self] _ in
-            guard let self = self else { return }
-            Task { await self.repeatPaginationManager.loadData(isRefreshing: true) }
-        }
-        Log("🍭 QuestViewModel: init")
-
         Task { await setupBindings() }
+        Log("🍭 QuestViewModel: init")
     }
     
     deinit {
         cancellables.removeAll()
         Log("🍭 QuestViewModel: deinit")
+    }
+    
+    private func setupFilterStateObserver() {
+        questFilterState.onSelectionChange = { [weak self] _ in
+            guard let self = self else { return }
+            Task { await self.loadInitialData() }
+        }
+        eventFilterState.onSelectionChange = { [weak self] _ in
+            guard let self = self else { return }
+            Task { await self.loadInitialData() }
+        }
+        repeatFilterState.onSelectionChange = { [weak self] _ in
+            guard let self = self else { return }
+            Task { await self.loadInitialData() }
+        }
+    }
+    
+    private func setupPaginationManagers() {
+        self.defaultPaginationManager.loadPageData = { [weak self] page, size in
+            guard let self = self else { return true }
+            return await self.loadPageData(page: page, size: size, category: .default)
+        }
+        self.repeatPaginationManager.loadPageData = { [weak self] page, size in
+            guard let self = self else { return true }
+            return await self.loadPageData(page: page, size: size, category: .repeat)
+        }
+        self.eventPaginationManager.loadPageData = { [weak self] page, size in
+            guard let self = self else { return true }
+            return await self.loadPageData(page: page, size: size, category: .event)
+        }
     }
     
     @MainActor
@@ -133,7 +124,7 @@ class QuestViewModel: ObservableObject {
             .removeDuplicates()
             .dropFirst()
             .sink { [weak self] _ in
-                Task { await self?.loadInitialData() }
+                Task { await self?.loadAllInitialData() }
             }
             .store(in: &cancellables)
         
@@ -145,7 +136,7 @@ class QuestViewModel: ObservableObject {
             .sink { [weak self] _ in
                 Log("🏠 QuestViewModel: 퀘스트 제출 트리거 > 리프레시 예정")
                 Task {
-                    await self?.loadInitialData()
+                    await self?.loadAllInitialData()
                 }
             }
             .store(in: &cancellables)
@@ -153,43 +144,37 @@ class QuestViewModel: ObservableObject {
     
     func loadDataIfNeeded() async {
         if isCurrentListEmpty {
-            await loadInitialData()
+            await loadInitialDataWithLoadingState(for: currentCategory)
         }
     }
     
-    func loadInitialData() async {
+    private func loadInitialDataWithLoadingState(for category: Category) async {
         await changeViewStatus(.loading)
-        async let defaultLoad: () = defaultPaginationManager.loadData(isRefreshing: true)
-        async let repeatLoad: () = repeatPaginationManager.loadData(isRefreshing: true)
-        async let eventLoad: () = eventPaginationManager.loadData(isRefreshing: true)
+        let minimumDelay: UInt64 = 300_000_000 // 최소 응답 지연 시간 추가 (0.3초)
+        async let dataLoad: Void = loadInitialData()
+        async let delay: Void = Task.sleep(nanoseconds: minimumDelay)
+        _ = try? await (dataLoad, delay)
+        await changeViewStatus(.loaded)
+    }
+    
+    private func loadAllInitialData() async {
+        await changeViewStatus(.loading)
+        async let defaultLoad: () = loadInitialData(for: .default)
+        async let repeatLoad: () = loadInitialData(for: .repeat)
+        async let eventLoad: () = loadInitialData(for: .event)
         _ = await (defaultLoad, repeatLoad, eventLoad)
         await changeViewStatus(.loaded)
     }
     
-    func loadMoreDataIfNeeded(index: Int) async {
-        if paginationManager(for: selectedHeader).canLoadMoreData(index: index, currentCount: currentQuests.count) {
-            await paginationManager(for: selectedHeader).loadData(isRefreshing: false)
-        }
-    }
-    
-    func refreshData() async {
+    func reloadData() async {
         // 마지막 새로고침으로부터 throttleInterval 이내에 새로 고침 시도를 방지
         let now = Date()
-
+        
         if let lastRefreshTime = lastRefreshTime, now.timeIntervalSince(lastRefreshTime) < throttleInterval {
             return
         }
         lastRefreshTime = now
-
-        switch selectedHeader {
-        case .default:
-            await defaultPaginationManager.loadData(isRefreshing: true)
-        case .repeat:
-            await repeatPaginationManager.loadData(isRefreshing: true)
-        case .event:
-            await eventPaginationManager.loadData(isRefreshing: true)
-        }
-        
+        await loadInitialData(for: currentCategory)
         lastRefreshTime = Date()
     }
     
@@ -198,18 +183,18 @@ class QuestViewModel: ObservableObject {
         self.viewStatus = viewStatus
     }
     
-    @discardableResult @MainActor
-    func loadQuestListWithImage(
+    @MainActor
+    func loadPageData(
         page: Int,
         size: Int,
-        status: QuestStatus,
+        category: Category,
     ) async -> Bool {
-        let getQuestList = await getQuestList(page: page, size: size, status: status)
+        let getQuestList = await getQuestList(page: page, size: size, category: category)
         var newQuestList = getQuestList.data
         
         // 현재 필터별 existingList 가져오기
-        let existingList: [QuestItem]
-        switch status {
+        let existingList: [Item]
+        switch category {
         case .default:
             existingList = defaultQuestListByFilter[questFilterState.selectedValue] ?? []
         case .repeat:
@@ -263,7 +248,7 @@ class QuestViewModel: ObservableObject {
         }
         
         // 상태별 필터 매핑
-        switch status {
+        switch category {
         case .default:
             let questFilter = questFilterState.selectedValue
             mapDefaultQuestByFilter(list: mergedList, filter: questFilter)
@@ -277,13 +262,13 @@ class QuestViewModel: ObservableObject {
     }
     
     /// uncompleted 상태의 기본 퀘스트 목록을 XpStat별로 분류하여 defaultQuestListByXpStat 딕셔너리에 매핑합니다.
-    private func mapDefaultQuestByFilter(list: [QuestItem], filter: QuestFilterType) {
+    private func mapDefaultQuestByFilter(list: [Item], filter: QuestFilterType) {
         var mapped = defaultQuestListByFilter
         mapped[filter] = list
         self.defaultQuestListByFilter = mapped
     }
     
-    private func mapRepeatQuestByFilter(list: [QuestItem], repeatType: RepeatType, filter: QuestFilterType) {
+    private func mapRepeatQuestByFilter(list: [Item], repeatType: RepeatType, filter: QuestFilterType) {
         var mapped = repeatQuestListByFilter
         var subMapped = mapped[repeatType] ?? [:]
         subMapped[filter] = list
@@ -291,18 +276,18 @@ class QuestViewModel: ObservableObject {
         self.repeatQuestListByFilter = mapped
     }
     
-    private func mapEventQuestByFilter(list: [QuestItem], filter: EventQuestFilterType) {
+    private func mapEventQuestByFilter(list: [Item], filter: EventQuestFilterType) {
         var mapped = eventQuestListByFilter
         mapped[filter] = list
         self.eventQuestListByFilter = mapped
     }
     
-    private func getQuestList(page: Int, size: Int, status: QuestStatus) async -> (data: [QuestItem], isLast: Bool) {
+    private func getQuestList(page: Int, size: Int, category: Category) async -> (data: [Item], isLast: Bool) {
         let myCommercialCode = await MainActor.run { illsangZoneManager.currentZoneCode }
         let selectedCommercialCode = sharedState.selectedCommercialArea.code
         let result: Result<ResponseWithPage<[Quest]>, Error>
         
-        switch status {
+        switch category {
         case .default:
             result = await questRepository.getDefaultQuests(
                 commercialAreaCode: selectedCommercialCode,
@@ -336,8 +321,8 @@ class QuestViewModel: ObservableObject {
         }
     }
     
-    func paginationManager(for status: QuestStatus) -> PaginationManager<QuestItem> {
-        switch status {
+    func paginationManager(for category: Category) -> PaginationManager<QuestItem> {
+        switch category {
         case .default: return defaultPaginationManager
         case .repeat: return repeatPaginationManager
         case .event: return eventPaginationManager
@@ -349,7 +334,7 @@ class QuestViewModel: ObservableObject {
     }
     
     /// 즐겨찾기 상태를 UI에 즉시 반영하고,  서버 반영은 디바운싱 처리
-    func toggleFavoriteStatus(quest: QuestItem) {
+    func toggleFavoriteStatus(quest: Item) {
         favoriteService.toggle(quest: quest)
     }
     
