@@ -38,7 +38,7 @@ struct UserMissionHistoryItemView: View {
                         Image(uiImage: .logoWithAlpha)
                             .resizable()
                             .scaledToFit()
-                            .frame(width: 100)
+                            .frame(width: 70)
                     }
                 }
                     .scaledToFill()

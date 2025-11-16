@@ -207,14 +207,11 @@ struct SplashScreenView: View {
         ZStack {
             Color.white
                 .ignoresSafeArea()
-            VStack {
-                Image(.logo) /// 런치스크린에서 사용한 이미지
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 172, height: 172)
-                    .offset(y: -8)
-                    .ignoresSafeArea()
-            }
+            Image(.logoWithAlpha) /// 런치스크린에서 사용한 이미지
+                .resizable()
+                .scaledToFit()
+                .frame(width: 152)
+                .ignoresSafeArea()
         }
     }
 }
