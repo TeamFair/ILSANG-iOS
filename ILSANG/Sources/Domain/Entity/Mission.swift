@@ -8,6 +8,7 @@
 
 struct Mission: Equatable {
     let id: Int
+    let title: String
     let type: MissionType
     let exampleImageIds: [String]?
 }

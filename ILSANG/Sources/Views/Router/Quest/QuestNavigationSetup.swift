@@ -16,24 +16,30 @@ extension View {
 
 struct QuestNavigationSetup: ViewModifier {
     @ObservedObject var questRouter: QuestRouter
+    @State private var missionTitleHeight: CGFloat = 0
     @EnvironmentObject var dependencies: AppDependencies
     
     func body(content: Content) -> some View {
         content
         // 퀘스트 상세 시트
             .sheet(isPresented: $questRouter.showQuestSheet) {
-                let detent = PresentationDetent.heightForQuest(quest: questRouter.selectedQuest)
-
-                QuestDetailView(
+                let detent = PresentationDetent.baseHeightForQuest(questRouter.selectedQuest) + missionTitleHeight
+                return QuestDetailView(
                     quest: questRouter.selectedQuest,
                     questRepository: dependencies.questRepository,
                     onFavorite: { _ in questRouter.handleFavoriteToggle() },
                     showQuestExImageAction: { questRouter.handleChallengeExImage() },
-                    questApproveAction: { questRouter.handleQuestApproval() }
+                    questApproveAction: { questRouter.handleQuestApproval() },
+                    onHeightChange: { height in
+                        missionTitleHeight = height
+                    }
                 )
                 .presentationCornerRadius(24)
                 .presentationDragIndicator(.hidden)
-                .presentationDetents([detent])
+                .presentationDetents([.height(detent)])
+                .onDisappear {
+                    missionTitleHeight = 0
+                }
             }
         
         // 도전내역 제출 라우터

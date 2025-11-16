@@ -14,6 +14,7 @@ extension MissionResponse {
         }
         return Mission(
             id: id,
+            title: title,
             type: missionType,
             exampleImageIds: exampleImageIds
         )

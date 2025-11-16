@@ -241,7 +241,7 @@ extension QuestItem {
         .setTitle("러닝 30분하기")
         .setNormalType()
         .setCoupons([CouponItem.mockData])
-        .setMission(.init(id: 0, type: .quiz(.ox), exampleImageIds: []))
+        .setMission(.init(id: 0, title: "", type: .quiz(.ox), exampleImageIds: []))
         .setReward([Reward(point: 110, pointType: .metro), Reward(point: 10, pointType: .commercial), Reward(point: 10, pointType: .contribution)])
         .setFavoriteYn(true)
         .build()
