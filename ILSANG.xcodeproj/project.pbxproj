@@ -143,6 +143,7 @@
 		606C87B12C0CC89B002D5C3E /* 2406_TERMS_OF_USE.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 606C87B02C0CC89B002D5C3E /* 2406_TERMS_OF_USE.pdf */; };
 		606F18152DA3E1F800ABEA84 /* FavoriteNetwork.swift in Sources */ = {isa = PBXBuildFile; fileRef = 606F18142DA3E1F800ABEA84 /* FavoriteNetwork.swift */; };
 		606F18172DA650DE00ABEA84 /* FavoriteService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 606F18162DA650DE00ABEA84 /* FavoriteService.swift */; };
+		60781F5D2EC97732003C437F /* QuestDetailMissionTitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60781F5C2EC97732003C437F /* QuestDetailMissionTitleView.swift */; };
 		607FCBD42BFA648000BB2D04 /* Tab.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FCBD32BFA648000BB2D04 /* Tab.swift */; };
 		607FCBD62BFA660C00BB2D04 /* MainTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FCBD52BFA660C00BB2D04 /* MainTabView.swift */; };
 		607FCBD82BFA681500BB2D04 /* ApprovalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FCBD72BFA681500BB2D04 /* ApprovalView.swift */; };
@@ -496,6 +497,7 @@
 		606C87B02C0CC89B002D5C3E /* 2406_TERMS_OF_USE.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = 2406_TERMS_OF_USE.pdf; sourceTree = "<group>"; };
 		606F18142DA3E1F800ABEA84 /* FavoriteNetwork.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteNetwork.swift; sourceTree = "<group>"; };
 		606F18162DA650DE00ABEA84 /* FavoriteService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteService.swift; sourceTree = "<group>"; };
+		60781F5C2EC97732003C437F /* QuestDetailMissionTitleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestDetailMissionTitleView.swift; sourceTree = "<group>"; };
 		607FCBD32BFA648000BB2D04 /* Tab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tab.swift; sourceTree = "<group>"; };
 		607FCBD52BFA660C00BB2D04 /* MainTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabView.swift; sourceTree = "<group>"; };
 		607FCBD72BFA681500BB2D04 /* ApprovalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApprovalView.swift; sourceTree = "<group>"; };
@@ -932,6 +934,7 @@
 				605F28512CF1B2C5007EA739 /* QuestDetailView.swift */,
 				605E813C2D9F1B9900ECDB15 /* QuestDetailViewModel.swift */,
 				605E813F2D9FE45C00ECDB15 /* QuestDetailInfoView.swift */,
+				60781F5C2EC97732003C437F /* QuestDetailMissionTitleView.swift */,
 				605E81432D9FE56000ECDB15 /* QuestDetailTitleView.swift */,
 				605E81412D9FE4C400ECDB15 /* QuestDetailApprovalImageView.swift */,
 				605E81452D9FE6D800ECDB15 /* QuestDetailRepeatRankView.swift */,
@@ -1975,6 +1978,7 @@
 				606C3EC22E60E9290050C4D6 /* PointResponse.swift in Sources */,
 				609197632E5DEC0F00F1D81B /* Banner+UIMapper.swift in Sources */,
 				6091974F2E5C292F00F1D81B /* AreaRankItem.swift in Sources */,
+				60781F5D2EC97732003C437F /* QuestDetailMissionTitleView.swift in Sources */,
 				60B392E22EABEE86005C4A88 /* UserMissionHistoryDetail.swift in Sources */,
 				60D897202E5372BE006A8480 /* MissionHistoryResponse+Mapping.swift in Sources */,
 				606C3EE52E674B360050C4D6 /* UserRouter.swift in Sources */,
