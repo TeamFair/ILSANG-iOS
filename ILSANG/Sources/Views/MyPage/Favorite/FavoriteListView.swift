@@ -13,6 +13,7 @@ struct FavoriteListView: View {
     @StateObject var userRouter: UserRouter
     @EnvironmentObject var sharedState: SharedState
     @EnvironmentObject var dependencies: AppDependencies
+    @Environment(\.layout) var layout
     @Environment(\.dismiss) var dismiss
     
     init(
@@ -26,6 +27,7 @@ struct FavoriteListView: View {
             wrappedValue: FavoriteListViewModel(
                 questRepository: questRepository,
                 favoriteService: favoriteService,
+                illsangZoneManager: illsangZoneManager,
                 selectedCommercialArea: selectedCommercialArea,
                 questSubmissionNotifier: questSubmissionNotifier
             )
@@ -55,9 +57,9 @@ struct FavoriteListView: View {
                     networkErrorView
                 }
             }
-            .scrollDisabled(viewModel.viewStatus != .loaded || viewModel.quests.isEmpty)
+            .scrollDisabled(viewModel.viewStatus != .loaded || viewModel.currentItems.isEmpty)
             .refreshable {
-                await viewModel.loadInitialData()
+                await viewModel.loadInitialDataWithLoadingState()
             }
         }
         .background(Color.background)
@@ -90,12 +92,12 @@ extension FavoriteListView {
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(.top, 14)
-        .padding(.leading, 20)
+        .padding(.leading, layout.horizontalPadding)
     }
     
     @ViewBuilder
     private var questListView: some View {
-        if viewModel.quests.isEmpty {
+        if viewModel.currentItems.isEmpty {
             selectScopeView
             emptyView
         } else {
@@ -103,7 +105,7 @@ extension FavoriteListView {
                 selectScopeView
                 
                 LazyVStack(spacing: 8) {
-                    ForEach(viewModel.quests, id: \.id) { quest in
+                    ForEach(Array(viewModel.currentItems.enumerated()), id: \.1.id) { index, quest in
                         FavoriteQuestItemView(
                             quest: quest,
                             action: { [weak viewModel, weak questRouter] in
@@ -115,15 +117,14 @@ extension FavoriteListView {
                             },
                             favoriteAction: { viewModel.toggleFavoriteStatus(quest: quest) }
                         )
+                        .task { await viewModel.loadMoreDataIfNeeded(at: index) }
                     }
                     
-                    if viewModel.paginationManager.canLoadMoreData() {
-                        ProgressView()
-                            .task { await viewModel.loadMoreData() }
-                    }
+                    LoadMoreIndicatorView(isVisible: viewModel.canLoadMore)
+
                 }
-                .padding(.top, 20)
-                .padding(.bottom, 72)
+                .padding(.top, layout.horizontalPadding)
+                .padding(.bottom, layout.bottomSpacing)
             }
         }
     }
@@ -145,7 +146,7 @@ extension FavoriteListView {
             subTitle: "네트워크 연결 상태가 좋지 않아\n퀘스트를 불러올 수 없어요",
             emoticon: "🥲"
         ) {
-            Task { await viewModel.loadInitialData() }
+            Task { await viewModel.loadInitialDataWithLoadingState() }
         }
     }
 }

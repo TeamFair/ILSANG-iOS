@@ -16,10 +16,10 @@ class SubmitRouterViewModel: ObservableObject {
     private let submitService: ImageChallengeSubmitService
     private let challengeNetwork: ChallengeNetwork
 
-    let selectedQuest: QuestViewModelItem
+    let selectedQuest: QuestItem
     private var submitTask: Task<Void, Never>?
     
-    init(selectedImage: UIImage? = nil, selectedQuest: QuestViewModelItem, submitService: ImageChallengeSubmitService, challengeNetwork: ChallengeNetwork) {
+    init(selectedImage: UIImage? = nil, selectedQuest: QuestItem, submitService: ImageChallengeSubmitService, challengeNetwork: ChallengeNetwork) {
         self.selectedImage = selectedImage
         self.selectedQuest = selectedQuest
         self.submitService = submitService

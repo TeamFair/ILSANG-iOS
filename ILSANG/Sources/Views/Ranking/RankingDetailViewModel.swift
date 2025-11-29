@@ -20,7 +20,7 @@ class RankingDetailViewModel: ObservableObject {
         case commercial
     }
     @Published var viewStatus: ViewStatus = .loading // TODO: 변경
-    @Published var areaUserRank: AreaUserRankViewModelItem = .init(ranks: [], user: nil)  // TODO: 변경
+    @Published var areaUserRank: AreaUserRankItem = .init(ranks: [], user: nil)  // TODO: 변경
     @Published var imageList: [UIImage] = []
     @Published var imageIdx = 0
     

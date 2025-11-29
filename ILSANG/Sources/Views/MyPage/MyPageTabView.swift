@@ -7,6 +7,12 @@
 
 import SwiftUI
 
+protocol TabItemRepresentable {
+    var title: String { get }
+    var icon: String? { get }
+    var image: UIImage? { get }
+}
+
 struct MyPageTabView<Tab: TabItemRepresentable & CaseIterable & Equatable>: View {
     @Binding var selectedTab: Tab
     private let tabs = Tab.allCases
@@ -51,55 +57,5 @@ struct MyPageTabItemView<Tab: TabItemRepresentable>: View {
             RoundedRectangle(cornerRadius: 12)
                 .foregroundColor(isSelected ? Color.accentColor : Color.white)
         )
-    }
-}
-
-protocol TabItemRepresentable {
-    var title: String { get }
-    var icon: String? { get }
-    var image: UIImage? { get }
-}
-
-enum MyPageTab: CaseIterable, TabItemRepresentable, Equatable {
-    case quest
-    case info
-    
-    var title: String {
-        switch self {
-        case .quest: return "챌린지"
-        case .info: return "내 정보"
-        }
-    }
-    
-    var icon: String? {
-        switch self {
-        case .quest: return "📜"
-        case .info: return "🎖️"
-        }
-    }
-    
-    var image: UIImage? { nil }
-}
-
-
-enum HonorGrade: String, CaseIterable, TabItemRepresentable, Equatable {
-    case standard
-    case rare
-    case legend
-    
-    var honor: Honor {
-        switch self {
-        case .standard: Honor.standard
-        case .rare: Honor.rare
-        case .legend: Honor.legend
-        }
-    }
-    var icon: String? { nil }
-    var title: String { honor.title }
-    var image: UIImage? { honor.image }
-    var description: String { honor.description }
-    
-    init?(rawValue: String) {
-        self = Self.allCases.first { $0.rawValue == rawValue.lowercased() } ?? .standard
     }
 }

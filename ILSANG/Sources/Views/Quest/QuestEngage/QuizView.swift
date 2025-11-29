@@ -26,29 +26,19 @@ struct QuizView: View, KeyboardReadable {
     
     private func oxQuizView(question: String, selection: String) -> some View {
         VStack(alignment: .leading, spacing: 24) {
-            quizTitleView(question)
+            QuizQuestionView(question: question)
             
             HStack(spacing: 10) {
                 Button {
                     selectedAnswer = "O"
                 } label: {
-                    Text("O")
-                        .styledFont(.title1)
-                        .frame(maxWidth: .infinity)
-                        .frame(height: 65)
-                        .foregroundStyle(selection == "O" ? .white : .black)
-                        .roundedBackground(cornerRadius: 12, bgColor: selection == "O" ? .primaryPurple : .gray100)
+                    OXSelectionLabel(label: "O", isSelected: selectedAnswer == "O")
                 }
                 
                 Button {
                     selectedAnswer = "X"
                 } label: {
-                    Text("X")
-                        .styledFont(.title1)
-                        .frame(maxWidth: .infinity)
-                        .frame(height: 65)
-                        .foregroundStyle(selection == "X" ? .white : .black)
-                        .roundedBackground(cornerRadius: 12, bgColor: selection == "X" ? .primaryPurple : .gray100)
+                    OXSelectionLabel(label: "X", isSelected: selectedAnswer == "X")
                 }
             }
         }
@@ -59,7 +49,7 @@ struct QuizView: View, KeyboardReadable {
     
     private func textQuizView(question: String, hint: String?, userAnswer: String) -> some View {
         VStack(alignment: .leading, spacing: 24) {
-            quizTitleView(question)
+            QuizQuestionView(question: question)
             
             if let hint {
                 VStack(alignment: .leading, spacing: 4) {
@@ -99,8 +89,30 @@ struct QuizView: View, KeyboardReadable {
         .padding(.horizontal, 20)
         .roundedBackground(cornerRadius: 12)
     }
+}
+
+/// OX 선택 상태를 정적으로 표시하는 라벨
+struct OXSelectionLabel: View {
+    let label: String
+    let isSelected: Bool
     
-    private func quizTitleView(_ question: String) -> some View {
+    var body: some View {
+        Text(label)
+            .styledFont(.title1)
+            .frame(maxWidth: .infinity)
+            .frame(height: 65)
+            .foregroundStyle(isSelected ? .white : .black)
+            .roundedBackground(
+                cornerRadius: 12,
+                bgColor: isSelected ? .primaryPurple : .gray100
+            )
+    }
+}
+
+struct QuizQuestionView: View {
+    let question: String
+    
+    var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             HStack(spacing: 8) {
                 Text("Q")

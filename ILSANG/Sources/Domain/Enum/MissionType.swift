@@ -8,8 +8,11 @@
 
 import UIKit
 
-enum MissionType: Equatable, Hashable {
+enum MissionType: Equatable, Hashable, SelectableTabItem {
     case quiz(QuizType), photo
+    
+    var id: String { self.description }
+    static var allCases: [MissionType] = [.photo, .quiz(.ox), .quiz(.text)]
     
     init?(rawValue: String) {
         if let quizType = QuizType(rawValue: rawValue) {
@@ -27,6 +30,24 @@ enum MissionType: Equatable, Hashable {
             quizType.description
         case .photo:
             "사진인증"
+        }
+    }
+    
+    var headerText: String {
+        self.description
+    }
+    
+    var parameterText: String {
+        switch self {
+        case .quiz(let quizType):
+            switch quizType {
+            case .text:
+                "WORDS"
+            case .ox:
+                "OX"
+            }
+        case .photo:
+            "PHOTO"
         }
     }
 }

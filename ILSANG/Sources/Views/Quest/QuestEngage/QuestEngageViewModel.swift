@@ -10,7 +10,7 @@ import Foundation
 /// 퀴즈 데이터를 관리하고 정답을 선택하는 역할
 class QuestEngageViewModel: ObservableObject {
     // MARK: - Properties
-    let quest: QuestViewModelItem
+    let quest: QuestItem
     private let challengeNetwork: ChallengeNetwork
     
     @Published var quiz: QuizResponse?
@@ -23,7 +23,7 @@ class QuestEngageViewModel: ObservableObject {
     var isSubmitAbled: Bool { selectedAnswer != "" }
     
     // MARK: - Initializer
-    init(quest: QuestViewModelItem, challengeNetwork: ChallengeNetwork) {
+    init(quest: QuestItem, challengeNetwork: ChallengeNetwork) {
         self.quest = quest
         self.challengeNetwork = challengeNetwork
         Log("🏃🏻‍♂️ QuestEngageViewModel: init")

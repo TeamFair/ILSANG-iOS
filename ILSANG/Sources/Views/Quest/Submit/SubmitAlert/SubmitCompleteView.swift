@@ -11,6 +11,7 @@ import SwiftUI
 struct SubmitCompleteView: View {
     let totalPoint: Int
     let rewards: [PointType: Int]
+    let isMyIllsangZone: Bool
     let action: () -> ()
     
     private let innerSpacing: CGFloat = 24
@@ -22,7 +23,7 @@ struct SubmitCompleteView: View {
     @State var animateToggleOpacity: Bool = false
     @State var animateToggle2: Bool = false
     
-    init(quest: QuestViewModelItem, action: @escaping ()->()) {
+    init(quest: QuestItem, action: @escaping ()->()) {
         self.totalPoint = quest.totalRewardPoint()
         var rewardDict: [PointType: Int] = [:]
         if let rewards = quest.rewards {
@@ -31,6 +32,7 @@ struct SubmitCompleteView: View {
             }
         }
         self.rewards = rewardDict
+        self.isMyIllsangZone = quest.isMyIllsangZone
         self.action = action
     }
     
@@ -65,7 +67,7 @@ struct SubmitCompleteView: View {
     private func rewardSummaryView(rewards: [PointType: Int]) -> some View {
         HStack(spacing: 8) {
             ForEach(PointType.sorted, id: \.self) { type in
-                pointView(icon: type.image, point: rewards[type])
+                pointView(icon: type.image, point: rewards[type], showDoublePoint: type == .contribution && isMyIllsangZone)
             }
         }
         .padding(.vertical, 8)
@@ -73,7 +75,7 @@ struct SubmitCompleteView: View {
         .roundedBackground(cornerRadius: 12, bgColor: .background)
     }
     
-    private func pointView(icon: ImageResource, point: Int?) -> some View {
+    private func pointView(icon: ImageResource, point: Int?, showDoublePoint: Bool) -> some View {
         HStack(spacing: 0) {
             Image(icon)
                 .resizable()
@@ -89,6 +91,10 @@ struct SubmitCompleteView: View {
                     .resizable()
                     .scaledToFit()
                     .frame(height: 10)
+            }
+            
+            if showDoublePoint {
+                DoublePointView(style: .text)
             }
         }
         .frame(height: 25)

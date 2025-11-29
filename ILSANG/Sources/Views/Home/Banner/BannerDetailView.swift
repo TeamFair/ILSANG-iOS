@@ -14,9 +14,10 @@ struct BannerDetailView: View {
     @StateObject var userRouter: UserRouter
     @EnvironmentObject var dependencies: AppDependencies
     @Environment(\.dismiss) var dismiss
+    @Environment(\.layout) var layout
     
     init(
-        banner: BannerViewModelItem,
+        banner: BannerItem,
         userRepository: UserRepositoryInterface,
         questRepository: QuestRepositoryInterface,
         areaRepository: AreaRepositoryInterface,
@@ -31,6 +32,7 @@ struct BannerDetailView: View {
                 questRepository: questRepository,
                 areaRepository: areaRepository,
                 favoriteService: favoriteService,
+                illsangZoneManager: illsangZoneManager,
                 questSubmissionNotifier: questSubmissionNotifier
             )
         )
@@ -62,7 +64,7 @@ struct BannerDetailView: View {
         .withQuestNavigation(questRouter: questRouter)
         .withUserNavigation(userRouter: userRouter)
         .task { await viewModel.loadDataIfNeeded() }
-        .onChange(of: viewModel.selectedHeader) { _, _ in
+        .onChange(of: viewModel.currentCategory) { _, _ in
             viewModel.closeFilterPicker()
         }
         .onChange(of: viewModel.eventFilterState.selectedValue) { _, _ in
@@ -94,7 +96,7 @@ struct BannerDetailView: View {
                     .foregroundColor(.gray500)
                     .padding(.bottom, 16)
             }
-            .padding(.horizontal, 20)
+            .padding(.horizontal, layout.horizontalPadding)
         }
     }
     
@@ -117,7 +119,7 @@ struct BannerDetailView: View {
                         filterPickerEventView
                             .zIndex(10)
                     }
-                    .padding(.horizontal, 20)
+                    .padding(.horizontal, layout.horizontalPadding)
                     .padding(.vertical, 24)
                 
                 switch viewModel.viewStatus {
@@ -127,7 +129,7 @@ struct BannerDetailView: View {
                     ProgressView()
                         .frame(maxHeight: .infinity, alignment: .center)
                 case .loaded:
-                    if viewModel.isFilteredListEmpty {
+                    if viewModel.isCurrentListEmpty {
                         questListEmptyView
                     } else {
                         questListView
@@ -135,13 +137,13 @@ struct BannerDetailView: View {
                 }
             } header: {
                 SelectableTabHeader(
-                    selectedItem: $viewModel.selectedHeader,
+                    selectedItem: $viewModel.currentCategory,
                     items: BannerQuestStatus.allCases,
                     horizontalPadding: 0,
                     height: 44,
                     hasBottomLine: true
                 )
-                .padding(.horizontal, -20)
+                .padding(.horizontal, -layout.horizontalPadding)
                 .background(Color.background)
             }
         }
@@ -149,9 +151,9 @@ struct BannerDetailView: View {
     
     private var questListView: some View {
         LazyVStack(alignment: .leading, spacing: 12) {
-            switch viewModel.selectedHeader {
-            case .uncomplete:
-                ForEach(viewModel.filteredQuestList, id: \.id) { quest in
+            ForEach(Array(viewModel.currentItems.enumerated()), id: \.1.id) { index, quest in
+                switch viewModel.currentCategory {
+                case .uncomplete:
                     UncompletedBannerQuestItemView(quest: quest) { [weak viewModel, weak questRouter] in
                         guard let viewModel = viewModel, let questRouter = questRouter else { return }
                         AnalyticsService.logEvent(.questItemClick(questId: quest.id, questType: quest.questType?.rawValue.uppercased() ?? ""))
@@ -159,33 +161,22 @@ struct BannerDetailView: View {
                         questRouter.presentQuestDetail(quest: quest) { [weak viewModel] quest in
                             viewModel?.toggleFavoriteStatus(quest: quest)
                         }
-                        
                     }
-                }
-                if viewModel.uncompletedPaginationManager.canLoadMoreData() {
-                    ProgressView()
-                        .onAppear {
-                            Task { [viewModel] in
-                                await viewModel.uncompletedPaginationManager.loadData(isRefreshing: false)
-                            }
-                        }
-                }
-            case .complete:
-                ForEach(viewModel.filteredQuestList, id: \.id) { quest in
+                    .task {
+                        await viewModel.loadMoreDataIfNeeded(at: index)
+                    }
+                case .complete:
                     CompletedQuestItemView(quest: quest)
-                }
-                if viewModel.completedPaginationManager.canLoadMoreData() {
-                    ProgressView()
-                        .onAppear {
-                            Task { [viewModel] in
-                                await viewModel.completedPaginationManager.loadData(isRefreshing: false)
-                            }
+                        .task {
+                            await viewModel.loadMoreDataIfNeeded(at: index)
                         }
                 }
             }
+            
+            LoadMoreIndicatorView(isVisible: viewModel.canLoadMore)
         }
         .zIndex(-1)
-        .padding(.bottom, 72)
+        .padding(.bottom, layout.bottomSpacing)
     }
     
     private var filterPickerEventView: some View {
@@ -194,8 +185,8 @@ struct BannerDetailView: View {
     
     private var questListEmptyView: some View {
         ErrorView(
-            title: viewModel.selectedHeader.emptyTitle,
-            subTitle: viewModel.selectedHeader.emptySubTitle,
+            title: viewModel.currentCategory.emptyTitle,
+            subTitle: viewModel.currentCategory.emptySubTitle,
             showButton: false
         )
         .frame(height: 320, alignment: .center)

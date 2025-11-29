@@ -12,16 +12,16 @@ extension PresentationDetent {
     static let questDetailShort = PresentationDetent.height(440)
     static let questDetailTallWithCoupon = PresentationDetent.height(736)
     static let questDetailShortWithCoupon = PresentationDetent.height(544)
-
-    static func heightForQuest(quest: QuestViewModelItem) -> PresentationDetent {
+    
+    static func baseHeightForQuest(_ quest: QuestItem) -> CGFloat {
         let isTall = quest.questType == .repeat || quest.missionType == .photo
         let hasCoupon = quest.hasCouponReward
-
+        
         switch (isTall, hasCoupon) {
-        case (true, true): return .questDetailTallWithCoupon
-        case (true, false): return .questDetailTall
-        case (false, true): return .questDetailShortWithCoupon
-        case (false, false): return .questDetailShort
+        case (true, true): return 736
+        case (true, false): return 632
+        case (false, true): return 544
+        case (false, false): return 440
         }
     }
 }

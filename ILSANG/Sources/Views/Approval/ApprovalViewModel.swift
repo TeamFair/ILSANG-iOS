@@ -5,7 +5,7 @@
 //  Created by Lee Jinhee on 6/1/24.
 //
 
-import SwiftUI
+import UIKit
 /*
 ✅ 이모지 에셋 변경
 ✅ 이모지 불러오기(idx 0, 1..<)
@@ -22,26 +22,25 @@ enum ApprovalSource: Equatable {
     case detail(missionId: Int)
 }
 
-final class ApprovalViewModel: ObservableObject {
-    enum ViewStatus {
-        case error
-        case loading
-        case loaded
-    }
+final class ApprovalViewModel: ObservableObject, SinglePaginationLoadable {
+    // MARK: - Typealias
+    typealias Item = ApprovalMissionHistoryItem
     
+    // MARK: - Published Properties
     @Published var viewStatus: ViewStatus = .loading
-    @Published var itemList: [ApprovalMissionHistoryItem] = []
-    
-    @Published var showReportAlert = false
+    @Published var currentItems: [ApprovalMissionHistoryItem] = []
     @Published var selectedChallenge: ApprovalMissionHistoryItem?
-    
-    var paginationManager: PaginationManager<ApprovalMissionHistoryItem>?
-    let approvalSource: ApprovalSource
+    @Published var showReportAlert = false
 
+    // MARK: - Stored Properties
+    let approvalSource: ApprovalSource
+    
+    internal let paginationManager = PaginationManager<ApprovalMissionHistoryItem>(size: 10, threshold: 2)
+    
     private let emojiNetwork: EmojiNetwork
     private let missionHistoryRepository: MissionHistoryRepository
     private let areaNameService: AreaNameProvider
-
+    
     init(
         approvalSource: ApprovalSource,
         emojiNetwork: EmojiNetwork,
@@ -53,14 +52,8 @@ final class ApprovalViewModel: ObservableObject {
         self.missionHistoryRepository = missionHistoryRepository
         self.areaNameService = areaNameService
         
-        self.paginationManager = PaginationManager<ApprovalMissionHistoryItem>(
-            size: 10,
-            threshold: 3
-        )
-        paginationManager?.loadPageData = { [weak self] page in
-            guard let self = self else { return ([], 0) }
-            return await self.getChallengesWithImage(page: page)
-        }
+        setupPaginationManagers()
+        
         Log("✨ ApprovalViewModel: init")
     }
     
@@ -68,33 +61,36 @@ final class ApprovalViewModel: ObservableObject {
         Log("✨ ApprovalViewModel: deinit")
     }
     
+    private func setupPaginationManagers() {
+        self.paginationManager.loadPageData = { [weak self] page, size in
+            guard let self else { return true }
+            return await self.loadPageData(page: page, size: size)
+        }
+    }
     
-    @MainActor
     func loadDataIfNeeded() async {
-        if itemList.isEmpty {
-            await loadInitialData()
+        if isCurrentListEmpty {
+            await loadInitialDataWithLoadingState()
         }
     }
     
     @MainActor
-    func loadInitialData() async {
+    func loadInitialDataWithLoadingState() async {
         changeViewStatus(.loading)
-        await self.paginationManager?.loadData(isRefreshing: true)
+        let minimumDelay: UInt64 = 300_000_000 // 최소 응답 지연 시간 추가 (0.3초)
+        async let dataLoad: Void = loadInitialData()
+        async let delay: Void = Task.sleep(nanoseconds: minimumDelay)
+        _ = try? await (dataLoad, delay)
+        await self.paginationManager.loadData(isRefreshing: true)
         changeViewStatus(.loaded)
     }
     
-    @MainActor
-    func loadMoreData() async {
-        guard ((paginationManager?.canLoadMoreData()) != nil) else { return }
-        await paginationManager?.loadData(isRefreshing: false)
-    }
-        
     // MARK: - 도전내역 랜덤 조회
     /// 페이지 번호를 받아 해당 페이지의 도전 내역 데이터를 로드 및 가공
     @MainActor
-    func getChallengesWithImage(page: Int) async -> ([ApprovalMissionHistoryItem], Int) {
+    func loadPageData(page: Int, size: Int) async -> Bool {
         // 1. 챌린지 데이터 로드
-        let (challenges, total) = await loadChallenges(page: page)
+        let (challenges, isLast) = await loadChallenges(page: page)
         
         // 2. 중복 제거
         let filteredChallenges = removeDuplicateChallenges(challenges)
@@ -108,19 +104,19 @@ final class ApprovalViewModel: ObservableObject {
         // 5. itemList 업데이트
         updateItemList(for: page, with: mappedChallenges)
         
-        return (itemList, total)
+        return isLast
     }
-
+    
     // MARK: 도전내역 조회 - Helper Methods
     /// 1. 챌린지 데이터 로드
-    private func loadChallenges(page: Int) async -> ([ApprovalMissionHistoryItem], Int) {
+    private func loadChallenges(page: Int) async -> ([ApprovalMissionHistoryItem], Bool) {
         switch approvalSource {
         case .tab:
-            let result = await getRandomChallenges(page: page, size: paginationManager?.size ?? 10)
-            return (result.data, result.total)
+            let result = await getRandomChallenges(page: page, size: paginationManager.size)
+            return (result.data, result.isLast)
         case .detail(let missionId):
-            let result = await getChallenges(missionId: missionId, page: page, size: paginationManager?.size ?? 10)
-            return (result.data, result.total)
+            let result = await getChallenges(missionId: missionId, page: page, size: paginationManager.size)
+            return (result.data, result.isLast)
         }
     }
     
@@ -136,7 +132,7 @@ final class ApprovalViewModel: ObservableObject {
             }
         }
     }
-
+    
     /// 3. 이미지 병합: 각 챌린지에 이미지 정보를 추가
     private func enrichChallengesWithImage(
         _ challenges: [ApprovalMissionHistoryItem]
@@ -166,7 +162,7 @@ final class ApprovalViewModel: ObservableObject {
             return enrichedChallenges
         }
     }
-
+    
     /// 4. 지역 코드 → 지역명 매핑
     private func mapAreaNames(for challenges: [ApprovalMissionHistoryItem]) async -> [ApprovalMissionHistoryItem] {
         var results: [ApprovalMissionHistoryItem] = []
@@ -179,16 +175,16 @@ final class ApprovalViewModel: ObservableObject {
             results.append(challenge)
         }
         return results
-
+        
     }
     
     /// 5. itemList 업데이트
     @MainActor
     private func updateItemList(for page: Int, with challenges: [ApprovalMissionHistoryItem]) {
         if page == 0 {
-            itemList = challenges
+            currentItems = challenges
         } else {
-            itemList += challenges
+            currentItems += challenges
         }
     }
     
@@ -208,7 +204,7 @@ final class ApprovalViewModel: ObservableObject {
     
     @MainActor
     private func updateEmoji(emojiType: EmojiType, idx: Int) async {
-        let item = itemList[idx]
+        let item = currentItems[idx]
         
         // 현재 상태
         let wasSelected = item.emojis.isSelected(emojiType)
@@ -237,9 +233,6 @@ final class ApprovalViewModel: ObservableObject {
         case .hate:
             item.hateCount = newCount(item.hateCount, isSelected: item.emojis.isSelected(.hate))
         }
-        
-        // 리스트 업데이트
-        itemList[idx] = item
     }
     
     /// 신고 확인 버튼을 눌렀을 때 호출됩니다.
@@ -263,25 +256,25 @@ final class ApprovalViewModel: ObservableObject {
     }
     
     // MARK: - API 호출부
-    private func getRandomChallenges(page: Int, size: Int) async -> (data: [ApprovalMissionHistoryItem], total: Int) {
+    private func getRandomChallenges(page: Int, size: Int) async -> (data: [ApprovalMissionHistoryItem], isLast: Bool) {
         let res = await missionHistoryRepository.getRandomMissionHistories(page: page, size: size)
         switch res {
         case .success(let response):
-            return (response.data.map {$0.toApprovalItem()}, response.total)
+            return (response.data.map {$0.toApprovalItem()}, response.isLast)
         case .failure(let err):
             Log("도전내역랜덤 조회 실패 \(err.localizedDescription)")
-            return ([], 0)
+            return ([], true)
         }
     }
     
-    private func getChallenges(missionId: Int, page: Int, size: Int) async -> (data: [ApprovalMissionHistoryItem], total: Int) {
+    private func getChallenges(missionId: Int, page: Int, size: Int) async -> (data: [ApprovalMissionHistoryItem], isLast: Bool) {
         let res = await missionHistoryRepository.getMissionHistories(missionId: missionId, page: page, size: size)
         switch res {
         case .success(let response):
-            return (response.data.map {$0.toApprovalItem()}, response.total)
+            return (response.data.map {$0.toApprovalItem()}, response.isLast)
         case .failure(let err):
             Log("도전내역랜덤 조회 실패 \(err.localizedDescription)")
-            return ([], 0)
+            return ([], true)
         }
     }
     

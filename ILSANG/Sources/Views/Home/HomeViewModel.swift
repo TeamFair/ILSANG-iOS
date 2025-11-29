@@ -24,22 +24,22 @@ final class HomeViewModel: ObservableObject {
             return "추천 퀘스트"
         }
     }
-    @Published var mainBanners: [BannerViewModelItem] = []
-    @Published var userRankList: [UserRankViewModelItem] = [] // 10개
-    @Published var largestRewardQuestList: [QuestViewModelItem] = [] // 3*5개
-    @Published var recommendQuestList: [QuestViewModelItem] = [] //QuestViewModelItem.mockQuestList // 10개
-    @Published var popularQuestList: [QuestViewModelItem] = [] // 4n개
+    @Published var mainBanners: [BannerItem] = []
+    @Published var userRankList: [UserRankItem] = [] // 10개
+    @Published var largestRewardQuestList: [QuestItem] = [] // 3*5개
+    @Published var recommendQuestList: [QuestItem] = [] //QuestViewModelItem.mockQuestList // 10개
+    @Published var popularQuestList: [QuestItem] = [] // 4n개
     
     @Published var currentBanner: Int = 0
     
     @Published var selectedPopularTabIndex: Int = 0
     let popularChunkSize: Int = 4
-    var paginatedPopularQuests: [[QuestViewModelItem]] {
+    var paginatedPopularQuests: [[QuestItem]] {
         popularQuestList.chunks(of: popularChunkSize)
     }
     
     @Published var showSelectMyRegionView: Bool = false
-    @Published var selectedBanner: BannerViewModelItem? = nil
+    @Published var selectedBanner: BannerItem? = nil
         
     var errorCnt = 0
     @Published var showMainBanners: Bool = true
@@ -56,6 +56,7 @@ final class HomeViewModel: ObservableObject {
     private let rankRepository: RankRepositoryInterface
     private let bannerRepository: BannerRepositoryInterface
     private let favoriteService: FavoriteService
+    private let illsangZoneManager: IllsangZoneManager
     private let questSubmissionNotifier: QuestSubmissionNotifier
     private let sharedState: SharedState
     
@@ -68,6 +69,7 @@ final class HomeViewModel: ObservableObject {
         rankRepository: RankRepositoryInterface,
         bannerRepository: BannerRepositoryInterface,
         favoriteService: FavoriteService,
+        illsangZoneManager: IllsangZoneManager,
         questSubmissionNotifier: QuestSubmissionNotifier,
         sharedState: SharedState
     )  {
@@ -77,6 +79,7 @@ final class HomeViewModel: ObservableObject {
         self.rankRepository = rankRepository
         self.bannerRepository = bannerRepository
         self.favoriteService = favoriteService
+        self.illsangZoneManager = illsangZoneManager
         self.questSubmissionNotifier = questSubmissionNotifier
         self.sharedState = sharedState
         
@@ -256,10 +259,11 @@ final class HomeViewModel: ObservableObject {
     @MainActor
     func loadPopularQuestList() async throws {
         let res = await questRepository.getPopularQuests(commercialAreaCode: sharedState.selectedCommercialArea.code, page: 0, size: 8)
-        
+        let myCommercialCode = await MainActor.run { illsangZoneManager.currentZoneCode }
+
         switch res {
         case .success(let response):
-            self.popularQuestList = response.content.map { $0.toQuestItem() }
+            self.popularQuestList = response.content.map { $0.toQuestItem(myCommercialCode: myCommercialCode, questCommercialCode: sharedState.selectedCommercialArea.code) }
             await cacheImages(for: &popularQuestList, getMainImage: true)
         case .failure(let error):
             throw error
@@ -269,10 +273,11 @@ final class HomeViewModel: ObservableObject {
     @MainActor
     func loadRecommendQuestList() async throws {
         let res = await questRepository.getRecommendQuests(commercialAreaCode: sharedState.selectedCommercialArea.code, page: 0, size: 10)
-        
+        let myCommercialCode = await MainActor.run { illsangZoneManager.currentZoneCode }
+
         switch res {
         case .success(let response):
-            self.recommendQuestList = response.content.map { $0.toQuestItem() }
+            self.recommendQuestList = response.content.map { $0.toQuestItem(myCommercialCode: myCommercialCode, questCommercialCode: sharedState.selectedCommercialArea.code) }
             await cacheImages(for: &recommendQuestList, getWriterImage: true)
         case .failure(let error):
             throw error
@@ -282,10 +287,11 @@ final class HomeViewModel: ObservableObject {
     @MainActor
     func loadLargeRewardQuestList() async throws {
         let res = await questRepository.getLargeRewardQuests(commercialAreaCode: sharedState.selectedCommercialArea.code, page: 0, size: 3)
-        
+        let myCommercialCode = await MainActor.run { illsangZoneManager.currentZoneCode }
+
         switch res {
-        case .success(let quests):
-            self.largestRewardQuestList = quests.content.map { $0.toQuestItem() }
+        case .success(let response):
+            self.largestRewardQuestList = response.content.map { $0.toQuestItem(myCommercialCode: myCommercialCode, questCommercialCode: sharedState.selectedCommercialArea.code) }
             await cacheImages(for: &largestRewardQuestList, getWriterImage: true)
         case .failure(let error):
             throw error
@@ -324,7 +330,7 @@ final class HomeViewModel: ObservableObject {
     
     /// getWriterImage, getMainImage 중 가져올 이미지 타입을 true로 설정
     @MainActor
-    func cacheImages(for quests: inout [QuestViewModelItem], getWriterImage: Bool = false, getMainImage: Bool = false) async {
+    func cacheImages(for quests: inout [QuestItem], getWriterImage: Bool = false, getMainImage: Bool = false) async {
         await withTaskGroup(of: (Int, UIImage?).self) { group in
             for (index, quest) in quests.enumerated() {
                 group.addTask {
@@ -393,7 +399,7 @@ final class HomeViewModel: ObservableObject {
     }
     
     /// 즐겨찾기 상태를 UI에 즉시 반영하고,  서버 반영은 디바운싱 처리
-    func toggleFavoriteStatus(quest: QuestViewModelItem) {
+    func toggleFavoriteStatus(quest: QuestItem) {
         favoriteService.toggle(quest: quest)
     }
 }

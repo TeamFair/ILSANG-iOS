@@ -9,12 +9,13 @@ import SwiftUI
 
 struct RankingItemView: View {
     let style: RankingItemStyle
+    @Environment(\.layout) var layout
     
     enum RankingItemStyle {
-        case totalRank(UserRankViewModelItem)
-        case userRank(UserRankViewModelItem)
-        case areaRank(AreaRankViewModelItem)
-        case currentUserRank(UserRankViewModelItem)
+        case totalRank(UserRankItem)
+        case userRank(UserRankItem)
+        case areaRank(AreaRankItem)
+        case currentUserRank(UserRankItem)
         case legendRank(LegendRankItem)
     }
     
@@ -23,20 +24,22 @@ struct RankingItemView: View {
         case .totalRank(let rank):
             TotalRankItemView(rank: rank)
         case .userRank(let rank):
-            UserRankItemView(rank: rank)
+            UserRankItemView(rank: rank, horizontalPadding: layout.horizontalPadding)
         case .areaRank(let rank):
-            AreaRankItemView(rank: rank)
+            AreaRankItemView(rank: rank, horizontalPadding: layout.horizontalPadding)
         case .currentUserRank(let rank):
-            CurrentUserRankItemView(rank: rank)
+            CurrentUserRankItemView(rank: rank, horizontalPadding: layout.horizontalPadding)
         case .legendRank(let rank):
-            LegendRankItemView(rank: rank)
+            LegendRankItemView(rank: rank, horizontalPadding: layout.horizontalPadding)
         }
     }
 }
 
 fileprivate struct UserRankItemView: View {
-    @ObservedObject var rank: UserRankViewModelItem
-    
+    @ObservedObject var rank: UserRankItem
+    let horizontalPadding: CGFloat
+    private let isSmallDevice: Bool = CGFloat.isSmallDevice
+
     var body: some View {
         HStack(spacing: 8) {
             RankIconView(idx: rank.rank, size: 26, fontStyle: .heading2)
@@ -61,21 +64,23 @@ fileprivate struct UserRankItemView: View {
                 }
                 
                 Text("\(rank.point)p")
-                    .styledFont(.title1)
+                    .styledFont(isSmallDevice ? .init(size: 21, weight: .bold, lineHeight: 22, tracking: 0) : .title1)
                     .foregroundColor(.black)
             }
             
             Spacer(minLength: 0)
         }
-        .padding(36)
+        .padding(isSmallDevice ? 20 : 36)
         .roundedBackground(cornerRadius: 16, bgColor: .white)
-        .padding(.horizontal, 20)
+        .padding(.horizontal, horizontalPadding)
     }
 }
 
 fileprivate struct AreaRankItemView: View {
-    let rank: AreaRankViewModelItem
-    
+    let rank: AreaRankItem
+    let horizontalPadding: CGFloat
+    private let isSmallDevice: Bool = CGFloat.isSmallDevice
+
     var body: some View {
         HStack(spacing: 10) {
             RankIconView(idx: rank.rank, size: 26, fontStyle: .heading2)
@@ -86,7 +91,7 @@ fileprivate struct AreaRankItemView: View {
                     .foregroundStyle(.gray500)
                 
                 Text("\(rank.point)p")
-                    .styledFont(.title1)
+                    .styledFont(isSmallDevice ? .init(size: 21, weight: .bold, lineHeight: 22, tracking: 0) : .title1)
                     .foregroundColor(.black)
             }
             
@@ -101,17 +106,19 @@ fileprivate struct AreaRankItemView: View {
                 .frame(26)
                 .roundedBackground(cornerRadius: 100, bgColor: Color.gray92.opacity(0.1))
         }
-        .padding(.leading, 36)
-        .padding(.trailing, 24)
-        .padding(.vertical, 24)
+        .padding(.leading, isSmallDevice ? 24 : 36)
+        .padding(.trailing, isSmallDevice ? 20 :24)
+        .padding(.vertical, isSmallDevice ? 20 : 24)
         .roundedBackground(cornerRadius: 16, bgColor: .white)
-        .padding(.horizontal, 20)
+        .padding(.horizontal, horizontalPadding)
     }
 }
 
 fileprivate struct CurrentUserRankItemView: View {
-    @ObservedObject var rank: UserRankViewModelItem
-    
+    @ObservedObject var rank: UserRankItem
+    let horizontalPadding: CGFloat
+    private let isSmallDevice: Bool = CGFloat.isSmallDevice
+
     var body: some View {
         VStack(spacing: 10) {
             HStack(spacing: 8) {
@@ -144,7 +151,7 @@ fileprivate struct CurrentUserRankItemView: View {
                     }
                     
                     Text("\(rank.point)p")
-                        .styledFont(.title1)
+                        .styledFont(isSmallDevice ? .init(size: 21, weight: .bold, lineHeight: 22, tracking: 0) : .title1)
                         .foregroundColor(.black)
                 }
                 
@@ -166,14 +173,15 @@ fileprivate struct CurrentUserRankItemView: View {
                     )
             }
         }
-        .padding(36)
+        .padding(isSmallDevice ? 20 : 36)
         .roundedBackground(cornerRadius: 16, bgColor: .white)
-        .padding(.horizontal, 20)
+        .padding(.horizontal, horizontalPadding)
     }
 }
 
 fileprivate struct LegendRankItemView: View {
     let rank: LegendRankItem
+    let horizontalPadding: CGFloat
     
     var body: some View {
         HStack(spacing: 0) {
@@ -213,12 +221,12 @@ fileprivate struct LegendRankItemView: View {
         .padding(.horizontal, 20)
         .padding(.vertical, 30)
         .roundedBackground(cornerRadius: 16, bgColor: .white)
-        .padding(.horizontal, 20)
+        .padding(.horizontal, horizontalPadding)
     }
 }
 
 fileprivate struct TotalRankItemView: View {
-    @ObservedObject var rank: UserRankViewModelItem
+    @ObservedObject var rank: UserRankItem
     
     var body: some View {
         VStack(spacing: 6) {

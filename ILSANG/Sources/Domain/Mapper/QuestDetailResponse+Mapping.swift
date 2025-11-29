@@ -9,10 +9,7 @@ import Foundation
 
 extension QuestDetailResponse: DomainConvertible {
     func toDomain() -> Quest {
-        let formatter = ISO8601DateFormatter()
-        let date = formatter.date(from: expireDate) ?? Date()
-        
-        return Quest(
+        Quest(
             id: id,
             title: title,
             writer: writerName,
@@ -21,11 +18,13 @@ extension QuestDetailResponse: DomainConvertible {
             rewards: rewards.map { $0.toDomain() },
             missions: missions.map { $0.toDomain() },
             coupons: coupons.map { $0.toDomain() },
-            expireDate: date,
+            expireDate: expireDate.toISO8601Date(),
             imageId: imageId,
             mainImageId: mainImageId,
             userRank: userRank,
-            favoriteYn: favoriteYn
+            favoriteYn: favoriteYn,
+            lastCompleteDate: nil,
+            commercialAreaCode: nil
         )
     }
 }

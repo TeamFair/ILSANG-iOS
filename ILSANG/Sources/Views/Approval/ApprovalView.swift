@@ -11,6 +11,7 @@ struct ApprovalView: View {
     @StateObject var vm: ApprovalViewModel
     @StateObject var userRouter: UserRouter
     @EnvironmentObject var dependencies: AppDependencies
+    @Environment(\.layout) var layout
     
     init(
         approvalSource: ApprovalSource,
@@ -52,7 +53,7 @@ struct ApprovalView: View {
     /// 퀘스트 타이틀  + 퀘스트 인증 이미지
     @ViewBuilder
     private var itemView: some View {
-        if vm.itemList.isEmpty {
+        if vm.isCurrentListEmpty {
             emptyView
         } else {
             imageListView
@@ -62,33 +63,37 @@ struct ApprovalView: View {
     private var imageListView: some View {
         ScrollView {
             LazyVStack(spacing: 16) {
-                ForEach(Array(vm.itemList.enumerated()), id: \.element.id) { idx, item in
+                ForEach(Array(vm.currentItems.enumerated()), id: \.element.id) { idx, item in
                     ApprovalItemView(
                         item: item,
-                        width: .screenWidth - 40,
-                        height: ((.screenWidth-40) / 5) * 4,
-                        padding: 20,
-                        onLike: { vm.onLike(for: idx) },
-                        onHate: { vm.onHate(for: idx) },
-                        onOtherUserTapped: {
-                            userRouter.navigateToUserProfile(userId: item.userId)
+                        width: .screenWidth - layout.horizontalPadding * 2,
+                        height: ((.screenWidth-layout.horizontalPadding * 2) / 5) * 4,
+                        padding: layout.horizontalPadding,
+                        onAction: { action in
+                            switch action {
+                            case .like:
+                                vm.onLike(for: idx)
+                            case .hate:
+                                vm.onHate(for: idx)
+                            case .profileTapped(let userId):
+                                userRouter.navigateToUserProfile(userId: userId)
+                            }
                         }
                     )
+                    .equatable()
                     .overlay(alignment: .topTrailing) {
                         trailingButton(for: item)
                     }
+                    .task { await vm.loadMoreDataIfNeeded(at: idx ) }
                 }
                 
-                if let manager = vm.paginationManager, manager.canLoadMoreData() {
-                    ProgressView()
-                        .task { await vm.loadMoreData() }
-                }
+                LoadMoreIndicatorView(isVisible: vm.canLoadMore)
             }
             .padding(.top, vm.approvalSource == .tab ? 47 : 0)
-            .padding(.bottom, 72)
+            .padding(.bottom, layout.bottomSpacing)
         }
         .refreshable {
-            await vm.loadInitialData()
+            await vm.loadInitialDataWithLoadingState()
         }
     }
     
@@ -115,7 +120,7 @@ struct ApprovalView: View {
                 .foregroundStyle(.gray500)
                 .frame(height: 35)
         }
-        .padding(20)
+        .padding(layout.horizontalPadding)
     }
     
     @ViewBuilder
@@ -136,7 +141,7 @@ struct ApprovalView: View {
             subTitle: "네트워크 연결 상태가 좋지 않아\n퀘스트를 불러올 수 없어요 ",
             emoticon: "🥲"
         ) {
-            Task { await vm.loadInitialData() }
+            Task { await vm.loadInitialDataWithLoadingState() }
         }
     }
     
@@ -145,7 +150,7 @@ struct ApprovalView: View {
             title: "인증할 이미지를 불러오지 못했어요",
             subTitle: "다음에 다시 시도해주세요"
         ) {
-            Task { await vm.loadInitialData() }
+            Task { await vm.loadInitialDataWithLoadingState() }
         }
     }
     

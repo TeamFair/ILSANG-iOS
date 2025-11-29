@@ -17,5 +17,7 @@ struct BaseQuestResponse: Decodable {
     let expireDate: String // "2025-08-21T11:53:17.556Z",
     let favoriteYn: Bool
     let rewards: [RewardResponse]
+    let lastCompleteDate: String?
+    let commercialAreaCode: String?
 }
 

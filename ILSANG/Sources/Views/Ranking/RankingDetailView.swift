@@ -11,6 +11,7 @@ struct RankingDetailView: View {
     @StateObject var vm: RankingDetailViewModel
     @StateObject var userRouter: UserRouter
     @EnvironmentObject var dependencies: AppDependencies
+    @Environment(\.layout) var layout
     @Environment(\.dismiss) var dismiss
     
     init(vm: RankingDetailViewModel) {
@@ -30,7 +31,7 @@ struct RankingDetailView: View {
                 Text("유저")
                     .styledFont(.heading1)
                     .frame(maxWidth: .infinity, alignment: .leading)
-                    .padding(.leading, 20)
+                    .padding(.leading, layout.horizontalPadding)
                     .padding(.bottom, 16)
                 
                 LazyVStack(spacing: 12) {
@@ -40,13 +41,6 @@ struct RankingDetailView: View {
                     ForEach(vm.areaUserRank.ranks, id: \.userId) { rank in
                         Button {
                             userRouter.navigateToUserProfile(userId: rank.userId)
-//                            OtherUserProfileView(
-//                                userId: rank.userId,
-//                                userRepository: dependencies.userRepository,
-//                                missionHistoryRepository: dependencies.missionHistoryRepository,
-//                                areaNameService: dependencies.areaNameService,
-//                                seasonManager: seasonManager
-//                            )
                         } label: {
                             RankingItemView(style: .userRank(rank))
                         }
@@ -61,8 +55,8 @@ struct RankingDetailView: View {
             if let currentSeason = dependencies.seasonManager.currentSeason,
             let targetDate = currentSeason.endDate.toISO8601Date() {
                 SeasonTimerView(season: currentSeason.seasonNumber, targetDate: targetDate)
-                    .padding(.horizontal, 20)
-                    .padding(.bottom, 20)
+                    .padding(.horizontal, layout.horizontalPadding)
+                    .padding(.bottom, layout.horizontalPadding)
             }
         }
         .background(Color.background)
@@ -143,7 +137,7 @@ struct RankingDetailView: View {
             )
         }
         .clipShape(RoundedRectangle(cornerRadius: 12))
-        .padding(.horizontal, 20)
+        .padding(.horizontal, layout.horizontalPadding)
     }
 }
 

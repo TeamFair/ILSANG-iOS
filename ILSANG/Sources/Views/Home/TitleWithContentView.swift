@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct TitleWithContentView<Content: View>: View {
+    @Environment(\.layout) var layout
+    
     let title: String
     var seeAll: (type: SeeAllType, alignment: SeeAllAlignment, action: () -> ())? = nil
     var style: Style = .home
@@ -87,7 +89,7 @@ struct TitleWithContentView<Content: View>: View {
                     }
                 }
             }
-            .padding(.horizontal, 20)
+            .padding(.horizontal, layout.horizontalPadding)
             
             content
             
@@ -98,7 +100,7 @@ struct TitleWithContentView<Content: View>: View {
                     seeAll?.type.view
                 }
                 .padding(.top, 12)
-                .padding(.horizontal, 20)
+                .padding(.horizontal, layout.horizontalPadding)
             }
         }
     }

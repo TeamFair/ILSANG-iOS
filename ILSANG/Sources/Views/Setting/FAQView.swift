@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct FAQView: View {
+    @Environment(\.layout) var layout
     @State private var expandedItem: String? = nil
     let faqList: [FAQItem] = FAQItem.faqList
     
@@ -28,7 +29,8 @@ struct FAQView: View {
                                     .styledFont(.regular, size: 14, lineHeight: 20)
                                     .multilineTextAlignment(.leading)
                                     .foregroundStyle(.gray500)
-                                    .padding(20)
+                                    .padding(.vertical, 20)
+                                    .padding(.horizontal, layout.horizontalPadding)
                                     .frame(maxWidth: .infinity, alignment: .leading)
                             }
                     }

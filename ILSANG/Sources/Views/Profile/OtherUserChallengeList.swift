@@ -9,35 +9,39 @@ import SwiftUI
 
 struct OtherUserChallengeList: View {
     @ObservedObject var vm: OtherUserProfileViewModel
+    @Environment(\.layout) var layout
     
     var body: some View {
-        if vm.challengeList.isEmpty {
-            ErrorView(
-                title: "완료된 퀘스트가 없어요",
-                subTitle: "사용자가 아직 퀘스트를\n수행하지 않았어요",
-                showButton: false
-            )
-            .frame(minHeight: 353)
-        } else {
-            ScrollView {
+        switch vm.missionHistoryViewStatus {
+        case .error:
+            EmptyView() // TODO: 변경
+        case .loading: // page 0을 불러올 때만 프로그레스뷰 표시
+            ProgressView().frame(maxWidth: .infinity, minHeight: 300)
+        case .loaded:
+            if vm.isCurrentListEmpty {
+                ErrorView(
+                    title: "완료된 퀘스트가 없어요",
+                    subTitle: "사용자가 아직 퀘스트를\n수행하지 않았어요",
+                    showButton: false
+                )
+                .frame(minHeight: 353)
+            } else {
                 LazyVStack(spacing: 9) {
-                    ForEach(Array(vm.challengeList.enumerated()), id: \.offset) { idx, challenge in
+                    ForEach(Array(vm.currentItems.enumerated()), id: \.1.missionHistoryId) { index, missionHistory in
                         NavigationLink {
-                            OtherUserChallengeDetailView(challenge: challenge)
+                            OtherUserChallengeDetailView(vm: vm, missionHistory: missionHistory)
                         } label: {
-                            UserMissionHistoryItemView(challenge: challenge)
+                            UserMissionHistoryItemView(missionHistory: missionHistory)
+                                .task {
+                                    await vm.loadMoreDataIfNeeded(at: index)
+                                }
                         }
                     }
                     
-                    if vm.hasMorePage() {
-                        ProgressView()
-                            .padding(.top, 12)
-                            .task {
-                                await vm.challengePaginationManager.loadData(isRefreshing: false)
-                            }
-                    }
+                    LoadMoreIndicatorView(isVisible: vm.canLoadMore)
                 }
-                .padding(.bottom, 72)
+                .padding(.bottom, layout.bottomSpacing)
+                .frame(minHeight: 300, alignment: .top)
             }
         }
     }

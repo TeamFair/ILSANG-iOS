@@ -23,14 +23,14 @@ class QuestRouter: ObservableObject {
     @Published var isQuestSheetPending: Bool = false
     
     // Data
-    @Published var selectedQuest: QuestViewModelItem = .mockData
+    @Published var selectedQuest: QuestItem = .mockData
     
     // Dependencies
     private let illsangZoneManager: IllsangZoneManager
     private let questRepository: QuestRepositoryInterface
     
     // Callbacks
-    private var onFavoriteToggle: ((QuestViewModelItem) -> Void)?
+    private var onFavoriteToggle: ((QuestItem) -> Void)?
     
     init(illsangZoneManager: IllsangZoneManager, questRepository: QuestRepositoryInterface) {
         self.illsangZoneManager = illsangZoneManager
@@ -44,8 +44,8 @@ class QuestRouter: ObservableObject {
     
     // Navigation Methods
     func presentQuestDetail(
-        quest: QuestViewModelItem,
-        onFavoriteToggle: @escaping (QuestViewModelItem) -> Void
+        quest: QuestItem,
+        onFavoriteToggle: @escaping (QuestItem) -> Void
     ) {
         self.onFavoriteToggle = onFavoriteToggle
         self.selectedQuest = quest  // 임시 데이터 세팅
@@ -54,10 +54,14 @@ class QuestRouter: ObservableObject {
         Task { [weak self] in
             guard let self = self else { return }
             do {
-                let questDetail = try await questRepository.getQuestDetail(questId: quest.id).get().toQuestItem()
+                let questDetail = try await questRepository
+                    .getQuestDetail(questId: quest.id)
+                    .get()
+                    .toQuestItem(isMyIllsangZone: quest.isMyIllsangZone) // 상위에서 세팅된 commercialAreaCode 재사용
                 if let imageId = questDetail.imageId {
                     questDetail.image = await ImageCacheService.shared.loadImageAsync(imageId: imageId)
                 }
+                questDetail.lastCompleteDate = quest.lastCompleteDate // 마지막 수행일 업데이트
                 self.selectedQuest = questDetail
                 
                 // 일상존 체크 후 시트 표시

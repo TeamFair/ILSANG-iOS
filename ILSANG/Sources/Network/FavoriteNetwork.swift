@@ -5,8 +5,6 @@
 //  Created by Lee Jinhee on 4/7/25.
 //
 
-import Foundation
-
 final class FavoriteNetwork {
     private let url: String = APIManager.makeURL(UserTarget(path: "quest", version: 1))
         

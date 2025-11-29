@@ -9,22 +9,25 @@ import SwiftUI
 
 struct QuestDetailView: View {
     @StateObject var vm: QuestDetailViewModel
+    @Environment(\.layout) var layout
+
     let showQuestExImageAction: () -> Void
     let questApproveAction: () -> Void
-    
+    var onHeightChange: (CGFloat) -> Void
+
     private let imageSpacing: CGFloat = 8
-    private let horizontalPadding: CGFloat = 20
     
     private var contentWidth: CGFloat {
-        (.screenWidth - (horizontalPadding * 2) - (imageSpacing * 2)) / 3
+        (.screenWidth - (layout.horizontalPadding * 2) - (imageSpacing * 2)) / 3
     }
     
     init(
-        quest: QuestViewModelItem,
+        quest: QuestItem,
         questRepository: QuestRepositoryInterface,
-        onFavorite: @escaping (QuestViewModelItem) -> Void,
+        onFavorite: @escaping (QuestItem) -> Void,
         showQuestExImageAction: @escaping () -> (),
-        questApproveAction: @escaping () -> ()
+        questApproveAction: @escaping () -> (),
+        onHeightChange: @escaping (CGFloat) -> ()
     ) {
         self._vm = StateObject(
             wrappedValue: QuestDetailViewModel(
@@ -35,12 +38,25 @@ struct QuestDetailView: View {
         )
         self.questApproveAction = questApproveAction
         self.showQuestExImageAction = showQuestExImageAction
+        self.onHeightChange = onHeightChange
     }
     
     var body: some View {
         ScrollView {
             VStack(spacing: 0) {
                 QuestDetailInfoView(quest: vm.quest)
+                if let title = vm.quest.missions.first?.title, !title.isEmpty, vm.quest.missions.first?.type == .photo {
+                    QuestDetailMissionTitleView(
+                           title: title,
+                           onHeightChange: { height in
+                               if let title = vm.quest.missions.first?.title, !title.isEmpty, vm.quest.missions.first?.type == .photo {
+                                   onHeightChange(height)
+                               } else {
+                                   onHeightChange(0)
+                               }
+                           }
+                       )
+                }
                 
                 HStack {
                     if vm.quest.missionType == .photo {
@@ -108,12 +124,15 @@ struct QuestDetailView: View {
             .background(Color.white)
         }
         .safeAreaInset(edge: .bottom) {
-            PrimaryButton(title: "퀘스트 인증하기") {
+            PrimaryButton(
+                title: "퀘스트 인증하기",
+                buttonAble: vm.approvalButtonAble
+            ) {
                 questApproveAction()
             }
-            .padding(.bottom, 4)
+            .padding(.bottom, layout.buttonBottomPadding)
         }
-        .padding(.horizontal, 20)
+        .padding(.horizontal, layout.horizontalPadding)
         .background(Color.white)
         .overlay {
             if let coupon = vm.quest.coupon, vm.showCouponRewardView {
@@ -123,7 +142,7 @@ struct QuestDetailView: View {
                         vm.showCouponRewardView = false
                     }
                 )
-                .padding(20)
+                .padding(layout.horizontalPadding)
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .ignoresSafeArea()
                 .background(Color.black.opacity(0.3))
@@ -177,7 +196,8 @@ struct QuestDetailView: View {
         questRepository: MockQuestRepository(),
         onFavorite:  { _ in },
         showQuestExImageAction: { },
-        questApproveAction: { }
+        questApproveAction: { },
+        onHeightChange: { _ in }
     )
     .frame(height: 632)
     .frame(maxHeight: .infinity)
@@ -191,7 +211,8 @@ struct QuestDetailView: View {
         questRepository: MockQuestRepository(),
         onFavorite:  { _ in },
         showQuestExImageAction: { },
-        questApproveAction: { }
+        questApproveAction: { },
+        onHeightChange: { _ in }
     )
     .frame(height: 544)
     .frame(maxHeight: .infinity)

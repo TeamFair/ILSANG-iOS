@@ -10,6 +10,7 @@ import SwiftUI
 struct OtherUserProfileView: View {
     @StateObject var vm: OtherUserProfileViewModel
     @EnvironmentObject var dependencies: AppDependencies
+    @Environment(\.layout) var layout
     @Environment(\.dismiss) var dismiss
     
     init(
@@ -40,6 +41,10 @@ struct OtherUserProfileView: View {
         .task {
             await vm.loadDataIfNeeded()
         }
+        .onChange(of: vm.selectedMissionType) { _, _ in
+            // TODO: scroll to top
+            Task { await vm.loadMissionDataIfNeeded() }
+        }
     }
     
     private var header: some View {
@@ -64,7 +69,7 @@ struct OtherUserProfileView: View {
     private var userProfileSection: some View {
         HStack(spacing: 16) {
             // 프로필 이미지
-            ProfileImageView(profileImage: vm.userProfileIamge, imageSize: 57)
+            ProfileImageView(profileImage: vm.userProfileImage, imageSize: 57)
                 .overlay {
                     TagView(title: "LV.\(vm.currentLv)", tagStyle: .levelStroke)
                         .offset(y: 24)
@@ -87,10 +92,10 @@ struct OtherUserProfileView: View {
                         fgColor: .gray500
                     )
                 }
-                                    
+                
                 HStack(alignment: .center, spacing: 6) {
                     ProgressBar(progress: vm.progress)
-
+                    
                     Text("\(vm.points.reduce(0) { $0 + $1.value })P")
                         .styledFont(.bold, size: 13, lineHeight: 13, tracking: 0)
                         .foregroundStyle(.primaryPurple)
@@ -99,14 +104,16 @@ struct OtherUserProfileView: View {
         }
         .padding(16)
         .roundedBackground(cornerRadius: 12)
-        .padding(.horizontal, 20)
+        .padding(.horizontal, layout.horizontalPadding)
     }
     
     @ViewBuilder
     private var illsangZoneSection: some View {
-        if let pointCommercial = vm.pointCommercial, let topCommercialArea = pointCommercial.topCommercialArea {
+        if let pointCommercial = vm.pointCommercial,
+           let topCommercialArea = pointCommercial.topCommercialArea,
+           let nickname = vm.userData?.nickname {
             TitleWithContentView(
-                title: "내 일상존",
+                title: "\(nickname)님의 일상존",
                 style: .my,
                 content:
                     Group {
@@ -117,16 +124,18 @@ struct OtherUserProfileView: View {
                             contributions: contributionsWithPercents,
                             showPrimaryButton: false
                         )
-                        .padding(.horizontal, 20)
+                        .padding(.horizontal, layout.horizontalPadding)
                     }
             )
         }
     }
     
-    @ViewBuilder
     private var pointSection: some View {
-        TitleWithContentView(
-            title: "내 포인트",
+        let nickname = vm.userData?.nickname ?? ""
+        let titleText = nickname.isEmpty ? "포인트" : "\(nickname)님의 포인트"
+        
+        return TitleWithContentView(
+            title: titleText,
             style: .my,
             content:
                 UserPointView(
@@ -136,20 +145,31 @@ struct OtherUserProfileView: View {
                     selectedSeason: $vm.selectedSeasonNumber,
                     filterState: $vm.seasonFilterState
                 )
-                .padding(.horizontal, 20)
+                .padding(.horizontal, layout.horizontalPadding)
         )
     }
-        
+    
     private var challengeSection: some View {
-        VStack(alignment: .leading, spacing: 20) {
-            Text("수행한 챌린지")
-                .styledFont(.medium, size: 14, lineHeight: 16)
-                .foregroundColor(.gray400)
-                .frame(maxWidth: .infinity, alignment: .leading)
-            
-            OtherUserChallengeList(vm: vm)
-        }
-        .padding(.horizontal, 20)
+        let nickname = vm.userData?.nickname ?? ""
+        let titleText = nickname.isEmpty ? "포인트" : "\(nickname)님이 수행한 퀘스트"
+        
+        return TitleWithContentView(
+            title: titleText,
+            style: .my,
+            content:
+                VStack(alignment: .leading, spacing: 20) {
+                    SelectableTabHeader(
+                        selectedItem: $vm.selectedMissionType,
+                        items: MissionType.allCases,
+                        horizontalPadding: 0,
+                        height: 44,
+                        hasBottomLine: true
+                    )
+                    
+                    OtherUserChallengeList(vm: vm)
+                }
+                .padding(.horizontal, layout.horizontalPadding)
+        )
     }
 }
 

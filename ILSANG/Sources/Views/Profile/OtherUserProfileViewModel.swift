@@ -8,35 +8,40 @@
 import UIKit
 import Combine
 
-@MainActor
-final class OtherUserProfileViewModel: ObservableObject {
+final class OtherUserProfileViewModel: ObservableObject, CategoryPaginationLoadable {
+    // MARK: - Typealias
+    typealias Item = UserMissionHistoryItem
+    typealias Category = MissionType
+    
     let userId: String
-
-    @Published var userData: User?
-    @Published var userTotalPoint: Int?
-    @Published var userProfileIamge: UIImage?
+    
+    @Published private(set) var missionHistoryViewStatus: ViewStatus = .loading
+    @Published private(set) var userData: User?
+    @Published private(set) var userTotalPoint: Int?
+    @Published private(set) var userProfileImage: UIImage?
     
     @Published var selectedSeasonNumber: Int = -1
-    var selectedSeasonId: Int? {
-        seasonManager.seasons.first { $0.seasonNumber == selectedSeasonNumber }?.id
-    }
     
-    @Published var pointCommercial: PointCommercialItem? // 내 일상존
-    @Published var completedQuestCount: Int = 0
-    @Published var points: [PointType: Int] = [:]
-    @Published var challengeList: [UserMissionHistoryViewModelItem] = []
-    
+    @Published private(set) var pointCommercial: PointCommercialItem? // 내 일상존
+    @Published private(set) var completedQuestCount: Int = 0
+    @Published private(set) var points: [PointType: Int] = [:]
     @Published var seasonFilterState: DynamicFilterPickerState<SeasonFilterType>
-
-    var challengePaginationManager = PaginationManager<UserMissionHistoryViewModelItem>(
-        size: 10,
-        threshold: 7)
     
-    private let userRepository: UserRepositoryInterface
-    private let missionHistoryRepository: MissionHistoryRepository
-    private let areaNameService: AreaNameProvider
-    private let seasonManager: SeasonManager
-    private var cancellables = Set<AnyCancellable>()
+    @Published var selectedMissionType: MissionType = .photo
+    @Published private var missionHistories: [MissionType: [Item]] = [:]
+    @Published var selectedMissionHistoryDetail: UserMissionHistoryDetailItem?
+    
+    // MARK: - Computed Properties
+    var currentMissionHistories: [Item] {
+        switch selectedMissionType {
+        case .photo:
+            return missionHistories[.photo, default: []]
+        case .quiz(.ox):
+            return missionHistories[.quiz(.ox), default: []]
+        case .quiz(.text):
+            return missionHistories[.quiz(.text), default: []]
+        }
+    }
     
     var userPoint: Int {
         points.reduce(0) { $0 + $1.value }
@@ -49,6 +54,17 @@ final class OtherUserProfileViewModel: ObservableObject {
         return XpLevelCalculator.calculateProgress(currentValue: levelData.currentLevelXP, totalValue: levelData.requiredXPForNextLevel)
     }
     
+    // MARK: - Stored Properties
+    private let photoPaginationManager = PaginationManager<Item>(size: 10, threshold: 3)
+    private let oxPaginationManager = PaginationManager<Item>(size: 10, threshold: 3)
+    private let textPaginationManager = PaginationManager<Item>(size: 10, threshold: 3)
+    
+    private let userRepository: UserRepositoryInterface
+    private let missionHistoryRepository: MissionHistoryRepository
+    private let areaNameService: AreaNameProvider
+    private let seasonManager: SeasonManager
+    private var cancellables = Set<AnyCancellable>()
+    
     init(userId: String, userRepository: UserRepositoryInterface, missionHistoryRepository: MissionHistoryRepository, areaNameService: AreaNameProvider, seasonManager: SeasonManager) {
         self.userId = userId
         self.userRepository = userRepository
@@ -56,8 +72,6 @@ final class OtherUserProfileViewModel: ObservableObject {
         self.areaNameService = areaNameService
         self.seasonManager = seasonManager
         
-        selectedSeasonNumber = seasonManager.currentSeason?.seasonNumber ?? -1 // 현재시즌으로 초기화
-
         // 초기값을 -1로 통일
         seasonFilterState = DynamicFilterPickerState(
             initialValue: SeasonFilterType(seasonNumber: -1),
@@ -67,89 +81,135 @@ final class OtherUserProfileViewModel: ObservableObject {
             guard let self = self else { return }
             // 선택된 시즌 번호 업데이트
             self.selectedSeasonNumber = selectedValue.seasonNumber
-             Task { await self.fetchPointAndQuestCount() }
+            Task { await self.fetchPointAndQuestCount() }
         }
         
-        updateSeasonsFromServer(seasonManager.seasons.map { $0.seasonNumber })
-//        seasonManager.$seasons
-//            .removeDuplicates { $0.map(\.seasonNumber) == $1.map(\.seasonNumber) }
-//            .dropFirst()
-//            .sink { [weak self] seasons in
-//                guard let self else { return }
-//                self.updateSeasonsFromServer(seasons.map { $0.seasonNumber })
-//            }
-//            .store(in: &cancellables)
+        Task { @MainActor in
+            selectedSeasonNumber = seasonManager.currentSeason?.seasonNumber ?? -1 // 현재시즌으로 초기화
+            updateSeasonsFromServer(seasonManager.seasons.map { $0.seasonNumber })
+        }
         
-        challengePaginationManager.loadPageData = { [weak self] page in
-            guard let self = self else { return ([], 0) }
-            return await loadChallengeListWithImage(page: page, size: 10)
+        setupPaginationManagers()
+    }
+    
+    private func setupPaginationManagers() {
+        self.photoPaginationManager.loadPageData = { [weak self] page, size in
+            guard let self = self else { return true }
+            return await loadPageData(page: page, size: size, category: selectedMissionType)
+        }
+        self.oxPaginationManager.loadPageData = { [weak self] page, size in
+            guard let self = self else { return true }
+            return await loadPageData(page: page, size: size, category: selectedMissionType)
+        }
+        self.textPaginationManager.loadPageData = { [weak self] page, size in
+            guard let self = self else { return true }
+            return await loadPageData(page: page, size: size, category: selectedMissionType)
         }
     }
-
     
     func loadDataIfNeeded() async {
         if userData != nil {
             return
         } else {
-            await loadInitialData()
+            await loadAllInitialData()
         }
     }
     
-    func loadInitialData() async {
+    func loadAllInitialData() async {
         async let user: () = fetchUser(userId: userId)
         async let commercial: () = fetchUserPointCommercial()
         async let pointAndQuest: () = fetchPointAndQuestCount()
-        async let history: () =  challengePaginationManager.loadData(isRefreshing: true)
+        async let history: () = loadMissionDataIfNeeded()
         _ = await (user, commercial, pointAndQuest, history)
     }
     
-    @discardableResult @MainActor
-    func loadChallengeListWithImage(page: Int, size: Int) async -> ([UserMissionHistoryViewModelItem], Int) {
-        let getChallengeList = await fetchChallenges(page: page, size: size)
-        let newChallengeList = getChallengeList.data
-        
-        if page == 0 {
-            self.challengeList = newChallengeList
-        } else {
-            self.challengeList += newChallengeList
+    func loadMissionDataIfNeeded() async {
+        if isCurrentListEmpty {
+            await loadInitialDataWithLoadingState(for: currentCategory)
         }
+    }
+    
+    private func loadInitialDataWithLoadingState(for category: Category) async {
+        await changeViewStatus(.loading)
+        let minimumDelay: UInt64 = 300_000_000 // 최소 응답 지연 시간 추가 (0.3초)
+        async let dataLoad: Void = loadInitialData(for: category)
+        async let delay: Void = Task.sleep(nanoseconds: minimumDelay)
+        _ = try? await (dataLoad, delay)
+        await changeViewStatus(.loaded)
+    }
+    
+    func loadPageData(page: Int, size: Int, category: Category) async -> Bool {
+        switch category {
+        case .photo:
+            await loadPhotoMissionHistory(page: page, size: size)
+        case .quiz(let type):
+            await loadQuizMissionHistory(page: page, size: size, quizType: type)
+        }
+    }
+    
+    @MainActor
+    func loadPhotoMissionHistory(page: Int, size: Int) async -> Bool {
+        if page == 0 {
+            missionHistoryViewStatus = .loading
+        }
+        let response = await fetchMissionHistories(page: page, size: size, missionType: .photo)
+        let newItems = response.data
         
         await withTaskGroup(of: (Int, UIImage?).self) { group in
-            for (index, challenge) in newChallengeList.enumerated() {
+            for (index, challenge) in newItems.enumerated() {
                 group.addTask {
                     let imageId = challenge.submitImageId
-                    var image: UIImage? = nil
-                    if let imageId {
-                        image = await ImageCacheService.shared.loadImageAsync(imageId: imageId)
-                    }
+                    guard let imageId else { return (index, nil) }
+                    let image = await ImageCacheService.shared.loadImageAsync(imageId: imageId)
                     return (index, image)
                 }
             }
             
             for await (index, image) in group {
-                if let image = image {
-                    if page == 0 {
-                        self.challengeList[index].submitImage = image
-                    } else {
-                        self.challengeList[challengeList.count - newChallengeList.count + index].submitImage = image
-                    }
+                if let image {
+                    newItems[index].submitImage = image
                 }
             }
         }
         
-        return (challengeList, getChallengeList.total)
+        if page == 0 {
+            self.missionHistories[.photo, default: []] = newItems
+            missionHistoryViewStatus = .loaded
+        } else {
+            self.missionHistories[.photo, default: []] += newItems
+        }
+        
+        return response.isLast
     }
     
-    private func fetchChallenges(page: Int, size: Int) async -> (data: [UserMissionHistoryViewModelItem], total: Int) {
-        let response = await missionHistoryRepository.getMissionHistories(page: page, size: size, userId: userId)
+    @MainActor
+    private func loadQuizMissionHistory(page: Int, size: Int, quizType: QuizType) async -> Bool {
+        if page == 0 {
+            missionHistoryViewStatus = .loading
+        }
+        let response = await fetchMissionHistories(page: page, size: size, missionType: .quiz(quizType))
+        let newItems = response.data
+        
+        if page == 0 {
+            self.missionHistories[.quiz(quizType), default: []] = newItems
+            missionHistoryViewStatus = .loaded
+        } else {
+            self.missionHistories[.quiz(quizType), default: []]  += newItems
+        }
+        
+        return response.isLast
+    }
+    
+    private func fetchMissionHistories(page: Int, size: Int, missionType: MissionType) async -> (data: [UserMissionHistoryItem], isLast: Bool) {
+        let response = await missionHistoryRepository.getMissionHistories(page: page, size: size, userId: userId, missionType: missionType, filterType: .latest)
         
         switch response {
         case .success(let res):
             // 데이터 초기화: 이미지가 없는 상태로 미리 표시
-            return (res.data.map { $0.toItem() } , res.total)
+            return (res.data.map { $0.toItem() }, res.isLast)
         case .failure(let error):
             Log("챌린지 조회 실패: \(error)")
-            return ([], 0)
+            return ([], true)
         }
     }
     
@@ -160,13 +220,14 @@ final class OtherUserProfileViewModel: ObservableObject {
         switch res {
         case .success(let res):
             self.userData = res
-            self.userProfileIamge = await ImageCacheService.shared.loadImageAsync(imageId: res.profileImageId ?? "")
+            self.userProfileImage = await ImageCacheService.shared.loadImageAsync(imageId: res.profileImageId ?? "")
         case .failure(let error):
             self.userData = nil
             Log("사용자 정보 조회 실패: \(error)")
         }
     }
     
+    @MainActor
     func fetchUserPointCommercial() async {
         let res = await userRepository.getUserPointCommercial(userId: userId)
         
@@ -189,6 +250,7 @@ final class OtherUserProfileViewModel: ObservableObject {
     
     @MainActor
     func fetchPointAndQuestCount() async {
+        let selectedSeasonId = getSelectedSeasonId()
         let res = await userRepository.getUserPoint(userId: userId, seasonId: selectedSeasonId)
         
         switch res {
@@ -204,14 +266,26 @@ final class OtherUserProfileViewModel: ObservableObject {
         }
     }
     
+    @MainActor
+    func fetchMissionHistoryDetail(id: Int, submitImage: UIImage?) async {
+        let response = await missionHistoryRepository.getMissionHistoryDetail(missionHistoryId: id)
+        switch response {
+        case .success(let res):
+            self.selectedMissionHistoryDetail = res.toItem(submitImage: submitImage)
+        case .failure(let error):
+            self.selectedMissionHistoryDetail = nil
+            Log("챌린지 상세 조회 실패: \(error)")
+        }
+    }
+    
     func getImage(imageId: String) async -> UIImage? {
         await ImageCacheService.shared.loadImageAsync(imageId: imageId)
     }
     
-    func hasMorePage() -> Bool {
-        challengePaginationManager.canLoadMoreData()
+    @MainActor
+    func getSelectedSeasonId() -> Int? {
+        seasonManager.seasons.first { $0.seasonNumber == selectedSeasonNumber }?.id
     }
-    
     
     func updateSeasonsFromServer(_ seasonNumbers: [Int]) {
         let newOptions = [SeasonFilterType(seasonNumber: -1)] + seasonNumbers.map { SeasonFilterType(seasonNumber: $0) }
@@ -220,5 +294,29 @@ final class OtherUserProfileViewModel: ObservableObject {
         if seasonFilterState.options != newOptions {
             seasonFilterState.updateOptions(newOptions)
         }
+    }
+    
+    @MainActor
+    func changeViewStatus(_ viewStatus: ViewStatus) {
+        self.missionHistoryViewStatus = viewStatus
+    }
+    
+    internal func paginationManager(for category: Category) -> PaginationManager<Item> {
+        switch category {
+        case .photo: return photoPaginationManager
+        case .quiz(.ox): return oxPaginationManager
+        case .quiz(.text): return textPaginationManager
+        }
+    }
+}
+
+extension OtherUserProfileViewModel {
+    var currentCategory: Category {
+        get { selectedMissionType }
+        set { selectedMissionType = newValue }
+    }
+    
+    var currentItems: [Item] {
+        get { currentMissionHistories }
     }
 }

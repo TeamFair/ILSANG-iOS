@@ -7,7 +7,6 @@
 
 import UIKit
 
-
 struct UserEmojis {
     var emojis: Set<EmojiType> = []
     
@@ -25,7 +24,17 @@ struct UserEmojis {
 }
 
 @Observable
-class ApprovalMissionHistoryItem: Identifiable {
+class ApprovalMissionHistoryItem: Identifiable, Equatable {
+    static func == (lhs: ApprovalMissionHistoryItem, rhs: ApprovalMissionHistoryItem) -> Bool {
+        lhs.id == rhs.id &&
+        lhs.title == rhs.title &&
+        lhs.displayDate == rhs.displayDate &&
+        lhs.likeCount == rhs.likeCount &&
+        lhs.hateCount == rhs.hateCount &&
+        lhs.imageId == rhs.imageId &&
+        lhs.userId == rhs.userId
+    }
+    
     let id: Int
     let title: String
     let displayDate: String

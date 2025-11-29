@@ -75,7 +75,6 @@ where Value: Hashable & CustomStringConvertible {
 // MARK: - PickerView
 struct PickerView<State>: View where State: PickerStateProtocol {
     @ObservedObject var state: State
-    var showBorder: Bool = false
     let width: CGFloat
 
     var body: some View {
@@ -96,10 +95,7 @@ struct PickerView<State>: View where State: PickerStateProtocol {
             .background(
                 RoundedRectangle(cornerRadius: 8)
                     .fill(.white)
-                    .stroke(
-                        showBorder ? .gray200 : .clear,
-                        style: StrokeStyle(lineWidth: 1)
-                    )
+                    .stroke(.gray100, style: StrokeStyle(lineWidth: 1))
             )
             .onTapGesture { state.pickerStatus.toggle() }
             .shadow(color: .shadow7D.opacity(0.05), radius: 20, x: 0, y: 10)
@@ -121,11 +117,22 @@ struct PickerView<State>: View where State: PickerStateProtocol {
                                 .background(Color.white)
                                 .padding(.horizontal, 12)
                         }
+                        .overlay(alignment: .bottom) {
+                            if idx != list.count - 1 {
+                                Rectangle()
+                                    .frame(height: 1)
+                                    .frame(maxWidth: .infinity)
+                                    .foregroundStyle(.gray100)
+                            }
+                        }
                     }
                 }
                 .frame(width: width)
-                .background(Color.white)
-                .clipShape(RoundedRectangle(cornerRadius: 8))
+                .background(
+                    RoundedRectangle(cornerRadius: 8)
+                        .fill(.white)
+                        .stroke(.gray100, style: StrokeStyle(lineWidth: 1))
+                )
                 .shadow(color: .shadow7D.opacity(0.05), radius: 20, x: 0, y: 10)
                 .padding(.top, 44)
                 .zIndex(1)
@@ -170,6 +177,29 @@ enum EventQuestFilterType: String, Hashable, CustomStringConvertible, CaseIterab
     var orderExpiredDesc: Bool? {
         switch self {
         case .upcoming: return false
+        default: return nil
+        }
+    }
+}
+
+enum MissionHistoryFilterType: String, Hashable, CustomStringConvertible, CaseIterable {
+    case latest = "최신순"
+    case pointHighest = "포인트 높은 순"
+    case pointLowest = "포인트 낮은 순"
+    
+    var description: String { return self.rawValue }
+    
+    var orderRewardDesc: Bool? {
+        switch self {
+        case .pointHighest: return true
+        case .pointLowest:  return false
+        default: return nil
+        }
+    }
+    
+    var latest: Bool? {
+        switch self {
+        case .latest: return true
         default: return nil
         }
     }

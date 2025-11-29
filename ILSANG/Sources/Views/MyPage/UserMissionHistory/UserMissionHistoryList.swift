@@ -12,30 +12,22 @@ struct UserMissionHistoryList: View {
     
     var body: some View {
         LazyVStack(spacing: 9) {
-            ForEach(Array(vm.missionHistories.enumerated()), id: \.offset) { idx, missionHistory in
-                NavigationLink(destination: UserMissionHistoryDetailView(vm: vm, idx: idx)) {
-                    UserMissionHistoryItemView(challenge: missionHistory)
+            ForEach(Array(vm.currentItems.enumerated()), id: \.element.missionHistoryId) { index, missionHistory in
+                NavigationLink(
+                    destination: UserMissionHistoryDetailView(vm: vm, missionHistory: missionHistory)
+                ) {
+                    UserMissionHistoryItemView(missionHistory: missionHistory)
+                        .task { await vm.loadMoreDataIfNeeded(at: index ) }
                 }
             }
             
-            if vm.hasMorePage {
-                ProgressView()
-                    .padding(.top, 12)
-                    .task {
-                        await vm.challengePaginationManager.loadData(isRefreshing: false)
-                    }
-            }
+            LoadMoreIndicatorView(isVisible: vm.canLoadMore)
         }
     }
 }
 
-//#Preview {
-//    MyPageChallengeList(
-//        vm: MyPageViewModel(
-//            userNetwork: UserNetwork(),
-//            challengeNetwork: ChallengeNetwork(),
-//            imageNetwork: ImageNetwork(),
-//            pointNetwork: PointNetwork()
-//        )
-//    )
-//}
+#Preview {
+    UserMissionHistoryList(
+        vm: UserMissionHistoryViewModel(missionHistoryRepository: MockMissionHistoryRepository())
+    )
+}

@@ -1,5 +1,5 @@
 //
-//  QuestViewModelItemBuilder.swift
+//  QuestItemBuilder.swift
 //  ILSANG
 //
 //  Created by Lee Jinhee on 5/19/25.
@@ -7,13 +7,13 @@
 
 import UIKit
 
-final class QuestViewModelItemBuilder {
+final class QuestItemBuilder {
     private var id: Int = 0
     private var image: UIImage? = nil
-    private var imageId: String = QuestViewModelItem.mockImageId
+    private var imageId: String = QuestItem.mockImageId
     private var mainImage: UIImage? = nil
     private var mainImageId: String = "default_main_image_id"
-    private var missions: [Mission] = [Mission(id: 0, type: .photo, exampleImageIds: [])]
+    private var missions: [Mission] = [Mission(id: 0, title: "미션", type: .photo, exampleImageIds: [])]
     private var title: String = "기본 미션 제목"
     private var writer: String = "일상"
     private var rewards: [Reward] = []
@@ -24,6 +24,9 @@ final class QuestViewModelItemBuilder {
     // private var challengeImages: [UIImage] = []
     private var userRank: Int = 0
     private var favoriteYn: Bool = false
+    private var lastCompleteDate: Date = .now.addingTimeInterval(-20000)
+    private var commercialAreaCode: String = "R100"
+    private var isMyIllsangZone: Bool = true
     
     func setId(_ id: Int) -> Self {
         self.id = id
@@ -96,12 +99,13 @@ final class QuestViewModelItemBuilder {
         if let firstMission = self.missions.first {
             let updatedMission = Mission(
                 id: firstMission.id,
+                title: firstMission.title,
                 type: firstMission.type,
                 exampleImageIds: challengeImageIds
             )
             self.missions = [updatedMission]
         } else {
-            let newMission = Mission(id: 1, type: .photo, exampleImageIds: challengeImageIds)
+            let newMission = Mission(id: 1, title: "", type: .photo, exampleImageIds: challengeImageIds)
             self.missions = [newMission]
         }
         return self
@@ -121,8 +125,8 @@ final class QuestViewModelItemBuilder {
         return self
     }
         
-    func build() -> QuestViewModelItem {
-        return QuestViewModelItem(
+    func build() -> QuestItem {
+        return QuestItem(
             id: id,
             title: title,
             writer: writer,
@@ -137,7 +141,10 @@ final class QuestViewModelItemBuilder {
             mainImageId: mainImageId,
             mainImage: mainImage,
             userRank: userRank,
-            favoriteYn: favoriteYn
+            favoriteYn: favoriteYn,
+            lastCompleteDate: lastCompleteDate,
+            commercialAreaCode: commercialAreaCode,
+            isMyIllsangZone: isMyIllsangZone
         )
     }
 }

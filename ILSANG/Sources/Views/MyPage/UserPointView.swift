@@ -40,7 +40,7 @@ struct UserPointView: View {
             
         }
         .overlay(alignment: .topTrailing) {
-            PickerView(state: filterState, showBorder: true, width: 150)
+            PickerView(state: filterState, width: 150)
         }
         .padding(16)
         .roundedBackground(cornerRadius: 12, bgColor: .white)

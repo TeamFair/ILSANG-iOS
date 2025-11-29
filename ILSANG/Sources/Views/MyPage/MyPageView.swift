@@ -11,6 +11,7 @@ struct MyPageView: View {
     @StateObject var vm: MyPageViewModel
     @EnvironmentObject var dependencies: AppDependencies
     @EnvironmentObject var sharedState: SharedState
+    @Environment(\.layout) var layout
     
     init(
         userRepository: UserRepositoryInterface,
@@ -53,7 +54,7 @@ struct MyPageView: View {
         }
         .frame(height: 50)
         .padding(.bottom, 5)
-        .padding(.horizontal, 20)
+        .padding(.horizontal, layout.horizontalPadding)
     }
     
     @ViewBuilder
@@ -106,7 +107,7 @@ struct MyPageView: View {
                 }
                 .padding(.top, 16)
                 .roundedBackground(cornerRadius: 16, bgColor: .white)
-                .padding(.horizontal, 20)
+                .padding(.horizontal, layout.horizontalPadding)
                 .padding(.bottom, 48)
                 
                 // 내 일상존
@@ -125,7 +126,7 @@ struct MyPageView: View {
                                 ) {
                                     sharedState.selectedTab = .quest
                                 }
-                                .padding(.horizontal, 20)
+                                .padding(.horizontal, layout.horizontalPadding)
                             }
                     )
                     .padding(.bottom, 48)
@@ -143,7 +144,7 @@ struct MyPageView: View {
                             selectedSeason: $vm.selectedSeasonNumber,
                             filterState: $vm.seasonFilterState
                         )
-                        .padding(.horizontal, 20)
+                        .padding(.horizontal, layout.horizontalPadding)
                 )
                 .padding(.bottom, 48)
                 
@@ -156,11 +157,11 @@ struct MyPageView: View {
                             SeasonSummaryView(
                                 nickname: vm.currentUser?.nickname, season: currentSeason, summary: vm.pointSummary
                             )
-                            .padding(.horizontal, 20)
+                            .padding(.horizontal, layout.horizontalPadding)
                     )
                 }
             }
-            .padding(.bottom, 72)
+            .padding(.bottom, layout.bottomSpacing)
         }
         .refreshable {
             await vm.refreshData()

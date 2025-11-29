@@ -5,8 +5,6 @@
 //  Created by Lee Jinhee on 8/28/25.
 //
 
-import Foundation
-
 struct UserMissionHistory {
     let missionHistoryId: Int
     let title, createdAt: String
@@ -14,4 +12,7 @@ struct UserMissionHistory {
     let questImageId: String?
     let viewCount: Int
     let likeCount: Int
+    let questType: QuestType
+    let repeatType: RepeatType?
+    let missionType: MissionType
 }

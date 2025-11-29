@@ -5,8 +5,6 @@
 //  Created by Lee Jinhee on 9/11/25.
 //
 
-import Foundation
-
 struct LegendRank {
     let userId: String
     let profileImageId: String?

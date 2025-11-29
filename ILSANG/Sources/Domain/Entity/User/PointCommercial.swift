@@ -5,7 +5,6 @@
 //  Created by Lee Jinhee on 8/29/25.
 //
 
-import Foundation
 
 struct PointCommercial {
     let topCommercialArea: TopCommercialArea?

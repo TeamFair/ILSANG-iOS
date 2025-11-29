@@ -13,7 +13,7 @@ struct SubmitRouterView: View {
     @StateObject var vm: SubmitRouterViewModel
     @Environment(\.dismiss) var dismiss
 
-    init(selectedQuest: QuestViewModelItem, submitService: ImageChallengeSubmitService, challengeNetwork: ChallengeNetwork) {
+    init(selectedQuest: QuestItem, submitService: ImageChallengeSubmitService, challengeNetwork: ChallengeNetwork) {
         _vm = StateObject(
             wrappedValue: SubmitRouterViewModel(
                 selectedQuest: selectedQuest,

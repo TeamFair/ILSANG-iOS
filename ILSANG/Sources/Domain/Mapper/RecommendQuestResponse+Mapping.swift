@@ -6,7 +6,6 @@
 //
 
 
-
 extension RecommendQuestResponse: DomainConvertible {
     func toDomain() -> Quest {
         Quest(
@@ -22,7 +21,9 @@ extension RecommendQuestResponse: DomainConvertible {
             imageId: imageId,
             mainImageId: mainImageId,
             userRank: nil,
-            favoriteYn: nil
+            favoriteYn: nil,
+            lastCompleteDate: nil,
+            commercialAreaCode: nil
         )
     }
 }

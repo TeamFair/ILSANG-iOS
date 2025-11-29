@@ -11,7 +11,6 @@ protocol QuestRepositoryInterface {
     func getDefaultQuests(commercialAreaCode: String, orderRewardDesc: Bool?, page: Int, size: Int) async -> Result<ResponseWithPage<[Quest]>, Error>
     func getRepeatQuests(commercialAreaCode: String, repeatFrequency: RepeatType, orderRewardDesc: Bool?, page: Int, size: Int) async -> Result<ResponseWithPage<[Quest]>, Error>
     func getEventQuests(commercialAreaCode: String, orderRewardDesc: Bool?, orderExpiredDesc: Bool?, page: Int, size: Int) async -> Result<ResponseWithPage<[Quest]>, Error>
-    func getCompletedQuests(page: Int, size: Int) async -> Result<ResponseWithPage<[Quest]>, Error>
     func getFavoriteQuests(commercialAreaCode: String, page: Int, size: Int) async -> Result<ResponseWithPage<[Quest]>, Error>
     func getRecommendQuests(commercialAreaCode: String, page: Int, size: Int) async -> Result<ResponseWithPage<[Quest]>, Error>
     func getPopularQuests(commercialAreaCode: String, page: Int, size: Int) async -> Result<ResponseWithPage<[Quest]>, Error>
@@ -39,11 +38,6 @@ final class QuestRepository: QuestRepositoryInterface {
     
     func getEventQuests(commercialAreaCode: String, orderRewardDesc: Bool?, orderExpiredDesc: Bool?, page: Int, size: Int) async -> Result<ResponseWithPage<[Quest]>, Error> {
         let res = await network.getEventQuests(commercialAreaCode: commercialAreaCode, orderRewardDesc: orderRewardDesc, orderExpiredDesc: orderExpiredDesc, page: page, size: size)
-        return ResponseMapper.mapPagedResponse(res)
-    }
-    
-    func getCompletedQuests(page: Int, size: Int) async -> Result<ResponseWithPage<[Quest]>, Error> {
-        let res = await network.getCompletedQuests(page: page, size: size)
         return ResponseMapper.mapPagedResponse(res)
     }
     
@@ -87,13 +81,15 @@ final class MockQuestRepository: QuestRepositoryInterface {
             questType: .normal,
             repeatFrequency: nil,
             rewards: [Reward(point: 10, pointType: .commercial), Reward(point: 10, pointType: .metro), Reward(point: 10, pointType: .contribution)],
-            missions: [Mission(id: 100, type: .photo, exampleImageIds: ["IMQU/2025082308223895"])],
+            missions: [Mission(id: 100, title: "미션", type: .photo, exampleImageIds: ["IMQU/2025082308223895"])],
             coupons: [Coupon(id: 0, name: "쿠폰", imageId: nil, storeName: "가게", description: "", validFrom: .now, validTo: .now)],
             expireDate: .now,
             imageId: "IMQU/2025082308223895",
             mainImageId: "IMQU/2025082308223895",
             userRank: nil,
-            favoriteYn: false
+            favoriteYn: false,
+            lastCompleteDate: nil,
+            commercialAreaCode: "R100"
         )
     ]
     private let mockRepeatQuests: [Quest] = [
@@ -104,13 +100,15 @@ final class MockQuestRepository: QuestRepositoryInterface {
             questType: .repeat,
             repeatFrequency: .daily,
             rewards: [Reward(point: 10, pointType: .commercial), Reward(point: 10, pointType: .metro), Reward(point: 10, pointType: .contribution)],
-            missions: [Mission(id: 100, type: .photo, exampleImageIds: ["IMQU/2025082308223895"])],
+            missions: [Mission(id: 100, title: "미션", type: .photo, exampleImageIds: ["IMQU/2025082308223895"])],
             coupons: [Coupon(id: 0, name: "쿠폰", imageId: nil, storeName: "가게", description: "", validFrom: .now, validTo: .now)],
             expireDate: .now,
             imageId: "IMQU/2025082308223895",
             mainImageId: "IMQU/2025082308223895",
             userRank: nil,
-            favoriteYn: false
+            favoriteYn: false,
+            lastCompleteDate: .now.addingTimeInterval(-10000),
+            commercialAreaCode: "R100"
         )
     ]
     
@@ -122,13 +120,15 @@ final class MockQuestRepository: QuestRepositoryInterface {
             questType: .event,
             repeatFrequency: nil,
             rewards: [Reward(point: 10, pointType: .commercial), Reward(point: 10, pointType: .metro), Reward(point: 10, pointType: .contribution)],
-            missions: [Mission(id: 100, type: .photo, exampleImageIds: [])],
+            missions: [Mission(id: 100, title: "미션", type: .photo, exampleImageIds: [])],
             coupons: [],
             expireDate: .now,
             imageId: "",
             mainImageId: "",
             userRank: nil,
-            favoriteYn: false
+            favoriteYn: false,
+            lastCompleteDate: nil,
+            commercialAreaCode: "R100"
         )
     ]
     
@@ -142,10 +142,6 @@ final class MockQuestRepository: QuestRepositoryInterface {
     
     func getEventQuests(commercialAreaCode: String, orderRewardDesc: Bool?, orderExpiredDesc: Bool?, page: Int, size: Int) async -> Result<ResponseWithPage<[Quest]>, Error> {
         .success(ResponseWithPage(size: size, content: mockEventQuests, totalPages: 1, totalElements: mockQuests.count, page: page, isLast: true))
-    }
-    
-    func getCompletedQuests(page: Int, size: Int) async -> Result<ResponseWithPage<[Quest]>, Error> {
-        .success(ResponseWithPage(size: size, content: mockQuests+mockRepeatQuests+mockEventQuests, totalPages: 1, totalElements: mockQuests.count, page: page, isLast: true))
     }
     
     func getFavoriteQuests(commercialAreaCode: String, page: Int, size: Int) async -> Result<ResponseWithPage<[Quest]>, any Error> {

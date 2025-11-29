@@ -10,6 +10,7 @@ import SwiftUI
 struct CouponListView: View {
     @StateObject var viewModel: CouponListViewModel
     @EnvironmentObject var sharedState: SharedState
+    @Environment(\.layout) var layout
     @Environment(\.dismiss) var dismiss
     
     init(viewModel: CouponListViewModel) {
@@ -81,9 +82,9 @@ extension CouponListView {
                     .disabled(coupon.useYn || coupon.expireYn)
                 }
             }
-            .padding(.horizontal, 20)
+            .padding(.horizontal, layout.horizontalPadding)
             .padding(.top, 24)
-            .padding(.bottom, 72)
+            .padding(.bottom, layout.bottomSpacing)
         }
         .refreshable {
             await viewModel.loadInitialData()
