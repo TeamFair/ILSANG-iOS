@@ -208,6 +208,8 @@
 		60943FE62C0A38FB00C8A714 /* ApprovalViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60943FE52C0A38FB00C8A714 /* ApprovalViewModel.swift */; };
 		609A76D92CFC50C7009F4567 /* QuestImageWithTagView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 609A76D82CFC50C7009F4567 /* QuestImageWithTagView.swift */; };
 		609A76DB2CFC5E90009F4567 /* RewardTagRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 609A76DA2CFC5E90009F4567 /* RewardTagRow.swift */; };
+		60A18CC02EDAEE1200B5D908 /* CommentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60A18CBF2EDAEE1200B5D908 /* CommentView.swift */; };
+		60A18CC22EDAEFD600B5D908 /* CommentItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60A18CC12EDAEFD600B5D908 /* CommentItem.swift */; };
 		60A2ADF32DAE62BD007AC375 /* SettingItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60A2ADF22DAE62BD007AC375 /* SettingItemView.swift */; };
 		60A2ADF52DAE66BD007AC375 /* SettingToggleItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60A2ADF42DAE66BD007AC375 /* SettingToggleItemView.swift */; };
 		60A2ADF82DAE6B68007AC375 /* FAQView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60A2ADF72DAE6B68007AC375 /* FAQView.swift */; };
@@ -248,6 +250,7 @@
 		60C6B4DC2C2D042700926C0E /* Image.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60C6B4DB2C2D042700926C0E /* Image.swift */; };
 		60C6B4DF2C2D053600926C0E /* SubmitRouterViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60C6B4DE2C2D053600926C0E /* SubmitRouterViewModel.swift */; };
 		60C7A1682EC0DFA900E86291 /* LoadMoreIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60C7A1672EC0DFA900E86291 /* LoadMoreIndicatorView.swift */; };
+		60D165592EDB0044008BF396 /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60D165582EDB0044008BF396 /* ProfileView.swift */; };
 		60D5EB582E783EBC00C5B78F /* QuestCouponView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60D5EB572E783EBC00C5B78F /* QuestCouponView.swift */; };
 		60D5EB5A2E78668E00C5B78F /* RankingRewardViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60D5EB592E78668E00C5B78F /* RankingRewardViewModel.swift */; };
 		60D897122E536D2C006A8480 /* MissionHistoryResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60D897112E536D2C006A8480 /* MissionHistoryResponse.swift */; };
@@ -562,6 +565,8 @@
 		60943FE52C0A38FB00C8A714 /* ApprovalViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApprovalViewModel.swift; sourceTree = "<group>"; };
 		609A76D82CFC50C7009F4567 /* QuestImageWithTagView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestImageWithTagView.swift; sourceTree = "<group>"; };
 		609A76DA2CFC5E90009F4567 /* RewardTagRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RewardTagRow.swift; sourceTree = "<group>"; };
+		60A18CBF2EDAEE1200B5D908 /* CommentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentView.swift; sourceTree = "<group>"; };
+		60A18CC12EDAEFD600B5D908 /* CommentItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentItem.swift; sourceTree = "<group>"; };
 		60A2ADF22DAE62BD007AC375 /* SettingItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingItemView.swift; sourceTree = "<group>"; };
 		60A2ADF42DAE66BD007AC375 /* SettingToggleItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingToggleItemView.swift; sourceTree = "<group>"; };
 		60A2ADF72DAE6B68007AC375 /* FAQView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FAQView.swift; sourceTree = "<group>"; };
@@ -601,6 +606,7 @@
 		60C6B4DB2C2D042700926C0E /* Image.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Image.swift; sourceTree = "<group>"; };
 		60C6B4DE2C2D053600926C0E /* SubmitRouterViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubmitRouterViewModel.swift; sourceTree = "<group>"; };
 		60C7A1672EC0DFA900E86291 /* LoadMoreIndicatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadMoreIndicatorView.swift; sourceTree = "<group>"; };
+		60D165582EDB0044008BF396 /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
 		60D5EB572E783EBC00C5B78F /* QuestCouponView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestCouponView.swift; sourceTree = "<group>"; };
 		60D5EB592E78668E00C5B78F /* RankingRewardViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RankingRewardViewModel.swift; sourceTree = "<group>"; };
 		60D897112E536D2C006A8480 /* MissionHistoryResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionHistoryResponse.swift; sourceTree = "<group>"; };
@@ -1085,6 +1091,7 @@
 			isa = PBXGroup;
 			children = (
 				606C3F102E6AA8B80050C4D6 /* CouponItem.swift */,
+				60A18CC12EDAEFD600B5D908 /* CommentItem.swift */,
 				606C3F0E2E6AA8B30050C4D6 /* UserCouponItem.swift */,
 				60DA1D1F2E6CC77F00AE314E /* TitleItem.swift */,
 				60E401AF2E72CD7A00BB0B6C /* UserItem.swift */,
@@ -1133,6 +1140,7 @@
 		607FCBDA2BFA681F00BB2D04 /* Approval */ = {
 			isa = PBXGroup;
 			children = (
+				60A18CBE2EDAED5C00B5D908 /* Component */,
 				607FCBD72BFA681500BB2D04 /* ApprovalView.swift */,
 				60A6B64C2E2C819E00872DE5 /* ApprovalDetailView.swift */,
 				606C87AE2C0B9B8C002D5C3E /* ApprovalItemView.swift */,
@@ -1246,6 +1254,15 @@
 				609A76D82CFC50C7009F4567 /* QuestImageWithTagView.swift */,
 				609A76DA2CFC5E90009F4567 /* RewardTagRow.swift */,
 				60D897502E577E96006A8480 /* TrailingStarView.swift */,
+			);
+			path = Component;
+			sourceTree = "<group>";
+		};
+		60A18CBE2EDAED5C00B5D908 /* Component */ = {
+			isa = PBXGroup;
+			children = (
+				60A18CBF2EDAEE1200B5D908 /* CommentView.swift */,
+				60D165582EDB0044008BF396 /* ProfileView.swift */,
 			);
 			path = Component;
 			sourceTree = "<group>";
@@ -1924,6 +1941,7 @@
 				60F352F62E91666900307BDC /* ChallengeResponse.swift in Sources */,
 				6091972C2E5A228700F1D81B /* RankingRewardView.swift in Sources */,
 				601BCF202D7C2DC100138387 /* UINavigationController.swift in Sources */,
+				60D165592EDB0044008BF396 /* ProfileView.swift in Sources */,
 				A1FF916E2C250C3B00F03E4B /* UserNetwork.swift in Sources */,
 				60DA1D202E6CC77F00AE314E /* TitleItem.swift in Sources */,
 				60004AD52D3B799700CD2254 /* Constants.swift in Sources */,
@@ -1935,6 +1953,7 @@
 				60ADF9CD2D5DD3D000556958 /* RoundedBackground.swift in Sources */,
 				606C3EFF2E69FC600050C4D6 /* UserCouponResponse.swift in Sources */,
 				606C3F0F2E6AA8B30050C4D6 /* UserCouponItem.swift in Sources */,
+				60A18CC02EDAEE1200B5D908 /* CommentView.swift in Sources */,
 				A1AB3D682C1141B3001EB9D8 /* LoginButtonView.swift in Sources */,
 				604B2D262E92A4C1006A814D /* QuestItemBuilder.swift in Sources */,
 				606F18152DA3E1F800ABEA84 /* FavoriteNetwork.swift in Sources */,
@@ -2123,6 +2142,7 @@
 				600657E02DBCFEE80022D117 /* HonorView.swift in Sources */,
 				A1BB602C2BFF145100AAADD4 /* MyPageProfile.swift in Sources */,
 				607FCBE92BFE418600BB2D04 /* QuestViewModel.swift in Sources */,
+				60A18CC22EDAEFD600B5D908 /* CommentItem.swift in Sources */,
 				606694F32DDA2B140000E368 /* HonorAcquisitionPopup.swift in Sources */,
 				60DA1D0F2E6CC2B700AE314E /* TitleResponse.swift in Sources */,
 				60DA1D102E6CC2B700AE314E /* UserTitleResponse.swift in Sources */,
