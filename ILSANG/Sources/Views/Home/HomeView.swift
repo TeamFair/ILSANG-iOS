@@ -127,6 +127,9 @@ struct HomeView: View {
     private var header: some View {
         HStack(alignment: .bottom) {
             Image(.logoWithAlpha)
+                .resizable()
+                .scaledToFit()
+                .frame(height: 36)
                 .frame(maxWidth: .infinity, alignment: .leading)
             Button {
                 sharedState.selectedTab = .mypage /// 마이 탭으로 이동
