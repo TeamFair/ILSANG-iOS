@@ -251,6 +251,7 @@
 		60C6B4DF2C2D053600926C0E /* SubmitRouterViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60C6B4DE2C2D053600926C0E /* SubmitRouterViewModel.swift */; };
 		60C7A1682EC0DFA900E86291 /* LoadMoreIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60C7A1672EC0DFA900E86291 /* LoadMoreIndicatorView.swift */; };
 		60D165592EDB0044008BF396 /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60D165582EDB0044008BF396 /* ProfileView.swift */; };
+		60D1655B2EDB614F008BF396 /* ApprovalQuestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60D1655A2EDB614F008BF396 /* ApprovalQuestView.swift */; };
 		60D5EB582E783EBC00C5B78F /* QuestCouponView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60D5EB572E783EBC00C5B78F /* QuestCouponView.swift */; };
 		60D5EB5A2E78668E00C5B78F /* RankingRewardViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60D5EB592E78668E00C5B78F /* RankingRewardViewModel.swift */; };
 		60D897122E536D2C006A8480 /* MissionHistoryResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60D897112E536D2C006A8480 /* MissionHistoryResponse.swift */; };
@@ -607,6 +608,7 @@
 		60C6B4DE2C2D053600926C0E /* SubmitRouterViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubmitRouterViewModel.swift; sourceTree = "<group>"; };
 		60C7A1672EC0DFA900E86291 /* LoadMoreIndicatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadMoreIndicatorView.swift; sourceTree = "<group>"; };
 		60D165582EDB0044008BF396 /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
+		60D1655A2EDB614F008BF396 /* ApprovalQuestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApprovalQuestView.swift; sourceTree = "<group>"; };
 		60D5EB572E783EBC00C5B78F /* QuestCouponView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestCouponView.swift; sourceTree = "<group>"; };
 		60D5EB592E78668E00C5B78F /* RankingRewardViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RankingRewardViewModel.swift; sourceTree = "<group>"; };
 		60D897112E536D2C006A8480 /* MissionHistoryResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionHistoryResponse.swift; sourceTree = "<group>"; };
@@ -1263,6 +1265,7 @@
 			children = (
 				60A18CBF2EDAEE1200B5D908 /* CommentView.swift */,
 				60D165582EDB0044008BF396 /* ProfileView.swift */,
+				60D1655A2EDB614F008BF396 /* ApprovalQuestView.swift */,
 			);
 			path = Component;
 			sourceTree = "<group>";
@@ -2159,6 +2162,7 @@
 				609197462E5C272E00F1D81B /* CommercialAreaRankResponse.swift in Sources */,
 				60E401B82E72D33000BB0B6C /* LegendRank+UIMapper.swift in Sources */,
 				604687AC2D213B890056E394 /* SelectableTabHeader.swift in Sources */,
+				60D1655B2EDB614F008BF396 /* ApprovalQuestView.swift in Sources */,
 				60E401B42E72CED500BB0B6C /* User+UIMapper.swift in Sources */,
 				607FCBDD2BFA686700BB2D04 /* MyPageView.swift in Sources */,
 				60D897232E537421006A8480 /* MIssionHistory+UIMapper.swift in Sources */,
