@@ -40,9 +40,7 @@ struct ApprovalItemContentView: View, Equatable {
                 ProfileView(profileImage: profileImage, nickname: nickname, honor: userTitle)
             }
             
-            Text(title)
-                .styledFont(.title1)
-                .foregroundStyle(.black)
+            MetadataView(displayDate: displayDate, commercialAreaName: commercialAreaName)
             
             if #available(iOS 18.0, *) {
                 Image(uiImage: image ?? .logo)
@@ -68,8 +66,6 @@ struct ApprovalItemContentView: View, Equatable {
                         showSheetView.toggle()
                     }
             }
-            
-            MetadataView(displayDate: displayDate, commercialAreaName: commercialAreaName)
         }
         .sheet(isPresented: $showSheetView) {
             ImageFullScreenView(image: image ?? .logo) {
@@ -126,11 +122,6 @@ fileprivate struct MetadataView: View {
     
     var body: some View {
         HStack(spacing: 4) {
-            Text(displayDate)
-                .font(.system(size: 12, weight: .regular))
-            
-            Spacer(minLength: 0)
-            
             if let commercialAreaName, !commercialAreaName.isEmpty {
                 Image(.illsangRegion)
                     .resizable()
@@ -140,6 +131,10 @@ fileprivate struct MetadataView: View {
                 Text(commercialAreaName)
                     .styledFont(.badge1)
             }
+            Spacer(minLength: 0)
+            
+            Text(displayDate)
+                .styledFont(.caption2)
         }
         .foregroundStyle(.gray500)
     }

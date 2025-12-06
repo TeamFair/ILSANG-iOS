@@ -52,7 +52,26 @@ class ApprovalMissionHistoryItem: Identifiable, Equatable {
     let userTitle: UserTitle?
     var emojis: UserEmojis
     
-    init(id: Int, title: String, displayDate: String, likeCount: Int, hateCount: Int, viewCount: Int, imageId: String, image: UIImage? = nil, commercialAreaCode: String?, commercialAreaName: String? = nil, userId: String, nickname: String, profileImageId: String?, profileImage: UIImage? = nil, userTitle: UserTitle?, emojis: UserEmojis) {
+    var questType: QuestType?
+    var repeatType: RepeatType?
+    var writer: String?
+    var expireAt: Date?
+    var lastCompleteDate: Date?
+    var comments: [CommentItem]
+    
+    var questStatus: ApprovalQuestStatus {
+        guard let expireAt, expireAt >= .now else { return .expired }
+        switch questType {
+        case .normal, .event:
+            return lastCompleteDate == nil ? .able : .completed
+        case .repeat:
+            return .able
+        default:
+            return .expired
+        }
+    }
+    
+    init(id: Int, title: String, displayDate: String, likeCount: Int, hateCount: Int, viewCount: Int, imageId: String, image: UIImage? = nil, commercialAreaCode: String?, commercialAreaName: String? = nil, userId: String, nickname: String, profileImageId: String?, profileImage: UIImage? = nil, userTitle: UserTitle?, emojis: UserEmojis, comments: [CommentItem] = CommentItem.mockList) {
         self.id = id
         self.title = title
         self.displayDate = displayDate
@@ -69,6 +88,7 @@ class ApprovalMissionHistoryItem: Identifiable, Equatable {
         self.profileImage = profileImage
         self.userTitle = userTitle
         self.emojis = emojis
+        self.comments = comments
     }
     
     static var mockDataList = [

@@ -124,7 +124,7 @@ struct CommentView: View {
     }
 }
 
-fileprivate struct CommentMenuOverlay: View {
+struct CommentMenuOverlay: View {
     let canDelete: Bool
     let canReport: Bool
     let onDelete: () -> Void
