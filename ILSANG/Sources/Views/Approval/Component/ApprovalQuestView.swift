@@ -7,6 +7,22 @@
 
 import SwiftUI
 
+enum ApprovalQuestStatus: Equatable {
+    case able, expired, completed
+    
+    func getButtonTitle(source: ApprovalSource) -> String {
+        switch self {
+        case .able:
+            switch source {
+            case .tab: "나도 하기"
+            case .detail: "바로가기"
+            }
+        case .expired: "기간 만료"
+        case .completed: "수행 완료"
+        }
+    }
+}
+
 struct ApprovalQuestView: View {
     @Environment(\.layout) var layout
     let questType: QuestType
@@ -16,22 +32,6 @@ struct ApprovalQuestView: View {
     let approvalSource: ApprovalSource
     let status: ApprovalQuestStatus
     let action: () -> Void
-    
-    enum ApprovalQuestStatus: Equatable {
-        case able, expired, completed
-        
-        func getButtonTitle(source: ApprovalSource) -> String {
-            switch self {
-            case .able:
-                switch source {
-                case .tab: "나도 하기"
-                case .detail: "바로가기"
-                }
-            case .expired: "기간 만료"
-            case .completed: "수행 완료"
-            }
-        }
-    }
     
     var actionDisable: Bool {
         if case .able = status { false } else { true }
