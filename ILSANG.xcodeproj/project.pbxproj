@@ -215,7 +215,7 @@
 		60A2ADF32DAE62BD007AC375 /* SettingItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60A2ADF22DAE62BD007AC375 /* SettingItemView.swift */; };
 		60A2ADF52DAE66BD007AC375 /* SettingToggleItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60A2ADF42DAE66BD007AC375 /* SettingToggleItemView.swift */; };
 		60A2ADF82DAE6B68007AC375 /* FAQView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60A2ADF72DAE6B68007AC375 /* FAQView.swift */; };
-		60A6B64D2E2C819E00872DE5 /* ApprovalDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60A6B64C2E2C819E00872DE5 /* ApprovalDetailView.swift */; };
+		60A6B64D2E2C819E00872DE5 /* MissionApprovalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60A6B64C2E2C819E00872DE5 /* MissionApprovalView.swift */; };
 		60A902DA2D89315800CA4489 /* FirebaseAnalyticsWithoutAdIdSupport in Frameworks */ = {isa = PBXBuildFile; productRef = 60A902D92D89315800CA4489 /* FirebaseAnalyticsWithoutAdIdSupport */; };
 		60A902DE2D89315800CA4489 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 60A902DD2D89315800CA4489 /* FirebaseAuth */; };
 		60A902E02D89315800CA4489 /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = 60A902DF2D89315800CA4489 /* FirebaseCore */; };
@@ -575,7 +575,7 @@
 		60A2ADF22DAE62BD007AC375 /* SettingItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingItemView.swift; sourceTree = "<group>"; };
 		60A2ADF42DAE66BD007AC375 /* SettingToggleItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingToggleItemView.swift; sourceTree = "<group>"; };
 		60A2ADF72DAE6B68007AC375 /* FAQView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FAQView.swift; sourceTree = "<group>"; };
-		60A6B64C2E2C819E00872DE5 /* ApprovalDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApprovalDetailView.swift; sourceTree = "<group>"; };
+		60A6B64C2E2C819E00872DE5 /* MissionApprovalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionApprovalView.swift; sourceTree = "<group>"; };
 		60ADF8862D57B49B00556958 /* QuestEngageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestEngageView.swift; sourceTree = "<group>"; };
 		60ADF8882D57B53100556958 /* QuestEngageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestEngageViewModel.swift; sourceTree = "<group>"; };
 		60ADF9BC2D59D3FD00556958 /* FontStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FontStyle.swift; sourceTree = "<group>"; };
@@ -1157,7 +1157,7 @@
 			children = (
 				60A18CBE2EDAED5C00B5D908 /* Component */,
 				607FCBD72BFA681500BB2D04 /* ApprovalView.swift */,
-				60A6B64C2E2C819E00872DE5 /* ApprovalDetailView.swift */,
+				60A6B64C2E2C819E00872DE5 /* MissionApprovalView.swift */,
 				606C87AE2C0B9B8C002D5C3E /* ApprovalItemView.swift */,
 				603CF4E22D732DA100A2D19E /* ApprovalItemContentView.swift */,
 				603CF4E42D732DD800A2D19E /* ImageFullScreenView.swift */,
@@ -2092,7 +2092,7 @@
 				60E401BA2E74477A00BB0B6C /* QuestSubmissionNotifier.swift in Sources */,
 				60C6B4D52C2C565700926C0E /* ChallengeNetwork.swift in Sources */,
 				605445D82DD8BD120005742D /* HonorPopupContainerView.swift in Sources */,
-				60A6B64D2E2C819E00872DE5 /* ApprovalDetailView.swift in Sources */,
+				60A6B64D2E2C819E00872DE5 /* MissionApprovalView.swift in Sources */,
 				A11D88F72C916DE500846122 /* Icon.swift in Sources */,
 				60505D702D941D0A00121C4C /* StandardScreenView.swift in Sources */,
 				60DA1D242E6D714200AE314E /* BannerQuestResponse.swift in Sources */,
