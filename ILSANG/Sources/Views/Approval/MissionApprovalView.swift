@@ -1,5 +1,5 @@
 //
-//  ApprovalDetailView.swift
+//  MissionApprovalView.swift
 //  ILSANG
 //
 //  Created by Lee Jinhee on 7/20/25.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct ApprovalDetailView: View {
+struct MissionApprovalView: View {
     @EnvironmentObject var dependencies: AppDependencies
 
     let missionId: Int
