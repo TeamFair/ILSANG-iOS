@@ -17,6 +17,8 @@
 		60054FA02D931AA300E7C5A6 /* PDFKitView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60054F9F2D931AA300E7C5A6 /* PDFKitView.swift */; };
 		600657E02DBCFEE80022D117 /* HonorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 600657DF2DBCFEE20022D117 /* HonorView.swift */; };
 		600657E42DBD2DF50022D117 /* MyPageHonorManageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 600657E32DBD2DF50022D117 /* MyPageHonorManageView.swift */; };
+		6009EC362EE4208A000F17BD /* ReportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6009EC352EE4208A000F17BD /* ReportView.swift */; };
+		6009EC392EE4213A000F17BD /* ReportPopup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6009EC382EE4213A000F17BD /* ReportPopup.swift */; };
 		600D63982E48E5BC009FE14F /* AreaResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 600D63972E48E5A9009FE14F /* AreaResponse.swift */; };
 		600D639C2E48E83F009FE14F /* AreaSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 600D639B2E48E83F009FE14F /* AreaSelectionView.swift */; };
 		600D639E2E490D14009FE14F /* IllsangZoneSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 600D639D2E490D14009FE14F /* IllsangZoneSelectionView.swift */; };
@@ -371,6 +373,8 @@
 		60054F9F2D931AA300E7C5A6 /* PDFKitView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PDFKitView.swift; sourceTree = "<group>"; };
 		600657DF2DBCFEE20022D117 /* HonorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HonorView.swift; sourceTree = "<group>"; };
 		600657E32DBD2DF50022D117 /* MyPageHonorManageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPageHonorManageView.swift; sourceTree = "<group>"; };
+		6009EC352EE4208A000F17BD /* ReportView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportView.swift; sourceTree = "<group>"; };
+		6009EC382EE4213A000F17BD /* ReportPopup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportPopup.swift; sourceTree = "<group>"; };
 		600D63972E48E5A9009FE14F /* AreaResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AreaResponse.swift; sourceTree = "<group>"; };
 		600D639B2E48E83F009FE14F /* AreaSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AreaSelectionView.swift; sourceTree = "<group>"; };
 		600D639D2E490D14009FE14F /* IllsangZoneSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IllsangZoneSelectionView.swift; sourceTree = "<group>"; };
@@ -756,6 +760,15 @@
 				605445D52DD78EE50005742D /* LegendRankingViewModel.swift */,
 			);
 			path = MyPageHonor;
+			sourceTree = "<group>";
+		};
+		6009EC372EE42120000F17BD /* Report */ = {
+			isa = PBXGroup;
+			children = (
+				6009EC352EE4208A000F17BD /* ReportView.swift */,
+				6009EC382EE4213A000F17BD /* ReportPopup.swift */,
+			);
+			path = Report;
 			sourceTree = "<group>";
 		};
 		600D639A2E48E6BA009FE14F /* Area */ = {
@@ -1149,6 +1162,7 @@
 				603CF4E22D732DA100A2D19E /* ApprovalItemContentView.swift */,
 				603CF4E42D732DD800A2D19E /* ImageFullScreenView.swift */,
 				60943FE52C0A38FB00C8A714 /* ApprovalViewModel.swift */,
+				6009EC372EE42120000F17BD /* Report */,
 			);
 			path = Approval;
 			sourceTree = "<group>";
@@ -1984,6 +1998,7 @@
 				605334572D29BE3600599159 /* TutorialViewModel.swift in Sources */,
 				606694F02DDA29E40000E368 /* AnimatedPopup.swift in Sources */,
 				6044B7332C33F754002C13A0 /* ErrorView.swift in Sources */,
+				6009EC392EE4213A000F17BD /* ReportPopup.swift in Sources */,
 				606C3EF12E68D4710050C4D6 /* CouponListView.swift in Sources */,
 				600D63982E48E5BC009FE14F /* AreaResponse.swift in Sources */,
 				60E401A82E72C93200BB0B6C /* LegendRankResponse.swift in Sources */,
@@ -2000,6 +2015,7 @@
 				606C3EC22E60E9290050C4D6 /* PointResponse.swift in Sources */,
 				609197632E5DEC0F00F1D81B /* Banner+UIMapper.swift in Sources */,
 				6091974F2E5C292F00F1D81B /* AreaRankItem.swift in Sources */,
+				6009EC362EE4208A000F17BD /* ReportView.swift in Sources */,
 				60781F5D2EC97732003C437F /* QuestDetailMissionTitleView.swift in Sources */,
 				60B392E22EABEE86005C4A88 /* UserMissionHistoryDetail.swift in Sources */,
 				60D897202E5372BE006A8480 /* MissionHistoryResponse+Mapping.swift in Sources */,
