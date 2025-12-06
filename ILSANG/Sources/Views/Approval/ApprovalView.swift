@@ -64,27 +64,31 @@ struct ApprovalView: View {
         ScrollView {
             LazyVStack(spacing: 16) {
                 ForEach(Array(vm.currentItems.enumerated()), id: \.element.id) { idx, item in
-                    ApprovalItemView(
-                        item: item,
-                        width: .screenWidth - layout.horizontalPadding * 2,
-                        height: ((.screenWidth-layout.horizontalPadding * 2) / 5) * 4,
-                        padding: layout.horizontalPadding,
-                        onAction: { action in
-                            switch action {
-                            case .like:
-                                vm.onLike(for: idx)
-                            case .hate:
-                                vm.onHate(for: idx)
-                            case .profileTapped(let userId):
-                                userRouter.navigateToUserProfile(userId: userId)
+                    NavigationLink {
+                        ApprovalDetailView(item: item)
+                    } label: {
+                        ApprovalItemView(
+                            item: item,
+                            width: .screenWidth - layout.horizontalPadding * 2,
+                            height: ((.screenWidth-layout.horizontalPadding * 2) / 5) * 4,
+                            padding: layout.horizontalPadding,
+                            onAction: { action in
+                                switch action {
+                                case .like:
+                                    vm.onLike(for: idx)
+                                case .hate:
+                                    vm.onHate(for: idx)
+                                case .profileTapped(let userId):
+                                    userRouter.navigateToUserProfile(userId: userId)
+                                }
                             }
+                        )
+                        .equatable()
+                        .overlay(alignment: .topTrailing) {
+                            trailingButton(for: item)
                         }
-                    )
-                    .equatable()
-                    .overlay(alignment: .topTrailing) {
-                        trailingButton(for: item)
+                        .task { await vm.loadMoreDataIfNeeded(at: idx ) }
                     }
-                    .task { await vm.loadMoreDataIfNeeded(at: idx ) }
                 }
                 
                 LoadMoreIndicatorView(isVisible: vm.canLoadMore)
