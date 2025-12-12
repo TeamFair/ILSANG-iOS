@@ -65,7 +65,14 @@ struct ApprovalView: View {
             LazyVStack(spacing: 16) {
                 ForEach(Array(vm.currentItems.enumerated()), id: \.element.id) { idx, item in
                     NavigationLink {
-                        ApprovalDetailView(item: item)
+                        ApprovalDetailView(
+                            vm: ApprovalDetailViewModel(
+                                missionHistory: item,
+                                commentRepository: dependencies.commentRepository,
+                                missionHistoryRepository: dependencies.missionHistoryRepository
+                            ),
+                            userRouter: userRouter
+                           )
                     } label: {
                         ApprovalItemView(
                             item: item,

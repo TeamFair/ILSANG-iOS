@@ -16,14 +16,13 @@ struct CommentItem: Identifiable {
     let userTitle: UserTitle?
     
     let content: String
-    let date: Date
+    let date: Date?
     
     let isWriter: Bool
     let isReplyComment: Bool
     let isFromCurrentUser: Bool
     
-    let state: CommentState
-    var isUserReported: Bool
+    var state: CommentState
 }
 
 enum CommentState {
@@ -48,8 +47,7 @@ extension CommentItem {
             isWriter: false,
             isReplyComment: false,
             isFromCurrentUser: false,
-            state: .normal,
-            isUserReported: false
+            state: .normal
         ),
         CommentItem(
             id: 1,
@@ -63,8 +61,7 @@ extension CommentItem {
             isWriter: true,
             isReplyComment: false,
             isFromCurrentUser: false,
-            state: .normal,
-            isUserReported: false
+            state: .normal
         ),
         CommentItem(
             id: 2,
@@ -78,8 +75,7 @@ extension CommentItem {
             isWriter: false,
             isReplyComment: false,
             isFromCurrentUser: true,
-            state: .normal,
-            isUserReported: false
+            state: .normal
         ),
         CommentItem(
             id: 3,
@@ -93,8 +89,7 @@ extension CommentItem {
             isWriter: false,
             isReplyComment: false,
             isFromCurrentUser: true,
-            state: .normal,
-            isUserReported: true
+            state: .normal
         ),
         
         // MARK: - Normal Replies (정상 대댓글)
@@ -110,8 +105,7 @@ extension CommentItem {
             isWriter: false,
             isReplyComment: true,
             isFromCurrentUser: false,
-            state: .normal,
-            isUserReported: false
+            state: .normal
         ),
         CommentItem(
             id: 5,
@@ -125,8 +119,7 @@ extension CommentItem {
             isWriter: false,
             isReplyComment: true,
             isFromCurrentUser: true,
-            state: .normal,
-            isUserReported: false
+            state: .normal
         ),
         CommentItem(
             id: 6,
@@ -140,8 +133,7 @@ extension CommentItem {
             isWriter: false,
             isReplyComment: true,
             isFromCurrentUser: true,
-            state: .normal,
-            isUserReported: true
+            state: .normal
         ),
         
         // MARK: - Deleted Comments (삭제된 댓글)
@@ -157,8 +149,7 @@ extension CommentItem {
             isWriter: false,
             isReplyComment: false,
             isFromCurrentUser: false,
-            state: .deleted,
-            isUserReported: false
+            state: .deleted
         ),
         
         // MARK: - Deleted Replies (삭제된 대댓글)
@@ -174,8 +165,7 @@ extension CommentItem {
             isWriter: false,
             isReplyComment: true,
             isFromCurrentUser: false,
-            state: .deleted,
-            isUserReported: false
+            state: .deleted
         ),
         
         // MARK: - Reported Comments (신고 누적으로 블라인드된 댓글)
@@ -191,8 +181,7 @@ extension CommentItem {
             isWriter: false,
             isReplyComment: false,
             isFromCurrentUser: false,
-            state: .reported,
-            isUserReported: false
+            state: .reported
         ),
         
         // MARK: - Reported Replies (블라인드 대댓글)
@@ -208,8 +197,7 @@ extension CommentItem {
             isWriter: false,
             isReplyComment: true,
             isFromCurrentUser: false,
-            state: .reported,
-            isUserReported: false
+            state: .reported
         )
     ]
 }
