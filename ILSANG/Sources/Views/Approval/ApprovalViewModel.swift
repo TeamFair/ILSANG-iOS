@@ -29,8 +29,9 @@ final class ApprovalViewModel: ObservableObject, SinglePaginationLoadable {
     // MARK: - Published Properties
     @Published var viewStatus: ViewStatus = .loading
     @Published var currentItems: [ApprovalMissionHistoryItem] = []
-    @Published var selectedChallenge: ApprovalMissionHistoryItem?
+    @Published var selectedChallenge: ApprovalMissionHistoryItem? // FIXME: 변수명 변경 -> 신고용 아이템
     @Published var showReportAlert = false
+    @Published var selectedMissionHistory: ApprovalMissionHistoryItem?
 
     // MARK: - Stored Properties
     let approvalSource: ApprovalSource

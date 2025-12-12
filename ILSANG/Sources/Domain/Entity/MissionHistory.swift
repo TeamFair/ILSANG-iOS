@@ -13,6 +13,7 @@ struct MissionHistory {
     let createdAt: Date
     let likeCount: Int
     let viewCount: Int
+    let commentCount: Int
     let imageId: String
     let commercialAreaCode: String
     let userId: String

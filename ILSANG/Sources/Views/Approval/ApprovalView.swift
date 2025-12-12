@@ -48,6 +48,16 @@ struct ApprovalView: View {
         }
         .overlay { reportAlertView }
         .withUserNavigation(userRouter: userRouter)
+        .navigationDestination(item: $vm.selectedMissionHistory) { item in
+            ApprovalDetailView(
+                vm: ApprovalDetailViewModel(
+                    missionHistory: item,
+                    commentRepository: dependencies.commentRepository,
+                    missionHistoryRepository: dependencies.missionHistoryRepository
+                ),
+                userRouter: userRouter
+            )
+        }
     }
     
     /// 퀘스트 타이틀  + 퀘스트 인증 이미지
@@ -64,37 +74,31 @@ struct ApprovalView: View {
         ScrollView {
             LazyVStack(spacing: 16) {
                 ForEach(Array(vm.currentItems.enumerated()), id: \.element.id) { idx, item in
-                    NavigationLink {
-                        ApprovalDetailView(
-                            vm: ApprovalDetailViewModel(
-                                missionHistory: item,
-                                commentRepository: dependencies.commentRepository,
-                                missionHistoryRepository: dependencies.missionHistoryRepository
-                            ),
-                            userRouter: userRouter
-                           )
-                    } label: {
-                        ApprovalItemView(
-                            item: item,
-                            width: .screenWidth - layout.horizontalPadding * 2,
-                            height: ((.screenWidth-layout.horizontalPadding * 2) / 5) * 4,
-                            padding: layout.horizontalPadding,
-                            showQuestInfo: vm.approvalSource == .tab,
-                            onAction: { action in
-                                switch action {
-                                case .like:
-                                    vm.onLike(for: idx)
-                                case .profileTapped(let userId):
-                                    userRouter.navigateToUserProfile(userId: userId)
-                                }
+                    ApprovalItemView(
+                        item: item,
+                        width: .screenWidth - layout.horizontalPadding * 2,
+                        height: ((.screenWidth-layout.horizontalPadding * 2) / 5) * 4,
+                        padding: layout.horizontalPadding,
+                        showQuestInfo: vm.approvalSource == .tab,
+                        onAction: { action in
+                            switch action {
+                            case .like:
+                                vm.onLike(for: idx)
+                            case .navigateToDetail:
+                                vm.selectedMissionHistory = item
+                            case .profileTapped(let userId):
+                                userRouter.navigateToUserProfile(userId: userId)
                             }
-                        )
-                        .equatable()
-                        .overlay(alignment: .topTrailing) {
-                            trailingButton(for: item)
                         }
-                        .task { await vm.loadMoreDataIfNeeded(at: idx ) }
+                    )
+                    .equatable()
+                    .onTapGesture {
+                        vm.selectedMissionHistory = item
                     }
+                    .overlay(alignment: .topTrailing) {
+                        trailingButton(for: item)
+                    }
+                    .task { await vm.loadMoreDataIfNeeded(at: idx ) }
                 }
                 
                 LoadMoreIndicatorView(isVisible: vm.canLoadMore)

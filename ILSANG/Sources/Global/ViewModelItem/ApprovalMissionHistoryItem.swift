@@ -24,7 +24,7 @@ struct UserEmojis {
 }
 
 @Observable
-class ApprovalMissionHistoryItem: Identifiable, Equatable {
+class ApprovalMissionHistoryItem: Identifiable, Equatable, Hashable {
     static func == (lhs: ApprovalMissionHistoryItem, rhs: ApprovalMissionHistoryItem) -> Bool {
         lhs.id == rhs.id &&
         lhs.title == rhs.title &&
@@ -34,11 +34,21 @@ class ApprovalMissionHistoryItem: Identifiable, Equatable {
         lhs.userId == rhs.userId
     }
     
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+        hasher.combine(title)
+        hasher.combine(displayDate)
+        hasher.combine(likeCount)
+        hasher.combine(imageId)
+        hasher.combine(userId)
+    }
+    
     let id: Int
     let title: String
     let displayDate: String
     var likeCount: Int
     let viewCount: Int
+    let commentCount: Int
     let imageId: String
     var image: UIImage?
     let commercialAreaCode: String?
@@ -74,6 +84,7 @@ class ApprovalMissionHistoryItem: Identifiable, Equatable {
         displayDate: String,
         likeCount: Int,
         viewCount: Int,
+        commentCount: Int,
         imageId: String,
         image: UIImage? = nil,
         commercialAreaCode: String?,
@@ -95,6 +106,7 @@ class ApprovalMissionHistoryItem: Identifiable, Equatable {
         self.displayDate = displayDate
         self.likeCount = likeCount
         self.viewCount = viewCount
+        self.commentCount = commentCount
         self.imageId = imageId
         self.image = image
         self.commercialAreaCode = commercialAreaCode
@@ -119,6 +131,7 @@ class ApprovalMissionHistoryItem: Identifiable, Equatable {
             displayDate: "2025-08-19",
             likeCount: 12,
             viewCount: 45,
+            commentCount: 0,
             imageId: "image_001",
             image: nil,
             commercialAreaCode: "S01",
@@ -141,6 +154,7 @@ class ApprovalMissionHistoryItem: Identifiable, Equatable {
             displayDate: "2025-08-18",
             likeCount: 8,
             viewCount: 30,
+            commentCount: 0,
             imageId: "image_002",
             image: nil,
             commercialAreaCode: "S01",
@@ -163,6 +177,7 @@ class ApprovalMissionHistoryItem: Identifiable, Equatable {
             displayDate: "2025-08-17",
             likeCount: 20,
             viewCount: 60,
+            commentCount: 0,
             imageId: "image_003",
             image: nil,
             commercialAreaCode: "S01",
@@ -187,6 +202,7 @@ class ApprovalMissionHistoryItem: Identifiable, Equatable {
         displayDate: "",
         likeCount: 0,
         viewCount: 0,
+        commentCount: 0,
         imageId: "",
         commercialAreaCode: nil,
         commercialAreaName: nil,

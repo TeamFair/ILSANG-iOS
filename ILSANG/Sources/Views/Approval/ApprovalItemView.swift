@@ -20,6 +20,7 @@ struct ApprovalItemView: View, Equatable {
     
     enum ApprovalAction {
         case like
+        case navigateToDetail
         case profileTapped(userId: String)
     }
     
@@ -55,12 +56,18 @@ struct ApprovalItemView: View, Equatable {
                 )
             }
             
-            HStack(spacing: 8) {
+            HStack(spacing: 16) {
                 button(
                     imageName: item.emojis.isSelected(.like) ? .likeFill : .like ,
                     imageColor: item.emojis.isSelected(.like) ? .primaryPurple : .gray400,
                     count: item.likeCount,
                     action: { onAction(.like) }
+                )
+                button(
+                    imageName: .chat,
+                    imageColor: .gray400,
+                    count: item.commentCount,
+                    action: { onAction(.navigateToDetail) }
                 )
             }
         }
