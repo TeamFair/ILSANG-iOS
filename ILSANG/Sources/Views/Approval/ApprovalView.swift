@@ -79,6 +79,7 @@ struct ApprovalView: View {
                             width: .screenWidth - layout.horizontalPadding * 2,
                             height: ((.screenWidth-layout.horizontalPadding * 2) / 5) * 4,
                             padding: layout.horizontalPadding,
+                            showQuestInfo: vm.approvalSource == .tab,
                             onAction: { action in
                                 switch action {
                                 case .like:
@@ -100,7 +101,7 @@ struct ApprovalView: View {
                 
                 LoadMoreIndicatorView(isVisible: vm.canLoadMore)
             }
-            .padding(.top, vm.approvalSource == .tab ? 47 : 0)
+            .padding(.top, vm.approvalSource == .tab ? 47 : 16)
             .padding(.bottom, layout.bottomSpacing)
         }
         .refreshable {

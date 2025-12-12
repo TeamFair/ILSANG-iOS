@@ -15,6 +15,7 @@ struct ApprovalItemView: View, Equatable {
     let width: CGFloat
     let height: CGFloat
     let padding: CGFloat
+    let showQuestInfo: Bool
     let onAction: (ApprovalAction) -> Void
     
     enum ApprovalAction {
@@ -40,6 +41,20 @@ struct ApprovalItemView: View, Equatable {
                 onAction(.profileTapped(userId: item.userId))
             }
             .equatable()
+            
+            if showQuestInfo {
+                ApprovalQuestView(
+                    questType: item.questType ?? .normal,
+                    repeatType: item.repeatType,
+                    questTitle: item.title,
+                    writerName: item.writer ?? "",
+                    bgStyle: .roundedStroke,
+                    status: item.questStatus,
+                    action: {
+                        // FIXME: 퀘스트 라우터 연결
+                    }
+                )
+            }
             
             ReactionView(likeCount: item.likeCount, hateCount: item.hateCount)
                 .equatable()
@@ -99,6 +114,7 @@ struct ApprovalItemView: View, Equatable {
         width: .screenWidth-40,
         height: 200,
         padding: 20,
+        showQuestInfo: true,
         onAction: { _ in}
     )
 }

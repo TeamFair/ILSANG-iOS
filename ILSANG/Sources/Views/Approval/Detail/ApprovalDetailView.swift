@@ -74,7 +74,7 @@ struct ApprovalDetailView: View {
                             repeatType: vm.missionHistory.repeatType,
                             questTitle: vm.missionHistory.title,
                             writerName: vm.missionHistory.writer ?? "",
-                            approvalSource: .tab,
+                            bgStyle: .roundedStroke,
                             status: vm.missionHistory.questStatus,
                             action: {
                                 vm.send(.mission)
