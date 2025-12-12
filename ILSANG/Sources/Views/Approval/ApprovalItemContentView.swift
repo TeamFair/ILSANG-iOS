@@ -110,7 +110,7 @@ struct ApprovalItemContentShareView: View {
             
             MetadataView(displayDate: item.displayDate, commercialAreaName: item.commercialAreaName)
             
-            ReactionView(likeCount: item.likeCount)
+            // ReactionView(likeCount: item.likeCount)
         }
         .background(.white)
     }
@@ -139,38 +139,6 @@ fileprivate struct MetadataView: View {
         .foregroundStyle(.gray500)
     }
 }
-
-struct ReactionView: View, Equatable {
-    static func == (lhs: ReactionView, rhs: ReactionView) -> Bool {
-        lhs.likeCount == rhs.likeCount
-    }
-    
-    let likeCount: Int
-    
-    var body: some View {
-        HStack(spacing: 16) {
-            emojiView(imageName: .thumbsUp, count: likeCount, alignment: .top)
-        }
-    }
-    
-    private func emojiView(imageName: UIImage, count: Int, alignment: Alignment) -> some View {
-        HStack(spacing: 4) {
-            Image(uiImage: imageName)
-                .resizable()
-                .renderingMode(.template)
-                .scaledToFit()
-                .frame(width: 21, height: 21)
-                .foregroundStyle(.gray200)
-                .frame(width: 24, height: 24, alignment: alignment)
-            Text("\(count)")
-                .monospacedDigit()
-                .styledFont(.heading2)
-                .foregroundStyle(.gray300)
-        }
-        .frame(height: 24)
-    }
-}
-
 
 #Preview {
     let item1 = ApprovalMissionHistoryItem.mockDataList[0]

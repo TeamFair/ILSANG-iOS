@@ -183,6 +183,37 @@ struct UserMissionHistoryInfoView: View {
     }
 }
 
+struct ReactionView: View, Equatable {
+    static func == (lhs: ReactionView, rhs: ReactionView) -> Bool {
+        lhs.likeCount == rhs.likeCount
+    }
+    
+    let likeCount: Int
+    
+    var body: some View {
+        HStack(spacing: 16) {
+            emojiView(imageName: .thumbsUp, count: likeCount, alignment: .top)
+        }
+    }
+    
+    private func emojiView(imageName: UIImage, count: Int, alignment: Alignment) -> some View {
+        HStack(spacing: 4) {
+            Image(uiImage: imageName)
+                .resizable()
+                .renderingMode(.template)
+                .scaledToFit()
+                .frame(width: 21, height: 21)
+                .foregroundStyle(.gray200)
+                .frame(width: 24, height: 24, alignment: alignment)
+            Text("\(count)")
+                .monospacedDigit()
+                .styledFont(.heading2)
+                .foregroundStyle(.gray300)
+        }
+        .frame(height: 24)
+    }
+}
+
 struct UserMissionHistoryInfoSectionView: View {
     @Environment(\.layout) var layout
     

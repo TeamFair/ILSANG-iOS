@@ -55,15 +55,11 @@ struct ApprovalItemView: View, Equatable {
                 )
             }
             
-            ReactionView(likeCount: item.likeCount)
-                .equatable()
-            
             HStack(spacing: 8) {
-                emojiButton(
-                    imageName: .thumbsUp,
-                    active: item.emojis.isSelected(.like),
-                    activeFgColor: .white,
-                    activeBgColor: .primaryPurple,
+                button(
+                    imageName: item.emojis.isSelected(.like) ? .likeFill : .like ,
+                    imageColor: item.emojis.isSelected(.like) ? .primaryPurple : .gray400,
+                    count: item.likeCount,
                     action: { onAction(.like) }
                 )
             }
@@ -73,28 +69,29 @@ struct ApprovalItemView: View, Equatable {
         .cornerRadius(12)
     }
     
-    private func emojiButton(
+    private func button(
         imageName: UIImage,
-        active: Bool,
-        activeFgColor: Color,
-        activeBgColor: Color,
+        imageColor: Color = .gray400,
+        count: Int,
         action: @escaping () -> ()
     ) -> some View {
         Button {
             action()
         } label: {
-            Image(uiImage: imageName)
-                .resizable()
-                .renderingMode(.template)
-                .frame(width: 27, height: 24)
-                .foregroundStyle(active ? activeFgColor : .gray300)
-                .frame(height: 50)
-                .frame(maxWidth: .infinity)
-                .background(
-                    RoundedRectangle(cornerRadius: 12)
-                        .frame(maxWidth: .infinity)
-                        .foregroundStyle(active ? activeBgColor : .gray100)
-                )
+            HStack(spacing: 4) {
+                Image(uiImage: imageName)
+                    .resizable()
+                    .renderingMode(.template)
+                    .scaledToFit()
+                    .frame(width: 24, height: 24)
+                    .foregroundStyle(imageColor)
+                    .frame(width: 30, height: 30)
+                Text("\(count)")
+                    .monospacedDigit()
+                    .styledFont(.subTitle1)
+                    .foregroundStyle(.gray400)
+            }
+            .frame(height: 30)
         }
     }
 }
