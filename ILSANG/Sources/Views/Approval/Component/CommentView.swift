@@ -9,11 +9,10 @@ import SwiftUI
 
 enum CommentAction {
     case delete(id: Int)
-    case report(id: Int, isAlreadyReported: Bool)
-    case reply(id: Int)
+    case report(id: Int)
+    case reply(id: Int, name: String)
     case showUserProfile(userId: String)
 }
-
 
 struct CommentView: View {
     @Binding var activeMenuCommentId: Int?
@@ -44,7 +43,7 @@ struct CommentView: View {
                         onAction(.delete(id: comment.id))
                     },
                     onReport: {
-                        onAction(.report(id: comment.id, isAlreadyReported: comment.isUserReported))
+                        onAction(.report(id: comment.id))
                     }
                 )
                 .padding(.top, 40)
@@ -93,7 +92,7 @@ struct CommentView: View {
         HStack(spacing: 0) {
             if !comment.isReplyComment {
                 Button {
-                    onAction(.reply(id: comment.id))
+                    onAction(.reply(id: comment.id, name: comment.nickname))
                 } label: {
                     Text("답글 달기")
                         .styledFont(.tabBold)
@@ -101,9 +100,11 @@ struct CommentView: View {
                 }
                 Spacer(minLength: 0)
             }
-            Text(comment.date.toDisplayFormat(.full))
-                .styledFont(.caption2)
-                .foregroundStyle(.gray500)
+            if let createdAt = comment.date?.toDisplayFormat(.full) {
+                Text(createdAt)
+                    .styledFont(.caption2)
+                    .foregroundStyle(.gray500)
+            }
         }
     }
     

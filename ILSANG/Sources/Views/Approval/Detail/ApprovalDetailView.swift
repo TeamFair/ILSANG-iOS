@@ -8,27 +8,11 @@
 import SwiftUI
 
 struct ApprovalDetailView: View {
-    @State private var activeMenuCommentId: Int?
-    @State private var activeMissionhistoryMenu: Bool = false
-    @State private var comment: String = ""
-    @State private var replyingToComment: (id: Int, nickname: String)? = nil
-    private let maxCommentLength = 300
-    let item: ApprovalMissionHistoryItem
-    var onAction: ((ApprovalDetailAction) -> Void)? = nil
-    
+    @StateObject var vm: ApprovalDetailViewModel
+    @StateObject var userRouter: UserRouter
+    @FocusState private var isCommentFocused: Bool
     @Environment(\.layout) var layout
     @Environment(\.dismiss) var dismiss
-    
-    enum ApprovalDetailAction {
-        case like
-        case mission
-        case profileTapped(userId: String)
-        case commentEllipsisTapped
-        case commentReport
-        case commentDelete
-        case missionHistoryEllipsisTapped
-        case missionHistoryReport
-    }
     
     var body: some View {
         VStack(spacing: 0) {
@@ -37,12 +21,14 @@ struct ApprovalDetailView: View {
         }
         .background(Color.background)
         .navigationBarBackButtonHidden(true)
+        .overlay { alertView }
         .task {
-            // await vm.loadDataIfNeeded() // FIXME: API 호출
+            vm.send(.load)
         }
+        
         .scrollDismissesKeyboard(.immediately)
         .onTapGesture {
-            activeMissionhistoryMenu = false
+            vm.activeMissionHistoryMenu = false
             hideKeyboard()
         }
         .safeAreaInset(edge: .bottom) {
@@ -58,103 +44,119 @@ struct ApprovalDetailView: View {
     }
     
     private var content: some View {
-        ScrollView {
-            VStack(spacing: 0) {
+        ScrollViewReader { proxy in
+            ScrollView {
                 VStack(spacing: 0) {
-                    ApprovalItemContentView(
-                        id: item.id,
-                        title: item.title,
-                        image: item.image,
-                        nickname: item.nickname,
-                        userTitle: item.userTitle,
-                        profileImage: item.profileImage,
-                        displayDate: item.displayDate,
-                        commercialAreaName: item.commercialAreaName,
-                        width: .screenWidth - layout.horizontalPadding * 2,
-                        height: ((.screenWidth-layout.horizontalPadding * 2) / 5) * 4,
-                    ) {
-                        onAction?(.profileTapped(userId: item.userId))
-                    }
-                    .overlay(alignment: .topTrailing) {
-                        trailingButton(for: item)
-                    }
-                    .padding(.top, 20)
-                    .padding(.horizontal, layout.horizontalPadding)
-                    .padding(.bottom, 16)
-                    
-                    ApprovalQuestView(
-                        questType: item.questType ?? .normal,
-                        repeatType: item.repeatType,
-                        questTitle: item.title,
-                        writerName: item.writer ?? "",
-                        approvalSource: .tab,
-                        status: item.questStatus,
-                        action: {
-                            onAction?(.mission)
+                    VStack(spacing: 0) {
+                        ApprovalItemContentView(
+                            id: vm.missionHistory.id,
+                            title: vm.missionHistory.title,
+                            image: vm.missionHistory.image,
+                            nickname: vm.missionHistory.nickname,
+                            userTitle: vm.missionHistory.userTitle,
+                            profileImage: vm.missionHistory.profileImage,
+                            displayDate: vm.missionHistory.displayDate,
+                            commercialAreaName: vm.missionHistory.commercialAreaName,
+                            width: .screenWidth - layout.horizontalPadding * 2,
+                            height: ((.screenWidth-layout.horizontalPadding * 2) / 5) * 4,
+                        ) {
+                            vm.send(.profileTapped(userId: vm.missionHistory.userId))
                         }
-                    )
-                    .padding(.bottom, 32)
-                    .padding(.horizontal, layout.horizontalPadding)
-                    
-                    HStack(spacing: 4) {
-                        Text("댓글")
-                            .foregroundStyle(.black)
-                            .styledFont(.heading1)
-                        Text("\(item.comments.count)")
-                            .foregroundStyle(.gray500)
-                            .styledFont(.body)
-                        Spacer()
+                        .overlay(alignment: .topTrailing) {
+                            trailingButton(for: vm.missionHistory)
+                        }
+                        .padding(.top, 20)
+                        .padding(.horizontal, layout.horizontalPadding)
+                        .padding(.bottom, 16)
+                        
+                        ApprovalQuestView(
+                            questType: vm.missionHistory.questType ?? .normal,
+                            repeatType: vm.missionHistory.repeatType,
+                            questTitle: vm.missionHistory.title,
+                            writerName: vm.missionHistory.writer ?? "",
+                            approvalSource: .tab,
+                            status: vm.missionHistory.questStatus,
+                            action: {
+                                vm.send(.mission)
+                            }
+                        )
+                        .padding(.bottom, 32)
+                        .padding(.horizontal, layout.horizontalPadding)
+                        
+                        HStack(spacing: 4) {
+                            Text("댓글")
+                                .foregroundStyle(.black)
+                                .styledFont(.heading1)
+                            Text("\(vm.comments.count)")
+                                .foregroundStyle(.gray500)
+                                .styledFont(.body)
+                            Spacer()
+                        }
+                        .padding(.bottom, 8)
+                        .padding(.horizontal, layout.horizontalPadding)
                     }
-                    .padding(.bottom, 8)
-                    .padding(.horizontal, layout.horizontalPadding)
-                }
-                .background(Color.white)
-                
-                divider
-                
-                if item.comments.isEmpty {
-                    emptyCommentView
-                } else {
-                    LazyVStack(spacing: 0) {
-                        ForEach(Array(item.comments.enumerated()), id: \.offset) { idx, comment in
-                            CommentView(
-                                activeMenuCommentId: $activeMenuCommentId,
-                                comment: comment) { action in
-                                    
-                                }
-                                .overlay(alignment: .bottom) {
-                                    if idx != CommentItem.mockList.count - 1 {
-                                        divider
+                    .background(Color.white)
+                    
+                    divider
+                    
+                    if vm.comments.isEmpty {
+                        emptyCommentView
+                    } else {
+                        LazyVStack(spacing: 0) {
+                            ForEach(Array(vm.comments.enumerated()), id: \.offset) { idx, comment in
+                                CommentView(
+                                    activeMenuCommentId: $vm.activeMenuCommentId,
+                                    comment: comment) { action in
+                                        vm.send(.commentAction(action))
                                     }
-                                }
+                                    .overlay(alignment: .bottom) {
+                                        if idx != CommentItem.mockList.count - 1 {
+                                            divider
+                                        }
+                                    }
+                                    .id(comment.id)
+                            }
                         }
                     }
                 }
+                .cornerRadius(12, corners: [.topLeft, .topRight])
             }
-            .cornerRadius(12, corners: [.topLeft, .topRight])
+            .onReceive(vm.$event) { event in
+                guard let event else { return }
+                switch event {
+                case .scrollToComment(let id):
+                    withAnimation(.linear) {
+                        proxy.scrollTo(id, anchor: .bottom)//.init(x: 0.5, y: 0.8))
+                    }
+                case .focusCommentField:
+                    isCommentFocused = true
+                }
+            }
+            .padding(.bottom, -10)
+            .padding(.horizontal, layout.horizontalPadding)
+            .overlay {
+                if vm.activeMenuCommentId != nil || vm.activeMissionHistoryMenu {
+                    Color.clear
+                        .contentShape(Rectangle()) // 터치 영역 확보
+                        .onTapGesture {
+                            vm.activeMissionHistoryMenu = false
+                            vm.activeMenuCommentId = nil
+                        }
+                        .gesture(
+                            DragGesture().onChanged { _ in
+                                vm.activeMissionHistoryMenu = false
+                                vm.activeMenuCommentId = nil
+                            }
+                        )
+                }
+            }
         }
-        .padding(.bottom, -10)
-        .padding(.horizontal, layout.horizontalPadding)
-        .simultaneousGesture(
-            DragGesture().onChanged { _ in
-                print("스크롤 중")
-                activeMissionhistoryMenu = false
-                activeMenuCommentId = nil
-            }
-        )
-        .simultaneousGesture(
-            TapGesture().onEnded {
-                print("탭 발생")
-                activeMissionhistoryMenu = false
-                activeMenuCommentId = nil
-            }
-        )
     }
     
     private func trailingButton(for item: ApprovalMissionHistoryItem) -> some View {
         Button {
             withAnimation(.snappy) {
-                onAction?(.missionHistoryEllipsisTapped)
+                vm.send(.missionHistoryEllipsisTapped)
             }
         } label: {
             Image(.moreVertical)
@@ -164,13 +166,13 @@ struct ApprovalDetailView: View {
                 .frame(height: 35)
         }
         .overlay(alignment: .topTrailing) {
-            if activeMissionhistoryMenu {
+            if vm.activeMissionHistoryMenu {
                 CommentMenuOverlay(
                     canDelete: false,
                     canReport: true,
                     onDelete: { },
                     onReport: {
-                        onAction?(.missionHistoryReport)
+                        vm.send(.missionHistoryReport)
                     }
                 )
                 .padding(.top, 40)
@@ -180,14 +182,14 @@ struct ApprovalDetailView: View {
     
     private var inputView: some View {
         VStack(spacing: 0) {
-            if let (_, nickname) = replyingToComment {
+            if let (_, nickname) = vm.replyingToComment {
                 HStack {
                     Text("\(nickname)님께 답글 남기는 중")
                         .styledFont(.caption2)
                         .foregroundStyle(.primaryPurple)
                     Spacer(minLength: 0)
                     Button {
-                        replyingToComment = nil
+                        vm.replyingToComment = nil
                     } label: {
                         Text("취소")
                             .styledFont(.caption2)
@@ -203,13 +205,14 @@ struct ApprovalDetailView: View {
             
             HStack(spacing: 8) {
                 HStack(spacing: 10) {
-                    TextField("", text: $comment, axis: .vertical)
+                    TextField("", text: $vm.comment, axis: .vertical)
                         .styledFont(.caption1)
                         .submitLabel(.return)
                         .keyboardType(.default)
                         .foregroundStyle(.black)
+                        .focused($isCommentFocused)
                         .overlay(alignment: .leading) {
-                            if comment.isEmpty {
+                            if vm.comment.isEmpty {
                                 Text("댓글을 입력해 주세요.")
                                     .styledFont(.caption1)
                                     .foregroundStyle(.gray300)
@@ -217,7 +220,7 @@ struct ApprovalDetailView: View {
                                     .allowsHitTesting(false)
                             }
                         }
-                    Text("\(comment.count)/\(maxCommentLength)")
+                    Text("\(vm.comment.count)/\(vm.maxCommentLength)")
                         .styledFont(.tabBold)
                         .foregroundStyle(.gray300)
                 }
@@ -227,15 +230,15 @@ struct ApprovalDetailView: View {
                 .roundedBackground(cornerRadius: 12, bgColor: .gray100)
                 
                 Button {
-                    
+                    vm.send(.createComment)
                 } label: {
                     Text("등록")
                         .styledFont(.button)
                         .foregroundStyle(.white)
                         .frame(width: 70, height: 50)
-                        .roundedBackground(cornerRadius: 12, bgColor: comment.isEmpty ? .gray300 : .primaryPurple)
+                        .roundedBackground(cornerRadius: 12, bgColor: vm.comment.isEmpty ? .gray300 : .primaryPurple)
                 }
-                .disabled(comment.isEmpty)
+                .disabled(vm.comment.isEmpty)
             }
             .frame(maxHeight: 90, alignment: .top)
             .fixedSize(horizontal: false, vertical: true)
@@ -259,8 +262,22 @@ struct ApprovalDetailView: View {
             .frame(maxWidth: .infinity)
             .foregroundStyle(.gray100)
     }
+    
+    @ViewBuilder
+    private var alertView: some View {
+        if let alertType = vm.showAlertType {
+            SettingAlertView(
+                alertType: alertType,
+                onCancel: nil,
+                onConfirm: { vm.showAlertType = nil }
+            )
+        }
+    }
 }
 
 #Preview {
-    ApprovalDetailView(item: .mockDataList[0], onAction: nil)
+    //    ApprovalDetailView(
+    //        vm: ,
+    //        userRouter:
+    //    )
 }

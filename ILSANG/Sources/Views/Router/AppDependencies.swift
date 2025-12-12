@@ -23,6 +23,7 @@ class AppDependencies: ObservableObject {
     let favoriteNetwork: FavoriteNetwork
     let bannerNetwork: BannerNetwork
     let couponNetwork: CouponNetwork
+    let commentNetwork: CommentNetwork
     
     // MARK: - Repositories
     let userRepository: UserRepositoryInterface
@@ -33,6 +34,7 @@ class AppDependencies: ObservableObject {
     let bannerRepository: BannerRepositoryInterface
     let couponRepository: CouponRepositoryInterface
     let titleRepository: TitleRepositoryInterface
+    let commentRepository: CommentRepositoryInterface
     
     // MARK: - Services
     let illsangZoneManager: IllsangZoneManager
@@ -58,6 +60,7 @@ class AppDependencies: ObservableObject {
         self.favoriteNetwork = FavoriteNetwork()
         self.bannerNetwork = BannerNetwork()
         self.couponNetwork = CouponNetwork()
+        self.commentNetwork = CommentNetwork()
         
         // Repositories
         self.userRepository = UserRepository(network: userNetwork)
@@ -68,6 +71,7 @@ class AppDependencies: ObservableObject {
         self.bannerRepository = BannerRepository(network: bannerNetwork)
         self.couponRepository = CouponRepository(network: couponNetwork)
         self.titleRepository = TitleRepository(network: titleNetwork)
+        self.commentRepository = CommentRepository(network: commentNetwork)
         
         // Services
         self.areaNameService = AreaNameService(areaRepository: areaRepository)

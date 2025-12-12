@@ -20,6 +20,13 @@
 		6009EC362EE4208A000F17BD /* ReportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6009EC352EE4208A000F17BD /* ReportView.swift */; };
 		6009EC392EE4213A000F17BD /* ReportPopup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6009EC382EE4213A000F17BD /* ReportPopup.swift */; };
 		6009EC3B2EE42BCA000F17BD /* ApprovalDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6009EC3A2EE42BCA000F17BD /* ApprovalDetailView.swift */; };
+		6009EC402EEB9ACE000F17BD /* CommentNetwork.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6009EC3F2EEB9ACE000F17BD /* CommentNetwork.swift */; };
+		6009EC422EEB9EC5000F17BD /* CommentResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6009EC412EEB9EC5000F17BD /* CommentResponse.swift */; };
+		6009EC442EEB9F58000F17BD /* Comment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6009EC432EEB9F58000F17BD /* Comment.swift */; };
+		6009EC462EEBA0B5000F17BD /* CommentResponse+Mapping.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6009EC452EEBA0B5000F17BD /* CommentResponse+Mapping.swift */; };
+		6009EC482EEBA40C000F17BD /* CommentRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6009EC472EEBA40C000F17BD /* CommentRepository.swift */; };
+		6009EC4A2EEBA6F5000F17BD /* Comment+UIMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6009EC492EEBA6F5000F17BD /* Comment+UIMapper.swift */; };
+		6009EC4C2EEBAAC9000F17BD /* ApprovalDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6009EC4B2EEBAAC9000F17BD /* ApprovalDetailViewModel.swift */; };
 		600D63982E48E5BC009FE14F /* AreaResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 600D63972E48E5A9009FE14F /* AreaResponse.swift */; };
 		600D639C2E48E83F009FE14F /* AreaSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 600D639B2E48E83F009FE14F /* AreaSelectionView.swift */; };
 		600D639E2E490D14009FE14F /* IllsangZoneSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 600D639D2E490D14009FE14F /* IllsangZoneSelectionView.swift */; };
@@ -377,6 +384,13 @@
 		6009EC352EE4208A000F17BD /* ReportView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportView.swift; sourceTree = "<group>"; };
 		6009EC382EE4213A000F17BD /* ReportPopup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportPopup.swift; sourceTree = "<group>"; };
 		6009EC3A2EE42BCA000F17BD /* ApprovalDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApprovalDetailView.swift; sourceTree = "<group>"; };
+		6009EC3F2EEB9ACE000F17BD /* CommentNetwork.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentNetwork.swift; sourceTree = "<group>"; };
+		6009EC412EEB9EC5000F17BD /* CommentResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentResponse.swift; sourceTree = "<group>"; };
+		6009EC432EEB9F58000F17BD /* Comment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Comment.swift; sourceTree = "<group>"; };
+		6009EC452EEBA0B5000F17BD /* CommentResponse+Mapping.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CommentResponse+Mapping.swift"; sourceTree = "<group>"; };
+		6009EC472EEBA40C000F17BD /* CommentRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentRepository.swift; sourceTree = "<group>"; };
+		6009EC492EEBA6F5000F17BD /* Comment+UIMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Comment+UIMapper.swift"; sourceTree = "<group>"; };
+		6009EC4B2EEBAAC9000F17BD /* ApprovalDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApprovalDetailViewModel.swift; sourceTree = "<group>"; };
 		600D63972E48E5A9009FE14F /* AreaResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AreaResponse.swift; sourceTree = "<group>"; };
 		600D639B2E48E83F009FE14F /* AreaSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AreaSelectionView.swift; sourceTree = "<group>"; };
 		600D639D2E490D14009FE14F /* IllsangZoneSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IllsangZoneSelectionView.swift; sourceTree = "<group>"; };
@@ -777,6 +791,7 @@
 			isa = PBXGroup;
 			children = (
 				6009EC3A2EE42BCA000F17BD /* ApprovalDetailView.swift */,
+				6009EC4B2EEBAAC9000F17BD /* ApprovalDetailViewModel.swift */,
 			);
 			path = Detail;
 			sourceTree = "<group>";
@@ -1003,6 +1018,7 @@
 				60D897102E536D0C006A8480 /* Response */,
 				601189222C3E95D40070F2AD /* AuthNetwork.swift */,
 				60004AD62D4221F500CD2254 /* BannerNetwork.swift */,
+				6009EC3F2EEB9ACE000F17BD /* CommentNetwork.swift */,
 				606C3F042E69FCEA0050C4D6 /* CouponNetwork.swift */,
 				606F18142DA3E1F800ABEA84 /* FavoriteNetwork.swift */,
 				600211ED2C1EEF91000CC02E /* EmojiNetwork.swift */,
@@ -1438,6 +1454,7 @@
 				60D897112E536D2C006A8480 /* MissionHistoryResponse.swift */,
 				6091976E2E5F8EC500F1D81B /* UserMissionHistoryResponse.swift */,
 				60B392DF2EABEC94005C4A88 /* UserMissionHistoryDetailResponse.swift */,
+				6009EC412EEB9EC5000F17BD /* CommentResponse.swift */,
 				60D897362E57502B006A8480 /* BaseQuestResponse.swift */,
 				60D897302E57428D006A8480 /* QuestDetailResponse.swift */,
 				60D897402E575056006A8480 /* LargeRewardQuestResponse.swift */,
@@ -1477,6 +1494,7 @@
 				609197662E5E069400F1D81B /* Area.swift */,
 				60924DC82C48C00E00221072 /* Quest.swift */,
 				60D8974A2E57645D006A8480 /* Reward.swift */,
+				6009EC432EEB9F58000F17BD /* Comment.swift */,
 				60D897482E576302006A8480 /* Mission.swift */,
 				60D897182E537188006A8480 /* MissionHistory.swift */,
 				60004AD82D42373300CD2254 /* Banner.swift */,
@@ -1494,6 +1512,7 @@
 			children = (
 				60D8974C2E5766D7006A8480 /* QuestRepository.swift */,
 				60D8971D2E5372B3006A8480 /* MissionHistoryRepository.swift */,
+				6009EC472EEBA40C000F17BD /* CommentRepository.swift */,
 				609197522E5C2E0500F1D81B /* RankRepository.swift */,
 				6091975E2E5DEA2B00F1D81B /* BannerRepository.swift */,
 				609197642E5E02CD00F1D81B /* AreaRepository.swift */,
@@ -1517,6 +1536,7 @@
 				609197252E59EC5F00F1D81B /* MissionResponse+Mapping.swift */,
 				609197272E59EC7100F1D81B /* RewardResponse+Mapping.swift */,
 				60D8971F2E5372BE006A8480 /* MissionHistoryResponse+Mapping.swift */,
+				6009EC452EEBA0B5000F17BD /* CommentResponse+Mapping.swift */,
 				6091975C2E5DE9C100F1D81B /* BannerResponse+Mapping.swift */,
 				609197682E5E06F300F1D81B /* AreaResponse+Mapping.swift */,
 				606C3F0A2E69FDF00050C4D6 /* CouponResponse+Mapping.swift */,
@@ -1534,6 +1554,7 @@
 				60D897222E537421006A8480 /* MIssionHistory+UIMapper.swift */,
 				609197742E5F8FF900F1D81B /* UserMissionHistory+UIMapper.swift */,
 				60B392E52EABF1C0005C4A88 /* UserMissionHistoryDetail+UIMapper.swift */,
+				6009EC492EEBA6F5000F17BD /* Comment+UIMapper.swift */,
 				60D897522E578003006A8480 /* Quest+UIMapper.swift */,
 				609197542E5C364600F1D81B /* Rank+UIMapper.swift */,
 				609197622E5DEC0F00F1D81B /* Banner+UIMapper.swift */,
@@ -1916,6 +1937,7 @@
 				601BCF392D7EE63100138387 /* CustomImagePicker.swift in Sources */,
 				606C3EB62E60A57C0050C4D6 /* UserMissionHistoryViewModel.swift in Sources */,
 				606C3EE92E674B530050C4D6 /* UserNavigationSetup.swift in Sources */,
+				6009EC482EEBA40C000F17BD /* CommentRepository.swift in Sources */,
 				603CF4F32D79A8CE00A2D19E /* SubmitInprogressView.swift in Sources */,
 				609197592E5C957700F1D81B /* SeasonManager.swift in Sources */,
 				6091976F2E5F8EC500F1D81B /* UserMissionHistoryResponse.swift in Sources */,
@@ -1942,6 +1964,8 @@
 				6028A94C2D397730003FBC8C /* UserRankResponse.swift in Sources */,
 				605E81422D9FE4D300ECDB15 /* QuestDetailApprovalImageView.swift in Sources */,
 				606C21CC2CC6B4FC00803947 /* SubmitStatusView.swift in Sources */,
+				6009EC422EEB9EC5000F17BD /* CommentResponse.swift in Sources */,
+				6009EC4A2EEBA6F5000F17BD /* Comment+UIMapper.swift in Sources */,
 				A196286F2C0859910037C53A /* DeleteAccountView.swift in Sources */,
 				60D897312E57428D006A8480 /* QuestDetailResponse.swift in Sources */,
 				6091974A2E5C27A400F1D81B /* AreaUserRankResponse.swift in Sources */,
@@ -1968,6 +1992,7 @@
 				60FB50CD2D15CEAE00C55E82 /* HomeView.swift in Sources */,
 				60F352F62E91666900307BDC /* ChallengeResponse.swift in Sources */,
 				6091972C2E5A228700F1D81B /* RankingRewardView.swift in Sources */,
+				6009EC462EEBA0B5000F17BD /* CommentResponse+Mapping.swift in Sources */,
 				601BCF202D7C2DC100138387 /* UINavigationController.swift in Sources */,
 				60D165592EDB0044008BF396 /* ProfileView.swift in Sources */,
 				A1FF916E2C250C3B00F03E4B /* UserNetwork.swift in Sources */,
@@ -2071,6 +2096,7 @@
 				6091975F2E5DEA2B00F1D81B /* BannerRepository.swift in Sources */,
 				60ADF9D22D5DDC5B00556958 /* QuizView.swift in Sources */,
 				605445D22DD7169A0005742D /* LegendRankingView.swift in Sources */,
+				6009EC442EEB9F58000F17BD /* Comment.swift in Sources */,
 				60B8B9E92BF9EEF1005F6DE3 /* QuestView.swift in Sources */,
 				60D897452E575FD6006A8480 /* MissionType.swift in Sources */,
 				60B8B9E72BF9EEF1005F6DE3 /* ILSANGApp.swift in Sources */,
@@ -2086,6 +2112,7 @@
 				60D897512E577E96006A8480 /* TrailingStarView.swift in Sources */,
 				A1C6422A2C33F55A004954CA /* QuestNetwork.swift in Sources */,
 				60ADF9CB2D5A01BA00556958 /* PresentationDetent++.swift in Sources */,
+				6009EC4C2EEBAAC9000F17BD /* ApprovalDetailViewModel.swift in Sources */,
 				60D8973F2E575052006A8480 /* PopularQuestResponse.swift in Sources */,
 				60D897432E575704006A8480 /* QuestType.swift in Sources */,
 				A1AB3D6C2C1142AA001EB9D8 /* LoginButton.swift in Sources */,
@@ -2123,6 +2150,7 @@
 				606C3EE32E674AF50050C4D6 /* IllsangZoneAlertView.swift in Sources */,
 				60B392E62EABF1C0005C4A88 /* UserMissionHistoryDetail+UIMapper.swift in Sources */,
 				609197672E5E069600F1D81B /* Area.swift in Sources */,
+				6009EC402EEB9ACE000F17BD /* CommentNetwork.swift in Sources */,
 				60ADF9C22D59D47100556958 /* FontWithLineHeight.swift in Sources */,
 				606C3F0B2E69FDF00050C4D6 /* CouponResponse+Mapping.swift in Sources */,
 				606292D82C19E70A0098B6D2 /* Network.swift in Sources */,

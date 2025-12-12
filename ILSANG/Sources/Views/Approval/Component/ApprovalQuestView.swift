@@ -106,7 +106,7 @@ struct ApprovalQuestView: View {
         ApprovalQuestView(questType: .repeat, repeatType: .monthly, questTitle: "월간 퀘스트", writerName: "작성자이름", approvalSource: .tab, status: .able, action: action)
         ApprovalQuestView(questType: .event, repeatType: nil, questTitle: "이벤트 퀘스트 참여완료", writerName: "작성자이름", approvalSource: .tab, status: .completed, action: action)
         ApprovalQuestView(questType: .event, repeatType: nil, questTitle: "이벤트 퀘스트 기간만료", writerName: "작성자이름", approvalSource: .tab, status: .expired, action: action)
-        ApprovalQuestView(questType: .repeat, repeatType: .daily, questTitle: "인증예시 퀘스트", writerName: "작성자이름", approvalSource: .detail(missionId: 2), status: .able, action: action)
+        ApprovalQuestView(questType: .repeat, repeatType: .daily, questTitle: "인증예시 퀘스트", writerName: "작성자이름", approvalSource: .detail(missionId: 2, quest: .mockData), status: .able, action: action)
     }
     .padding(20)
 }
