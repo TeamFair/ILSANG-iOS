@@ -57,7 +57,6 @@ class ApprovalMissionHistoryItem: Identifiable, Equatable {
     var writer: String?
     var expireAt: Date?
     var lastCompleteDate: Date?
-    var comments: [CommentItem]
     
     var questStatus: ApprovalQuestStatus {
         guard let expireAt, expireAt >= .now else { return .expired }
@@ -71,7 +70,29 @@ class ApprovalMissionHistoryItem: Identifiable, Equatable {
         }
     }
     
-    init(id: Int, title: String, displayDate: String, likeCount: Int, hateCount: Int, viewCount: Int, imageId: String, image: UIImage? = nil, commercialAreaCode: String?, commercialAreaName: String? = nil, userId: String, nickname: String, profileImageId: String?, profileImage: UIImage? = nil, userTitle: UserTitle?, emojis: UserEmojis, comments: [CommentItem] = CommentItem.mockList) {
+    init(
+        id: Int,
+        title: String,
+        displayDate: String,
+        likeCount: Int,
+        hateCount: Int,
+        viewCount: Int,
+        imageId: String,
+        image: UIImage? = nil,
+        commercialAreaCode: String?,
+        commercialAreaName: String? = nil,
+        userId: String,
+        nickname: String,
+        profileImageId: String?,
+        profileImage: UIImage? = nil,
+        userTitle: UserTitle?,
+        emojis: UserEmojis,
+        questType: QuestType?,
+        repeatType: RepeatType?,
+        writer: String?,
+        expireAt: Date?,
+        lastCompleteDate: Date?
+    ) {
         self.id = id
         self.title = title
         self.displayDate = displayDate
@@ -88,7 +109,11 @@ class ApprovalMissionHistoryItem: Identifiable, Equatable {
         self.profileImage = profileImage
         self.userTitle = userTitle
         self.emojis = emojis
-        self.comments = comments
+        self.questType = questType
+        self.repeatType = repeatType
+        self.writer = writer
+        self.expireAt = expireAt
+        self.lastCompleteDate = lastCompleteDate
     }
     
     static var mockDataList = [
@@ -108,7 +133,12 @@ class ApprovalMissionHistoryItem: Identifiable, Equatable {
             profileImageId: "profile_001",
             profileImage: nil,
             userTitle: UserTitle(titleHistoryId: 1, name: "칭호1", grade: .standard, createdAt: .now),
-            emojis: .init(emojis: [.hate])
+            emojis: .init(emojis: [.hate]),
+            questType: .event,
+            repeatType: nil,
+            writer: "작성자",
+            expireAt: .now,
+            lastCompleteDate: nil
         ),
         ApprovalMissionHistoryItem(
             id: 2,
@@ -126,7 +156,12 @@ class ApprovalMissionHistoryItem: Identifiable, Equatable {
             profileImageId: "profile_002",
             profileImage: nil,
             userTitle: UserTitle(titleHistoryId: 2, name: "칭호2", grade: .legend, createdAt: .now),
-            emojis: .init(emojis: [.hate])
+            emojis: .init(emojis: [.hate]),
+            questType: .event,
+            repeatType: nil,
+            writer: "작성자",
+            expireAt: .now,
+            lastCompleteDate: nil
         ),
         ApprovalMissionHistoryItem(
             id: 3,
@@ -144,7 +179,12 @@ class ApprovalMissionHistoryItem: Identifiable, Equatable {
             profileImageId: "profile_003",
             profileImage: .img2,
             userTitle: UserTitle(titleHistoryId: 3, name: "칭호3", grade: .rare, createdAt: .now),
-            emojis: .init(emojis: [.hate])
+            emojis: .init(emojis: [.hate]),
+            questType: .event,
+            repeatType: nil,
+            writer: "작성자",
+            expireAt: .now,
+            lastCompleteDate: nil
         )
     ]
     
@@ -162,6 +202,11 @@ class ApprovalMissionHistoryItem: Identifiable, Equatable {
         nickname: "",
         profileImageId: nil,
         userTitle: nil,
-        emojis: .init(emojis: [])
+        emojis: .init(emojis: []),
+        questType: .event,
+        repeatType: nil,
+        writer: "작성자",
+        expireAt: .now,
+        lastCompleteDate: nil
     )
 }

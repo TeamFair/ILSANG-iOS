@@ -25,7 +25,38 @@ extension MissionHistory {
             profileImageId: profileImageId,
             profileImage: nil,
             userTitle: userTitle,
-            emojis: UserEmojis(emojis: Set(emojis))
+            emojis: UserEmojis(emojis: Set(emojis)),
+            questType: questType,
+            repeatType: repeatType,
+            writer: writer,
+            expireAt: expireAt,
+            lastCompleteDate: lastCompleteDate
+        )
+    }
+    
+    func toApprovalItem(quest: QuestItem) -> ApprovalMissionHistoryItem {
+        return ApprovalMissionHistoryItem(
+            id: id,
+            title: title,
+            displayDate: createdAt.toDisplayFormat(),
+            likeCount: likeCount,
+            hateCount: hateCount,
+            viewCount: viewCount,
+            imageId: imageId,
+            image: nil,
+            commercialAreaCode: commercialAreaCode,
+            commercialAreaName: nil,
+            userId: userId,
+            nickname: nickname,
+            profileImageId: profileImageId,
+            profileImage: nil,
+            userTitle: userTitle,
+            emojis: UserEmojis(emojis: Set(emojis)),
+            questType: quest.questType,
+            repeatType: quest.repeatType,
+            writer: quest.writer,
+            expireAt: quest.expireDate,
+            lastCompleteDate: quest.lastCompleteDate
         )
     }
 }

@@ -104,7 +104,12 @@ final class MockMissionHistoryRepository: MissionHistoryRepositoryInterface {
             nickname: "닉네임",
             profileImageId: "",
             userTitle: nil,
-            emojis: [.hate]
+            emojis: [.hate],
+            questType: .event,
+            repeatType: nil,
+            writer: "작성자",
+            expireAt: .now,
+            lastCompleteDate: nil
         )
     ]
     

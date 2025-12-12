@@ -11,6 +11,7 @@ struct MissionApprovalView: View {
     @EnvironmentObject var dependencies: AppDependencies
 
     let missionId: Int
+    let quest: QuestItem
     @Environment(\.dismiss) var dismiss
 
     var body: some View {
@@ -21,7 +22,7 @@ struct MissionApprovalView: View {
             .padding(.bottom, 8)
 
             ApprovalView(
-                approvalSource: .detail(missionId: missionId),
+                approvalSource: .detail(missionId: missionId, quest: quest),
                 emojiNetwork: dependencies.emojiNetwork,
                 missionHistoryRepository: dependencies.missionHistoryRepository,
                 areaNameService: dependencies.areaNameService
