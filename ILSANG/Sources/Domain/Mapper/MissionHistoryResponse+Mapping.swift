@@ -28,7 +28,12 @@ extension MissionHistoryResponse {
             nickname: user.nickname,
             profileImageId: user.profileImageId,
             userTitle: userTitle,
-            emojis: emojis
+            emojis: emojis,
+            questType: questType.flatMap { QuestType(rawValue: $0) },
+            repeatType: repeatFrequency.flatMap { RepeatType(param: $0) },
+            writer: writerName,
+            expireAt: expireDate?.toISO8601Date(),
+            lastCompleteDate: lastCompleteDate?.toISO8601Date()
         )
     }
 }

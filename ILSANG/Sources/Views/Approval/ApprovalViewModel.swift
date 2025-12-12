@@ -19,7 +19,7 @@ import UIKit
 
 enum ApprovalSource: Equatable {
     case tab
-    case detail(missionId: Int)
+    case detail(missionId: Int, quest: QuestItem)
 }
 
 final class ApprovalViewModel: ObservableObject, SinglePaginationLoadable {
@@ -114,8 +114,8 @@ final class ApprovalViewModel: ObservableObject, SinglePaginationLoadable {
         case .tab:
             let result = await getRandomChallenges(page: page, size: paginationManager.size)
             return (result.data, result.isLast)
-        case .detail(let missionId):
-            let result = await getChallenges(missionId: missionId, page: page, size: paginationManager.size)
+        case .detail(let missionId, let quest):
+            let result = await getChallenges(missionId: missionId, page: page, size: paginationManager.size, quest: quest)
             return (result.data, result.isLast)
         }
     }
@@ -267,13 +267,13 @@ final class ApprovalViewModel: ObservableObject, SinglePaginationLoadable {
         }
     }
     
-    private func getChallenges(missionId: Int, page: Int, size: Int) async -> (data: [ApprovalMissionHistoryItem], isLast: Bool) {
+    private func getChallenges(missionId: Int, page: Int, size: Int, quest: QuestItem) async -> (data: [ApprovalMissionHistoryItem], isLast: Bool) {
         let res = await missionHistoryRepository.getMissionHistories(missionId: missionId, page: page, size: size)
         switch res {
         case .success(let response):
-            return (response.data.map {$0.toApprovalItem()}, response.isLast)
+            return (response.data.map {$0.toApprovalItem(quest: quest)}, response.isLast)
         case .failure(let err):
-            Log("도전내역랜덤 조회 실패 \(err.localizedDescription)")
+            Log("미션 \(missionId) 도전내역 조회 실패 \(err.localizedDescription)")
             return ([], true)
         }
     }

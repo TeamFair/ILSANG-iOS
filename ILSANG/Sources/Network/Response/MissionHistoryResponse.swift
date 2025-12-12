@@ -15,6 +15,12 @@ struct MissionHistoryResponse: Decodable {
     let imageId, commercialAreaCode: String
     let emojis: [EmojiType]
     
+    let questType: String?
+    let repeatFrequency: String?
+    let writerName: String?
+    let expireDate: String?
+    var lastCompleteDate: String?
+    
     struct User: Decodable {
         let userId, nickname: String
         let profileImageId: String?
@@ -32,5 +38,6 @@ struct MissionHistoryResponse: Decodable {
         case imageId = "submitImageId"
         case commercialAreaCode
         case emojis = "currentUserEmojis"
+        case questType, repeatFrequency, writerName, expireDate, lastCompleteDate
     }
 }
