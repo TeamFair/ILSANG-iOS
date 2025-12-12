@@ -110,7 +110,7 @@ struct ApprovalItemContentShareView: View {
             
             MetadataView(displayDate: item.displayDate, commercialAreaName: item.commercialAreaName)
             
-            ReactionView(likeCount: item.likeCount, hateCount: item.hateCount)
+            ReactionView(likeCount: item.likeCount)
         }
         .background(.white)
     }
@@ -142,19 +142,14 @@ fileprivate struct MetadataView: View {
 
 struct ReactionView: View, Equatable {
     static func == (lhs: ReactionView, rhs: ReactionView) -> Bool {
-        lhs.likeCount == rhs.likeCount &&
-        lhs.hateCount == rhs.hateCount
+        lhs.likeCount == rhs.likeCount
     }
     
     let likeCount: Int
-    var hateCount: Int? = nil
     
     var body: some View {
         HStack(spacing: 16) {
             emojiView(imageName: .thumbsUp, count: likeCount, alignment: .top)
-            if let hateCount {
-                emojiView(imageName: .thumbsDown, count: hateCount, alignment: .bottom)
-            }
         }
     }
     

@@ -20,7 +20,6 @@ struct ApprovalItemView: View, Equatable {
     
     enum ApprovalAction {
         case like
-        case hate
         case profileTapped(userId: String)
     }
     
@@ -56,17 +55,10 @@ struct ApprovalItemView: View, Equatable {
                 )
             }
             
-            ReactionView(likeCount: item.likeCount, hateCount: item.hateCount)
+            ReactionView(likeCount: item.likeCount)
                 .equatable()
             
             HStack(spacing: 8) {
-                emojiButton(
-                    imageName: .thumbsDown,
-                    active: item.emojis.isSelected(.hate),
-                    activeFgColor: .primary300,
-                    activeBgColor: .primary100,
-                    action: { onAction(.hate) }
-                )
                 emojiButton(
                     imageName: .thumbsUp,
                     active: item.emojis.isSelected(.like),

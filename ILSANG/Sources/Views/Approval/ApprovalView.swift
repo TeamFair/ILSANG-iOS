@@ -84,8 +84,6 @@ struct ApprovalView: View {
                                 switch action {
                                 case .like:
                                     vm.onLike(for: idx)
-                                case .hate:
-                                    vm.onHate(for: idx)
                                 case .profileTapped(let userId):
                                     userRouter.navigateToUserProfile(userId: userId)
                                 }

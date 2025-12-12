@@ -30,7 +30,6 @@ class ApprovalMissionHistoryItem: Identifiable, Equatable {
         lhs.title == rhs.title &&
         lhs.displayDate == rhs.displayDate &&
         lhs.likeCount == rhs.likeCount &&
-        lhs.hateCount == rhs.hateCount &&
         lhs.imageId == rhs.imageId &&
         lhs.userId == rhs.userId
     }
@@ -39,7 +38,6 @@ class ApprovalMissionHistoryItem: Identifiable, Equatable {
     let title: String
     let displayDate: String
     var likeCount: Int
-    var hateCount: Int
     let viewCount: Int
     let imageId: String
     var image: UIImage?
@@ -75,7 +73,6 @@ class ApprovalMissionHistoryItem: Identifiable, Equatable {
         title: String,
         displayDate: String,
         likeCount: Int,
-        hateCount: Int,
         viewCount: Int,
         imageId: String,
         image: UIImage? = nil,
@@ -97,7 +94,6 @@ class ApprovalMissionHistoryItem: Identifiable, Equatable {
         self.title = title
         self.displayDate = displayDate
         self.likeCount = likeCount
-        self.hateCount = hateCount
         self.viewCount = viewCount
         self.imageId = imageId
         self.image = image
@@ -122,7 +118,6 @@ class ApprovalMissionHistoryItem: Identifiable, Equatable {
             title: "첫 번째 미션",
             displayDate: "2025-08-19",
             likeCount: 12,
-            hateCount: 2,
             viewCount: 45,
             imageId: "image_001",
             image: nil,
@@ -133,7 +128,7 @@ class ApprovalMissionHistoryItem: Identifiable, Equatable {
             profileImageId: "profile_001",
             profileImage: nil,
             userTitle: UserTitle(titleHistoryId: 1, name: "칭호1", grade: .standard, createdAt: .now),
-            emojis: .init(emojis: [.hate]),
+            emojis: .init(emojis: []),
             questType: .event,
             repeatType: nil,
             writer: "작성자",
@@ -145,7 +140,6 @@ class ApprovalMissionHistoryItem: Identifiable, Equatable {
             title: "두 번째 미션",
             displayDate: "2025-08-18",
             likeCount: 8,
-            hateCount: 1,
             viewCount: 30,
             imageId: "image_002",
             image: nil,
@@ -156,7 +150,7 @@ class ApprovalMissionHistoryItem: Identifiable, Equatable {
             profileImageId: "profile_002",
             profileImage: nil,
             userTitle: UserTitle(titleHistoryId: 2, name: "칭호2", grade: .legend, createdAt: .now),
-            emojis: .init(emojis: [.hate]),
+            emojis: .init(emojis: [.like]),
             questType: .event,
             repeatType: nil,
             writer: "작성자",
@@ -168,7 +162,6 @@ class ApprovalMissionHistoryItem: Identifiable, Equatable {
             title: "세 번째 미션",
             displayDate: "2025-08-17",
             likeCount: 20,
-            hateCount: 0,
             viewCount: 60,
             imageId: "image_003",
             image: nil,
@@ -179,7 +172,7 @@ class ApprovalMissionHistoryItem: Identifiable, Equatable {
             profileImageId: "profile_003",
             profileImage: .img2,
             userTitle: UserTitle(titleHistoryId: 3, name: "칭호3", grade: .rare, createdAt: .now),
-            emojis: .init(emojis: [.hate]),
+            emojis: .init(emojis: [.like]),
             questType: .event,
             repeatType: nil,
             writer: "작성자",
@@ -193,7 +186,6 @@ class ApprovalMissionHistoryItem: Identifiable, Equatable {
         title: "불러올 수 없습니다",
         displayDate: "",
         likeCount: 0,
-        hateCount: 0,
         viewCount: 0,
         imageId: "",
         commercialAreaCode: nil,
