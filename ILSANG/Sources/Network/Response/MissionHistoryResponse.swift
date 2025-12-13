@@ -11,7 +11,7 @@ struct MissionHistoryResponse: Decodable {
     let missionHistoryId: Int
     let user: User
     let title, createdAt: String
-    let likeCount, viewCount, commentCount: Int
+    let likeCount, viewCount, commentCount, shareCount: Int
     let imageId, commercialAreaCode: String
     let emojis: [EmojiType]
     
@@ -35,6 +35,7 @@ struct MissionHistoryResponse: Decodable {
         case likeCount
         case viewCount
         case commentCount
+        case shareCount
         case imageId = "submitImageId"
         case commercialAreaCode
         case emojis = "currentUserEmojis"
@@ -51,6 +52,7 @@ extension MissionHistoryResponse {
         createdAt = try container.decode(String.self, forKey: .createdAt)
         likeCount = try container.decode(Int.self, forKey: .likeCount)
         viewCount = try container.decode(Int.self, forKey: .viewCount)
+        shareCount = try container.decode(Int.self, forKey: .shareCount)
         commentCount = try container.decode(Int.self, forKey: .commentCount)
         imageId = try container.decode(String.self, forKey: .imageId)
         commercialAreaCode = try container.decode(String.self, forKey: .commercialAreaCode)

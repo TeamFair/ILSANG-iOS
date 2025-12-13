@@ -69,6 +69,16 @@ struct ApprovalItemView: View, Equatable {
                     count: item.commentCount,
                     action: { onAction(.navigateToDetail) }
                 )
+                
+                ShareLink(item: photo, preview: SharePreview(photo.caption, image: photo.image)) {
+                    button(
+                        imageName: .share,
+                        imageColor: .gray400,
+                        count: item.shareCount,
+                        action: {  } // FIXME: 공유 시 카운트 올리기
+                    )
+                    .disabled(true)
+                }
             }
         }
         .padding(padding)
@@ -90,7 +100,7 @@ struct ApprovalItemView: View, Equatable {
                     .resizable()
                     .renderingMode(.template)
                     .scaledToFit()
-                    .frame(width: 24, height: 24)
+                    .frame(width: 27, height: 22)
                     .foregroundStyle(imageColor)
                     .frame(width: 30, height: 30)
                 Text("\(count)")
@@ -100,6 +110,29 @@ struct ApprovalItemView: View, Equatable {
             }
             .frame(height: 30)
         }
+    }
+    
+    // MARK: - 챌린지 이미지 공유하기
+    private var photo: TransferableUIImage {
+        return .init(uiimage: shareChallengeImage, caption: "일상 챌린지 공유하기")
+    }
+    
+    private var shareChallengeImage: UIImage {
+        let renderer = ImageRenderer(
+            content: ApprovalItemContentShareView(
+                item: item,
+                width: .screenWidth-40,
+                height: ((.screenWidth-40) / 5) * 4
+            )
+            .padding(20)
+            .background(
+                RoundedRectangle(cornerRadius: 12)
+                    .fill(.white)
+            )
+        )
+        
+        renderer.scale = 3.0
+        return renderer.uiImage ?? .init()
     }
 }
 

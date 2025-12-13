@@ -113,13 +113,6 @@ struct ApprovalView: View {
     
     private func trailingButton(for item: ApprovalMissionHistoryItem) -> some View {
         Menu {
-            ShareLink(item: photo, preview: SharePreview(photo.caption, image: photo.image)) {
-                Label("공유하기", image: "share")
-            }
-            .onAppear {
-                vm.selectedChallenge = item
-            }
-            
             Button {
                 vm.selectedChallenge = item
                 vm.showReportAlert = true
@@ -166,29 +159,6 @@ struct ApprovalView: View {
         ) {
             Task { await vm.loadInitialDataWithLoadingState() }
         }
-    }
-    
-    // MARK: - 챌린지 이미지 공유하기
-    private var photo: TransferableUIImage {
-        return .init(uiimage: shareChallengeImage, caption: "일상 챌린지 공유하기")
-    }
-    
-    private var shareChallengeImage: UIImage {
-        let renderer = ImageRenderer(
-            content: ApprovalItemContentShareView(
-                item: vm.selectedChallenge ?? .failedData,
-                width: .screenWidth-40,
-                height: ((.screenWidth-40) / 5) * 4
-            )
-            .padding(20)
-            .background(
-                RoundedRectangle(cornerRadius: 12)
-                    .fill(.white)
-            )
-        )
-        
-        renderer.scale = 3.0
-        return renderer.uiImage ?? .init()
     }
 }
 

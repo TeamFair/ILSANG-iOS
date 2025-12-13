@@ -49,6 +49,7 @@ class ApprovalMissionHistoryItem: Identifiable, Equatable, Hashable {
     var likeCount: Int
     let viewCount: Int
     let commentCount: Int
+    let shareCount: Int
     let imageId: String
     var image: UIImage?
     let commercialAreaCode: String?
@@ -84,6 +85,7 @@ class ApprovalMissionHistoryItem: Identifiable, Equatable, Hashable {
         displayDate: String,
         likeCount: Int,
         viewCount: Int,
+        shareCount: Int,
         commentCount: Int,
         imageId: String,
         image: UIImage? = nil,
@@ -106,6 +108,7 @@ class ApprovalMissionHistoryItem: Identifiable, Equatable, Hashable {
         self.displayDate = displayDate
         self.likeCount = likeCount
         self.viewCount = viewCount
+        self.shareCount = shareCount
         self.commentCount = commentCount
         self.imageId = imageId
         self.image = image
@@ -131,6 +134,7 @@ class ApprovalMissionHistoryItem: Identifiable, Equatable, Hashable {
             displayDate: "2025-08-19",
             likeCount: 12,
             viewCount: 45,
+            shareCount: 10,
             commentCount: 0,
             imageId: "image_001",
             image: nil,
@@ -154,6 +158,7 @@ class ApprovalMissionHistoryItem: Identifiable, Equatable, Hashable {
             displayDate: "2025-08-18",
             likeCount: 8,
             viewCount: 30,
+            shareCount: 10,
             commentCount: 0,
             imageId: "image_002",
             image: nil,
@@ -177,6 +182,7 @@ class ApprovalMissionHistoryItem: Identifiable, Equatable, Hashable {
             displayDate: "2025-08-17",
             likeCount: 20,
             viewCount: 60,
+            shareCount: 10,
             commentCount: 0,
             imageId: "image_003",
             image: nil,
@@ -202,6 +208,7 @@ class ApprovalMissionHistoryItem: Identifiable, Equatable, Hashable {
         displayDate: "",
         likeCount: 0,
         viewCount: 0,
+        shareCount: 10,
         commentCount: 0,
         imageId: "",
         commercialAreaCode: nil,

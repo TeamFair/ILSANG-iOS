@@ -21,6 +21,7 @@ extension MissionHistoryResponse {
             createdAt: createdAt.toISO8601Date() ?? .now,
             likeCount: likeCount,
             viewCount: viewCount,
+            shareCount: shareCount,
             commentCount: commentCount,
             imageId: imageId,
             commercialAreaCode: commercialAreaCode,

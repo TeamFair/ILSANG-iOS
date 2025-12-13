@@ -97,6 +97,7 @@ final class MockMissionHistoryRepository: MissionHistoryRepositoryInterface {
             createdAt: .now,
             likeCount: 2,
             viewCount: 0,
+            shareCount: 0,
             commentCount: 0,
             imageId: "",
             commercialAreaCode: "R100",
