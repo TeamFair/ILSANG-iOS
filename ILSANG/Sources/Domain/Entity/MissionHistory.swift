@@ -12,8 +12,9 @@ struct MissionHistory {
     let title: String
     let createdAt: Date
     let likeCount: Int
-    let hateCount: Int
     let viewCount: Int
+    let shareCount: Int
+    let commentCount: Int
     let imageId: String
     let commercialAreaCode: String
     let userId: String

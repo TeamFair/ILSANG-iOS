@@ -20,7 +20,7 @@ struct ApprovalItemView: View, Equatable {
     
     enum ApprovalAction {
         case like
-        case hate
+        case navigateToDetail
         case profileTapped(userId: String)
     }
     
@@ -36,8 +36,10 @@ struct ApprovalItemView: View, Equatable {
                 displayDate: item.displayDate,
                 commercialAreaName: item.commercialAreaName,
                 width: width,
-                height: height
-            ) {
+                height: height,
+                onImageTapped: {
+                    onAction(.navigateToDetail)
+            }) {
                 onAction(.profileTapped(userId: item.userId))
             }
             .equatable()
@@ -56,24 +58,29 @@ struct ApprovalItemView: View, Equatable {
                 )
             }
             
-            ReactionView(likeCount: item.likeCount, hateCount: item.hateCount)
-                .equatable()
-            
-            HStack(spacing: 8) {
-                emojiButton(
-                    imageName: .thumbsDown,
-                    active: item.emojis.isSelected(.hate),
-                    activeFgColor: .primary300,
-                    activeBgColor: .primary100,
-                    action: { onAction(.hate) }
-                )
-                emojiButton(
-                    imageName: .thumbsUp,
-                    active: item.emojis.isSelected(.like),
-                    activeFgColor: .white,
-                    activeBgColor: .primaryPurple,
+            HStack(spacing: 16) {
+                button(
+                    imageName: item.emojis.isSelected(.like) ? .likeFill : .like ,
+                    imageColor: item.emojis.isSelected(.like) ? .primaryPurple : .gray400,
+                    count: item.likeCount,
                     action: { onAction(.like) }
                 )
+                button(
+                    imageName: .chat,
+                    imageColor: .gray400,
+                    count: item.commentCount,
+                    action: { onAction(.navigateToDetail) }
+                )
+                
+                ShareLink(item: photo, preview: SharePreview(photo.caption, image: photo.image)) {
+                    button(
+                        imageName: .share,
+                        imageColor: .gray400,
+                        count: item.shareCount,
+                        action: {  } // FIXME: 공유 시 카운트 올리기
+                    )
+                    .disabled(true)
+                }
             }
         }
         .padding(padding)
@@ -81,29 +88,53 @@ struct ApprovalItemView: View, Equatable {
         .cornerRadius(12)
     }
     
-    private func emojiButton(
+    private func button(
         imageName: UIImage,
-        active: Bool,
-        activeFgColor: Color,
-        activeBgColor: Color,
+        imageColor: Color = .gray400,
+        count: Int,
         action: @escaping () -> ()
     ) -> some View {
         Button {
             action()
         } label: {
-            Image(uiImage: imageName)
-                .resizable()
-                .renderingMode(.template)
-                .frame(width: 27, height: 24)
-                .foregroundStyle(active ? activeFgColor : .gray300)
-                .frame(height: 50)
-                .frame(maxWidth: .infinity)
-                .background(
-                    RoundedRectangle(cornerRadius: 12)
-                        .frame(maxWidth: .infinity)
-                        .foregroundStyle(active ? activeBgColor : .gray100)
-                )
+            HStack(spacing: 4) {
+                Image(uiImage: imageName)
+                    .resizable()
+                    .renderingMode(.template)
+                    .scaledToFit()
+                    .frame(width: 27, height: 22)
+                    .foregroundStyle(imageColor)
+                    .frame(width: 30, height: 30)
+                Text("\(count)")
+                    .monospacedDigit()
+                    .styledFont(.subTitle1)
+                    .foregroundStyle(.gray400)
+            }
+            .frame(height: 30)
         }
+    }
+    
+    // MARK: - 챌린지 이미지 공유하기
+    private var photo: TransferableUIImage {
+        return .init(uiimage: shareChallengeImage, caption: "일상 챌린지 공유하기")
+    }
+    
+    private var shareChallengeImage: UIImage {
+        let renderer = ImageRenderer(
+            content: ApprovalItemContentShareView(
+                item: item,
+                width: .screenWidth-40,
+                height: ((.screenWidth-40) / 11) * 10
+            )
+            .padding(20)
+            .background(
+                RoundedRectangle(cornerRadius: 12)
+                    .fill(.white)
+            )
+        )
+        
+        renderer.scale = 3.0
+        return renderer.uiImage ?? .init()
     }
 }
 

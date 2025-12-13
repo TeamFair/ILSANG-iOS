@@ -29,8 +29,9 @@ final class ApprovalViewModel: ObservableObject, SinglePaginationLoadable {
     // MARK: - Published Properties
     @Published var viewStatus: ViewStatus = .loading
     @Published var currentItems: [ApprovalMissionHistoryItem] = []
-    @Published var selectedChallenge: ApprovalMissionHistoryItem?
+    @Published var selectedChallenge: ApprovalMissionHistoryItem? // FIXME: 변수명 변경 -> 신고용 아이템
     @Published var showReportAlert = false
+    @Published var selectedMissionHistory: ApprovalMissionHistoryItem?
 
     // MARK: - Stored Properties
     let approvalSource: ApprovalSource
@@ -195,13 +196,6 @@ final class ApprovalViewModel: ObservableObject, SinglePaginationLoadable {
         }
     }
     
-    /// hate 버튼을 눌렀을 때 호출됩니다.
-    func onHate(for idx: Int) {
-        Task {
-            await updateEmoji(emojiType: .hate, idx: idx)
-        }
-    }
-    
     @MainActor
     private func updateEmoji(emojiType: EmojiType, idx: Int) async {
         let item = currentItems[idx]
@@ -227,12 +221,7 @@ final class ApprovalViewModel: ObservableObject, SinglePaginationLoadable {
             max(current + (isSelected ? 1 : -1), 0)
         }
         
-        switch emojiType {
-        case .like:
-            item.likeCount = newCount(item.likeCount, isSelected: item.emojis.isSelected(.like))
-        case .hate:
-            item.hateCount = newCount(item.hateCount, isSelected: item.emojis.isSelected(.hate))
-        }
+        item.likeCount = newCount(item.likeCount, isSelected: item.emojis.isSelected(.like))
     }
     
     /// 신고 확인 버튼을 눌렀을 때 호출됩니다.

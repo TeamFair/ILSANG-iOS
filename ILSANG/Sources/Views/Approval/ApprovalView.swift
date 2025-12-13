@@ -48,6 +48,16 @@ struct ApprovalView: View {
         }
         .overlay { reportAlertView }
         .withUserNavigation(userRouter: userRouter)
+        .navigationDestination(item: $vm.selectedMissionHistory) { item in
+            ApprovalDetailView(
+                vm: ApprovalDetailViewModel(
+                    missionHistory: item,
+                    commentRepository: dependencies.commentRepository,
+                    missionHistoryRepository: dependencies.missionHistoryRepository
+                ),
+                userRouter: userRouter
+            )
+        }
     }
     
     /// 퀘스트 타이틀  + 퀘스트 인증 이미지
@@ -64,39 +74,31 @@ struct ApprovalView: View {
         ScrollView {
             LazyVStack(spacing: 16) {
                 ForEach(Array(vm.currentItems.enumerated()), id: \.element.id) { idx, item in
-                    NavigationLink {
-                        ApprovalDetailView(
-                            vm: ApprovalDetailViewModel(
-                                missionHistory: item,
-                                commentRepository: dependencies.commentRepository,
-                                missionHistoryRepository: dependencies.missionHistoryRepository
-                            ),
-                            userRouter: userRouter
-                           )
-                    } label: {
-                        ApprovalItemView(
-                            item: item,
-                            width: .screenWidth - layout.horizontalPadding * 2,
-                            height: ((.screenWidth-layout.horizontalPadding * 2) / 5) * 4,
-                            padding: layout.horizontalPadding,
-                            showQuestInfo: vm.approvalSource == .tab,
-                            onAction: { action in
-                                switch action {
-                                case .like:
-                                    vm.onLike(for: idx)
-                                case .hate:
-                                    vm.onHate(for: idx)
-                                case .profileTapped(let userId):
-                                    userRouter.navigateToUserProfile(userId: userId)
-                                }
+                    ApprovalItemView(
+                        item: item,
+                        width: .screenWidth - layout.horizontalPadding * 2,
+                        height: ((.screenWidth-layout.horizontalPadding * 2) / 11) * 10,
+                        padding: layout.horizontalPadding,
+                        showQuestInfo: vm.approvalSource == .tab,
+                        onAction: { action in
+                            switch action {
+                            case .like:
+                                vm.onLike(for: idx)
+                            case .navigateToDetail:
+                                vm.selectedMissionHistory = item
+                            case .profileTapped(let userId):
+                                userRouter.navigateToUserProfile(userId: userId)
                             }
-                        )
-                        .equatable()
-                        .overlay(alignment: .topTrailing) {
-                            trailingButton(for: item)
                         }
-                        .task { await vm.loadMoreDataIfNeeded(at: idx ) }
+                    )
+                    .equatable()
+                    .onTapGesture {
+                        vm.selectedMissionHistory = item
                     }
+                    .overlay(alignment: .topTrailing) {
+                        trailingButton(for: item)
+                    }
+                    .task { await vm.loadMoreDataIfNeeded(at: idx ) }
                 }
                 
                 LoadMoreIndicatorView(isVisible: vm.canLoadMore)
@@ -111,13 +113,6 @@ struct ApprovalView: View {
     
     private func trailingButton(for item: ApprovalMissionHistoryItem) -> some View {
         Menu {
-            ShareLink(item: photo, preview: SharePreview(photo.caption, image: photo.image)) {
-                Label("공유하기", image: "share")
-            }
-            .onAppear {
-                vm.selectedChallenge = item
-            }
-            
             Button {
                 vm.selectedChallenge = item
                 vm.showReportAlert = true
@@ -164,29 +159,6 @@ struct ApprovalView: View {
         ) {
             Task { await vm.loadInitialDataWithLoadingState() }
         }
-    }
-    
-    // MARK: - 챌린지 이미지 공유하기
-    private var photo: TransferableUIImage {
-        return .init(uiimage: shareChallengeImage, caption: "일상 챌린지 공유하기")
-    }
-    
-    private var shareChallengeImage: UIImage {
-        let renderer = ImageRenderer(
-            content: ApprovalItemContentShareView(
-                item: vm.selectedChallenge ?? .failedData,
-                width: .screenWidth-40,
-                height: ((.screenWidth-40) / 5) * 4
-            )
-            .padding(20)
-            .background(
-                RoundedRectangle(cornerRadius: 12)
-                    .fill(.white)
-            )
-        )
-        
-        renderer.scale = 3.0
-        return renderer.uiImage ?? .init()
     }
 }
 
