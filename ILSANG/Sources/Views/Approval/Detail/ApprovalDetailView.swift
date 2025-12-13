@@ -59,6 +59,7 @@ struct ApprovalDetailView: View {
                             commercialAreaName: vm.missionHistory.commercialAreaName,
                             width: .screenWidth - layout.horizontalPadding * 2,
                             height: ((.screenWidth-layout.horizontalPadding * 2) / 11) * 10,
+                            isImageZoomEnabled: true
                         ) {
                             vm.send(.profileTapped(userId: vm.missionHistory.userId))
                         }

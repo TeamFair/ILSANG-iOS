@@ -36,8 +36,10 @@ struct ApprovalItemView: View, Equatable {
                 displayDate: item.displayDate,
                 commercialAreaName: item.commercialAreaName,
                 width: width,
-                height: height
-            ) {
+                height: height,
+                onImageTapped: {
+                    onAction(.navigateToDetail)
+            }) {
                 onAction(.profileTapped(userId: item.userId))
             }
             .equatable()

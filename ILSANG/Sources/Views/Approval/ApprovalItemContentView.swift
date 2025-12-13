@@ -29,7 +29,9 @@ struct ApprovalItemContentView: View, Equatable {
     let commercialAreaName: String?
     let width: CGFloat
     let height: CGFloat
+    var isImageZoomEnabled: Bool = false
     
+    var onImageTapped: (() -> Void)?
     let onOtherUserTapped: () -> Void
     
     var body: some View {
@@ -52,7 +54,11 @@ struct ApprovalItemContentView: View, Equatable {
                     .clipShape(RoundedRectangle(cornerRadius: 12))
                     .matchedTransitionSource(id: id, in: namespace)
                     .onTapGesture {
-                        showMagView.toggle()
+                        if isImageZoomEnabled {
+                            showMagView.toggle()
+                        } else {
+                            onImageTapped?()
+                        }
                     }
             } else {
                 Image(uiImage: image ?? .logo)
@@ -63,7 +69,11 @@ struct ApprovalItemContentView: View, Equatable {
                     .contentShape(RoundedRectangle(cornerRadius: 12))
                     .clipShape(RoundedRectangle(cornerRadius: 12))
                     .onTapGesture {
-                        showSheetView.toggle()
+                        if isImageZoomEnabled {
+                            showSheetView.toggle()
+                        } else {
+                            onImageTapped?()
+                        }
                     }
             }
         }
