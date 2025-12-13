@@ -122,7 +122,7 @@ struct ApprovalItemView: View, Equatable {
             content: ApprovalItemContentShareView(
                 item: item,
                 width: .screenWidth-40,
-                height: ((.screenWidth-40) / 5) * 4
+                height: ((.screenWidth-40) / 11) * 10
             )
             .padding(20)
             .background(

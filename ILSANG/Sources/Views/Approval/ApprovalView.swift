@@ -77,7 +77,7 @@ struct ApprovalView: View {
                     ApprovalItemView(
                         item: item,
                         width: .screenWidth - layout.horizontalPadding * 2,
-                        height: ((.screenWidth-layout.horizontalPadding * 2) / 5) * 4,
+                        height: ((.screenWidth-layout.horizontalPadding * 2) / 11) * 10,
                         padding: layout.horizontalPadding,
                         showQuestInfo: vm.approvalSource == .tab,
                         onAction: { action in

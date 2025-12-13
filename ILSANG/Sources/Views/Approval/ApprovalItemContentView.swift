@@ -154,7 +154,7 @@ fileprivate struct MetadataView: View {
             displayDate: item1.displayDate,
             commercialAreaName: item1.commercialAreaName,
             width: .screenWidth-40,
-            height:  ((.screenWidth-40) / 5) * 4,
+            height:  ((.screenWidth-40) / 11) * 10,
             onOtherUserTapped: { }
         )
         
@@ -168,7 +168,7 @@ fileprivate struct MetadataView: View {
             displayDate: item2.displayDate,
             commercialAreaName: item2.commercialAreaName,
             width: .screenWidth-40,
-            height:  ((.screenWidth-40) / 5) * 4,
+            height:  ((.screenWidth-40) / 11) * 10,
             onOtherUserTapped: { }
         )
     }
