@@ -5,6 +5,7 @@
 //  Created by Lee Jinhee on 12/12/25.
 //
 
+import Combine
 import UIKit
 
 enum ApprovalDetailAction {
@@ -42,16 +43,32 @@ final class ApprovalDetailViewModel: ObservableObject {
     
     private let commentRepository: CommentRepositoryInterface
     private let missionHistoryRepository: MissionHistoryRepositoryInterface
+    private let questSubmissionNotifier: QuestSubmissionNotifier
+    private var cancellables = Set<AnyCancellable>()
+    
     var onAction: ((ApprovalDetailAction) -> Void)? = nil
     
     init(
         missionHistory: ApprovalMissionHistoryItem,
         commentRepository: CommentRepositoryInterface,
         missionHistoryRepository: MissionHistoryRepositoryInterface,
+        questSubmissionNotifier: QuestSubmissionNotifier
     ) {
         self.missionHistory = missionHistory
         self.commentRepository = commentRepository
         self.missionHistoryRepository = missionHistoryRepository
+        self.questSubmissionNotifier = questSubmissionNotifier
+
+        // 퀘스트 수행 후 재수행 불가능하도록 퀘스트 수행시 수행시간 업데이트
+        questSubmissionNotifier.$refreshTrigger
+            .removeDuplicates()
+            .dropFirst()
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                Log("MissionApprovalView: 퀘스트 제출 트리거 > 데이터 리로드")
+                self?.missionHistory.lastCompleteDate = .now
+            }
+            .store(in: &cancellables)
         
         Log("✨ ApprovalDetailViewModel: init")
     }

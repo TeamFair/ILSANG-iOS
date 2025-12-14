@@ -30,6 +30,7 @@ extension MissionHistoryResponse {
             profileImageId: user.profileImageId,
             userTitle: userTitle,
             emojis: emojis,
+            questId: questId,
             questType: questType.flatMap { QuestType(rawValue: $0) },
             repeatType: repeatFrequency.flatMap { RepeatType(param: $0) },
             writer: writerName,

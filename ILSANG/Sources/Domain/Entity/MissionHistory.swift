@@ -22,6 +22,7 @@ struct MissionHistory {
     let profileImageId: String?
     let userTitle: UserTitle?
     let emojis: [EmojiType]
+    let questId: Int?
     let questType: QuestType?
     let repeatType: RepeatType?
     let writer: String?

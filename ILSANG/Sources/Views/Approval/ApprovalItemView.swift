@@ -22,6 +22,7 @@ struct ApprovalItemView: View, Equatable {
         case like
         case navigateToDetail
         case profileTapped(userId: String)
+        case showQuestDetail
     }
     
     var body: some View {
@@ -53,7 +54,7 @@ struct ApprovalItemView: View, Equatable {
                     bgStyle: .roundedStroke,
                     status: item.questStatus,
                     action: {
-                        // FIXME: 퀘스트 라우터 연결
+                        onAction(.showQuestDetail)
                     }
                 )
             }

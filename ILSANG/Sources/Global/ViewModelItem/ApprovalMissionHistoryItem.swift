@@ -61,10 +61,11 @@ class ApprovalMissionHistoryItem: Identifiable, Equatable, Hashable {
     let userTitle: UserTitle?
     var emojis: UserEmojis
     
-    var questType: QuestType?
-    var repeatType: RepeatType?
-    var writer: String?
-    var expireAt: Date?
+    let questId: Int?
+    let questType: QuestType?
+    let repeatType: RepeatType?
+    let writer: String?
+    let expireAt: Date?
     var lastCompleteDate: Date?
     
     var questStatus: ApprovalQuestStatus {
@@ -73,10 +74,56 @@ class ApprovalMissionHistoryItem: Identifiable, Equatable, Hashable {
         case .normal, .event:
             return lastCompleteDate == nil ? .able : .completed
         case .repeat:
-            return .able
+            return isRepeatDisabled ? .completed : .able
         default:
             return .expired
         }
+    }
+    
+    // TODO: QuestItem 통합
+    /// 반복 퀘스트가 현재 잠금 상태인지 여부
+    var isRepeatDisabled: Bool {
+        guard questType == .repeat,
+              let repeatType,
+              let lastCompleteDate
+        else { return false }
+        
+        return Date() < nextAvailableDate(for: repeatType, from: lastCompleteDate)
+    }
+    
+    /// repeatType에 따른 다음 재시작 가능 날짜 계산
+    private func nextAvailableDate(for type: RepeatType, from date: Date) -> Date {
+        let calendar = Calendar.current
+
+        switch type {
+        case .daily:
+            // 다음날 00:00
+            if let nextDay = calendar.date(byAdding: .day, value: 1, to: date) {
+                return calendar.startOfDay(for: nextDay)
+            }
+
+        case .weekly:
+            // 다음 월요일 00:00 계산
+            let components = calendar.dateComponents([.weekday], from: date)
+            let weekday = components.weekday ?? 1
+            // 월요일(2) 기준으로 남은 일수 계산
+            let daysUntilNextMonday = (9 - weekday) % 7
+            // 만약 오늘이 월요일이라면 → 다음주 월요일로 (7일 뒤)
+            let offset = daysUntilNextMonday == 0 ? 7 : daysUntilNextMonday
+
+            if let nextMonday = calendar.date(byAdding: .day, value: offset, to: date) {
+                return calendar.startOfDay(for: nextMonday)
+            }
+
+        case .monthly:
+            // 다음달 1일 00:00
+            let nextMonth = calendar.date(byAdding: .month, value: 1, to: date) ?? date
+            var components = calendar.dateComponents([.year, .month], from: nextMonth)
+            components.day = 1
+            return calendar.date(from: components).flatMap { calendar.startOfDay(for: $0) } ?? date
+        }
+
+        return date
     }
     
     init(
@@ -97,6 +144,7 @@ class ApprovalMissionHistoryItem: Identifiable, Equatable, Hashable {
         profileImage: UIImage? = nil,
         userTitle: UserTitle?,
         emojis: UserEmojis,
+        questId: Int?,
         questType: QuestType?,
         repeatType: RepeatType?,
         writer: String?,
@@ -120,6 +168,7 @@ class ApprovalMissionHistoryItem: Identifiable, Equatable, Hashable {
         self.profileImage = profileImage
         self.userTitle = userTitle
         self.emojis = emojis
+        self.questId = questId
         self.questType = questType
         self.repeatType = repeatType
         self.writer = writer
@@ -146,6 +195,7 @@ class ApprovalMissionHistoryItem: Identifiable, Equatable, Hashable {
             profileImage: nil,
             userTitle: UserTitle(titleHistoryId: 1, name: "칭호1", grade: .standard, createdAt: .now),
             emojis: .init(emojis: []),
+            questId: 3,
             questType: .event,
             repeatType: nil,
             writer: "작성자",
@@ -170,6 +220,7 @@ class ApprovalMissionHistoryItem: Identifiable, Equatable, Hashable {
             profileImage: nil,
             userTitle: UserTitle(titleHistoryId: 2, name: "칭호2", grade: .legend, createdAt: .now),
             emojis: .init(emojis: [.like]),
+            questId: 3,
             questType: .event,
             repeatType: nil,
             writer: "작성자",
@@ -194,6 +245,7 @@ class ApprovalMissionHistoryItem: Identifiable, Equatable, Hashable {
             profileImage: .img2,
             userTitle: UserTitle(titleHistoryId: 3, name: "칭호3", grade: .rare, createdAt: .now),
             emojis: .init(emojis: [.like]),
+            questId: 3,
             questType: .event,
             repeatType: nil,
             writer: "작성자",
@@ -218,6 +270,7 @@ class ApprovalMissionHistoryItem: Identifiable, Equatable, Hashable {
         profileImageId: nil,
         userTitle: nil,
         emojis: .init(emojis: []),
+        questId: 3,
         questType: .event,
         repeatType: nil,
         writer: "작성자",

@@ -5,6 +5,7 @@
 //  Created by Lee Jinhee on 6/1/24.
 //
 
+import Combine
 import UIKit
 /*
 ✅ 이모지 에셋 변경
@@ -39,21 +40,39 @@ final class ApprovalViewModel: ObservableObject, SinglePaginationLoadable {
     internal let paginationManager = PaginationManager<ApprovalMissionHistoryItem>(size: 10, threshold: 2)
     
     private let emojiNetwork: EmojiNetwork
-    private let missionHistoryRepository: MissionHistoryRepository
+    private let missionHistoryRepository: MissionHistoryRepositoryInterface
+    private let favoriteService: FavoriteService
     private let areaNameService: AreaNameProvider
-    
+    private let questSubmissionNotifier: QuestSubmissionNotifier
+    private var cancellables = Set<AnyCancellable>()
+
     init(
         approvalSource: ApprovalSource,
         emojiNetwork: EmojiNetwork,
-        missionHistoryRepository: MissionHistoryRepository,
-        areaNameService: AreaNameProvider
+        missionHistoryRepository: MissionHistoryRepositoryInterface,
+        favoriteService: FavoriteService,
+        areaNameService: AreaNameProvider,
+        questSubmissionNotifier: QuestSubmissionNotifier
     ) {
         self.approvalSource = approvalSource
         self.emojiNetwork = emojiNetwork
         self.missionHistoryRepository = missionHistoryRepository
+        self.favoriteService = favoriteService
         self.areaNameService = areaNameService
+        self.questSubmissionNotifier = questSubmissionNotifier
         
         setupPaginationManagers()
+        
+        // 퀘스트 수행 후 재수행 불가능하도록 퀘스트 수행시 수행시간 업데이트
+        questSubmissionNotifier.$refreshTrigger
+            .removeDuplicates()
+            .dropFirst()
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                Log("MissionApprovalView: 퀘스트 제출 트리거 > 데이터 리로드")
+                Task { await self?.loadInitialDataWithLoadingState() }
+            }
+            .store(in: &cancellables)
         
         Log("✨ ApprovalViewModel: init")
     }
@@ -235,6 +254,11 @@ final class ApprovalViewModel: ObservableObject, SinglePaginationLoadable {
     /// 신고 알림을 취소합니다.
     func dismissReportAlert() {
         showReportAlert = false
+    }
+    
+    /// 즐겨찾기 상태를 UI에 즉시 반영하고,  서버 반영은 디바운싱 처리
+    func toggleFavoriteStatus(questId: Int, prev: Bool) {
+        favoriteService.toggle(questId: questId, prevFavriteYn: prev)
     }
     
     /// 뷰 상태를 변경합니다.

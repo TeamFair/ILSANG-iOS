@@ -43,6 +43,23 @@ final class FavoriteService: FavoriteServiceInterface {
         }
     }
     
+    /// 화면 업데이트 불필요할 경우 사용
+    func toggle(questId: Int, prevFavriteYn: Bool) {
+        // 원래 상태 저장 (첫 토글일 때만)
+        if originalState[questId] == nil {
+            originalState[questId] = prevFavriteYn
+        }
+        
+        // debounce task 취소 및 재설정
+        debounceTasks[questId]?.cancel()
+        debounceTasks[questId] = Task { [weak self] in
+            let nanoseconds = UInt64((self?.debounceDelay ?? 1.0) * 1_000_000_000)
+            try? await Task.sleep(nanoseconds: nanoseconds)
+            await self?.sendUpdate(for: questId)
+            self?.debounceTasks[questId] = nil
+        }
+    }
+    
     @MainActor
     private func sendUpdate(for quest: QuestItem) async {
         let questId = quest.id
@@ -61,6 +78,17 @@ final class FavoriteService: FavoriteServiceInterface {
         if !success {
             // 실패하면 상태 복구
             quest.favoriteYn.toggle()
+        }
+    }
+    
+    private func sendUpdate(for questId: Int) async {
+        guard let original = originalState[questId] else { return }
+        originalState[questId] = nil
+        
+        if original {
+            let _ = await favoriteNetwork.post(questId: questId)
+        } else {
+            let _ = await favoriteNetwork.delete(questId: questId)
         }
     }
 }
