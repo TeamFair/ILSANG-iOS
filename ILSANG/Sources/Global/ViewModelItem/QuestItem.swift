@@ -96,7 +96,7 @@ class QuestItem: Hashable, Identifiable {
         case .normal, .event:
             return lastCompleteDate == nil ? .able : .completed
         case .repeat:
-            return .able
+            return isRepeatDisabled ? .completed : .able
         default:
             return .expired
         }

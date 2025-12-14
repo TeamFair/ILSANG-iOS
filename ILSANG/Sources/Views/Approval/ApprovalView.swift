@@ -9,6 +9,7 @@ import SwiftUI
 
 struct ApprovalView: View {
     @StateObject var vm: ApprovalViewModel
+    @StateObject var questRouter: QuestRouter
     @StateObject var userRouter: UserRouter
     @EnvironmentObject var dependencies: AppDependencies
     @Environment(\.layout) var layout
@@ -16,15 +17,27 @@ struct ApprovalView: View {
     init(
         approvalSource: ApprovalSource,
         emojiNetwork: EmojiNetwork,
-        missionHistoryRepository: MissionHistoryRepository,
-        areaNameService: AreaNameProvider
+        questRepository: QuestRepositoryInterface,
+        missionHistoryRepository: MissionHistoryRepositoryInterface,
+        favoriteService: FavoriteService,
+        areaNameService: AreaNameProvider,
+        illsangZoneManager: IllsangZoneManager,
+        questSubmissionNotifier: QuestSubmissionNotifier
     ) {
         _vm = StateObject(
             wrappedValue: ApprovalViewModel(
                 approvalSource: approvalSource,
                 emojiNetwork: emojiNetwork,
                 missionHistoryRepository: missionHistoryRepository,
-                areaNameService: areaNameService
+                favoriteService: favoriteService,
+                areaNameService: areaNameService,
+                questSubmissionNotifier: questSubmissionNotifier
+            )
+        )
+        _questRouter = StateObject(
+            wrappedValue: QuestRouter(
+                illsangZoneManager: illsangZoneManager,
+                questRepository: questRepository
             )
         )
         _userRouter = StateObject(wrappedValue: UserRouter())
@@ -47,15 +60,18 @@ struct ApprovalView: View {
             await vm.loadDataIfNeeded()
         }
         .overlay { reportAlertView }
+        .withQuestNavigation(questRouter: questRouter)
         .withUserNavigation(userRouter: userRouter)
         .navigationDestination(item: $vm.selectedMissionHistory) { item in
             ApprovalDetailView(
                 vm: ApprovalDetailViewModel(
                     missionHistory: item,
                     commentRepository: dependencies.commentRepository,
-                    missionHistoryRepository: dependencies.missionHistoryRepository
+                    missionHistoryRepository: dependencies.missionHistoryRepository,
+                    questSubmissionNotifier: dependencies.questSubmissionNotifier
                 ),
-                userRouter: userRouter
+                userRouter: userRouter,
+                questRouter: questRouter
             )
         }
     }
@@ -88,6 +104,12 @@ struct ApprovalView: View {
                                 vm.selectedMissionHistory = item
                             case .profileTapped(let userId):
                                 userRouter.navigateToUserProfile(userId: userId)
+                            case .showQuestDetail:
+                                // FIXME: questId받기
+                                guard let questId = item.questId else { return }
+                                questRouter.presentQuestDetail(questId: questId) { updatedQuest in
+                                    vm.toggleFavoriteStatus(questId: updatedQuest.id, prev: updatedQuest.favoriteYn)
+                                }
                             }
                         }
                     )
@@ -166,7 +188,11 @@ struct ApprovalView: View {
     ApprovalView(
         approvalSource: .tab,
         emojiNetwork: EmojiNetwork(),
+        questRepository: QuestRepository(network: QuestNetwork()),
         missionHistoryRepository: MissionHistoryRepository(network: MissionHistoryNetwork(),),
-        areaNameService: AreaNameService(areaRepository: AreaRepository(network: AreaNetwork()))
+        favoriteService: FavoriteService(favoriteNetwork: FavoriteNetwork()),
+        areaNameService: AreaNameService(areaRepository: AreaRepository(network: AreaNetwork())),
+        illsangZoneManager: IllsangZoneManager(areaNameService: AreaNameService(areaRepository: AreaRepository(network: AreaNetwork()))),
+        questSubmissionNotifier: QuestSubmissionNotifier()
     )
 }

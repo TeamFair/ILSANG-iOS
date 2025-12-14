@@ -106,6 +106,7 @@ final class MockMissionHistoryRepository: MissionHistoryRepositoryInterface {
             profileImageId: "",
             userTitle: nil,
             emojis: [],
+            questId: 3,
             questType: .event,
             repeatType: nil,
             writer: "작성자",

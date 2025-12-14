@@ -15,6 +15,7 @@ struct MissionHistoryResponse: Decodable {
     let imageId, commercialAreaCode: String
     let emojis: [EmojiType]
     
+    let questId: Int?
     let questType: String?
     let repeatFrequency: String?
     let writerName: String?
@@ -39,7 +40,7 @@ struct MissionHistoryResponse: Decodable {
         case imageId = "submitImageId"
         case commercialAreaCode
         case emojis = "currentUserEmojis"
-        case questType, repeatFrequency, writerName, expireDate, lastCompleteDate
+        case questId, questType, repeatFrequency, writerName, expireDate, lastCompleteDate
     }
 }
 extension MissionHistoryResponse {
@@ -61,6 +62,7 @@ extension MissionHistoryResponse {
         let rawEmojiValues = try container.decodeIfPresent([String].self, forKey: .emojis) ?? []
         emojis = rawEmojiValues.compactMap { EmojiType(rawValue: $0.uppercased()) }
         
+        questId = try container.decodeIfPresent(Int.self, forKey: .questId)
         questType = try container.decodeIfPresent(String.self, forKey: .questType)
         repeatFrequency = try container.decodeIfPresent(String.self, forKey: .repeatFrequency)
         writerName = try container.decodeIfPresent(String.self, forKey: .writerName)

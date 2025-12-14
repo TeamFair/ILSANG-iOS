@@ -10,6 +10,7 @@ import SwiftUI
 struct ApprovalDetailView: View {
     @StateObject var vm: ApprovalDetailViewModel
     @StateObject var userRouter: UserRouter
+    @ObservedObject var questRouter: QuestRouter
     @FocusState private var isCommentFocused: Bool
     @Environment(\.layout) var layout
     @Environment(\.dismiss) var dismiss
@@ -25,7 +26,7 @@ struct ApprovalDetailView: View {
         .task {
             vm.send(.load)
         }
-        
+        .withQuestNavigation(questRouter: questRouter)
         .scrollDismissesKeyboard(.immediately)
         .onTapGesture {
             vm.activeMissionHistoryMenu = false

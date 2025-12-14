@@ -72,6 +72,33 @@ class QuestRouter: ObservableObject {
         }
     }
     
+    func presentQuestDetail(
+        questId: Int,
+        onFavoriteToggle: @escaping (QuestItem) -> Void
+    ) {
+        self.onFavoriteToggle = onFavoriteToggle
+        
+        // 퀘스트 상세 정보 로드
+        Task { [weak self] in
+            guard let self = self else { return }
+            do {
+                let questDetail = try await questRepository
+                    .getQuestDetail(questId: questId)
+                    .get()
+                    .toQuestItem(myCommercialCode: illsangZoneManager.currentZoneCode, questCommercialCode: nil)
+                if let imageId = questDetail.imageId {
+                    questDetail.image = await ImageCacheService.shared.loadImageAsync(imageId: imageId)
+                }
+                self.selectedQuest = questDetail
+                
+                // 일상존 체크 후 시트 표시
+                self.checkIllsangZoneAndPresentSheet()
+            } catch {
+                Log("퀘스트 상세 정보 로드 실패: \(error)")
+            }
+        }
+    }
+    
     private func checkIllsangZoneAndPresentSheet() {
         if !illsangZoneManager.isZoneSelected() && illsangZoneManager.shouldShowWarning {
             isQuestSheetPending = true
