@@ -240,7 +240,7 @@ final class Network {
         guard let data = data,
               let errorResponse = try? JSONDecoder().decode(ErrorResponse.self, from: data)
         else { return nil }
-        return errorResponse.errMessage
+        return errorResponse.message
     }
 }
 

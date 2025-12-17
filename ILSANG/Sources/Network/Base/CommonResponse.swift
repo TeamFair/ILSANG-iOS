@@ -49,7 +49,7 @@ struct ResponseWithEmpty: Decodable, EmptyResponse {
 }
 
 struct ErrorResponse: Decodable {
-    let errMessage: String?
-    let status: String?
     let message: String?
+    let status: Int?
+    let error: String?
 }
