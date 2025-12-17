@@ -14,6 +14,7 @@ protocol MissionHistoryRepositoryInterface {
     func getMissionHistoryDetail(missionHistoryId: Int) async -> Result<UserMissionHistoryDetail, Error>
     func deleteMissionHistory(missionHistoryId: Int) async -> Bool
     func reportMissionHistory(missionHistoryId: Int, reason: String) async throws
+    func incrementMissionHistoryShareCount(missionHistoryId: Int) async throws
 }
 
 final class MissionHistoryRepository: MissionHistoryRepositoryInterface {
@@ -90,6 +91,17 @@ final class MissionHistoryRepository: MissionHistoryRepositoryInterface {
             throw ReportError.unknown(code: response.resultCode)
         }
     }
+    
+    /// 공유수 증가
+    func incrementMissionHistoryShareCount(missionHistoryId: Int) async throws {
+        let res = await network.incrementMissionHistoryShareCount(missionHistoryId: missionHistoryId)
+        switch res {
+        case .success:
+            return
+        case .failure(let error):
+            throw error
+        }
+    }
 }
 
 final class MockMissionHistoryRepository: MissionHistoryRepositoryInterface {
@@ -154,6 +166,10 @@ final class MockMissionHistoryRepository: MissionHistoryRepositoryInterface {
     }
     
     func reportMissionHistory(missionHistoryId: Int, reason: String) async throws {
+        return
+    }
+    
+    func incrementMissionHistoryShareCount(missionHistoryId: Int) async throws {
         return
     }
 }

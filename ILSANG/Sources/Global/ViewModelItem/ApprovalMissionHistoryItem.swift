@@ -49,7 +49,7 @@ class ApprovalMissionHistoryItem: Identifiable, Equatable, Hashable {
     var likeCount: Int
     let viewCount: Int
     let commentCount: Int
-    let shareCount: Int
+    var shareCount: Int
     let imageId: String
     var image: UIImage?
     let commercialAreaCode: String?

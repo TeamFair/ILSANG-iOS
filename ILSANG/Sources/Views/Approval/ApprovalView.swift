@@ -116,6 +116,8 @@ struct ApprovalView: View {
                                 questRouter.presentQuestDetail(questId: questId) { updatedQuest in
                                     vm.toggleFavoriteStatus(questId: updatedQuest.id, prev: updatedQuest.favoriteYn)
                                 }
+                            case .share:
+                                Task { await vm.incrementMissionHistoryShareCount(missionHistory: item) }
                             }
                         }
                     )

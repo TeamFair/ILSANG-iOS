@@ -59,4 +59,8 @@ final class MissionHistoryNetwork {
     func deleteMissionHistory(missionHistoryId: Int) async -> Result<ResponseWithEmpty, Error> {
         return await Network.requestData(url: url+"/history/\(missionHistoryId)", method: .delete)
     }
+    
+    func incrementMissionHistoryShareCount(missionHistoryId: Int) async -> Result<ResponseWithEmpty, Error> {
+        return await Network.requestData(url: url+"/history/\(missionHistoryId)/share", method: .post)
+    }
 }
