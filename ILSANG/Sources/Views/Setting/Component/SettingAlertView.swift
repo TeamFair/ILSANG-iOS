@@ -154,8 +154,37 @@ enum AlertType: AlertPresentable {
     case Logout
     case Withdrawal
     case ChallengeDelete
-    case CommentDeleteFail
-    case CommentCreateFail
+    case Comment(CommentAlertType)
+    
+    enum CommentAlertType: String {
+        case errorTooLong
+        case errorEmptyInput
+        case errorInvalidCharacters
+        case errorCreateTooFast
+        case createFail
+        case deleteFail
+
+        var title: String {
+            switch self {
+            case .errorTooLong, .errorEmptyInput, .errorInvalidCharacters, .errorCreateTooFast:
+                "댓글 입력"
+            case .createFail:
+                "댓글 등록 실패"
+            case .deleteFail:
+                "댓글 삭제 실패"
+            }
+        }
+        var subtitle: String {
+            switch self {
+            case .errorTooLong: "300자 이하로 작성해 주세요."
+            case .errorEmptyInput: "공백 제외 1자 이상 입력하세요."
+            case .errorInvalidCharacters: "허용되지 않은 문자가 포함되어 있습니다."
+            case .errorCreateTooFast: "1분 이내에는 댓글을 여러 번 작성하실 수 없습니다."
+            case .createFail: "댓글을 등록할 수 없습니다"
+            case .deleteFail: "댓글을 삭제할 수 없습니다"
+            }
+        }
+    }
     
     var title: String {
         switch self {
@@ -169,10 +198,8 @@ enum AlertType: AlertPresentable {
             "정말 탈퇴하시겠어요?"
         case .ChallengeDelete:
             "챌린지를 삭제 할까요?"
-        case .CommentDeleteFail:
-            "댓글을 삭제할 수 없습니다"
-        case .CommentCreateFail:
-            "댓글을 등록할 수 없습니다"
+        case .Comment(let type):
+            type.title
         }
     }
     
@@ -186,6 +213,8 @@ enum AlertType: AlertPresentable {
             "확인 시 일상 계정이 영구적으로 삭제되며,\n모든 데이터는 복구가 불가능합니다."
         case .ChallengeDelete:
             "삭제하면 복구가 불가합니다"
+        case .Comment(let type):
+            type.subtitle
         default: nil
         }
     }
