@@ -9,6 +9,7 @@ import SwiftUI
 
 struct ApprovalDetailView: View {
     @StateObject var vm: ApprovalDetailViewModel
+    @EnvironmentObject var dependencies: AppDependencies
     @StateObject var userRouter: UserRouter
     @ObservedObject var questRouter: QuestRouter
     @FocusState private var isCommentFocused: Bool
@@ -22,6 +23,9 @@ struct ApprovalDetailView: View {
         }
         .background(Color.background)
         .navigationBarBackButtonHidden(true)
+        .safeAreaInset(edge: .bottom) {
+            inputView
+        }
         .overlay { alertView }
         .task {
             vm.send(.load)
@@ -30,10 +34,20 @@ struct ApprovalDetailView: View {
         .scrollDismissesKeyboard(.immediately)
         .onTapGesture {
             vm.activeMissionHistoryMenu = false
+            vm.activeMenuCommentId = nil
             hideKeyboard()
         }
-        .safeAreaInset(edge: .bottom) {
-            inputView
+        .navigationDestination(isPresented: $vm.isNavigationActive) {
+            switch vm.route {
+            case .report(let target):
+                ReportView(
+                    missionHistoryRepository: dependencies.missionHistoryRepository,
+                    commentRepository: dependencies.commentRepository,
+                    reportTarget: target
+                )
+            case .none:
+                EmptyView()
+            }
         }
     }
     
@@ -89,7 +103,7 @@ struct ApprovalDetailView: View {
                             Text("댓글")
                                 .foregroundStyle(.black)
                                 .styledFont(.heading1)
-                            Text("\(vm.comments.count)")
+                            Text("\(vm.comments.filter { $0.state == .normal }.count)")
                                 .foregroundStyle(.gray500)
                                 .styledFont(.body)
                             Spacer()
@@ -128,7 +142,7 @@ struct ApprovalDetailView: View {
                 switch event {
                 case .scrollToComment(let id):
                     withAnimation(.linear) {
-                        proxy.scrollTo(id, anchor: .bottom)//.init(x: 0.5, y: 0.8))
+                        proxy.scrollTo(id, anchor: .bottom)
                     }
                 case .focusCommentField:
                     isCommentFocused = true
@@ -136,22 +150,14 @@ struct ApprovalDetailView: View {
             }
             .padding(.bottom, -10)
             .padding(.horizontal, layout.horizontalPadding)
-            .overlay {
-                if vm.activeMenuCommentId != nil || vm.activeMissionHistoryMenu {
-                    Color.clear
-                        .contentShape(Rectangle()) // 터치 영역 확보
-                        .onTapGesture {
-                            vm.activeMissionHistoryMenu = false
-                            vm.activeMenuCommentId = nil
-                        }
-                        .gesture(
-                            DragGesture().onChanged { _ in
-                                vm.activeMissionHistoryMenu = false
-                                vm.activeMenuCommentId = nil
-                            }
-                        )
+            .simultaneousGesture(
+                DragGesture().onChanged { _ in
+                    if vm.activeMenuCommentId != nil || vm.activeMissionHistoryMenu {
+                        vm.activeMissionHistoryMenu = false
+                        vm.activeMenuCommentId = nil
+                    }
                 }
-            }
+            )
         }
     }
     

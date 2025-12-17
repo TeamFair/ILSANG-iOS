@@ -30,10 +30,9 @@ final class ApprovalViewModel: ObservableObject, SinglePaginationLoadable {
     // MARK: - Published Properties
     @Published var viewStatus: ViewStatus = .loading
     @Published var currentItems: [ApprovalMissionHistoryItem] = []
-    @Published var selectedChallenge: ApprovalMissionHistoryItem? // FIXME: 변수명 변경 -> 신고용 아이템
-    @Published var showReportAlert = false
     @Published var selectedMissionHistory: ApprovalMissionHistoryItem?
-
+    @Published var selectedMissionHistoryForReport: ApprovalMissionHistoryItem?
+    
     // MARK: - Stored Properties
     let approvalSource: ApprovalSource
     
@@ -242,20 +241,7 @@ final class ApprovalViewModel: ObservableObject, SinglePaginationLoadable {
         
         item.likeCount = newCount(item.likeCount, isSelected: item.emojis.isSelected(.like))
     }
-    
-    /// 신고 확인 버튼을 눌렀을 때 호출됩니다.
-    /// 선택된 챌린지를 서버에 신고 요청한 후, 알림을 닫습니다.
-    func confirmReport() async {
-        guard let _ = selectedChallenge else { return }
-        await reportChallenge()
-        showReportAlert = false
-    }
-    
-    /// 신고 알림을 취소합니다.
-    func dismissReportAlert() {
-        showReportAlert = false
-    }
-    
+
     /// 즐겨찾기 상태를 UI에 즉시 반영하고,  서버 반영은 디바운싱 처리
     func toggleFavoriteStatus(questId: Int, prev: Bool) {
         favoriteService.toggle(questId: questId, prevFavriteYn: prev)
@@ -288,17 +274,6 @@ final class ApprovalViewModel: ObservableObject, SinglePaginationLoadable {
         case .failure(let err):
             Log("미션 \(missionId) 도전내역 조회 실패 \(err.localizedDescription)")
             return ([], true)
-        }
-    }
-    
-    private func reportChallenge() async {
-        guard let missionHistoryId = self.selectedChallenge?.id else { return }
-        let result = await missionHistoryRepository.putMissionHistory(missionHistoryId: missionHistoryId)
-        switch result {
-        case .success:
-            await loadInitialData() // TODO: 해당 챌린지를 목록에서 지우기
-        case .failure(let err):
-            Log("도전내역 신고 실패 \(missionHistoryId) \(err.localizedDescription)")
         }
     }
 }

@@ -146,6 +146,7 @@ struct CommentMenuOverlay: View {
                             .scaledToFit()
                             .frame(15)
                     }
+                    .frame(height: 40)
                 }
             }
             
@@ -162,12 +163,12 @@ struct CommentMenuOverlay: View {
                             .scaledToFit()
                             .frame(15)
                     }
+                    .frame(height: 40)
                 }
             }
         }
         .foregroundStyle(.gray500)
         .padding(.horizontal, 12)
-        .frame(height: 40)
         .frame(width: 150)
         .background(
             RoundedRectangle(cornerRadius: 8)

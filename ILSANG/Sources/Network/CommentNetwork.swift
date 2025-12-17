@@ -29,7 +29,7 @@ final class CommentNetwork {
     }
     
     // 댓글 신고
-    func reportComment(commentId: Int, reason: String) async -> Result<ResponseWithEmpty, Error> {
+    func reportComment(commentId: Int, reason: String) async -> Result<ResultCodeResponse, Error> {
         let body: [String: Any] = ["reason": reason]
         guard let bodyData = body.convertToJsonData() else {
             return .failure(NetworkError.requestFailed("Fail to convert data"))

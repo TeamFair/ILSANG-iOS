@@ -153,7 +153,6 @@ enum AlertType: AlertPresentable {
     case DeleteProfileImage
     case Logout
     case Withdrawal
-    case Report
     case ChallengeDelete
     case CommentDeleteFail
     case CommentCreateFail
@@ -168,8 +167,6 @@ enum AlertType: AlertPresentable {
             "로그아웃 하시겠어요?"
         case .Withdrawal:
             "정말 탈퇴하시겠어요?"
-        case .Report:
-            "신고하시겠습니까?"
         case .ChallengeDelete:
             "챌린지를 삭제 할까요?"
         case .CommentDeleteFail:
@@ -187,8 +184,6 @@ enum AlertType: AlertPresentable {
             "기본 사진으로 변경됩니다."
         case .Withdrawal:
             "확인 시 일상 계정이 영구적으로 삭제되며,\n모든 데이터는 복구가 불가능합니다."
-        case .Report:
-            "확인 후 빠른 시일 내 조치하도록 하겠습니다"
         case .ChallengeDelete:
             "삭제하면 복구가 불가합니다"
         default: nil
@@ -197,7 +192,7 @@ enum AlertType: AlertPresentable {
     
     var disagree: String {
         switch self {
-        case .CancleEditProfile, .DeleteProfileImage, .Withdrawal, .Report, .ChallengeDelete:
+        case .CancleEditProfile, .DeleteProfileImage, .Withdrawal, .ChallengeDelete:
             "취소"
         case .Logout:
             "아니요"
