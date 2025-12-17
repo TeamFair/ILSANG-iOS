@@ -276,4 +276,13 @@ final class ApprovalViewModel: ObservableObject, SinglePaginationLoadable {
             return ([], true)
         }
     }
+    
+    func incrementMissionHistoryShareCount(missionHistory: ApprovalMissionHistoryItem) async {
+        do {
+            try await missionHistoryRepository.incrementMissionHistoryShareCount(missionHistoryId: missionHistory.id)
+            missionHistory.shareCount += 1
+        } catch {
+            Log("\(missionHistory.id) 공유수 증가 실패")
+        }
+    }
 }

@@ -11,6 +11,8 @@ struct ApprovalItemView: View, Equatable {
     static func == (lhs: ApprovalItemView, rhs: ApprovalItemView) -> Bool {
         lhs.item.id == rhs.item.id
     }
+    @State private var isSharePresented = false
+    
     let item: ApprovalMissionHistoryItem
     let width: CGFloat
     let height: CGFloat
@@ -20,6 +22,7 @@ struct ApprovalItemView: View, Equatable {
     
     enum ApprovalAction {
         case like
+        case share
         case navigateToDetail
         case profileTapped(userId: String)
         case showQuestDetail
@@ -72,21 +75,30 @@ struct ApprovalItemView: View, Equatable {
                     count: item.commentCount,
                     action: { onAction(.navigateToDetail) }
                 )
-                
-                ShareLink(item: photo, preview: SharePreview(photo.caption, image: photo.image)) {
-                    button(
-                        imageName: .share,
-                        imageColor: .gray400,
-                        count: item.shareCount,
-                        action: {  } // FIXME: 공유 시 카운트 올리기
-                    )
-                    .disabled(true)
-                }
+                button(
+                    imageName: .share,
+                    imageColor: .gray400,
+                    count: item.shareCount,
+                    action: {
+                        isSharePresented = true
+                    }
+                )
             }
         }
         .padding(padding)
         .background(Color.white)
         .cornerRadius(12)
+        .sheet(isPresented: $isSharePresented) {
+            ShareLinkView(
+                activityItems: [MissionShareItem(title: "일상 챌린지 공유하기", image: shareChallengeImage)],
+                onComplete: { completed in
+                    if completed {
+                        onAction(.share)
+                    }
+                }
+            )
+            .presentationDetents([.medium, .large])
+        }
     }
     
     private func button(
@@ -115,11 +127,7 @@ struct ApprovalItemView: View, Equatable {
         }
     }
     
-    // MARK: - 챌린지 이미지 공유하기
-    private var photo: TransferableUIImage {
-        return .init(uiimage: shareChallengeImage, caption: "일상 챌린지 공유하기")
-    }
-    
+    // MARK: - 공유용 챌린지 이미지
     private var shareChallengeImage: UIImage {
         let renderer = ImageRenderer(
             content: ApprovalItemContentShareView(

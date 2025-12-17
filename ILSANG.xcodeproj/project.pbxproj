@@ -102,6 +102,8 @@
 		605E81462D9FE6D800ECDB15 /* QuestDetailRepeatRankView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605E81452D9FE6D800ECDB15 /* QuestDetailRepeatRankView.swift */; };
 		605E814A2D9FEB2300ECDB15 /* QuestDetailStatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605E81492D9FEB2300ECDB15 /* QuestDetailStatView.swift */; };
 		605F28522CF1B2C5007EA739 /* QuestDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605F28512CF1B2C5007EA739 /* QuestDetailView.swift */; };
+		606077F12EF2E4A300D4A7B1 /* ShareLinkView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 606077F02EF2E4A300D4A7B1 /* ShareLinkView.swift */; };
+		606077F32EF2E4C500D4A7B1 /* MissionShareItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 606077F22EF2E4C500D4A7B1 /* MissionShareItem.swift */; };
 		6060B2EA2C08947B0083944D /* Image++.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6060B2E92C08947B0083944D /* Image++.swift */; };
 		606132782CD68FE300830948 /* TagView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 606132772CD68FE300830948 /* TagView.swift */; };
 		6061327B2CDB33FD00830948 /* FilterPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6061327A2CDB33FD00830948 /* FilterPicker.swift */; };
@@ -467,6 +469,8 @@
 		605E81452D9FE6D800ECDB15 /* QuestDetailRepeatRankView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestDetailRepeatRankView.swift; sourceTree = "<group>"; };
 		605E81492D9FEB2300ECDB15 /* QuestDetailStatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestDetailStatView.swift; sourceTree = "<group>"; };
 		605F28512CF1B2C5007EA739 /* QuestDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestDetailView.swift; sourceTree = "<group>"; };
+		606077F02EF2E4A300D4A7B1 /* ShareLinkView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareLinkView.swift; sourceTree = "<group>"; };
+		606077F22EF2E4C500D4A7B1 /* MissionShareItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionShareItem.swift; sourceTree = "<group>"; };
 		6060B2E92C08947B0083944D /* Image++.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Image++.swift"; sourceTree = "<group>"; };
 		606132712CD3256C00830948 /* Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Release.xcconfig; sourceTree = "<group>"; };
 		606132722CD325B600830948 /* Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Debug.xcconfig; sourceTree = "<group>"; };
@@ -1254,6 +1258,7 @@
 				601189262C3F00FB0070F2AD /* AuthChannel.swift */,
 				A11D88F62C916DE500846122 /* Icon.swift */,
 				60299E302CBFFF160039663F /* TransferableUIImage.swift */,
+				606077F22EF2E4C500D4A7B1 /* MissionShareItem.swift */,
 				60ADF9BC2D59D3FD00556958 /* FontStyle.swift */,
 			);
 			path = Model;
@@ -1690,6 +1695,7 @@
 				60054F9F2D931AA300E7C5A6 /* PDFKitView.swift */,
 				606C3EE22E674AF50050C4D6 /* IllsangZoneAlertView.swift */,
 				60F352F12E8FEDEA00307BDC /* RenderDebugContainer.swift */,
+				606077F02EF2E4A300D4A7B1 /* ShareLinkView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -2074,6 +2080,7 @@
 				609197262E59EC5F00F1D81B /* MissionResponse+Mapping.swift in Sources */,
 				606C3EE12E662E3E0050C4D6 /* IllsangZoneManager.swift in Sources */,
 				60FF5ECB2E4BB4A6007A5B40 /* SeasonNetwork.swift in Sources */,
+				606077F12EF2E4A300D4A7B1 /* ShareLinkView.swift in Sources */,
 				609197752E5F8FF900F1D81B /* UserMissionHistory+UIMapper.swift in Sources */,
 				60246FA82D91E57E007C05B3 /* AnalyticsService.swift in Sources */,
 				60B392E02EABEC94005C4A88 /* UserMissionHistoryDetailResponse.swift in Sources */,
@@ -2232,6 +2239,7 @@
 				606C3F112E6AA8B80050C4D6 /* CouponItem.swift in Sources */,
 				6091972A2E5A226600F1D81B /* RankingDetailView.swift in Sources */,
 				602A541D2EBA0FDD0094A33E /* HonorGrade.swift in Sources */,
+				606077F32EF2E4C500D4A7B1 /* MissionShareItem.swift in Sources */,
 				6091976B2E5F307A00F1D81B /* AreaNameService.swift in Sources */,
 				607FCBEB2BFE44D900BB2D04 /* IconView.swift in Sources */,
 			);
