@@ -219,6 +219,7 @@ struct ApprovalDetailView: View {
                         .keyboardType(.default)
                         .foregroundStyle(.black)
                         .focused($isCommentFocused)
+                        .disabled(vm.showAlertType != nil)
                         .overlay(alignment: .leading) {
                             if vm.comment.isEmpty {
                                 Text("댓글을 입력해 주세요.")
@@ -226,6 +227,11 @@ struct ApprovalDetailView: View {
                                     .foregroundStyle(.gray300)
                                     .padding(.leading, 2)
                                     .allowsHitTesting(false)
+                            }
+                        }
+                        .onChange(of: vm.comment) { oldValue, newValue in
+                            if newValue.count > vm.maxCommentLength && newValue.count > oldValue.count {
+                                vm.showAlertType = .Comment(.errorTooLong)
                             }
                         }
                     Text("\(vm.comment.count)/\(vm.maxCommentLength)")
@@ -246,7 +252,7 @@ struct ApprovalDetailView: View {
                         .frame(width: 70, height: 50)
                         .roundedBackground(cornerRadius: 12, bgColor: vm.comment.isEmpty ? .gray300 : .primaryPurple)
                 }
-                .disabled(vm.comment.isEmpty)
+                .disabled(vm.comment.isEmpty || vm.comments.count > vm.maxCommentLength)
             }
             .frame(maxHeight: 90, alignment: .top)
             .fixedSize(horizontal: false, vertical: true)

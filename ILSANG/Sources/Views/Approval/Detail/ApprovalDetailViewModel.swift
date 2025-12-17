@@ -216,6 +216,18 @@ final class ApprovalDetailViewModel: ObservableObject {
     
     @MainActor
     private func createComment() async {
+        let trimmedComment = comment.trimmingCharacters(in: .whitespacesAndNewlines)
+        
+        guard !trimmedComment.isEmpty else {
+            showAlertType = .Comment(.errorEmptyInput)
+            return
+        }
+        
+        if trimmedComment.containsInvalidCharacters() {
+            showAlertType = .Comment(.errorInvalidCharacters)
+            return
+        }
+        
         let parentId = replyingToComment?.id
         let result = await commentRepository.createComment(missionHistoryId: missionHistory.id, parentId: parentId, comment: comment)
         
@@ -229,9 +241,16 @@ final class ApprovalDetailViewModel: ObservableObject {
             } else {
                 scrollToLastComment()  // 댓글 >> 전체 댓글의 맨 마지막
             }
-        case .failure:
-            showAlertType = .CommentCreateFail
-            // TODO: 1분이내 등록 불가 대응
+        case .failure(let error):
+            if case NetworkError.clientError(let message) = error {
+                if message.contains("1 minute") {
+                    showAlertType = .Comment(.errorCreateTooFast)
+                } else {
+                    showAlertType = .Comment(.createFail)
+                }
+            } else {
+                showAlertType = .Comment(.createFail)
+            }
         }
     }
     
@@ -244,7 +263,7 @@ final class ApprovalDetailViewModel: ObservableObject {
                 comments[idx].state = .deleted
             }
         case .failure:
-            showAlertType = .CommentDeleteFail
+            showAlertType = .Comment(.deleteFail)
         }
     }
 }
