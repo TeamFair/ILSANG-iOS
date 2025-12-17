@@ -45,9 +45,15 @@ final class MissionHistoryNetwork {
         let parameters: Parameters = ["missionHistoryId": missionHistoryId]
         return await Network.requestData(url: url+"/history/detail", method: .get, parameters: parameters)
     }
+    
     /// 신고하기
-    func putMissionHistory(missionHistoryId: Int) async -> Result<ResponseWithEmpty, Error> {
-        return await Network.requestData(url: url+"/history/\(missionHistoryId)", method: .put)
+    func reportMissionHistory(missionHistoryId: Int, reason: String) async -> Result<ResultCodeResponse, Error> {
+        let body: [String: Any] = ["reason": reason]
+        guard let bodyData = body.convertToJsonData() else {
+            return .failure(NetworkError.requestFailed("Fail to convert data"))
+        }
+        
+        return await Network.requestData(url: url+"/history/\(missionHistoryId)", method: .put, body: bodyData)
     }
     
     func deleteMissionHistory(missionHistoryId: Int) async -> Result<ResponseWithEmpty, Error> {

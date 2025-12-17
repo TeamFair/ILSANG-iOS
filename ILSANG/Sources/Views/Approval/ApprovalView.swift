@@ -59,7 +59,6 @@ struct ApprovalView: View {
         .task {
             await vm.loadDataIfNeeded()
         }
-        .overlay { reportAlertView }
         .withQuestNavigation(questRouter: questRouter)
         .withUserNavigation(userRouter: userRouter)
         .navigationDestination(item: $vm.selectedMissionHistory) { item in
@@ -72,6 +71,13 @@ struct ApprovalView: View {
                 ),
                 userRouter: userRouter,
                 questRouter: questRouter
+            )
+        }
+        .navigationDestination(item: $vm.selectedMissionHistoryForReport) { item in
+            ReportView(
+                missionHistoryRepository: dependencies.missionHistoryRepository,
+                commentRepository: dependencies.commentRepository,
+                reportTarget: .missionHistory(id: item.id)
             )
         }
     }
@@ -136,8 +142,7 @@ struct ApprovalView: View {
     private func trailingButton(for item: ApprovalMissionHistoryItem) -> some View {
         Menu {
             Button {
-                vm.selectedChallenge = item
-                vm.showReportAlert = true
+                vm.selectedMissionHistoryForReport = item
             } label: {
                 Label("신고하기", image: "syren")
             }
@@ -150,17 +155,6 @@ struct ApprovalView: View {
                 .frame(height: 35)
         }
         .padding(layout.horizontalPadding)
-    }
-    
-    @ViewBuilder
-    private var reportAlertView: some View {
-        if vm.showReportAlert {
-            SettingAlertView(
-                alertType: AlertType.Report,
-                onCancel: { vm.dismissReportAlert() },
-                onConfirm: { Task { await vm.confirmReport() } }
-            )
-        }
     }
     
     private var networkErrorView: some View {

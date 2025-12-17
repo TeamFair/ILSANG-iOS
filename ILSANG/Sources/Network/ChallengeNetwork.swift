@@ -15,7 +15,7 @@ final class ChallengeNetwork {
         return await Network.requestData(url: url+"/random-quiz", method: .get, parameters: parameters)
     }
     
-    func postQuizChallenge(missionId: Int, quizId: Int, answer: String) async -> Result<ChallengeResponse, Error> {
+    func postQuizChallenge(missionId: Int, quizId: Int, answer: String) async -> Result<ResultCodeResponse, Error> {
         let bodyData: [String: Any] = [
             "missionId": "\(missionId)",
             "quizId": "\(quizId)",
@@ -24,7 +24,7 @@ final class ChallengeNetwork {
         return await postChallenge(body: bodyData)
     }
     
-    func postPhotoChallenge(missionId: Int, imageId: String) async -> Result<ChallengeResponse, Error> {
+    func postPhotoChallenge(missionId: Int, imageId: String) async -> Result<ResultCodeResponse, Error> {
         let bodyData: [String: Any] = [
             "missionId": "\(missionId)",
             "imageId": imageId
@@ -32,7 +32,7 @@ final class ChallengeNetwork {
         return await postChallenge(body: bodyData)
     }
     
-    private func postChallenge(body: [String: Any]) async -> Result<ChallengeResponse,Error> {
+    private func postChallenge(body: [String: Any]) async -> Result<ResultCodeResponse,Error> {
         guard let bodyData = body.convertToJsonData() else {
             return .failure(NetworkError.requestFailed("Fail to convert data"))
         }

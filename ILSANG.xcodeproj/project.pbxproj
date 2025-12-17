@@ -312,7 +312,7 @@
 		60E401BA2E74477A00BB0B6C /* QuestSubmissionNotifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60E401B92E74477A00BB0B6C /* QuestSubmissionNotifier.swift */; };
 		60F352F22E8FEDEA00307BDC /* RenderDebugContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60F352F12E8FEDEA00307BDC /* RenderDebugContainer.swift */; };
 		60F352F42E91644E00307BDC /* ISO8601DateFormatter++.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60F352F32E91644E00307BDC /* ISO8601DateFormatter++.swift */; };
-		60F352F62E91666900307BDC /* ChallengeResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60F352F52E91666900307BDC /* ChallengeResponse.swift */; };
+		60F352F62E91666900307BDC /* ResultCodeResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60F352F52E91666900307BDC /* ResultCodeResponse.swift */; };
 		60F352F82E91667700307BDC /* QuizResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60F352F72E91667700307BDC /* QuizResponse.swift */; };
 		60F352FA2E9166F000307BDC /* Season.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60F352F92E9166F000307BDC /* Season.swift */; };
 		60F352FC2E91679400307BDC /* SeasonResponse+Mapping.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60F352FB2E91679400307BDC /* SeasonResponse+Mapping.swift */; };
@@ -679,7 +679,7 @@
 		60E401B92E74477A00BB0B6C /* QuestSubmissionNotifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestSubmissionNotifier.swift; sourceTree = "<group>"; };
 		60F352F12E8FEDEA00307BDC /* RenderDebugContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RenderDebugContainer.swift; sourceTree = "<group>"; };
 		60F352F32E91644E00307BDC /* ISO8601DateFormatter++.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ISO8601DateFormatter++.swift"; sourceTree = "<group>"; };
-		60F352F52E91666900307BDC /* ChallengeResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChallengeResponse.swift; sourceTree = "<group>"; };
+		60F352F52E91666900307BDC /* ResultCodeResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultCodeResponse.swift; sourceTree = "<group>"; };
 		60F352F72E91667700307BDC /* QuizResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuizResponse.swift; sourceTree = "<group>"; };
 		60F352F92E9166F000307BDC /* Season.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Season.swift; sourceTree = "<group>"; };
 		60F352FB2E91679400307BDC /* SeasonResponse+Mapping.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SeasonResponse+Mapping.swift"; sourceTree = "<group>"; };
@@ -1465,7 +1465,7 @@
 				60D897382E575038006A8480 /* RewardResponse.swift */,
 				600D63972E48E5A9009FE14F /* AreaResponse.swift */,
 				6091975A2E5DE8C800F1D81B /* BannerResponse.swift */,
-				60F352F52E91666900307BDC /* ChallengeResponse.swift */,
+				60F352F52E91666900307BDC /* ResultCodeResponse.swift */,
 				60F352F72E91667700307BDC /* QuizResponse.swift */,
 				60C6B4DB2C2D042700926C0E /* Image.swift */,
 				60FF5ED02E4CDC2B007A5B40 /* SeasonResponse.swift */,
@@ -1990,7 +1990,7 @@
 				60D8972B2E53B5AE006A8480 /* MissionHistoryNetwork.swift in Sources */,
 				600211EC2C1EEED7000CC02E /* APIManager.swift in Sources */,
 				60FB50CD2D15CEAE00C55E82 /* HomeView.swift in Sources */,
-				60F352F62E91666900307BDC /* ChallengeResponse.swift in Sources */,
+				60F352F62E91666900307BDC /* ResultCodeResponse.swift in Sources */,
 				6091972C2E5A228700F1D81B /* RankingRewardView.swift in Sources */,
 				6009EC462EEBA0B5000F17BD /* CommentResponse+Mapping.swift in Sources */,
 				601BCF202D7C2DC100138387 /* UINavigationController.swift in Sources */,
