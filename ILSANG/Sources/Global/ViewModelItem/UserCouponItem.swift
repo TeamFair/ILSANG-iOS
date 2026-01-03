@@ -48,6 +48,7 @@ extension UserCouponItem {
                 image: nil,
                 storeName: "일상 스토어",
                 description: "7일 동안 자유롭게 사용할 수 있는 이용권",
+                type: .realtime,
                 validFrom: .now,
                 validTo: .now
             )
@@ -64,6 +65,7 @@ extension UserCouponItem {
                 image: nil,
                 storeName: "일상 마켓",
                 description: "30일 동안 사용할 수 있는 특별 할인 쿠폰",
+                type: .realtime,
                 validFrom: .now,
                 validTo: .now
             )
@@ -80,6 +82,7 @@ extension UserCouponItem {
                 image: nil,
                 storeName: "일상 가게",
                 description: "시즌 한정으로 제공되는 특별 혜택 쿠폰",
+                type: .realtime,
                 validFrom: .now,
                 validTo: .now
             )
@@ -96,6 +99,7 @@ extension UserCouponItem {
                 image: nil,
                 storeName: "일상 가게",
                 description: "시즌 한정으로 제공되는 특별 혜택 쿠폰",
+                type: .realtime,
                 validFrom: .now,
                 validTo: .now
             )

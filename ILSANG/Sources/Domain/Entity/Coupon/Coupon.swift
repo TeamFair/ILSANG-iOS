@@ -13,6 +13,7 @@ struct Coupon {
     let imageId: String?
     let storeName: String?
     let description: String?
+    let type: CouponSettingType?
     let validFrom: Date?
     let validTo: Date?
 }

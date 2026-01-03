@@ -82,7 +82,7 @@ struct QuestDetailView: View {
                     .padding(.bottom, 24)
                 
                 if vm.quest.hasCouponReward {
-                    rewardView
+                    couponRewardView
                         .padding(.bottom, 16)
                 }
                 
@@ -150,9 +150,9 @@ struct QuestDetailView: View {
         }
     }
     
-    private var rewardView: some View {
+    private var couponRewardView: some View {
         HStack(spacing: 4) {
-            Text("일상존 퀘스트로\n쿠폰 확률을 높여보세요!")
+            Text(vm.quest.coupon?.type?.questDetailTitle ?? "쿠폰 보상")
                 .styledFont(.tabRegular)
                 .foregroundStyle(.gray500)
                 .multilineTextAlignment(.leading)
