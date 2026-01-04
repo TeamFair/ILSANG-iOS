@@ -11,7 +11,7 @@ struct ApprovalDetailView: View {
     @StateObject var vm: ApprovalDetailViewModel
     @EnvironmentObject var dependencies: AppDependencies
     @StateObject var userRouter: UserRouter
-    @ObservedObject var questRouter: QuestRouter
+    var questRouter: QuestRouter
     @FocusState private var isCommentFocused: Bool
     @Environment(\.layout) var layout
     @Environment(\.dismiss) var dismiss
