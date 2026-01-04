@@ -11,7 +11,6 @@ import UIKit
 enum ApprovalDetailAction {
     case load
     case reload
-    case mission
     case profileTapped(userId: String)
     case missionHistoryEllipsisTapped
     case missionHistoryReport
@@ -62,6 +61,7 @@ final class ApprovalDetailViewModel: ObservableObject {
     
     let commentRepository: CommentRepositoryInterface
     let missionHistoryRepository: MissionHistoryRepositoryInterface
+    private let favoriteService: FavoriteService
     private let questSubmissionNotifier: QuestSubmissionNotifier
     private var cancellables = Set<AnyCancellable>()
     
@@ -71,10 +71,12 @@ final class ApprovalDetailViewModel: ObservableObject {
         missionHistory: ApprovalMissionHistoryItem,
         commentRepository: CommentRepositoryInterface,
         missionHistoryRepository: MissionHistoryRepositoryInterface,
+        favoriteService: FavoriteService,
         questSubmissionNotifier: QuestSubmissionNotifier
     ) {
         self.missionHistory = missionHistory
         self.commentRepository = commentRepository
+        self.favoriteService = favoriteService
         self.missionHistoryRepository = missionHistoryRepository
         self.questSubmissionNotifier = questSubmissionNotifier
 
@@ -101,8 +103,6 @@ final class ApprovalDetailViewModel: ObservableObject {
         switch action {
         case .load, .reload:
             Task { await loadInitialDataWithLoadingState() }
-        case .mission:
-            print("") // FIXME: 상세 시트 연결
         case .missionHistoryEllipsisTapped:
             activeMissionHistoryMenu.toggle()
         case .missionHistoryReport:
@@ -176,6 +176,10 @@ final class ApprovalDetailViewModel: ObservableObject {
     @MainActor
     private func changeViewStatus(_ viewStatus: ViewStatus) {
         self.viewStatus = viewStatus
+    }
+    
+    func toggleFavoriteStatus(questId: Int, prev: Bool) {
+        favoriteService.toggle(questId: questId, prevFavriteYn: prev)
     }
     
     @MainActor

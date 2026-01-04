@@ -11,7 +11,7 @@ struct ApprovalDetailView: View {
     @StateObject var vm: ApprovalDetailViewModel
     @EnvironmentObject var dependencies: AppDependencies
     @StateObject var userRouter: UserRouter
-    @ObservedObject var questRouter: QuestRouter
+    var questRouter: QuestRouter
     @FocusState private var isCommentFocused: Bool
     @Environment(\.layout) var layout
     @Environment(\.dismiss) var dismiss
@@ -93,7 +93,10 @@ struct ApprovalDetailView: View {
                             bgStyle: .roundedStroke,
                             status: vm.missionHistory.questStatus,
                             action: {
-                                vm.send(.mission)
+                                guard let questId = vm.missionHistory.questId else { return }
+                                questRouter.presentQuestDetail(questId: questId) { updatedQuest in
+                                    vm.toggleFavoriteStatus(questId: updatedQuest.id, prev: updatedQuest.favoriteYn)
+                                }
                             }
                         )
                         .padding(.bottom, 32)

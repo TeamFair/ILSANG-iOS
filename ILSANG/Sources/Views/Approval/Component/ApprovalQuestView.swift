@@ -39,28 +39,29 @@ struct ApprovalQuestView: View {
     }
     
     var body: some View {
-        HStack(spacing: 0) {
-            VStack(alignment: .leading, spacing: 8) {
-                MissionTagGroupView(questType: questType, repeatType: repeatType, missionType: .photo)
-                VStack(alignment: .leading, spacing: 0) {
-                    Text(questTitle)
-                        .styledFont(.bold, size: 15, lineHeight: 20)
-                        .foregroundStyle(.black)
-                    Text(writerName)
-                        .styledFont(.regular, size: 11, lineHeight: 16)
-                        .foregroundStyle(.gray400)
+        Button {
+            action()
+        } label: {
+            HStack(spacing: 0) {
+                // 퀘스트 정보
+                VStack(alignment: .leading, spacing: 8) {
+                    MissionTagGroupView(questType: questType, repeatType: repeatType, missionType: .photo)
+                    VStack(alignment: .leading, spacing: 0) {
+                        Text(questTitle)
+                            .styledFont(.bold, size: 15, lineHeight: 20)
+                            .foregroundStyle(.black)
+                        Text(writerName)
+                            .styledFont(.regular, size: 11, lineHeight: 16)
+                            .foregroundStyle(.gray400)
+                    }
                 }
-            }
-            
-            Spacer(minLength: 0)
-            
-            Button {
-                action()
-            } label: {
+                
+                Spacer(minLength: 0)
+                
+                // 나도하기 버튼
                 HStack(spacing: 0) {
                     Text(status.buttonTitle)
                         .styledFont(.tabBold)
-                    
                     Image(.arrowUnder)
                         .resizable()
                         .scaledToFit()
@@ -69,36 +70,37 @@ struct ApprovalQuestView: View {
                 }
                 .padding(.vertical, 6)
                 .padding(.horizontal, 8)
+                .foregroundStyle(actionDisable ? .gray300 : .gray500)
+                .roundedBackground(cornerRadius: 12, bgColor: .background)
             }
-            .foregroundStyle(actionDisable ? .gray300 : .gray500)
-            .roundedBackground(cornerRadius: 12, bgColor: .background)
-            .disabled(actionDisable)
-        }
-        .padding(.horizontal, layout.horizontalPadding)
-        .padding(.vertical, 16)
-        .background(
-            ZStack {
-                switch bgStyle {
-                case .verticalStroke:
-                    VStack(spacing: 0) {
-                        Rectangle()
-                            .fill(.gray100)
-                            .frame(height: 1)
-                        Spacer()
-                        Rectangle()
-                            .fill(.gray100)
-                            .frame(height: 1)
+            .padding(.horizontal, layout.horizontalPadding)
+            .padding(.vertical, 16)
+            .background(
+                ZStack {
+                    switch bgStyle {
+                    case .verticalStroke:
+                        VStack(spacing: 0) {
+                            Rectangle()
+                                .fill(.gray100)
+                                .frame(height: 1)
+                            Spacer()
+                            Rectangle()
+                                .fill(.gray100)
+                                .frame(height: 1)
+                        }
+                        .background(.white)
+                    case .roundedStroke:
+                        RoundedRectangle(cornerRadius: 12)
+                            .fill(.white)
+                            .strokeBorder(.gray100, style: .init(lineWidth: 1))
                     }
-                    .background(.white)
-                case .roundedStroke:
-                    RoundedRectangle(cornerRadius: 12)
-                        .fill(.white)
-                        .strokeBorder(.gray100, style: .init(lineWidth: 1))
                 }
-            }
-        )
+            )
+        }
+        .disabled(actionDisable)
     }
 }
+
 #Preview {
     let action = { print("tapped") }
     ScrollView {
