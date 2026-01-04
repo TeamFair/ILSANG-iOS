@@ -9,12 +9,13 @@ import SwiftUI
 
 struct QuestCouponView: View {
     let coupon: CouponItem
+    var buttonTitle: String = "확인"
     var onDismiss: (() -> Void)?
     
     var body: some View {
         VStack(spacing: 0){
             HStack {
-                Text("이번 주 특별 보상")
+                Text(coupon.type?.title ?? "")
                     .styledFont(.heading2)
                     .foregroundStyle(.black)
                 Spacer()
@@ -51,7 +52,7 @@ struct QuestCouponView: View {
                 .foregroundStyle(.gray400)
                 .padding(.bottom, 48)
             
-            PrimaryButton(title: "확인") {
+            PrimaryButton(title: buttonTitle) {
                 onDismiss?()
             }
         }
@@ -69,6 +70,7 @@ struct QuestCouponView: View {
             image: nil,
             storeName: "서현가게",
             description: nil,
+            type: nil,
             validFrom: .now,
             validTo: .now
         )

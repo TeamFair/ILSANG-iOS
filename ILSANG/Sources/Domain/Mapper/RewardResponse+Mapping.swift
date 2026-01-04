@@ -6,10 +6,9 @@
 //
 
 
-
 extension RewardResponse {
-    func toDomain() -> Reward {
-        guard let pointType = PointType(rawValue: pointType.lowercased()) else { fatalError("PointType 초기화 실패") }
+    func toDomain() -> Reward? {
+        guard let pointType = PointType(rawValue: pointType.lowercased()) else { return nil }
         return Reward(point: point, pointType: pointType)
     }
 }

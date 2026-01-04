@@ -12,7 +12,8 @@ class SubmitRouterViewModel: ObservableObject {
     @Published var selectedImage: UIImage?
     @Published var showSubmitAlertView: Bool = false
     @Published var submitStatus: SubmitStatus = .inProgress
-    
+    @Published var showCouponRewardView: Bool = false
+
     private let submitService: ImageChallengeSubmitService
     private let challengeNetwork: ChallengeNetwork
 

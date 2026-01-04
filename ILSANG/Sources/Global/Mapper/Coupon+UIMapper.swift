@@ -16,6 +16,7 @@ extension Coupon {
             image: nil,
             storeName: storeName,
             description: description,
+            type: type,
             validFrom: validFrom,
             validTo: validTo
         )

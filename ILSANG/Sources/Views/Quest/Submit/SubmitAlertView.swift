@@ -16,8 +16,23 @@ struct SubmitAlertView: View {
     var body: some View {
         ZStack {
             if vm.showSubmitAlertView {
-                Color.black.opacity(0.7).ignoresSafeArea()
+                Color.black.opacity(0.3).ignoresSafeArea()
                 submitAlertView
+            }
+            if let coupon = vm.selectedQuest.coupon, vm.showCouponRewardView {
+                QuestCouponView(
+                    coupon: coupon,
+                    buttonTitle: "획득",
+                    onDismiss: {
+                        vm.showCouponRewardView = false
+                        dependencies.questSubmissionNotifier.markQuestAsSubmitted()
+                        dismiss()
+                    }
+                )
+                .padding(20)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .ignoresSafeArea()
+                .background(Color.black.opacity(0.3))
             }
         }
         .onChange(of: scenePhase) { _, newPhase in
@@ -41,8 +56,13 @@ struct SubmitAlertView: View {
         case .complete:
             SubmitCompleteView(quest: vm.selectedQuest) {
                 vm.showSubmitAlertView = false
-                dependencies.questSubmissionNotifier.markQuestAsSubmitted()
-                dismiss()
+
+                if vm.selectedQuest.coupon?.type == .realtime {
+                    vm.showCouponRewardView = true
+                } else {
+                    dependencies.questSubmissionNotifier.markQuestAsSubmitted()
+                    dismiss()
+                }
             }
         }
     }

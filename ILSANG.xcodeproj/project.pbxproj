@@ -318,6 +318,7 @@
 		60F352F82E91667700307BDC /* QuizResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60F352F72E91667700307BDC /* QuizResponse.swift */; };
 		60F352FA2E9166F000307BDC /* Season.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60F352F92E9166F000307BDC /* Season.swift */; };
 		60F352FC2E91679400307BDC /* SeasonResponse+Mapping.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60F352FB2E91679400307BDC /* SeasonResponse+Mapping.swift */; };
+		60F733CF2F0916BC007A8A72 /* CouponSettingType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60F733CE2F0916BC007A8A72 /* CouponSettingType.swift */; };
 		60FB50CD2D15CEAE00C55E82 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60FB50CC2D15CEAE00C55E82 /* HomeView.swift */; };
 		60FF5EC32E4937A6007A5B40 /* MyRegionAreaSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60FF5EC22E4937A6007A5B40 /* MyRegionAreaSelectionView.swift */; };
 		60FF5EC52E4949F8007A5B40 /* RegionPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60FF5EC42E4949F8007A5B40 /* RegionPickerView.swift */; };
@@ -687,6 +688,7 @@
 		60F352F72E91667700307BDC /* QuizResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuizResponse.swift; sourceTree = "<group>"; };
 		60F352F92E9166F000307BDC /* Season.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Season.swift; sourceTree = "<group>"; };
 		60F352FB2E91679400307BDC /* SeasonResponse+Mapping.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SeasonResponse+Mapping.swift"; sourceTree = "<group>"; };
+		60F733CE2F0916BC007A8A72 /* CouponSettingType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CouponSettingType.swift; sourceTree = "<group>"; };
 		60FB50CC2D15CEAE00C55E82 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		60FF5EC22E4937A6007A5B40 /* MyRegionAreaSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyRegionAreaSelectionView.swift; sourceTree = "<group>"; };
 		60FF5EC42E4949F8007A5B40 /* RegionPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegionPickerView.swift; sourceTree = "<group>"; };
@@ -899,6 +901,7 @@
 				60D897462E576052006A8480 /* QuizType.swift */,
 				60D897442E575FB8006A8480 /* MissionType.swift */,
 				6029881F2D041D4700903806 /* PointType.swift */,
+				60F733CE2F0916BC007A8A72 /* CouponSettingType.swift */,
 				602988212D041DDC00903806 /* RepeatType.swift */,
 				604B2D1F2E929E8D006A814D /* PostImageType.swift */,
 				604B2D212E929E98006A814D /* EmojiType.swift */,
@@ -1954,6 +1957,7 @@
 				606C3F0D2E69FE620050C4D6 /* Coupon+UIMapper.swift in Sources */,
 				9FE63D6C2CB3A58800CA7940 /* RankingView.swift in Sources */,
 				602988202D041D4700903806 /* PointType.swift in Sources */,
+				60F733CF2F0916BC007A8A72 /* CouponSettingType.swift in Sources */,
 				9FE63D722CB3AB4F00CA7940 /* RankingItemView.swift in Sources */,
 				9FE63D702CB3AAF100CA7940 /* RankingViewModel.swift in Sources */,
 				600D639C2E48E83F009FE14F /* AreaSelectionView.swift in Sources */,
@@ -2377,7 +2381,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.5.1;
+				MARKETING_VERSION = 1.5.2;
 				PRODUCT_BUNDLE_IDENTIFIER = "$(APP_BUNDLE_ID)";
 				"PRODUCT_BUNDLE_IDENTIFIER[sdk=iphoneos*]" = com.ilsang240615.dev;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -2588,7 +2592,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.5.1;
+				MARKETING_VERSION = 1.5.2;
 				PRODUCT_BUNDLE_IDENTIFIER = "$(APP_BUNDLE_ID)";
 				"PRODUCT_BUNDLE_IDENTIFIER[sdk=iphoneos*]" = com.ilsang240615.dev;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -2635,7 +2639,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.5.1;
+				MARKETING_VERSION = 1.5.2;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
