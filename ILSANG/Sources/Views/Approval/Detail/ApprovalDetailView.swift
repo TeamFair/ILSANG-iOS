@@ -93,7 +93,10 @@ struct ApprovalDetailView: View {
                             bgStyle: .roundedStroke,
                             status: vm.missionHistory.questStatus,
                             action: {
-                                vm.send(.mission)
+                                guard let questId = vm.missionHistory.questId else { return }
+                                questRouter.presentQuestDetail(questId: questId) { updatedQuest in
+                                    vm.toggleFavoriteStatus(questId: updatedQuest.id, prev: updatedQuest.favoriteYn)
+                                }
                             }
                         )
                         .padding(.bottom, 32)

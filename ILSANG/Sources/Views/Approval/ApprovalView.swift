@@ -67,6 +67,7 @@ struct ApprovalView: View {
                     missionHistory: item,
                     commentRepository: dependencies.commentRepository,
                     missionHistoryRepository: dependencies.missionHistoryRepository,
+                    favoriteService: dependencies.favoriteService,
                     questSubmissionNotifier: dependencies.questSubmissionNotifier
                 ),
                 userRouter: userRouter,
@@ -111,7 +112,6 @@ struct ApprovalView: View {
                             case .profileTapped(let userId):
                                 userRouter.navigateToUserProfile(userId: userId)
                             case .showQuestDetail:
-                                // FIXME: questId받기
                                 guard let questId = item.questId else { return }
                                 questRouter.presentQuestDetail(questId: questId) { updatedQuest in
                                     vm.toggleFavoriteStatus(questId: updatedQuest.id, prev: updatedQuest.favoriteYn)
