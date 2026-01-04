@@ -29,6 +29,8 @@ class QuestRouter: ObservableObject {
     private let illsangZoneManager: IllsangZoneManager
     private let questRepository: QuestRepositoryInterface
     
+    private let delayAfterAction: TimeInterval = 0.1
+
     // Callbacks
     private var onFavoriteToggle: ((QuestItem) -> Void)?
     
@@ -104,7 +106,7 @@ class QuestRouter: ObservableObject {
             isQuestSheetPending = true
             alertType = .illsangZoneNotSelected
         } else {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { [weak self] in
+            DispatchQueue.main.asyncAfter(deadline: .now() + delayAfterAction) { [weak self] in
                 self?.showQuestSheet = true
             }
         }
@@ -153,7 +155,7 @@ class QuestRouter: ObservableObject {
             }
             if isQuestSheetPending {
                 isQuestSheetPending = false
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { [weak self] in
+                DispatchQueue.main.asyncAfter(deadline: .now() + delayAfterAction) { [weak self] in
                     self?.showQuestSheet = true
                 }
             }
@@ -173,7 +175,7 @@ class QuestRouter: ObservableObject {
         case .illsangZoneSetSuccess:
             if isQuestSheetPending {
                 isQuestSheetPending = false
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { [weak self] in
+                DispatchQueue.main.asyncAfter(deadline: .now() + delayAfterAction) { [weak self] in
                     self?.showQuestSheet = true
                 }
             }
