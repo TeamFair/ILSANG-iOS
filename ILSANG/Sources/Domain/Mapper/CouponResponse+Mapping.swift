@@ -15,6 +15,7 @@ extension CouponResponse: DomainConvertible {
             imageId: imageId,
             storeName: storeName,
             description: description,
+            type: type.flatMap { CouponSettingType(type: $0) },
             validFrom: validFrom?.toISO8601Date(),
             validTo: validTo?.toISO8601Date()
         )

@@ -74,8 +74,6 @@ struct QuestEngageView: View {
                 PrimaryButton(
                     title: "퀘스트 인증하기",
                     buttonAble: vm.isSubmitAbled) {
-                        submitVM.showSubmitAlertView = true
-                        submitVM.submitStatus = .inProgress
                         DispatchQueue.main.asyncAfter(deadline: .now()+0.8) {
                             submitVM.submit(userAnswer: vm.selectedAnswer, quizId: vm.quiz?.quizId)
                         }

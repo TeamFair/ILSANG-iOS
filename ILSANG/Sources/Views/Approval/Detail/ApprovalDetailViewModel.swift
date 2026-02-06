@@ -5,12 +5,12 @@
 //  Created by Lee Jinhee on 12/12/25.
 //
 
+import Combine
 import UIKit
 
 enum ApprovalDetailAction {
     case load
     case reload
-    case mission
     case profileTapped(userId: String)
     case missionHistoryEllipsisTapped
     case missionHistoryReport
@@ -20,7 +20,24 @@ enum ApprovalDetailAction {
 
 enum ApprovalDetailViewEvent {
     case focusCommentField
-    case scrollToComment(Int)
+    case scrollToComment(id: Int)
+}
+
+enum ApprovalDetailRoute: Identifiable, Hashable {
+    case report(ReportTarget)
+    
+    var id: String {
+        switch self {
+        case .report(let target):
+            // 타겟에 따라 고유한 문자열 ID 생성
+            switch target {
+            case .comment(let id):
+                return "report_comment_\(id)"
+            case .missionHistory(let id):
+                return "report_missionHistory_\(id)"
+            }
+        }
+    }
 }
 
 final class ApprovalDetailViewModel: ObservableObject {
@@ -32,8 +49,10 @@ final class ApprovalDetailViewModel: ObservableObject {
     @Published var comment: String = ""
     @Published var replyingToComment: (id: Int, nickname: String)? = nil
     
+    @Published var isNavigationActive: Bool = false
     @Published var showAlertType: AlertType?
     @Published var event: ApprovalDetailViewEvent?
+    @Published var route: ApprovalDetailRoute?
 
     // MARK: - Stored Properties
     let missionHistory: ApprovalMissionHistoryItem
@@ -52,10 +71,25 @@ final class ApprovalDetailViewModel: ObservableObject {
         missionHistory: ApprovalMissionHistoryItem,
         commentRepository: CommentRepositoryInterface,
         missionHistoryRepository: MissionHistoryRepositoryInterface,
+        favoriteService: FavoriteService,
+        questSubmissionNotifier: QuestSubmissionNotifier
     ) {
         self.missionHistory = missionHistory
         self.commentRepository = commentRepository
+        self.favoriteService = favoriteService
         self.missionHistoryRepository = missionHistoryRepository
+        self.questSubmissionNotifier = questSubmissionNotifier
+
+        // 퀘스트 수행 후 재수행 불가능하도록 퀘스트 수행시 수행시간 업데이트
+        questSubmissionNotifier.$refreshTrigger
+            .removeDuplicates()
+            .dropFirst()
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                Log("MissionApprovalView: 퀘스트 제출 트리거 > 데이터 리로드")
+                self?.missionHistory.lastCompleteDate = .now
+            }
+            .store(in: &cancellables)
         
         Log("✨ ApprovalDetailViewModel: init")
     }
@@ -69,12 +103,11 @@ final class ApprovalDetailViewModel: ObservableObject {
         switch action {
         case .load, .reload:
             Task { await loadInitialDataWithLoadingState() }
-        case .mission:
-            print("") // FIXME: 상세 시트 연결
         case .missionHistoryEllipsisTapped:
-            activeMissionHistoryMenu = true
+            activeMissionHistoryMenu.toggle()
         case .missionHistoryReport:
-            print("") // FIXME: 신고 화면 이동
+            route = .report(.missionHistory(id: missionHistory.id))
+            isNavigationActive = true
         case .profileTapped(let userId):
             print("\(userId)") // FIXME: 프로필 화면 연결
         case .createComment:
@@ -83,16 +116,15 @@ final class ApprovalDetailViewModel: ObservableObject {
             switch commentAction {
             case .delete(let id):
                 Task { await deleteComment(commentId: id) }
+                activeMenuCommentId = nil
             case .report(let id):
-                print("\(id)")  // FIXME: 신고 화면 이동
+                route = .report(.comment(id: id))
+                activeMenuCommentId = nil
+                isNavigationActive = true
             case .reply(let id, let name):
                 replyingToComment = (id, name)
                 event = .focusCommentField
-                if let index = comments.firstIndex(where: { $0.id == id }) {
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                        self.event = .scrollToComment(index)
-                    }
-                }
+                self.scrollToComment(id)
             case .showUserProfile(let userId):
                 print("\(userId)") // FIXME: 프로필 화면 연결
             }
@@ -146,12 +178,41 @@ final class ApprovalDetailViewModel: ObservableObject {
         self.viewStatus = viewStatus
     }
     
+    func toggleFavoriteStatus(questId: Int, prev: Bool) {
+        favoriteService.toggle(questId: questId, prevFavriteYn: prev)
+    }
+    
+    @MainActor
+    private func scrollToLastComment() {
+        guard let last = comments.last else { return }
+        self.scrollToComment(last.id)
+    }
+    
+    @MainActor
+    private func scrollToLastChild(of parentId: Int) {
+        // parent + children 구조
+        let children = comments.filter { $0.parentId == parentId }
+        guard let lastChild = children.last else { return }
+        self.scrollToComment(lastChild.id)
+    }
+    
+    @MainActor
+    private func scrollToComment(_ id: Int) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+            self.event = .scrollToComment(id: id)
+        }
+    }
+    
     // MARK: - API 호출부
     private func fetchComments() async -> [CommentItem] {
         let result = await commentRepository.fetchComments(missionHistoryId: missionHistory.id)
         switch result {
         case .success(let comments):
-            return comments.flatMap { $0.toFlatItems(currentUserId: userId, missionHistoryUserId: missionHistory.userId) }
+            return Comment.toFlatItems(
+                comments,
+                currentUserId: userId,
+                missionHistoryUserId: missionHistory.userId
+            )
         case .failure:
             return []
         }
@@ -159,15 +220,41 @@ final class ApprovalDetailViewModel: ObservableObject {
     
     @MainActor
     private func createComment() async {
-        let result = await commentRepository.createComment(missionHistoryId: missionHistory.id, parentId: replyingToComment?.id ?? nil, comment: comment)
+        let trimmedComment = comment.trimmingCharacters(in: .whitespacesAndNewlines)
+        
+        guard !trimmedComment.isEmpty else {
+            showAlertType = .Comment(.errorEmptyInput)
+            return
+        }
+        
+        if trimmedComment.containsInvalidCharacters() {
+            showAlertType = .Comment(.errorInvalidCharacters)
+            return
+        }
+        
+        let parentId = replyingToComment?.id
+        let result = await commentRepository.createComment(missionHistoryId: missionHistory.id, parentId: parentId, comment: comment)
+        
         switch result {
         case .success:
             replyingToComment = nil
             comment = ""
-             await loadComments()
-        case .failure:
-            showAlertType = .CommentCreateFail
-            // TODO: 1분이내 등록 불가 대응
+            await loadComments()
+            if let parentId {
+                scrollToLastChild(of: parentId) // 답글 >> 부모의 마지막 child
+            } else {
+                scrollToLastComment()  // 댓글 >> 전체 댓글의 맨 마지막
+            }
+        case .failure(let error):
+            if case NetworkError.clientError(let message) = error {
+                if message.contains("1 minute") {
+                    showAlertType = .Comment(.errorCreateTooFast)
+                } else {
+                    showAlertType = .Comment(.createFail)
+                }
+            } else {
+                showAlertType = .Comment(.createFail)
+            }
         }
     }
     
@@ -180,8 +267,7 @@ final class ApprovalDetailViewModel: ObservableObject {
                 comments[idx].state = .deleted
             }
         case .failure:
-            // FIXME: 실패 알럿 추가
-            showAlertType = .CommentDeleteFail
+            showAlertType = .Comment(.deleteFail)
         }
     }
 }

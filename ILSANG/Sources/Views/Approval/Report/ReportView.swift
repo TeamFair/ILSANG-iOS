@@ -21,9 +21,29 @@ enum ReportType: CaseIterable {
     }
 }
 
+enum ReportTarget: Hashable {
+    case comment(id: Int)
+    case missionHistory(id: Int)
+}
+
 struct ReportView: View {
     @Environment(\.dismiss) var dismiss
-    @State private var selectedType: ReportType?
+    @State private var selectedType: Set<ReportType> = Set()
+    @State private var showReportPopup: ReportPopupView.ReportPopupType?
+
+    let missionHistoryRepository: MissionHistoryRepositoryInterface
+    private let commentRepository: CommentRepositoryInterface
+    let reportTarget: ReportTarget
+    
+    init(
+        missionHistoryRepository: MissionHistoryRepositoryInterface,
+        commentRepository: CommentRepositoryInterface,
+        reportTarget: ReportTarget
+    ) {
+        self.missionHistoryRepository = missionHistoryRepository
+        self.commentRepository = commentRepository
+        self.reportTarget = reportTarget
+    }
     
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
@@ -44,12 +64,16 @@ struct ReportView: View {
                     .foregroundStyle(.gray500)
                     .padding(.bottom, 36)
                 
-                ForEach(ReportType.allCases, id: \.title) { type in
-                    VStack(alignment: .leading, spacing: 8) {
+                VStack(alignment: .leading, spacing: 8) {
+                    ForEach(ReportType.allCases, id: \.title) { type in
                         Button {
-                            selectedType = type
+                            if selectedType.contains(type) {
+                                selectedType.remove(type)
+                            } else {
+                                selectedType.insert(type)
+                            }
                         } label: {
-                            reportTypeLabel(type.title, isSelected: selectedType == type)
+                            reportTypeLabel(type.title, isSelected: selectedType.contains(type))
                         }
                     }
                 }
@@ -58,15 +82,30 @@ struct ReportView: View {
                 
                 PrimaryButton(
                     title: "신고하기",
-                    buttonAble: selectedType != nil,
+                    buttonAble: selectedType.count != 0,
                     action: {
-                        // FIXME: 신고 API 호출
+                        report()
                     }
                 )
             }
             .padding(.horizontal, 20)
         }
         .navigationBarBackButtonHidden()
+        .overlay {
+            if let type = showReportPopup {
+                ZStack {
+                    Color.black.opacity(0.3)
+                        .ignoresSafeArea()
+                    ReportPopupView(
+                        onClose: {
+                            onPopupClose(type)
+                        },
+                        type: type
+                    )
+                    .padding(.horizontal, 20)
+                }
+            }
+        }
     }
     
     private func reportTypeLabel(_ title: String, isSelected: Bool) -> some View {
@@ -92,8 +131,44 @@ struct ReportView: View {
                 .foregroundStyle(.black)
         }
     }
+    
+    private func report() {
+        Task {
+            let reason = selectedType.compactMap({ $0.title }).joined(separator: ",")
+            do {
+                switch reportTarget {
+                case .comment(let id):
+                    try await commentRepository.reportComment(commentId: id, reason: reason)
+                case .missionHistory(let id):
+                    try await missionHistoryRepository.reportMissionHistory(missionHistoryId: id, reason: reason)
+                }
+                showReportPopup = .succ // 성공 토스트
+            } catch ReportError.alreadyReported {
+                // "이미 신고한 댓글입니다" 토스트
+                showReportPopup = .reported
+            } catch {
+                // 일반 에러 처리
+                showReportPopup = .fail
+            }
+         
+        }
+    }
+    
+    private func onPopupClose(_ type: ReportPopupView.ReportPopupType) {
+
+        switch type {
+        case .reported:
+            showReportPopup = nil
+            dismiss()
+        case .succ:
+            showReportPopup = nil
+            dismiss()
+        case .fail:
+            showReportPopup = nil
+        }
+    }
 }
 
-#Preview {
-    ReportView()
-}
+//#Preview {
+//    ReportView(reportTarget: .comment(id: 3))
+//}

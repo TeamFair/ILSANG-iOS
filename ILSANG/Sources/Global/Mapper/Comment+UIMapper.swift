@@ -6,6 +6,26 @@
 //
 
 extension Comment {
+    static func toFlatItems(
+        _ comments: [Comment],
+        currentUserId: String,
+        missionHistoryUserId: String
+    ) -> [CommentItem] {
+        
+        comments
+        // 상위 댓글 정렬
+            .sorted {
+                ($0.createdAt ?? .distantPast) < ($1.createdAt ?? .distantPast)
+            }
+        // 각 댓글을 flat 구조로 변환
+            .flatMap {
+                $0.toFlatItems(
+                    currentUserId: currentUserId,
+                    missionHistoryUserId: missionHistoryUserId
+                )
+            }
+    }
+    
     func toFlatItems(currentUserId: String, missionHistoryUserId: String, depth: Int = 0) -> [CommentItem] {
         let commentState: CommentState
         if deleteYn {
@@ -19,6 +39,7 @@ extension Comment {
         // children 제거한 구조
         let item = CommentItem(
             id: id,
+            parentId: parentId,
             userId: writer.userId,
             nickname: writer.nickname,
             profileImageId: writer.profileImageId,
@@ -32,11 +53,17 @@ extension Comment {
             state: commentState
         )
         
-        return [item] + children.flatMap {
-            $0.toFlatItems(
-                currentUserId: currentUserId,
-                missionHistoryUserId: missionHistoryUserId
-            )
-        }
+        let sortedChildren = children
+            .flatMap {
+                $0.toFlatItems(
+                    currentUserId: currentUserId,
+                    missionHistoryUserId: missionHistoryUserId
+                )
+            }
+            .sorted {
+                ($0.date ?? .distantPast) < ($1.date ?? .distantPast)
+            }
+
+        return [item] + sortedChildren
     }
 }

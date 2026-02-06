@@ -9,6 +9,7 @@ import UIKit
 
 struct CommentItem: Identifiable {
     let id: Int
+    let parentId: Int?
     let userId: String
     let nickname: String
     let profileImageId: String?
@@ -37,6 +38,7 @@ extension CommentItem {
         // MARK: - Normal Comments (정상 댓글)
         CommentItem(
             id: 0,
+            parentId: nil,
             userId: "u1",
             nickname: "김이선",
             profileImageId: nil,
@@ -51,6 +53,7 @@ extension CommentItem {
         ),
         CommentItem(
             id: 1,
+            parentId: nil,
             userId: "u1",
             nickname: "김이선",
             profileImageId: nil,
@@ -65,6 +68,7 @@ extension CommentItem {
         ),
         CommentItem(
             id: 2,
+            parentId: nil,
             userId: "u1",
             nickname: "김이선",
             profileImageId: nil,
@@ -79,6 +83,7 @@ extension CommentItem {
         ),
         CommentItem(
             id: 3,
+            parentId: nil,
             userId: "u1",
             nickname: "김이선",
             profileImageId: nil,
@@ -95,6 +100,7 @@ extension CommentItem {
         // MARK: - Normal Replies (정상 대댓글)
         CommentItem(
             id: 4,
+            parentId: nil,
             userId: "u2",
             nickname: "김이선",
             profileImageId: nil,
@@ -109,6 +115,7 @@ extension CommentItem {
         ),
         CommentItem(
             id: 5,
+            parentId: nil,
             userId: "u2",
             nickname: "김이선",
             profileImageId: nil,
@@ -123,6 +130,7 @@ extension CommentItem {
         ),
         CommentItem(
             id: 6,
+            parentId: nil,
             userId: "u2",
             nickname: "김이선",
             profileImageId: nil,
@@ -139,6 +147,7 @@ extension CommentItem {
         // MARK: - Deleted Comments (삭제된 댓글)
         CommentItem(
             id: 7,
+            parentId: nil,
             userId: "u3",
             nickname: "삭제된 댓글",
             profileImageId: nil,
@@ -155,6 +164,7 @@ extension CommentItem {
         // MARK: - Deleted Replies (삭제된 대댓글)
         CommentItem(
             id: 8,
+            parentId: nil,
             userId: "u3",
             nickname: "삭제된 대댓글",
             profileImageId: nil,
@@ -171,6 +181,7 @@ extension CommentItem {
         // MARK: - Reported Comments (신고 누적으로 블라인드된 댓글)
         CommentItem(
             id: 9,
+            parentId: nil,
             userId: "u4",
             nickname: "블라인드 댓글",
             profileImageId: nil,
@@ -187,6 +198,7 @@ extension CommentItem {
         // MARK: - Reported Replies (블라인드 대댓글)
         CommentItem(
             id: 10,
+            parentId: nil,
             userId: "u4",
             nickname: "블라인드 대댓글",
             profileImageId: nil,

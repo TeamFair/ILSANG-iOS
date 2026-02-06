@@ -5,6 +5,7 @@
 //  Created by Lee Jinhee on 6/1/24.
 //
 
+import Combine
 import UIKit
 /*
 ✅ 이모지 에셋 변경
@@ -19,7 +20,7 @@ import UIKit
 
 enum ApprovalSource: Equatable {
     case tab
-    case detail(missionId: Int)
+    case detail(missionId: Int, quest: QuestItem)
 }
 
 final class ApprovalViewModel: ObservableObject, SinglePaginationLoadable {
@@ -29,30 +30,48 @@ final class ApprovalViewModel: ObservableObject, SinglePaginationLoadable {
     // MARK: - Published Properties
     @Published var viewStatus: ViewStatus = .loading
     @Published var currentItems: [ApprovalMissionHistoryItem] = []
-    @Published var selectedChallenge: ApprovalMissionHistoryItem?
-    @Published var showReportAlert = false
-
+    @Published var selectedMissionHistory: ApprovalMissionHistoryItem?
+    @Published var selectedMissionHistoryForReport: ApprovalMissionHistoryItem?
+    
     // MARK: - Stored Properties
     let approvalSource: ApprovalSource
     
     internal let paginationManager = PaginationManager<ApprovalMissionHistoryItem>(size: 10, threshold: 2)
     
     private let emojiNetwork: EmojiNetwork
-    private let missionHistoryRepository: MissionHistoryRepository
+    private let missionHistoryRepository: MissionHistoryRepositoryInterface
+    private let favoriteService: FavoriteService
     private let areaNameService: AreaNameProvider
-    
+    private let questSubmissionNotifier: QuestSubmissionNotifier
+    private var cancellables = Set<AnyCancellable>()
+
     init(
         approvalSource: ApprovalSource,
         emojiNetwork: EmojiNetwork,
-        missionHistoryRepository: MissionHistoryRepository,
-        areaNameService: AreaNameProvider
+        missionHistoryRepository: MissionHistoryRepositoryInterface,
+        favoriteService: FavoriteService,
+        areaNameService: AreaNameProvider,
+        questSubmissionNotifier: QuestSubmissionNotifier
     ) {
         self.approvalSource = approvalSource
         self.emojiNetwork = emojiNetwork
         self.missionHistoryRepository = missionHistoryRepository
+        self.favoriteService = favoriteService
         self.areaNameService = areaNameService
+        self.questSubmissionNotifier = questSubmissionNotifier
         
         setupPaginationManagers()
+        
+        // 퀘스트 수행 후 재수행 불가능하도록 퀘스트 수행시 수행시간 업데이트
+        questSubmissionNotifier.$refreshTrigger
+            .removeDuplicates()
+            .dropFirst()
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                Log("MissionApprovalView: 퀘스트 제출 트리거 > 데이터 리로드")
+                Task { await self?.loadInitialDataWithLoadingState() }
+            }
+            .store(in: &cancellables)
         
         Log("✨ ApprovalViewModel: init")
     }
@@ -114,8 +133,8 @@ final class ApprovalViewModel: ObservableObject, SinglePaginationLoadable {
         case .tab:
             let result = await getRandomChallenges(page: page, size: paginationManager.size)
             return (result.data, result.isLast)
-        case .detail(let missionId):
-            let result = await getChallenges(missionId: missionId, page: page, size: paginationManager.size)
+        case .detail(let missionId, let quest):
+            let result = await getChallenges(missionId: missionId, page: page, size: paginationManager.size, quest: quest)
             return (result.data, result.isLast)
         }
     }
@@ -195,13 +214,6 @@ final class ApprovalViewModel: ObservableObject, SinglePaginationLoadable {
         }
     }
     
-    /// hate 버튼을 눌렀을 때 호출됩니다.
-    func onHate(for idx: Int) {
-        Task {
-            await updateEmoji(emojiType: .hate, idx: idx)
-        }
-    }
-    
     @MainActor
     private func updateEmoji(emojiType: EmojiType, idx: Int) async {
         let item = currentItems[idx]
@@ -227,25 +239,12 @@ final class ApprovalViewModel: ObservableObject, SinglePaginationLoadable {
             max(current + (isSelected ? 1 : -1), 0)
         }
         
-        switch emojiType {
-        case .like:
-            item.likeCount = newCount(item.likeCount, isSelected: item.emojis.isSelected(.like))
-        case .hate:
-            item.hateCount = newCount(item.hateCount, isSelected: item.emojis.isSelected(.hate))
-        }
+        item.likeCount = newCount(item.likeCount, isSelected: item.emojis.isSelected(.like))
     }
-    
-    /// 신고 확인 버튼을 눌렀을 때 호출됩니다.
-    /// 선택된 챌린지를 서버에 신고 요청한 후, 알림을 닫습니다.
-    func confirmReport() async {
-        guard let _ = selectedChallenge else { return }
-        await reportChallenge()
-        showReportAlert = false
-    }
-    
-    /// 신고 알림을 취소합니다.
-    func dismissReportAlert() {
-        showReportAlert = false
+
+    /// 즐겨찾기 상태를 UI에 즉시 반영하고,  서버 반영은 디바운싱 처리
+    func toggleFavoriteStatus(questId: Int, prev: Bool) {
+        favoriteService.toggle(questId: questId, prevFavriteYn: prev)
     }
     
     /// 뷰 상태를 변경합니다.
@@ -267,25 +266,23 @@ final class ApprovalViewModel: ObservableObject, SinglePaginationLoadable {
         }
     }
     
-    private func getChallenges(missionId: Int, page: Int, size: Int) async -> (data: [ApprovalMissionHistoryItem], isLast: Bool) {
+    private func getChallenges(missionId: Int, page: Int, size: Int, quest: QuestItem) async -> (data: [ApprovalMissionHistoryItem], isLast: Bool) {
         let res = await missionHistoryRepository.getMissionHistories(missionId: missionId, page: page, size: size)
         switch res {
         case .success(let response):
-            return (response.data.map {$0.toApprovalItem()}, response.isLast)
+            return (response.data.map {$0.toApprovalItem(quest: quest)}, response.isLast)
         case .failure(let err):
-            Log("도전내역랜덤 조회 실패 \(err.localizedDescription)")
+            Log("미션 \(missionId) 도전내역 조회 실패 \(err.localizedDescription)")
             return ([], true)
         }
     }
     
-    private func reportChallenge() async {
-        guard let missionHistoryId = self.selectedChallenge?.id else { return }
-        let result = await missionHistoryRepository.putMissionHistory(missionHistoryId: missionHistoryId)
-        switch result {
-        case .success:
-            await loadInitialData() // TODO: 해당 챌린지를 목록에서 지우기
-        case .failure(let err):
-            Log("도전내역 신고 실패 \(missionHistoryId) \(err.localizedDescription)")
+    func incrementMissionHistoryShareCount(missionHistory: ApprovalMissionHistoryItem) async {
+        do {
+            try await missionHistoryRepository.incrementMissionHistoryShareCount(missionHistoryId: missionHistory.id)
+            missionHistory.shareCount += 1
+        } catch {
+            Log("\(missionHistory.id) 공유수 증가 실패")
         }
     }
 }

@@ -1,11 +1,11 @@
 //
-//  ChallengeResponse.swift
+//  ResultCodeResponse.swift
 //  ILSANG
 //
 //  Created by Lee Jinhee on 10/4/25.
 //
 
 
-struct ChallengeResponse: Decodable {
+struct ResultCodeResponse: Decodable {
     let resultCode: String
 }

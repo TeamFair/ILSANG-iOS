@@ -15,7 +15,7 @@ extension QuestDetailResponse: DomainConvertible {
             writer: writerName,
             questType: QuestType(rawValue: questType),
             repeatFrequency: self.repeatFrequency.flatMap { RepeatType(param: $0) },
-            rewards: rewards.map { $0.toDomain() },
+            rewards: rewards.compactMap { $0.toDomain() },
             missions: missions.map { $0.toDomain() },
             coupons: coupons.map { $0.toDomain() },
             expireDate: expireDate.toISO8601Date(),

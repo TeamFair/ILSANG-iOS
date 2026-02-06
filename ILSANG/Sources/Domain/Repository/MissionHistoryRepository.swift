@@ -13,7 +13,8 @@ protocol MissionHistoryRepositoryInterface {
     func getMissionHistories(page: Int, size: Int, userId: String?, missionType: MissionType, filterType: MissionHistoryFilterType) async -> Result<(data: [UserMissionHistory], isLast: Bool), Error>
     func getMissionHistoryDetail(missionHistoryId: Int) async -> Result<UserMissionHistoryDetail, Error>
     func deleteMissionHistory(missionHistoryId: Int) async -> Bool
-    func putMissionHistory(missionHistoryId: Int) async -> Result<Void, Error>
+    func reportMissionHistory(missionHistoryId: Int, reason: String) async throws
+    func incrementMissionHistoryShareCount(missionHistoryId: Int) async throws
 }
 
 final class MissionHistoryRepository: MissionHistoryRepositoryInterface {
@@ -78,13 +79,27 @@ final class MissionHistoryRepository: MissionHistoryRepositoryInterface {
     }
     
     // 신고하기
-    func putMissionHistory(missionHistoryId: Int) async -> Result<Void, Error> {
-        let res = await network.putMissionHistory(missionHistoryId: missionHistoryId)
+    func reportMissionHistory(missionHistoryId: Int, reason: String) async throws {
+        let response = try await network.reportMissionHistory(missionHistoryId: missionHistoryId, reason: reason)
+            .get()
+        switch response.resultCode {
+        case "S1000": // 신고 성공
+            return
+        case "R1000": // 이미 신고한 케이스
+            throw ReportError.alreadyReported
+        default:
+            throw ReportError.unknown(code: response.resultCode)
+        }
+    }
+    
+    /// 공유수 증가
+    func incrementMissionHistoryShareCount(missionHistoryId: Int) async throws {
+        let res = await network.incrementMissionHistoryShareCount(missionHistoryId: missionHistoryId)
         switch res {
         case .success:
-            return .success(Void())
+            return
         case .failure(let error):
-            return .failure(error)
+            throw error
         }
     }
 }
@@ -96,15 +111,22 @@ final class MockMissionHistoryRepository: MissionHistoryRepositoryInterface {
             title: "미션 타이틀",
             createdAt: .now,
             likeCount: 2,
-            hateCount: 0,
             viewCount: 0,
+            shareCount: 0,
+            commentCount: 0,
             imageId: "",
             commercialAreaCode: "R100",
             userId: "",
             nickname: "닉네임",
             profileImageId: "",
             userTitle: nil,
-            emojis: [.hate]
+            emojis: [],
+            questId: 3,
+            questType: .event,
+            repeatType: nil,
+            writer: "작성자",
+            expireAt: .now,
+            lastCompleteDate: nil
         )
     ]
     
@@ -143,7 +165,11 @@ final class MockMissionHistoryRepository: MissionHistoryRepositoryInterface {
         true
     }
     
-    func putMissionHistory(missionHistoryId: Int) async -> Result<Void, any Error> {
-        .success(())
+    func reportMissionHistory(missionHistoryId: Int, reason: String) async throws {
+        return
+    }
+    
+    func incrementMissionHistoryShareCount(missionHistoryId: Int) async throws {
+        return
     }
 }

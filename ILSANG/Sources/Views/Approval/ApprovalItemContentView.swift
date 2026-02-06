@@ -29,7 +29,9 @@ struct ApprovalItemContentView: View, Equatable {
     let commercialAreaName: String?
     let width: CGFloat
     let height: CGFloat
+    var isImageZoomEnabled: Bool = false
     
+    var onImageTapped: (() -> Void)?
     let onOtherUserTapped: () -> Void
     
     var body: some View {
@@ -52,7 +54,11 @@ struct ApprovalItemContentView: View, Equatable {
                     .clipShape(RoundedRectangle(cornerRadius: 12))
                     .matchedTransitionSource(id: id, in: namespace)
                     .onTapGesture {
-                        showMagView.toggle()
+                        if isImageZoomEnabled {
+                            showMagView.toggle()
+                        } else {
+                            onImageTapped?()
+                        }
                     }
             } else {
                 Image(uiImage: image ?? .logo)
@@ -63,7 +69,11 @@ struct ApprovalItemContentView: View, Equatable {
                     .contentShape(RoundedRectangle(cornerRadius: 12))
                     .clipShape(RoundedRectangle(cornerRadius: 12))
                     .onTapGesture {
-                        showSheetView.toggle()
+                        if isImageZoomEnabled {
+                            showSheetView.toggle()
+                        } else {
+                            onImageTapped?()
+                        }
                     }
             }
         }
@@ -110,7 +120,7 @@ struct ApprovalItemContentShareView: View {
             
             MetadataView(displayDate: item.displayDate, commercialAreaName: item.commercialAreaName)
             
-            ReactionView(likeCount: item.likeCount, hateCount: item.hateCount)
+            // ReactionView(likeCount: item.likeCount)
         }
         .background(.white)
     }
@@ -140,43 +150,6 @@ fileprivate struct MetadataView: View {
     }
 }
 
-struct ReactionView: View, Equatable {
-    static func == (lhs: ReactionView, rhs: ReactionView) -> Bool {
-        lhs.likeCount == rhs.likeCount &&
-        lhs.hateCount == rhs.hateCount
-    }
-    
-    let likeCount: Int
-    var hateCount: Int? = nil
-    
-    var body: some View {
-        HStack(spacing: 16) {
-            emojiView(imageName: .thumbsUp, count: likeCount, alignment: .top)
-            if let hateCount {
-                emojiView(imageName: .thumbsDown, count: hateCount, alignment: .bottom)
-            }
-        }
-    }
-    
-    private func emojiView(imageName: UIImage, count: Int, alignment: Alignment) -> some View {
-        HStack(spacing: 4) {
-            Image(uiImage: imageName)
-                .resizable()
-                .renderingMode(.template)
-                .scaledToFit()
-                .frame(width: 21, height: 21)
-                .foregroundStyle(.gray200)
-                .frame(width: 24, height: 24, alignment: alignment)
-            Text("\(count)")
-                .monospacedDigit()
-                .styledFont(.heading2)
-                .foregroundStyle(.gray300)
-        }
-        .frame(height: 24)
-    }
-}
-
-
 #Preview {
     let item1 = ApprovalMissionHistoryItem.mockDataList[0]
     let item2 = ApprovalMissionHistoryItem.mockDataList[1]
@@ -191,7 +164,7 @@ struct ReactionView: View, Equatable {
             displayDate: item1.displayDate,
             commercialAreaName: item1.commercialAreaName,
             width: .screenWidth-40,
-            height:  ((.screenWidth-40) / 5) * 4,
+            height:  ((.screenWidth-40) / 11) * 10,
             onOtherUserTapped: { }
         )
         
@@ -205,7 +178,7 @@ struct ReactionView: View, Equatable {
             displayDate: item2.displayDate,
             commercialAreaName: item2.commercialAreaName,
             width: .screenWidth-40,
-            height:  ((.screenWidth-40) / 5) * 4,
+            height:  ((.screenWidth-40) / 11) * 10,
             onOtherUserTapped: { }
         )
     }

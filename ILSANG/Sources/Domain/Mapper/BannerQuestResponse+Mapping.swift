@@ -15,7 +15,7 @@ extension BannerQuestResponse: DomainConvertible {
             writer: writerName,
             questType: QuestType(rawValue: questType),
             repeatFrequency: repeatFrequency.flatMap { RepeatType(param: $0) },
-            rewards: rewards.map { $0.toDomain() },
+            rewards: rewards.compactMap { $0.toDomain() },
             missions: [],
             coupons: [],
             expireDate: expireDate.toISO8601Date(),

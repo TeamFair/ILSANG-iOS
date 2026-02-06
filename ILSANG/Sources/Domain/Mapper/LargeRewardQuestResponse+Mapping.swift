@@ -15,7 +15,7 @@ extension LargeRewardQuestResponse: DomainConvertible {
             writer: writerName,
             questType: nil,
             repeatFrequency: nil,
-            rewards: rewards.map { $0.toDomain() },
+            rewards: rewards.compactMap { $0.toDomain() },
             missions: [],
             coupons: [],
             expireDate: expireDate.toISO8601Date(),

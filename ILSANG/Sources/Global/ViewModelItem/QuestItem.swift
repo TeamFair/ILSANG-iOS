@@ -90,6 +90,18 @@ class QuestItem: Hashable, Identifiable {
     var coupon: CouponItem? { coupons.first }
     var hasCouponReward: Bool { !coupons.isEmpty }
     
+    var questStatus: ApprovalQuestStatus {
+        guard let expireDate, expireDate >= .now else { return .expired }
+        switch questType {
+        case .normal, .event:
+            return lastCompleteDate == nil ? .able : .completed
+        case .repeat:
+            return isRepeatDisabled ? .completed : .able
+        default:
+            return .expired
+        }
+    }
+    
     func totalRewardPoint() -> Int {
         guard let rewards else { return 0 }
         return rewards.reduce(0) { total, reward in

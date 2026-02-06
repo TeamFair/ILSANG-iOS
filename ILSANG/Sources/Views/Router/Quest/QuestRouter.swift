@@ -29,6 +29,8 @@ class QuestRouter: ObservableObject {
     private let illsangZoneManager: IllsangZoneManager
     private let questRepository: QuestRepositoryInterface
     
+    private let delayAfterAction: TimeInterval = 0.1
+
     // Callbacks
     private var onFavoriteToggle: ((QuestItem) -> Void)?
     
@@ -72,12 +74,39 @@ class QuestRouter: ObservableObject {
         }
     }
     
+    func presentQuestDetail(
+        questId: Int,
+        onFavoriteToggle: @escaping (QuestItem) -> Void
+    ) {
+        self.onFavoriteToggle = onFavoriteToggle
+        
+        // 퀘스트 상세 정보 로드
+        Task { [weak self] in
+            guard let self = self else { return }
+            do {
+                let questDetail = try await questRepository
+                    .getQuestDetail(questId: questId)
+                    .get()
+                    .toQuestItem(myCommercialCode: illsangZoneManager.currentZoneCode, questCommercialCode: nil)
+                if let imageId = questDetail.imageId {
+                    questDetail.image = await ImageCacheService.shared.loadImageAsync(imageId: imageId)
+                }
+                self.selectedQuest = questDetail
+                
+                // 일상존 체크 후 시트 표시
+                self.checkIllsangZoneAndPresentSheet()
+            } catch {
+                Log("퀘스트 상세 정보 로드 실패: \(error)")
+            }
+        }
+    }
+    
     private func checkIllsangZoneAndPresentSheet() {
         if !illsangZoneManager.isZoneSelected() && illsangZoneManager.shouldShowWarning {
             isQuestSheetPending = true
             alertType = .illsangZoneNotSelected
         } else {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { [weak self] in
+            DispatchQueue.main.asyncAfter(deadline: .now() + delayAfterAction) { [weak self] in
                 self?.showQuestSheet = true
             }
         }
@@ -126,7 +155,7 @@ class QuestRouter: ObservableObject {
             }
             if isQuestSheetPending {
                 isQuestSheetPending = false
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { [weak self] in
+                DispatchQueue.main.asyncAfter(deadline: .now() + delayAfterAction) { [weak self] in
                     self?.showQuestSheet = true
                 }
             }
@@ -146,7 +175,7 @@ class QuestRouter: ObservableObject {
         case .illsangZoneSetSuccess:
             if isQuestSheetPending {
                 isQuestSheetPending = false
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { [weak self] in
+                DispatchQueue.main.asyncAfter(deadline: .now() + delayAfterAction) { [weak self] in
                     self?.showQuestSheet = true
                 }
             }

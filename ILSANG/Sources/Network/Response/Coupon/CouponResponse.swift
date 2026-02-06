@@ -13,6 +13,7 @@ struct CouponResponse: Decodable {
     let imageId: String?
     let storeName: String?
     let description: String?
+    let type: String?
     let validFrom: String?
     let validTo: String?
     
@@ -23,6 +24,7 @@ struct CouponResponse: Decodable {
         case imageId
         case storeName
         case description
+        case type
         case validFrom
         case validTo
     }
@@ -38,6 +40,7 @@ struct CouponResponse: Decodable {
         self.imageId = try container.decodeIfPresent(String.self, forKey: .imageId)
         self.storeName = try container.decodeIfPresent(String.self, forKey: .storeName)
         self.description = try container.decodeIfPresent(String.self, forKey: .description)
+        self.type = try container.decodeIfPresent(String.self, forKey: .type)
         self.validFrom = try container.decodeIfPresent(String.self, forKey: .validFrom)
         self.validTo = try container.decodeIfPresent(String.self, forKey: .validTo)
     }

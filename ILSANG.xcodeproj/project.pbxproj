@@ -102,6 +102,8 @@
 		605E81462D9FE6D800ECDB15 /* QuestDetailRepeatRankView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605E81452D9FE6D800ECDB15 /* QuestDetailRepeatRankView.swift */; };
 		605E814A2D9FEB2300ECDB15 /* QuestDetailStatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605E81492D9FEB2300ECDB15 /* QuestDetailStatView.swift */; };
 		605F28522CF1B2C5007EA739 /* QuestDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605F28512CF1B2C5007EA739 /* QuestDetailView.swift */; };
+		606077F12EF2E4A300D4A7B1 /* ShareLinkView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 606077F02EF2E4A300D4A7B1 /* ShareLinkView.swift */; };
+		606077F32EF2E4C500D4A7B1 /* MissionShareItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 606077F22EF2E4C500D4A7B1 /* MissionShareItem.swift */; };
 		6060B2EA2C08947B0083944D /* Image++.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6060B2E92C08947B0083944D /* Image++.swift */; };
 		606132782CD68FE300830948 /* TagView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 606132772CD68FE300830948 /* TagView.swift */; };
 		6061327B2CDB33FD00830948 /* FilterPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6061327A2CDB33FD00830948 /* FilterPicker.swift */; };
@@ -312,10 +314,11 @@
 		60E401BA2E74477A00BB0B6C /* QuestSubmissionNotifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60E401B92E74477A00BB0B6C /* QuestSubmissionNotifier.swift */; };
 		60F352F22E8FEDEA00307BDC /* RenderDebugContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60F352F12E8FEDEA00307BDC /* RenderDebugContainer.swift */; };
 		60F352F42E91644E00307BDC /* ISO8601DateFormatter++.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60F352F32E91644E00307BDC /* ISO8601DateFormatter++.swift */; };
-		60F352F62E91666900307BDC /* ChallengeResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60F352F52E91666900307BDC /* ChallengeResponse.swift */; };
+		60F352F62E91666900307BDC /* ResultCodeResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60F352F52E91666900307BDC /* ResultCodeResponse.swift */; };
 		60F352F82E91667700307BDC /* QuizResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60F352F72E91667700307BDC /* QuizResponse.swift */; };
 		60F352FA2E9166F000307BDC /* Season.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60F352F92E9166F000307BDC /* Season.swift */; };
 		60F352FC2E91679400307BDC /* SeasonResponse+Mapping.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60F352FB2E91679400307BDC /* SeasonResponse+Mapping.swift */; };
+		60F733CF2F0916BC007A8A72 /* CouponSettingType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60F733CE2F0916BC007A8A72 /* CouponSettingType.swift */; };
 		60FB50CD2D15CEAE00C55E82 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60FB50CC2D15CEAE00C55E82 /* HomeView.swift */; };
 		60FF5EC32E4937A6007A5B40 /* MyRegionAreaSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60FF5EC22E4937A6007A5B40 /* MyRegionAreaSelectionView.swift */; };
 		60FF5EC52E4949F8007A5B40 /* RegionPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60FF5EC42E4949F8007A5B40 /* RegionPickerView.swift */; };
@@ -467,6 +470,8 @@
 		605E81452D9FE6D800ECDB15 /* QuestDetailRepeatRankView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestDetailRepeatRankView.swift; sourceTree = "<group>"; };
 		605E81492D9FEB2300ECDB15 /* QuestDetailStatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestDetailStatView.swift; sourceTree = "<group>"; };
 		605F28512CF1B2C5007EA739 /* QuestDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestDetailView.swift; sourceTree = "<group>"; };
+		606077F02EF2E4A300D4A7B1 /* ShareLinkView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareLinkView.swift; sourceTree = "<group>"; };
+		606077F22EF2E4C500D4A7B1 /* MissionShareItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionShareItem.swift; sourceTree = "<group>"; };
 		6060B2E92C08947B0083944D /* Image++.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Image++.swift"; sourceTree = "<group>"; };
 		606132712CD3256C00830948 /* Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Release.xcconfig; sourceTree = "<group>"; };
 		606132722CD325B600830948 /* Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Debug.xcconfig; sourceTree = "<group>"; };
@@ -679,10 +684,11 @@
 		60E401B92E74477A00BB0B6C /* QuestSubmissionNotifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestSubmissionNotifier.swift; sourceTree = "<group>"; };
 		60F352F12E8FEDEA00307BDC /* RenderDebugContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RenderDebugContainer.swift; sourceTree = "<group>"; };
 		60F352F32E91644E00307BDC /* ISO8601DateFormatter++.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ISO8601DateFormatter++.swift"; sourceTree = "<group>"; };
-		60F352F52E91666900307BDC /* ChallengeResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChallengeResponse.swift; sourceTree = "<group>"; };
+		60F352F52E91666900307BDC /* ResultCodeResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultCodeResponse.swift; sourceTree = "<group>"; };
 		60F352F72E91667700307BDC /* QuizResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuizResponse.swift; sourceTree = "<group>"; };
 		60F352F92E9166F000307BDC /* Season.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Season.swift; sourceTree = "<group>"; };
 		60F352FB2E91679400307BDC /* SeasonResponse+Mapping.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SeasonResponse+Mapping.swift"; sourceTree = "<group>"; };
+		60F733CE2F0916BC007A8A72 /* CouponSettingType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CouponSettingType.swift; sourceTree = "<group>"; };
 		60FB50CC2D15CEAE00C55E82 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		60FF5EC22E4937A6007A5B40 /* MyRegionAreaSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyRegionAreaSelectionView.swift; sourceTree = "<group>"; };
 		60FF5EC42E4949F8007A5B40 /* RegionPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegionPickerView.swift; sourceTree = "<group>"; };
@@ -895,6 +901,7 @@
 				60D897462E576052006A8480 /* QuizType.swift */,
 				60D897442E575FB8006A8480 /* MissionType.swift */,
 				6029881F2D041D4700903806 /* PointType.swift */,
+				60F733CE2F0916BC007A8A72 /* CouponSettingType.swift */,
 				602988212D041DDC00903806 /* RepeatType.swift */,
 				604B2D1F2E929E8D006A814D /* PostImageType.swift */,
 				604B2D212E929E98006A814D /* EmojiType.swift */,
@@ -1254,6 +1261,7 @@
 				601189262C3F00FB0070F2AD /* AuthChannel.swift */,
 				A11D88F62C916DE500846122 /* Icon.swift */,
 				60299E302CBFFF160039663F /* TransferableUIImage.swift */,
+				606077F22EF2E4C500D4A7B1 /* MissionShareItem.swift */,
 				60ADF9BC2D59D3FD00556958 /* FontStyle.swift */,
 			);
 			path = Model;
@@ -1465,7 +1473,7 @@
 				60D897382E575038006A8480 /* RewardResponse.swift */,
 				600D63972E48E5A9009FE14F /* AreaResponse.swift */,
 				6091975A2E5DE8C800F1D81B /* BannerResponse.swift */,
-				60F352F52E91666900307BDC /* ChallengeResponse.swift */,
+				60F352F52E91666900307BDC /* ResultCodeResponse.swift */,
 				60F352F72E91667700307BDC /* QuizResponse.swift */,
 				60C6B4DB2C2D042700926C0E /* Image.swift */,
 				60FF5ED02E4CDC2B007A5B40 /* SeasonResponse.swift */,
@@ -1690,6 +1698,7 @@
 				60054F9F2D931AA300E7C5A6 /* PDFKitView.swift */,
 				606C3EE22E674AF50050C4D6 /* IllsangZoneAlertView.swift */,
 				60F352F12E8FEDEA00307BDC /* RenderDebugContainer.swift */,
+				606077F02EF2E4A300D4A7B1 /* ShareLinkView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -1948,6 +1957,7 @@
 				606C3F0D2E69FE620050C4D6 /* Coupon+UIMapper.swift in Sources */,
 				9FE63D6C2CB3A58800CA7940 /* RankingView.swift in Sources */,
 				602988202D041D4700903806 /* PointType.swift in Sources */,
+				60F733CF2F0916BC007A8A72 /* CouponSettingType.swift in Sources */,
 				9FE63D722CB3AB4F00CA7940 /* RankingItemView.swift in Sources */,
 				9FE63D702CB3AAF100CA7940 /* RankingViewModel.swift in Sources */,
 				600D639C2E48E83F009FE14F /* AreaSelectionView.swift in Sources */,
@@ -1990,7 +2000,7 @@
 				60D8972B2E53B5AE006A8480 /* MissionHistoryNetwork.swift in Sources */,
 				600211EC2C1EEED7000CC02E /* APIManager.swift in Sources */,
 				60FB50CD2D15CEAE00C55E82 /* HomeView.swift in Sources */,
-				60F352F62E91666900307BDC /* ChallengeResponse.swift in Sources */,
+				60F352F62E91666900307BDC /* ResultCodeResponse.swift in Sources */,
 				6091972C2E5A228700F1D81B /* RankingRewardView.swift in Sources */,
 				6009EC462EEBA0B5000F17BD /* CommentResponse+Mapping.swift in Sources */,
 				601BCF202D7C2DC100138387 /* UINavigationController.swift in Sources */,
@@ -2074,6 +2084,7 @@
 				609197262E59EC5F00F1D81B /* MissionResponse+Mapping.swift in Sources */,
 				606C3EE12E662E3E0050C4D6 /* IllsangZoneManager.swift in Sources */,
 				60FF5ECB2E4BB4A6007A5B40 /* SeasonNetwork.swift in Sources */,
+				606077F12EF2E4A300D4A7B1 /* ShareLinkView.swift in Sources */,
 				609197752E5F8FF900F1D81B /* UserMissionHistory+UIMapper.swift in Sources */,
 				60246FA82D91E57E007C05B3 /* AnalyticsService.swift in Sources */,
 				60B392E02EABEC94005C4A88 /* UserMissionHistoryDetailResponse.swift in Sources */,
@@ -2232,6 +2243,7 @@
 				606C3F112E6AA8B80050C4D6 /* CouponItem.swift in Sources */,
 				6091972A2E5A226600F1D81B /* RankingDetailView.swift in Sources */,
 				602A541D2EBA0FDD0094A33E /* HonorGrade.swift in Sources */,
+				606077F32EF2E4C500D4A7B1 /* MissionShareItem.swift in Sources */,
 				6091976B2E5F307A00F1D81B /* AreaNameService.swift in Sources */,
 				607FCBEB2BFE44D900BB2D04 /* IconView.swift in Sources */,
 			);
@@ -2369,7 +2381,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.5.1;
+				MARKETING_VERSION = 1.5.2;
 				PRODUCT_BUNDLE_IDENTIFIER = "$(APP_BUNDLE_ID)";
 				"PRODUCT_BUNDLE_IDENTIFIER[sdk=iphoneos*]" = com.ilsang240615.dev;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -2580,7 +2592,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.5.1;
+				MARKETING_VERSION = 1.5.2;
 				PRODUCT_BUNDLE_IDENTIFIER = "$(APP_BUNDLE_ID)";
 				"PRODUCT_BUNDLE_IDENTIFIER[sdk=iphoneos*]" = com.ilsang240615.dev;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -2627,7 +2639,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.5.1;
+				MARKETING_VERSION = 1.5.2;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
