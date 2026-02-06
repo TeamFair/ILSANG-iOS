@@ -42,6 +42,10 @@ final class ApprovalDetailViewModel: ObservableObject {
     
     private let commentRepository: CommentRepositoryInterface
     private let missionHistoryRepository: MissionHistoryRepositoryInterface
+    var createCommentAble: Bool {
+        !comment.isEmpty && comment.count <= maxCommentLength
+    }
+    
     var onAction: ((ApprovalDetailAction) -> Void)? = nil
     
     init(
