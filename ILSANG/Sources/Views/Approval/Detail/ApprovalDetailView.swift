@@ -253,9 +253,9 @@ struct ApprovalDetailView: View {
                         .styledFont(.button)
                         .foregroundStyle(.white)
                         .frame(width: 70, height: 50)
-                        .roundedBackground(cornerRadius: 12, bgColor: vm.comment.isEmpty ? .gray300 : .primaryPurple)
+                        .roundedBackground(cornerRadius: 12, bgColor: vm.createCommentAble ? .primaryPurple : .gray300)
                 }
-                .disabled(vm.comment.isEmpty || vm.comments.count > vm.maxCommentLength)
+                .disabled(!vm.createCommentAble)
             }
             .frame(maxHeight: 90, alignment: .top)
             .fixedSize(horizontal: false, vertical: true)

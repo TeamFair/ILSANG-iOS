@@ -59,11 +59,11 @@ final class ApprovalDetailViewModel: ObservableObject {
     private let userId = UserService.shared.currentUser?.id ?? ""
     let maxCommentLength = 300
     
-    let commentRepository: CommentRepositoryInterface
-    let missionHistoryRepository: MissionHistoryRepositoryInterface
-    private let favoriteService: FavoriteService
-    private let questSubmissionNotifier: QuestSubmissionNotifier
-    private var cancellables = Set<AnyCancellable>()
+    private let commentRepository: CommentRepositoryInterface
+    private let missionHistoryRepository: MissionHistoryRepositoryInterface
+    var createCommentAble: Bool {
+        !comment.isEmpty && comment.count <= maxCommentLength
+    }
     
     var onAction: ((ApprovalDetailAction) -> Void)? = nil
     
