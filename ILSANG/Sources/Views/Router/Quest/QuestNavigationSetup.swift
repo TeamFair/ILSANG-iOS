@@ -63,7 +63,13 @@ struct QuestNavigationSetup: ViewModifier {
             }
         // 도전내역 상세
             .navigationDestination(isPresented: $questRouter.showChallengeImage) {
-                ApprovalDetailView(missionId: questRouter.selectedQuest.missionId)
+                MissionApprovalView(
+                    missionId: questRouter.selectedQuest.missionId,
+                    quest: questRouter.selectedQuest,
+                    questSubmissionNotifier: dependencies.questSubmissionNotifier,
+                    showQuestApproval: {
+                        questRouter.handleQuestApproval()
+                })
             }
         // 일상존 선택
             .navigationDestination(isPresented: $questRouter.showIllsangZoneSelection) {

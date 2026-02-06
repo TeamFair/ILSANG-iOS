@@ -17,6 +17,16 @@
 		60054FA02D931AA300E7C5A6 /* PDFKitView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60054F9F2D931AA300E7C5A6 /* PDFKitView.swift */; };
 		600657E02DBCFEE80022D117 /* HonorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 600657DF2DBCFEE20022D117 /* HonorView.swift */; };
 		600657E42DBD2DF50022D117 /* MyPageHonorManageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 600657E32DBD2DF50022D117 /* MyPageHonorManageView.swift */; };
+		6009EC362EE4208A000F17BD /* ReportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6009EC352EE4208A000F17BD /* ReportView.swift */; };
+		6009EC392EE4213A000F17BD /* ReportPopup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6009EC382EE4213A000F17BD /* ReportPopup.swift */; };
+		6009EC3B2EE42BCA000F17BD /* ApprovalDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6009EC3A2EE42BCA000F17BD /* ApprovalDetailView.swift */; };
+		6009EC402EEB9ACE000F17BD /* CommentNetwork.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6009EC3F2EEB9ACE000F17BD /* CommentNetwork.swift */; };
+		6009EC422EEB9EC5000F17BD /* CommentResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6009EC412EEB9EC5000F17BD /* CommentResponse.swift */; };
+		6009EC442EEB9F58000F17BD /* Comment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6009EC432EEB9F58000F17BD /* Comment.swift */; };
+		6009EC462EEBA0B5000F17BD /* CommentResponse+Mapping.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6009EC452EEBA0B5000F17BD /* CommentResponse+Mapping.swift */; };
+		6009EC482EEBA40C000F17BD /* CommentRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6009EC472EEBA40C000F17BD /* CommentRepository.swift */; };
+		6009EC4A2EEBA6F5000F17BD /* Comment+UIMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6009EC492EEBA6F5000F17BD /* Comment+UIMapper.swift */; };
+		6009EC4C2EEBAAC9000F17BD /* ApprovalDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6009EC4B2EEBAAC9000F17BD /* ApprovalDetailViewModel.swift */; };
 		600D63982E48E5BC009FE14F /* AreaResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 600D63972E48E5A9009FE14F /* AreaResponse.swift */; };
 		600D639C2E48E83F009FE14F /* AreaSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 600D639B2E48E83F009FE14F /* AreaSelectionView.swift */; };
 		600D639E2E490D14009FE14F /* IllsangZoneSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 600D639D2E490D14009FE14F /* IllsangZoneSelectionView.swift */; };
@@ -92,6 +102,8 @@
 		605E81462D9FE6D800ECDB15 /* QuestDetailRepeatRankView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605E81452D9FE6D800ECDB15 /* QuestDetailRepeatRankView.swift */; };
 		605E814A2D9FEB2300ECDB15 /* QuestDetailStatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605E81492D9FEB2300ECDB15 /* QuestDetailStatView.swift */; };
 		605F28522CF1B2C5007EA739 /* QuestDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605F28512CF1B2C5007EA739 /* QuestDetailView.swift */; };
+		606077F12EF2E4A300D4A7B1 /* ShareLinkView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 606077F02EF2E4A300D4A7B1 /* ShareLinkView.swift */; };
+		606077F32EF2E4C500D4A7B1 /* MissionShareItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 606077F22EF2E4C500D4A7B1 /* MissionShareItem.swift */; };
 		6060B2EA2C08947B0083944D /* Image++.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6060B2E92C08947B0083944D /* Image++.swift */; };
 		606132782CD68FE300830948 /* TagView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 606132772CD68FE300830948 /* TagView.swift */; };
 		6061327B2CDB33FD00830948 /* FilterPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6061327A2CDB33FD00830948 /* FilterPicker.swift */; };
@@ -208,10 +220,12 @@
 		60943FE62C0A38FB00C8A714 /* ApprovalViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60943FE52C0A38FB00C8A714 /* ApprovalViewModel.swift */; };
 		609A76D92CFC50C7009F4567 /* QuestImageWithTagView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 609A76D82CFC50C7009F4567 /* QuestImageWithTagView.swift */; };
 		609A76DB2CFC5E90009F4567 /* RewardTagRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 609A76DA2CFC5E90009F4567 /* RewardTagRow.swift */; };
+		60A18CC02EDAEE1200B5D908 /* CommentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60A18CBF2EDAEE1200B5D908 /* CommentView.swift */; };
+		60A18CC22EDAEFD600B5D908 /* CommentItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60A18CC12EDAEFD600B5D908 /* CommentItem.swift */; };
 		60A2ADF32DAE62BD007AC375 /* SettingItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60A2ADF22DAE62BD007AC375 /* SettingItemView.swift */; };
 		60A2ADF52DAE66BD007AC375 /* SettingToggleItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60A2ADF42DAE66BD007AC375 /* SettingToggleItemView.swift */; };
 		60A2ADF82DAE6B68007AC375 /* FAQView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60A2ADF72DAE6B68007AC375 /* FAQView.swift */; };
-		60A6B64D2E2C819E00872DE5 /* ApprovalDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60A6B64C2E2C819E00872DE5 /* ApprovalDetailView.swift */; };
+		60A6B64D2E2C819E00872DE5 /* MissionApprovalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60A6B64C2E2C819E00872DE5 /* MissionApprovalView.swift */; };
 		60A902DA2D89315800CA4489 /* FirebaseAnalyticsWithoutAdIdSupport in Frameworks */ = {isa = PBXBuildFile; productRef = 60A902D92D89315800CA4489 /* FirebaseAnalyticsWithoutAdIdSupport */; };
 		60A902DE2D89315800CA4489 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 60A902DD2D89315800CA4489 /* FirebaseAuth */; };
 		60A902E02D89315800CA4489 /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = 60A902DF2D89315800CA4489 /* FirebaseCore */; };
@@ -248,6 +262,8 @@
 		60C6B4DC2C2D042700926C0E /* Image.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60C6B4DB2C2D042700926C0E /* Image.swift */; };
 		60C6B4DF2C2D053600926C0E /* SubmitRouterViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60C6B4DE2C2D053600926C0E /* SubmitRouterViewModel.swift */; };
 		60C7A1682EC0DFA900E86291 /* LoadMoreIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60C7A1672EC0DFA900E86291 /* LoadMoreIndicatorView.swift */; };
+		60D165592EDB0044008BF396 /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60D165582EDB0044008BF396 /* ProfileView.swift */; };
+		60D1655B2EDB614F008BF396 /* ApprovalQuestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60D1655A2EDB614F008BF396 /* ApprovalQuestView.swift */; };
 		60D5EB582E783EBC00C5B78F /* QuestCouponView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60D5EB572E783EBC00C5B78F /* QuestCouponView.swift */; };
 		60D5EB5A2E78668E00C5B78F /* RankingRewardViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60D5EB592E78668E00C5B78F /* RankingRewardViewModel.swift */; };
 		60D897122E536D2C006A8480 /* MissionHistoryResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60D897112E536D2C006A8480 /* MissionHistoryResponse.swift */; };
@@ -298,10 +314,11 @@
 		60E401BA2E74477A00BB0B6C /* QuestSubmissionNotifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60E401B92E74477A00BB0B6C /* QuestSubmissionNotifier.swift */; };
 		60F352F22E8FEDEA00307BDC /* RenderDebugContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60F352F12E8FEDEA00307BDC /* RenderDebugContainer.swift */; };
 		60F352F42E91644E00307BDC /* ISO8601DateFormatter++.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60F352F32E91644E00307BDC /* ISO8601DateFormatter++.swift */; };
-		60F352F62E91666900307BDC /* ChallengeResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60F352F52E91666900307BDC /* ChallengeResponse.swift */; };
+		60F352F62E91666900307BDC /* ResultCodeResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60F352F52E91666900307BDC /* ResultCodeResponse.swift */; };
 		60F352F82E91667700307BDC /* QuizResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60F352F72E91667700307BDC /* QuizResponse.swift */; };
 		60F352FA2E9166F000307BDC /* Season.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60F352F92E9166F000307BDC /* Season.swift */; };
 		60F352FC2E91679400307BDC /* SeasonResponse+Mapping.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60F352FB2E91679400307BDC /* SeasonResponse+Mapping.swift */; };
+		60F733CF2F0916BC007A8A72 /* CouponSettingType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60F733CE2F0916BC007A8A72 /* CouponSettingType.swift */; };
 		60FB50CD2D15CEAE00C55E82 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60FB50CC2D15CEAE00C55E82 /* HomeView.swift */; };
 		60FF5EC32E4937A6007A5B40 /* MyRegionAreaSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60FF5EC22E4937A6007A5B40 /* MyRegionAreaSelectionView.swift */; };
 		60FF5EC52E4949F8007A5B40 /* RegionPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60FF5EC42E4949F8007A5B40 /* RegionPickerView.swift */; };
@@ -367,6 +384,16 @@
 		60054F9F2D931AA300E7C5A6 /* PDFKitView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PDFKitView.swift; sourceTree = "<group>"; };
 		600657DF2DBCFEE20022D117 /* HonorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HonorView.swift; sourceTree = "<group>"; };
 		600657E32DBD2DF50022D117 /* MyPageHonorManageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPageHonorManageView.swift; sourceTree = "<group>"; };
+		6009EC352EE4208A000F17BD /* ReportView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportView.swift; sourceTree = "<group>"; };
+		6009EC382EE4213A000F17BD /* ReportPopup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportPopup.swift; sourceTree = "<group>"; };
+		6009EC3A2EE42BCA000F17BD /* ApprovalDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApprovalDetailView.swift; sourceTree = "<group>"; };
+		6009EC3F2EEB9ACE000F17BD /* CommentNetwork.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentNetwork.swift; sourceTree = "<group>"; };
+		6009EC412EEB9EC5000F17BD /* CommentResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentResponse.swift; sourceTree = "<group>"; };
+		6009EC432EEB9F58000F17BD /* Comment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Comment.swift; sourceTree = "<group>"; };
+		6009EC452EEBA0B5000F17BD /* CommentResponse+Mapping.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CommentResponse+Mapping.swift"; sourceTree = "<group>"; };
+		6009EC472EEBA40C000F17BD /* CommentRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentRepository.swift; sourceTree = "<group>"; };
+		6009EC492EEBA6F5000F17BD /* Comment+UIMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Comment+UIMapper.swift"; sourceTree = "<group>"; };
+		6009EC4B2EEBAAC9000F17BD /* ApprovalDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApprovalDetailViewModel.swift; sourceTree = "<group>"; };
 		600D63972E48E5A9009FE14F /* AreaResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AreaResponse.swift; sourceTree = "<group>"; };
 		600D639B2E48E83F009FE14F /* AreaSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AreaSelectionView.swift; sourceTree = "<group>"; };
 		600D639D2E490D14009FE14F /* IllsangZoneSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IllsangZoneSelectionView.swift; sourceTree = "<group>"; };
@@ -443,6 +470,8 @@
 		605E81452D9FE6D800ECDB15 /* QuestDetailRepeatRankView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestDetailRepeatRankView.swift; sourceTree = "<group>"; };
 		605E81492D9FEB2300ECDB15 /* QuestDetailStatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestDetailStatView.swift; sourceTree = "<group>"; };
 		605F28512CF1B2C5007EA739 /* QuestDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestDetailView.swift; sourceTree = "<group>"; };
+		606077F02EF2E4A300D4A7B1 /* ShareLinkView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareLinkView.swift; sourceTree = "<group>"; };
+		606077F22EF2E4C500D4A7B1 /* MissionShareItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionShareItem.swift; sourceTree = "<group>"; };
 		6060B2E92C08947B0083944D /* Image++.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Image++.swift"; sourceTree = "<group>"; };
 		606132712CD3256C00830948 /* Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Release.xcconfig; sourceTree = "<group>"; };
 		606132722CD325B600830948 /* Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Debug.xcconfig; sourceTree = "<group>"; };
@@ -562,10 +591,12 @@
 		60943FE52C0A38FB00C8A714 /* ApprovalViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApprovalViewModel.swift; sourceTree = "<group>"; };
 		609A76D82CFC50C7009F4567 /* QuestImageWithTagView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestImageWithTagView.swift; sourceTree = "<group>"; };
 		609A76DA2CFC5E90009F4567 /* RewardTagRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RewardTagRow.swift; sourceTree = "<group>"; };
+		60A18CBF2EDAEE1200B5D908 /* CommentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentView.swift; sourceTree = "<group>"; };
+		60A18CC12EDAEFD600B5D908 /* CommentItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentItem.swift; sourceTree = "<group>"; };
 		60A2ADF22DAE62BD007AC375 /* SettingItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingItemView.swift; sourceTree = "<group>"; };
 		60A2ADF42DAE66BD007AC375 /* SettingToggleItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingToggleItemView.swift; sourceTree = "<group>"; };
 		60A2ADF72DAE6B68007AC375 /* FAQView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FAQView.swift; sourceTree = "<group>"; };
-		60A6B64C2E2C819E00872DE5 /* ApprovalDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApprovalDetailView.swift; sourceTree = "<group>"; };
+		60A6B64C2E2C819E00872DE5 /* MissionApprovalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionApprovalView.swift; sourceTree = "<group>"; };
 		60ADF8862D57B49B00556958 /* QuestEngageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestEngageView.swift; sourceTree = "<group>"; };
 		60ADF8882D57B53100556958 /* QuestEngageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestEngageViewModel.swift; sourceTree = "<group>"; };
 		60ADF9BC2D59D3FD00556958 /* FontStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FontStyle.swift; sourceTree = "<group>"; };
@@ -601,6 +632,8 @@
 		60C6B4DB2C2D042700926C0E /* Image.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Image.swift; sourceTree = "<group>"; };
 		60C6B4DE2C2D053600926C0E /* SubmitRouterViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubmitRouterViewModel.swift; sourceTree = "<group>"; };
 		60C7A1672EC0DFA900E86291 /* LoadMoreIndicatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadMoreIndicatorView.swift; sourceTree = "<group>"; };
+		60D165582EDB0044008BF396 /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
+		60D1655A2EDB614F008BF396 /* ApprovalQuestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApprovalQuestView.swift; sourceTree = "<group>"; };
 		60D5EB572E783EBC00C5B78F /* QuestCouponView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestCouponView.swift; sourceTree = "<group>"; };
 		60D5EB592E78668E00C5B78F /* RankingRewardViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RankingRewardViewModel.swift; sourceTree = "<group>"; };
 		60D897112E536D2C006A8480 /* MissionHistoryResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionHistoryResponse.swift; sourceTree = "<group>"; };
@@ -651,10 +684,11 @@
 		60E401B92E74477A00BB0B6C /* QuestSubmissionNotifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestSubmissionNotifier.swift; sourceTree = "<group>"; };
 		60F352F12E8FEDEA00307BDC /* RenderDebugContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RenderDebugContainer.swift; sourceTree = "<group>"; };
 		60F352F32E91644E00307BDC /* ISO8601DateFormatter++.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ISO8601DateFormatter++.swift"; sourceTree = "<group>"; };
-		60F352F52E91666900307BDC /* ChallengeResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChallengeResponse.swift; sourceTree = "<group>"; };
+		60F352F52E91666900307BDC /* ResultCodeResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultCodeResponse.swift; sourceTree = "<group>"; };
 		60F352F72E91667700307BDC /* QuizResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuizResponse.swift; sourceTree = "<group>"; };
 		60F352F92E9166F000307BDC /* Season.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Season.swift; sourceTree = "<group>"; };
 		60F352FB2E91679400307BDC /* SeasonResponse+Mapping.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SeasonResponse+Mapping.swift"; sourceTree = "<group>"; };
+		60F733CE2F0916BC007A8A72 /* CouponSettingType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CouponSettingType.swift; sourceTree = "<group>"; };
 		60FB50CC2D15CEAE00C55E82 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		60FF5EC22E4937A6007A5B40 /* MyRegionAreaSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyRegionAreaSelectionView.swift; sourceTree = "<group>"; };
 		60FF5EC42E4949F8007A5B40 /* RegionPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegionPickerView.swift; sourceTree = "<group>"; };
@@ -748,6 +782,24 @@
 				605445D52DD78EE50005742D /* LegendRankingViewModel.swift */,
 			);
 			path = MyPageHonor;
+			sourceTree = "<group>";
+		};
+		6009EC372EE42120000F17BD /* Report */ = {
+			isa = PBXGroup;
+			children = (
+				6009EC352EE4208A000F17BD /* ReportView.swift */,
+				6009EC382EE4213A000F17BD /* ReportPopup.swift */,
+			);
+			path = Report;
+			sourceTree = "<group>";
+		};
+		6009EC3C2EE42BE2000F17BD /* Detail */ = {
+			isa = PBXGroup;
+			children = (
+				6009EC3A2EE42BCA000F17BD /* ApprovalDetailView.swift */,
+				6009EC4B2EEBAAC9000F17BD /* ApprovalDetailViewModel.swift */,
+			);
+			path = Detail;
 			sourceTree = "<group>";
 		};
 		600D639A2E48E6BA009FE14F /* Area */ = {
@@ -849,6 +901,7 @@
 				60D897462E576052006A8480 /* QuizType.swift */,
 				60D897442E575FB8006A8480 /* MissionType.swift */,
 				6029881F2D041D4700903806 /* PointType.swift */,
+				60F733CE2F0916BC007A8A72 /* CouponSettingType.swift */,
 				602988212D041DDC00903806 /* RepeatType.swift */,
 				604B2D1F2E929E8D006A814D /* PostImageType.swift */,
 				604B2D212E929E98006A814D /* EmojiType.swift */,
@@ -972,6 +1025,7 @@
 				60D897102E536D0C006A8480 /* Response */,
 				601189222C3E95D40070F2AD /* AuthNetwork.swift */,
 				60004AD62D4221F500CD2254 /* BannerNetwork.swift */,
+				6009EC3F2EEB9ACE000F17BD /* CommentNetwork.swift */,
 				606C3F042E69FCEA0050C4D6 /* CouponNetwork.swift */,
 				606F18142DA3E1F800ABEA84 /* FavoriteNetwork.swift */,
 				600211ED2C1EEF91000CC02E /* EmojiNetwork.swift */,
@@ -1085,6 +1139,7 @@
 			isa = PBXGroup;
 			children = (
 				606C3F102E6AA8B80050C4D6 /* CouponItem.swift */,
+				60A18CC12EDAEFD600B5D908 /* CommentItem.swift */,
 				606C3F0E2E6AA8B30050C4D6 /* UserCouponItem.swift */,
 				60DA1D1F2E6CC77F00AE314E /* TitleItem.swift */,
 				60E401AF2E72CD7A00BB0B6C /* UserItem.swift */,
@@ -1133,12 +1188,15 @@
 		607FCBDA2BFA681F00BB2D04 /* Approval */ = {
 			isa = PBXGroup;
 			children = (
+				60A18CBE2EDAED5C00B5D908 /* Component */,
 				607FCBD72BFA681500BB2D04 /* ApprovalView.swift */,
-				60A6B64C2E2C819E00872DE5 /* ApprovalDetailView.swift */,
+				60A6B64C2E2C819E00872DE5 /* MissionApprovalView.swift */,
 				606C87AE2C0B9B8C002D5C3E /* ApprovalItemView.swift */,
 				603CF4E22D732DA100A2D19E /* ApprovalItemContentView.swift */,
 				603CF4E42D732DD800A2D19E /* ImageFullScreenView.swift */,
 				60943FE52C0A38FB00C8A714 /* ApprovalViewModel.swift */,
+				6009EC372EE42120000F17BD /* Report */,
+				6009EC3C2EE42BE2000F17BD /* Detail */,
 			);
 			path = Approval;
 			sourceTree = "<group>";
@@ -1203,6 +1261,7 @@
 				601189262C3F00FB0070F2AD /* AuthChannel.swift */,
 				A11D88F62C916DE500846122 /* Icon.swift */,
 				60299E302CBFFF160039663F /* TransferableUIImage.swift */,
+				606077F22EF2E4C500D4A7B1 /* MissionShareItem.swift */,
 				60ADF9BC2D59D3FD00556958 /* FontStyle.swift */,
 			);
 			path = Model;
@@ -1246,6 +1305,16 @@
 				609A76D82CFC50C7009F4567 /* QuestImageWithTagView.swift */,
 				609A76DA2CFC5E90009F4567 /* RewardTagRow.swift */,
 				60D897502E577E96006A8480 /* TrailingStarView.swift */,
+			);
+			path = Component;
+			sourceTree = "<group>";
+		};
+		60A18CBE2EDAED5C00B5D908 /* Component */ = {
+			isa = PBXGroup;
+			children = (
+				60A18CBF2EDAEE1200B5D908 /* CommentView.swift */,
+				60D165582EDB0044008BF396 /* ProfileView.swift */,
+				60D1655A2EDB614F008BF396 /* ApprovalQuestView.swift */,
 			);
 			path = Component;
 			sourceTree = "<group>";
@@ -1393,6 +1462,7 @@
 				60D897112E536D2C006A8480 /* MissionHistoryResponse.swift */,
 				6091976E2E5F8EC500F1D81B /* UserMissionHistoryResponse.swift */,
 				60B392DF2EABEC94005C4A88 /* UserMissionHistoryDetailResponse.swift */,
+				6009EC412EEB9EC5000F17BD /* CommentResponse.swift */,
 				60D897362E57502B006A8480 /* BaseQuestResponse.swift */,
 				60D897302E57428D006A8480 /* QuestDetailResponse.swift */,
 				60D897402E575056006A8480 /* LargeRewardQuestResponse.swift */,
@@ -1403,7 +1473,7 @@
 				60D897382E575038006A8480 /* RewardResponse.swift */,
 				600D63972E48E5A9009FE14F /* AreaResponse.swift */,
 				6091975A2E5DE8C800F1D81B /* BannerResponse.swift */,
-				60F352F52E91666900307BDC /* ChallengeResponse.swift */,
+				60F352F52E91666900307BDC /* ResultCodeResponse.swift */,
 				60F352F72E91667700307BDC /* QuizResponse.swift */,
 				60C6B4DB2C2D042700926C0E /* Image.swift */,
 				60FF5ED02E4CDC2B007A5B40 /* SeasonResponse.swift */,
@@ -1432,6 +1502,7 @@
 				609197662E5E069400F1D81B /* Area.swift */,
 				60924DC82C48C00E00221072 /* Quest.swift */,
 				60D8974A2E57645D006A8480 /* Reward.swift */,
+				6009EC432EEB9F58000F17BD /* Comment.swift */,
 				60D897482E576302006A8480 /* Mission.swift */,
 				60D897182E537188006A8480 /* MissionHistory.swift */,
 				60004AD82D42373300CD2254 /* Banner.swift */,
@@ -1449,6 +1520,7 @@
 			children = (
 				60D8974C2E5766D7006A8480 /* QuestRepository.swift */,
 				60D8971D2E5372B3006A8480 /* MissionHistoryRepository.swift */,
+				6009EC472EEBA40C000F17BD /* CommentRepository.swift */,
 				609197522E5C2E0500F1D81B /* RankRepository.swift */,
 				6091975E2E5DEA2B00F1D81B /* BannerRepository.swift */,
 				609197642E5E02CD00F1D81B /* AreaRepository.swift */,
@@ -1472,6 +1544,7 @@
 				609197252E59EC5F00F1D81B /* MissionResponse+Mapping.swift */,
 				609197272E59EC7100F1D81B /* RewardResponse+Mapping.swift */,
 				60D8971F2E5372BE006A8480 /* MissionHistoryResponse+Mapping.swift */,
+				6009EC452EEBA0B5000F17BD /* CommentResponse+Mapping.swift */,
 				6091975C2E5DE9C100F1D81B /* BannerResponse+Mapping.swift */,
 				609197682E5E06F300F1D81B /* AreaResponse+Mapping.swift */,
 				606C3F0A2E69FDF00050C4D6 /* CouponResponse+Mapping.swift */,
@@ -1489,6 +1562,7 @@
 				60D897222E537421006A8480 /* MIssionHistory+UIMapper.swift */,
 				609197742E5F8FF900F1D81B /* UserMissionHistory+UIMapper.swift */,
 				60B392E52EABF1C0005C4A88 /* UserMissionHistoryDetail+UIMapper.swift */,
+				6009EC492EEBA6F5000F17BD /* Comment+UIMapper.swift */,
 				60D897522E578003006A8480 /* Quest+UIMapper.swift */,
 				609197542E5C364600F1D81B /* Rank+UIMapper.swift */,
 				609197622E5DEC0F00F1D81B /* Banner+UIMapper.swift */,
@@ -1624,6 +1698,7 @@
 				60054F9F2D931AA300E7C5A6 /* PDFKitView.swift */,
 				606C3EE22E674AF50050C4D6 /* IllsangZoneAlertView.swift */,
 				60F352F12E8FEDEA00307BDC /* RenderDebugContainer.swift */,
+				606077F02EF2E4A300D4A7B1 /* ShareLinkView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -1871,6 +1946,7 @@
 				601BCF392D7EE63100138387 /* CustomImagePicker.swift in Sources */,
 				606C3EB62E60A57C0050C4D6 /* UserMissionHistoryViewModel.swift in Sources */,
 				606C3EE92E674B530050C4D6 /* UserNavigationSetup.swift in Sources */,
+				6009EC482EEBA40C000F17BD /* CommentRepository.swift in Sources */,
 				603CF4F32D79A8CE00A2D19E /* SubmitInprogressView.swift in Sources */,
 				609197592E5C957700F1D81B /* SeasonManager.swift in Sources */,
 				6091976F2E5F8EC500F1D81B /* UserMissionHistoryResponse.swift in Sources */,
@@ -1881,6 +1957,7 @@
 				606C3F0D2E69FE620050C4D6 /* Coupon+UIMapper.swift in Sources */,
 				9FE63D6C2CB3A58800CA7940 /* RankingView.swift in Sources */,
 				602988202D041D4700903806 /* PointType.swift in Sources */,
+				60F733CF2F0916BC007A8A72 /* CouponSettingType.swift in Sources */,
 				9FE63D722CB3AB4F00CA7940 /* RankingItemView.swift in Sources */,
 				9FE63D702CB3AAF100CA7940 /* RankingViewModel.swift in Sources */,
 				600D639C2E48E83F009FE14F /* AreaSelectionView.swift in Sources */,
@@ -1897,6 +1974,8 @@
 				6028A94C2D397730003FBC8C /* UserRankResponse.swift in Sources */,
 				605E81422D9FE4D300ECDB15 /* QuestDetailApprovalImageView.swift in Sources */,
 				606C21CC2CC6B4FC00803947 /* SubmitStatusView.swift in Sources */,
+				6009EC422EEB9EC5000F17BD /* CommentResponse.swift in Sources */,
+				6009EC4A2EEBA6F5000F17BD /* Comment+UIMapper.swift in Sources */,
 				A196286F2C0859910037C53A /* DeleteAccountView.swift in Sources */,
 				60D897312E57428D006A8480 /* QuestDetailResponse.swift in Sources */,
 				6091974A2E5C27A400F1D81B /* AreaUserRankResponse.swift in Sources */,
@@ -1921,9 +2000,11 @@
 				60D8972B2E53B5AE006A8480 /* MissionHistoryNetwork.swift in Sources */,
 				600211EC2C1EEED7000CC02E /* APIManager.swift in Sources */,
 				60FB50CD2D15CEAE00C55E82 /* HomeView.swift in Sources */,
-				60F352F62E91666900307BDC /* ChallengeResponse.swift in Sources */,
+				60F352F62E91666900307BDC /* ResultCodeResponse.swift in Sources */,
 				6091972C2E5A228700F1D81B /* RankingRewardView.swift in Sources */,
+				6009EC462EEBA0B5000F17BD /* CommentResponse+Mapping.swift in Sources */,
 				601BCF202D7C2DC100138387 /* UINavigationController.swift in Sources */,
+				60D165592EDB0044008BF396 /* ProfileView.swift in Sources */,
 				A1FF916E2C250C3B00F03E4B /* UserNetwork.swift in Sources */,
 				60DA1D202E6CC77F00AE314E /* TitleItem.swift in Sources */,
 				60004AD52D3B799700CD2254 /* Constants.swift in Sources */,
@@ -1935,6 +2016,7 @@
 				60ADF9CD2D5DD3D000556958 /* RoundedBackground.swift in Sources */,
 				606C3EFF2E69FC600050C4D6 /* UserCouponResponse.swift in Sources */,
 				606C3F0F2E6AA8B30050C4D6 /* UserCouponItem.swift in Sources */,
+				60A18CC02EDAEE1200B5D908 /* CommentView.swift in Sources */,
 				A1AB3D682C1141B3001EB9D8 /* LoginButtonView.swift in Sources */,
 				604B2D262E92A4C1006A814D /* QuestItemBuilder.swift in Sources */,
 				606F18152DA3E1F800ABEA84 /* FavoriteNetwork.swift in Sources */,
@@ -1962,6 +2044,7 @@
 				605334572D29BE3600599159 /* TutorialViewModel.swift in Sources */,
 				606694F02DDA29E40000E368 /* AnimatedPopup.swift in Sources */,
 				6044B7332C33F754002C13A0 /* ErrorView.swift in Sources */,
+				6009EC392EE4213A000F17BD /* ReportPopup.swift in Sources */,
 				606C3EF12E68D4710050C4D6 /* CouponListView.swift in Sources */,
 				600D63982E48E5BC009FE14F /* AreaResponse.swift in Sources */,
 				60E401A82E72C93200BB0B6C /* LegendRankResponse.swift in Sources */,
@@ -1978,6 +2061,7 @@
 				606C3EC22E60E9290050C4D6 /* PointResponse.swift in Sources */,
 				609197632E5DEC0F00F1D81B /* Banner+UIMapper.swift in Sources */,
 				6091974F2E5C292F00F1D81B /* AreaRankItem.swift in Sources */,
+				6009EC362EE4208A000F17BD /* ReportView.swift in Sources */,
 				60781F5D2EC97732003C437F /* QuestDetailMissionTitleView.swift in Sources */,
 				60B392E22EABEE86005C4A88 /* UserMissionHistoryDetail.swift in Sources */,
 				60D897202E5372BE006A8480 /* MissionHistoryResponse+Mapping.swift in Sources */,
@@ -1989,6 +2073,7 @@
 				606C87AF2C0B9B8C002D5C3E /* ApprovalItemView.swift in Sources */,
 				60D8974F2E576D46006A8480 /* ResponseMapper.swift in Sources */,
 				60DA1D222E6CC81400AE314E /* Title+UIMapper.swift in Sources */,
+				6009EC3B2EE42BCA000F17BD /* ApprovalDetailView.swift in Sources */,
 				60D897292E537653006A8480 /* ApprovalMissionHistoryItem.swift in Sources */,
 				60943FE62C0A38FB00C8A714 /* ApprovalViewModel.swift in Sources */,
 				60C6B4DC2C2D042700926C0E /* Image.swift in Sources */,
@@ -1999,6 +2084,7 @@
 				609197262E59EC5F00F1D81B /* MissionResponse+Mapping.swift in Sources */,
 				606C3EE12E662E3E0050C4D6 /* IllsangZoneManager.swift in Sources */,
 				60FF5ECB2E4BB4A6007A5B40 /* SeasonNetwork.swift in Sources */,
+				606077F12EF2E4A300D4A7B1 /* ShareLinkView.swift in Sources */,
 				609197752E5F8FF900F1D81B /* UserMissionHistory+UIMapper.swift in Sources */,
 				60246FA82D91E57E007C05B3 /* AnalyticsService.swift in Sources */,
 				60B392E02EABEC94005C4A88 /* UserMissionHistoryDetailResponse.swift in Sources */,
@@ -2021,6 +2107,7 @@
 				6091975F2E5DEA2B00F1D81B /* BannerRepository.swift in Sources */,
 				60ADF9D22D5DDC5B00556958 /* QuizView.swift in Sources */,
 				605445D22DD7169A0005742D /* LegendRankingView.swift in Sources */,
+				6009EC442EEB9F58000F17BD /* Comment.swift in Sources */,
 				60B8B9E92BF9EEF1005F6DE3 /* QuestView.swift in Sources */,
 				60D897452E575FD6006A8480 /* MissionType.swift in Sources */,
 				60B8B9E72BF9EEF1005F6DE3 /* ILSANGApp.swift in Sources */,
@@ -2036,6 +2123,7 @@
 				60D897512E577E96006A8480 /* TrailingStarView.swift in Sources */,
 				A1C6422A2C33F55A004954CA /* QuestNetwork.swift in Sources */,
 				60ADF9CB2D5A01BA00556958 /* PresentationDetent++.swift in Sources */,
+				6009EC4C2EEBAAC9000F17BD /* ApprovalDetailViewModel.swift in Sources */,
 				60D8973F2E575052006A8480 /* PopularQuestResponse.swift in Sources */,
 				60D897432E575704006A8480 /* QuestType.swift in Sources */,
 				A1AB3D6C2C1142AA001EB9D8 /* LoginButton.swift in Sources */,
@@ -2054,7 +2142,7 @@
 				60E401BA2E74477A00BB0B6C /* QuestSubmissionNotifier.swift in Sources */,
 				60C6B4D52C2C565700926C0E /* ChallengeNetwork.swift in Sources */,
 				605445D82DD8BD120005742D /* HonorPopupContainerView.swift in Sources */,
-				60A6B64D2E2C819E00872DE5 /* ApprovalDetailView.swift in Sources */,
+				60A6B64D2E2C819E00872DE5 /* MissionApprovalView.swift in Sources */,
 				A11D88F72C916DE500846122 /* Icon.swift in Sources */,
 				60505D702D941D0A00121C4C /* StandardScreenView.swift in Sources */,
 				60DA1D242E6D714200AE314E /* BannerQuestResponse.swift in Sources */,
@@ -2073,6 +2161,7 @@
 				606C3EE32E674AF50050C4D6 /* IllsangZoneAlertView.swift in Sources */,
 				60B392E62EABF1C0005C4A88 /* UserMissionHistoryDetail+UIMapper.swift in Sources */,
 				609197672E5E069600F1D81B /* Area.swift in Sources */,
+				6009EC402EEB9ACE000F17BD /* CommentNetwork.swift in Sources */,
 				60ADF9C22D59D47100556958 /* FontWithLineHeight.swift in Sources */,
 				606C3F0B2E69FDF00050C4D6 /* CouponResponse+Mapping.swift in Sources */,
 				606292D82C19E70A0098B6D2 /* Network.swift in Sources */,
@@ -2123,6 +2212,7 @@
 				600657E02DBCFEE80022D117 /* HonorView.swift in Sources */,
 				A1BB602C2BFF145100AAADD4 /* MyPageProfile.swift in Sources */,
 				607FCBE92BFE418600BB2D04 /* QuestViewModel.swift in Sources */,
+				60A18CC22EDAEFD600B5D908 /* CommentItem.swift in Sources */,
 				606694F32DDA2B140000E368 /* HonorAcquisitionPopup.swift in Sources */,
 				60DA1D0F2E6CC2B700AE314E /* TitleResponse.swift in Sources */,
 				60DA1D102E6CC2B700AE314E /* UserTitleResponse.swift in Sources */,
@@ -2139,6 +2229,7 @@
 				609197462E5C272E00F1D81B /* CommercialAreaRankResponse.swift in Sources */,
 				60E401B82E72D33000BB0B6C /* LegendRank+UIMapper.swift in Sources */,
 				604687AC2D213B890056E394 /* SelectableTabHeader.swift in Sources */,
+				60D1655B2EDB614F008BF396 /* ApprovalQuestView.swift in Sources */,
 				60E401B42E72CED500BB0B6C /* User+UIMapper.swift in Sources */,
 				607FCBDD2BFA686700BB2D04 /* MyPageView.swift in Sources */,
 				60D897232E537421006A8480 /* MIssionHistory+UIMapper.swift in Sources */,
@@ -2152,6 +2243,7 @@
 				606C3F112E6AA8B80050C4D6 /* CouponItem.swift in Sources */,
 				6091972A2E5A226600F1D81B /* RankingDetailView.swift in Sources */,
 				602A541D2EBA0FDD0094A33E /* HonorGrade.swift in Sources */,
+				606077F32EF2E4C500D4A7B1 /* MissionShareItem.swift in Sources */,
 				6091976B2E5F307A00F1D81B /* AreaNameService.swift in Sources */,
 				607FCBEB2BFE44D900BB2D04 /* IconView.swift in Sources */,
 			);
@@ -2289,7 +2381,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.5.1;
+				MARKETING_VERSION = 1.5.2;
 				PRODUCT_BUNDLE_IDENTIFIER = "$(APP_BUNDLE_ID)";
 				"PRODUCT_BUNDLE_IDENTIFIER[sdk=iphoneos*]" = com.ilsang240615.dev;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -2500,7 +2592,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.5.1;
+				MARKETING_VERSION = 1.5.2;
 				PRODUCT_BUNDLE_IDENTIFIER = "$(APP_BUNDLE_ID)";
 				"PRODUCT_BUNDLE_IDENTIFIER[sdk=iphoneos*]" = com.ilsang240615.dev;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -2547,7 +2639,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.5.1;
+				MARKETING_VERSION = 1.5.2;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;

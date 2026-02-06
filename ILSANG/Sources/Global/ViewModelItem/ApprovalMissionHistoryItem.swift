@@ -24,23 +24,32 @@ struct UserEmojis {
 }
 
 @Observable
-class ApprovalMissionHistoryItem: Identifiable, Equatable {
+class ApprovalMissionHistoryItem: Identifiable, Equatable, Hashable {
     static func == (lhs: ApprovalMissionHistoryItem, rhs: ApprovalMissionHistoryItem) -> Bool {
         lhs.id == rhs.id &&
         lhs.title == rhs.title &&
         lhs.displayDate == rhs.displayDate &&
         lhs.likeCount == rhs.likeCount &&
-        lhs.hateCount == rhs.hateCount &&
         lhs.imageId == rhs.imageId &&
         lhs.userId == rhs.userId
+    }
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+        hasher.combine(title)
+        hasher.combine(displayDate)
+        hasher.combine(likeCount)
+        hasher.combine(imageId)
+        hasher.combine(userId)
     }
     
     let id: Int
     let title: String
     let displayDate: String
     var likeCount: Int
-    var hateCount: Int
     let viewCount: Int
+    let commentCount: Int
+    var shareCount: Int
     let imageId: String
     var image: UIImage?
     let commercialAreaCode: String?
@@ -52,13 +61,103 @@ class ApprovalMissionHistoryItem: Identifiable, Equatable {
     let userTitle: UserTitle?
     var emojis: UserEmojis
     
-    init(id: Int, title: String, displayDate: String, likeCount: Int, hateCount: Int, viewCount: Int, imageId: String, image: UIImage? = nil, commercialAreaCode: String?, commercialAreaName: String? = nil, userId: String, nickname: String, profileImageId: String?, profileImage: UIImage? = nil, userTitle: UserTitle?, emojis: UserEmojis) {
+    let questId: Int?
+    let questType: QuestType?
+    let repeatType: RepeatType?
+    let writer: String?
+    let expireAt: Date?
+    var lastCompleteDate: Date?
+    
+    var questStatus: ApprovalQuestStatus {
+        guard let expireAt, expireAt >= .now else { return .expired }
+        switch questType {
+        case .normal, .event:
+            return lastCompleteDate == nil ? .able : .completed
+        case .repeat:
+            return isRepeatDisabled ? .completed : .able
+        default:
+            return .expired
+        }
+    }
+    
+    // TODO: QuestItem 통합
+    /// 반복 퀘스트가 현재 잠금 상태인지 여부
+    var isRepeatDisabled: Bool {
+        guard questType == .repeat,
+              let repeatType,
+              let lastCompleteDate
+        else { return false }
+        
+        return Date() < nextAvailableDate(for: repeatType, from: lastCompleteDate)
+    }
+    
+    /// repeatType에 따른 다음 재시작 가능 날짜 계산
+    private func nextAvailableDate(for type: RepeatType, from date: Date) -> Date {
+        let calendar = Calendar.current
+
+        switch type {
+        case .daily:
+            // 다음날 00:00
+            if let nextDay = calendar.date(byAdding: .day, value: 1, to: date) {
+                return calendar.startOfDay(for: nextDay)
+            }
+
+        case .weekly:
+            // 다음 월요일 00:00 계산
+            let components = calendar.dateComponents([.weekday], from: date)
+            let weekday = components.weekday ?? 1
+            // 월요일(2) 기준으로 남은 일수 계산
+            let daysUntilNextMonday = (9 - weekday) % 7
+            // 만약 오늘이 월요일이라면 → 다음주 월요일로 (7일 뒤)
+            let offset = daysUntilNextMonday == 0 ? 7 : daysUntilNextMonday
+
+            if let nextMonday = calendar.date(byAdding: .day, value: offset, to: date) {
+                return calendar.startOfDay(for: nextMonday)
+            }
+
+        case .monthly:
+            // 다음달 1일 00:00
+            let nextMonth = calendar.date(byAdding: .month, value: 1, to: date) ?? date
+            var components = calendar.dateComponents([.year, .month], from: nextMonth)
+            components.day = 1
+            return calendar.date(from: components).flatMap { calendar.startOfDay(for: $0) } ?? date
+        }
+
+        return date
+    }
+    
+    init(
+        id: Int,
+        title: String,
+        displayDate: String,
+        likeCount: Int,
+        viewCount: Int,
+        shareCount: Int,
+        commentCount: Int,
+        imageId: String,
+        image: UIImage? = nil,
+        commercialAreaCode: String?,
+        commercialAreaName: String? = nil,
+        userId: String,
+        nickname: String,
+        profileImageId: String?,
+        profileImage: UIImage? = nil,
+        userTitle: UserTitle?,
+        emojis: UserEmojis,
+        questId: Int?,
+        questType: QuestType?,
+        repeatType: RepeatType?,
+        writer: String?,
+        expireAt: Date?,
+        lastCompleteDate: Date?
+    ) {
         self.id = id
         self.title = title
         self.displayDate = displayDate
         self.likeCount = likeCount
-        self.hateCount = hateCount
         self.viewCount = viewCount
+        self.shareCount = shareCount
+        self.commentCount = commentCount
         self.imageId = imageId
         self.image = image
         self.commercialAreaCode = commercialAreaCode
@@ -69,6 +168,12 @@ class ApprovalMissionHistoryItem: Identifiable, Equatable {
         self.profileImage = profileImage
         self.userTitle = userTitle
         self.emojis = emojis
+        self.questId = questId
+        self.questType = questType
+        self.repeatType = repeatType
+        self.writer = writer
+        self.expireAt = expireAt
+        self.lastCompleteDate = lastCompleteDate
     }
     
     static var mockDataList = [
@@ -77,8 +182,9 @@ class ApprovalMissionHistoryItem: Identifiable, Equatable {
             title: "첫 번째 미션",
             displayDate: "2025-08-19",
             likeCount: 12,
-            hateCount: 2,
             viewCount: 45,
+            shareCount: 10,
+            commentCount: 0,
             imageId: "image_001",
             image: nil,
             commercialAreaCode: "S01",
@@ -88,15 +194,22 @@ class ApprovalMissionHistoryItem: Identifiable, Equatable {
             profileImageId: "profile_001",
             profileImage: nil,
             userTitle: UserTitle(titleHistoryId: 1, name: "칭호1", grade: .standard, createdAt: .now),
-            emojis: .init(emojis: [.hate])
+            emojis: .init(emojis: []),
+            questId: 3,
+            questType: .event,
+            repeatType: nil,
+            writer: "작성자",
+            expireAt: .now,
+            lastCompleteDate: nil
         ),
         ApprovalMissionHistoryItem(
             id: 2,
             title: "두 번째 미션",
             displayDate: "2025-08-18",
             likeCount: 8,
-            hateCount: 1,
             viewCount: 30,
+            shareCount: 10,
+            commentCount: 0,
             imageId: "image_002",
             image: nil,
             commercialAreaCode: "S01",
@@ -106,15 +219,22 @@ class ApprovalMissionHistoryItem: Identifiable, Equatable {
             profileImageId: "profile_002",
             profileImage: nil,
             userTitle: UserTitle(titleHistoryId: 2, name: "칭호2", grade: .legend, createdAt: .now),
-            emojis: .init(emojis: [.hate])
+            emojis: .init(emojis: [.like]),
+            questId: 3,
+            questType: .event,
+            repeatType: nil,
+            writer: "작성자",
+            expireAt: .now,
+            lastCompleteDate: nil
         ),
         ApprovalMissionHistoryItem(
             id: 3,
             title: "세 번째 미션",
             displayDate: "2025-08-17",
             likeCount: 20,
-            hateCount: 0,
             viewCount: 60,
+            shareCount: 10,
+            commentCount: 0,
             imageId: "image_003",
             image: nil,
             commercialAreaCode: "S01",
@@ -124,7 +244,13 @@ class ApprovalMissionHistoryItem: Identifiable, Equatable {
             profileImageId: "profile_003",
             profileImage: .img2,
             userTitle: UserTitle(titleHistoryId: 3, name: "칭호3", grade: .rare, createdAt: .now),
-            emojis: .init(emojis: [.hate])
+            emojis: .init(emojis: [.like]),
+            questId: 3,
+            questType: .event,
+            repeatType: nil,
+            writer: "작성자",
+            expireAt: .now,
+            lastCompleteDate: nil
         )
     ]
     
@@ -133,8 +259,9 @@ class ApprovalMissionHistoryItem: Identifiable, Equatable {
         title: "불러올 수 없습니다",
         displayDate: "",
         likeCount: 0,
-        hateCount: 0,
         viewCount: 0,
+        shareCount: 10,
+        commentCount: 0,
         imageId: "",
         commercialAreaCode: nil,
         commercialAreaName: nil,
@@ -142,6 +269,12 @@ class ApprovalMissionHistoryItem: Identifiable, Equatable {
         nickname: "",
         profileImageId: nil,
         userTitle: nil,
-        emojis: .init(emojis: [])
+        emojis: .init(emojis: []),
+        questId: 3,
+        questType: .event,
+        repeatType: nil,
+        writer: "작성자",
+        expireAt: .now,
+        lastCompleteDate: nil
     )
 }

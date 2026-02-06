@@ -7,6 +7,7 @@
 
 struct UserTitleResponse: Decodable {
     let titleHistoryId: Int?
-    let name, grade, type: String
+    let name, grade: String
+    let type: String?
     let createdAt: String?
 }

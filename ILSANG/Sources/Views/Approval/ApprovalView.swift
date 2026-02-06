@@ -9,6 +9,7 @@ import SwiftUI
 
 struct ApprovalView: View {
     @StateObject var vm: ApprovalViewModel
+    @StateObject var questRouter: QuestRouter
     @StateObject var userRouter: UserRouter
     @EnvironmentObject var dependencies: AppDependencies
     @Environment(\.layout) var layout
@@ -16,15 +17,27 @@ struct ApprovalView: View {
     init(
         approvalSource: ApprovalSource,
         emojiNetwork: EmojiNetwork,
-        missionHistoryRepository: MissionHistoryRepository,
-        areaNameService: AreaNameProvider
+        questRepository: QuestRepositoryInterface,
+        missionHistoryRepository: MissionHistoryRepositoryInterface,
+        favoriteService: FavoriteService,
+        areaNameService: AreaNameProvider,
+        illsangZoneManager: IllsangZoneManager,
+        questSubmissionNotifier: QuestSubmissionNotifier
     ) {
         _vm = StateObject(
             wrappedValue: ApprovalViewModel(
                 approvalSource: approvalSource,
                 emojiNetwork: emojiNetwork,
                 missionHistoryRepository: missionHistoryRepository,
-                areaNameService: areaNameService
+                favoriteService: favoriteService,
+                areaNameService: areaNameService,
+                questSubmissionNotifier: questSubmissionNotifier
+            )
+        )
+        _questRouter = StateObject(
+            wrappedValue: QuestRouter(
+                illsangZoneManager: illsangZoneManager,
+                questRepository: questRepository
             )
         )
         _userRouter = StateObject(wrappedValue: UserRouter())
@@ -46,8 +59,28 @@ struct ApprovalView: View {
         .task {
             await vm.loadDataIfNeeded()
         }
-        .overlay { reportAlertView }
+        .withQuestNavigation(questRouter: questRouter)
         .withUserNavigation(userRouter: userRouter)
+        .navigationDestination(item: $vm.selectedMissionHistory) { item in
+            ApprovalDetailView(
+                vm: ApprovalDetailViewModel(
+                    missionHistory: item,
+                    commentRepository: dependencies.commentRepository,
+                    missionHistoryRepository: dependencies.missionHistoryRepository,
+                    favoriteService: dependencies.favoriteService,
+                    questSubmissionNotifier: dependencies.questSubmissionNotifier
+                ),
+                userRouter: userRouter,
+                questRouter: questRouter
+            )
+        }
+        .navigationDestination(item: $vm.selectedMissionHistoryForReport) { item in
+            ReportView(
+                missionHistoryRepository: dependencies.missionHistoryRepository,
+                commentRepository: dependencies.commentRepository,
+                reportTarget: .missionHistory(id: item.id)
+            )
+        }
     }
     
     /// 퀘스트 타이틀  + 퀘스트 인증 이미지
@@ -67,20 +100,31 @@ struct ApprovalView: View {
                     ApprovalItemView(
                         item: item,
                         width: .screenWidth - layout.horizontalPadding * 2,
-                        height: ((.screenWidth-layout.horizontalPadding * 2) / 5) * 4,
+                        height: ((.screenWidth-layout.horizontalPadding * 2) / 11) * 10,
                         padding: layout.horizontalPadding,
+                        showQuestInfo: vm.approvalSource == .tab,
                         onAction: { action in
                             switch action {
                             case .like:
                                 vm.onLike(for: idx)
-                            case .hate:
-                                vm.onHate(for: idx)
+                            case .navigateToDetail:
+                                vm.selectedMissionHistory = item
                             case .profileTapped(let userId):
                                 userRouter.navigateToUserProfile(userId: userId)
+                            case .showQuestDetail:
+                                guard let questId = item.questId else { return }
+                                questRouter.presentQuestDetail(questId: questId) { updatedQuest in
+                                    vm.toggleFavoriteStatus(questId: updatedQuest.id, prev: updatedQuest.favoriteYn)
+                                }
+                            case .share:
+                                Task { await vm.incrementMissionHistoryShareCount(missionHistory: item) }
                             }
                         }
                     )
                     .equatable()
+                    .onTapGesture {
+                        vm.selectedMissionHistory = item
+                    }
                     .overlay(alignment: .topTrailing) {
                         trailingButton(for: item)
                     }
@@ -89,7 +133,7 @@ struct ApprovalView: View {
                 
                 LoadMoreIndicatorView(isVisible: vm.canLoadMore)
             }
-            .padding(.top, vm.approvalSource == .tab ? 47 : 0)
+            .padding(.top, vm.approvalSource == .tab ? 47 : 16)
             .padding(.bottom, layout.bottomSpacing)
         }
         .refreshable {
@@ -99,16 +143,8 @@ struct ApprovalView: View {
     
     private func trailingButton(for item: ApprovalMissionHistoryItem) -> some View {
         Menu {
-            ShareLink(item: photo, preview: SharePreview(photo.caption, image: photo.image)) {
-                Label("공유하기", image: "share")
-            }
-            .onAppear {
-                vm.selectedChallenge = item
-            }
-            
             Button {
-                vm.selectedChallenge = item
-                vm.showReportAlert = true
+                vm.selectedMissionHistoryForReport = item
             } label: {
                 Label("신고하기", image: "syren")
             }
@@ -121,17 +157,6 @@ struct ApprovalView: View {
                 .frame(height: 35)
         }
         .padding(layout.horizontalPadding)
-    }
-    
-    @ViewBuilder
-    private var reportAlertView: some View {
-        if vm.showReportAlert {
-            SettingAlertView(
-                alertType: AlertType.Report,
-                onCancel: { vm.dismissReportAlert() },
-                onConfirm: { Task { await vm.confirmReport() } }
-            )
-        }
     }
     
     private var networkErrorView: some View {
@@ -153,36 +178,17 @@ struct ApprovalView: View {
             Task { await vm.loadInitialDataWithLoadingState() }
         }
     }
-    
-    // MARK: - 챌린지 이미지 공유하기
-    private var photo: TransferableUIImage {
-        return .init(uiimage: shareChallengeImage, caption: "일상 챌린지 공유하기")
-    }
-    
-    private var shareChallengeImage: UIImage {
-        let renderer = ImageRenderer(
-            content: ApprovalItemContentShareView(
-                item: vm.selectedChallenge ?? .failedData,
-                width: .screenWidth-40,
-                height: ((.screenWidth-40) / 5) * 4
-            )
-            .padding(20)
-            .background(
-                RoundedRectangle(cornerRadius: 12)
-                    .fill(.white)
-            )
-        )
-        
-        renderer.scale = 3.0
-        return renderer.uiImage ?? .init()
-    }
 }
 
 #Preview {
     ApprovalView(
         approvalSource: .tab,
         emojiNetwork: EmojiNetwork(),
+        questRepository: QuestRepository(network: QuestNetwork()),
         missionHistoryRepository: MissionHistoryRepository(network: MissionHistoryNetwork(),),
-        areaNameService: AreaNameService(areaRepository: AreaRepository(network: AreaNetwork()))
+        favoriteService: FavoriteService(favoriteNetwork: FavoriteNetwork()),
+        areaNameService: AreaNameService(areaRepository: AreaRepository(network: AreaNetwork())),
+        illsangZoneManager: IllsangZoneManager(areaNameService: AreaNameService(areaRepository: AreaRepository(network: AreaNetwork()))),
+        questSubmissionNotifier: QuestSubmissionNotifier()
     )
 }

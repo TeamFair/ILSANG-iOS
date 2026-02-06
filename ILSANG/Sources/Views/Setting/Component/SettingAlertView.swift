@@ -153,8 +153,38 @@ enum AlertType: AlertPresentable {
     case DeleteProfileImage
     case Logout
     case Withdrawal
-    case Report
     case ChallengeDelete
+    case Comment(CommentAlertType)
+    
+    enum CommentAlertType: String {
+        case errorTooLong
+        case errorEmptyInput
+        case errorInvalidCharacters
+        case errorCreateTooFast
+        case createFail
+        case deleteFail
+
+        var title: String {
+            switch self {
+            case .errorTooLong, .errorEmptyInput, .errorInvalidCharacters, .errorCreateTooFast:
+                "댓글 입력"
+            case .createFail:
+                "댓글 등록 실패"
+            case .deleteFail:
+                "댓글 삭제 실패"
+            }
+        }
+        var subtitle: String {
+            switch self {
+            case .errorTooLong: "300자 이하로 작성해 주세요."
+            case .errorEmptyInput: "공백 제외 1자 이상 입력하세요."
+            case .errorInvalidCharacters: "허용되지 않은 문자가 포함되어 있습니다."
+            case .errorCreateTooFast: "1분 이내에는 댓글을 여러 번 작성하실 수 없습니다."
+            case .createFail: "댓글을 등록할 수 없습니다"
+            case .deleteFail: "댓글을 삭제할 수 없습니다"
+            }
+        }
+    }
     
     var title: String {
         switch self {
@@ -166,10 +196,10 @@ enum AlertType: AlertPresentable {
             "로그아웃 하시겠어요?"
         case .Withdrawal:
             "정말 탈퇴하시겠어요?"
-        case .Report:
-            "신고하시겠습니까?"
         case .ChallengeDelete:
             "챌린지를 삭제 할까요?"
+        case .Comment(let type):
+            type.title
         }
     }
     
@@ -179,23 +209,23 @@ enum AlertType: AlertPresentable {
             "변경을 완료하지 않으면\n프로필이 저장되지 않습니다."
         case .DeleteProfileImage:
             "기본 사진으로 변경됩니다."
-        case .Logout:
-            nil
         case .Withdrawal:
             "확인 시 일상 계정이 영구적으로 삭제되며,\n모든 데이터는 복구가 불가능합니다."
-        case .Report:
-            "확인 후 빠른 시일 내 조치하도록 하겠습니다"
         case .ChallengeDelete:
             "삭제하면 복구가 불가합니다"
+        case .Comment(let type):
+            type.subtitle
+        default: nil
         }
     }
     
     var disagree: String {
         switch self {
-        case .CancleEditProfile, .DeleteProfileImage, .Withdrawal, .Report, .ChallengeDelete:
+        case .CancleEditProfile, .DeleteProfileImage, .Withdrawal, .ChallengeDelete:
             "취소"
         case .Logout:
             "아니요"
+        default: ""
         }
     }
     

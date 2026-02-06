@@ -1,0 +1,116 @@
+//
+//  ApprovalQuestView.swift
+//  ILLSANG
+//
+//  Created by Lee Jinhee on 11/30/25.
+//
+
+import SwiftUI
+
+enum ApprovalQuestStatus: Equatable {
+    case able, expired, completed
+    
+    var buttonTitle: String {
+        switch self {
+        case .able: "나도 하기"
+        case .expired: "기간 만료"
+        case .completed: "수행 완료"
+        }
+    }
+}
+
+struct ApprovalQuestView: View {
+    @Environment(\.layout) var layout
+    let questType: QuestType
+    let repeatType: RepeatType?
+    let questTitle: String
+    let writerName: String
+    let bgStyle: BackgroundStyle
+    let status: ApprovalQuestStatus
+    let action: () -> Void
+    
+    var actionDisable: Bool {
+        if case .able = status { false } else { true }
+    }
+    
+    enum BackgroundStyle {
+        case verticalStroke
+        case roundedStroke
+    }
+    
+    var body: some View {
+        Button {
+            action()
+        } label: {
+            HStack(spacing: 0) {
+                // 퀘스트 정보
+                VStack(alignment: .leading, spacing: 8) {
+                    MissionTagGroupView(questType: questType, repeatType: repeatType, missionType: .photo)
+                    VStack(alignment: .leading, spacing: 0) {
+                        Text(questTitle)
+                            .styledFont(.bold, size: 15, lineHeight: 20)
+                            .foregroundStyle(.black)
+                        Text(writerName)
+                            .styledFont(.regular, size: 11, lineHeight: 16)
+                            .foregroundStyle(.gray400)
+                    }
+                }
+                
+                Spacer(minLength: 0)
+                
+                // 나도하기 버튼
+                HStack(spacing: 0) {
+                    Text(status.buttonTitle)
+                        .styledFont(.tabBold)
+                    Image(.arrowUnder)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(20)
+                        .rotationEffect(.degrees(-90))
+                }
+                .padding(.vertical, 6)
+                .padding(.horizontal, 8)
+                .foregroundStyle(actionDisable ? .gray300 : .gray500)
+                .roundedBackground(cornerRadius: 12, bgColor: .background)
+            }
+            .padding(.horizontal, layout.horizontalPadding)
+            .padding(.vertical, 16)
+            .background(
+                ZStack {
+                    switch bgStyle {
+                    case .verticalStroke:
+                        VStack(spacing: 0) {
+                            Rectangle()
+                                .fill(.gray100)
+                                .frame(height: 1)
+                            Spacer()
+                            Rectangle()
+                                .fill(.gray100)
+                                .frame(height: 1)
+                        }
+                        .background(.white)
+                    case .roundedStroke:
+                        RoundedRectangle(cornerRadius: 12)
+                            .fill(.white)
+                            .strokeBorder(.gray100, style: .init(lineWidth: 1))
+                    }
+                }
+            )
+        }
+        .disabled(actionDisable)
+    }
+}
+
+#Preview {
+    let action = { print("tapped") }
+    ScrollView {
+        ApprovalQuestView(questType: .normal, repeatType: nil, questTitle: "일반 퀘스트", writerName: "작성자이름", bgStyle: .verticalStroke, status: .able, action: action )
+        ApprovalQuestView(questType: .repeat, repeatType: .daily, questTitle: "일간 퀘스트", writerName: "작성자이름", bgStyle: .verticalStroke, status: .able, action: action)
+        ApprovalQuestView(questType: .repeat, repeatType: .weekly, questTitle: "주간 퀘스트", writerName: "작성자이름", bgStyle: .verticalStroke, status: .able, action: action)
+        ApprovalQuestView(questType: .repeat, repeatType: .monthly, questTitle: "월간 퀘스트", writerName: "작성자이름", bgStyle: .verticalStroke, status: .able, action: action)
+        ApprovalQuestView(questType: .event, repeatType: nil, questTitle: "이벤트 퀘스트 참여완료", writerName: "작성자이름", bgStyle: .verticalStroke, status: .completed, action: action)
+        ApprovalQuestView(questType: .event, repeatType: nil, questTitle: "이벤트 퀘스트 기간만료", writerName: "작성자이름", bgStyle: .verticalStroke, status: .expired, action: action)
+        ApprovalQuestView(questType: .repeat, repeatType: .daily, questTitle: "인증예시 퀘스트", writerName: "작성자이름", bgStyle: .verticalStroke,  status: .able, action: action)
+    }
+    .padding(20)
+}

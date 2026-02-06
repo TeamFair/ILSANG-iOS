@@ -144,4 +144,13 @@ extension String {
             return self
         }
     }
+    
+    /// HTML 태그, 링크 포함 여부 확인
+    func containsInvalidCharacters() -> Bool {
+        let pattern = "(<[^>]+>)|(https?://\\S+)"
+        if let _ = self.range(of: pattern, options: .regularExpression) {
+            return true
+        }
+        return false
+    }
 }

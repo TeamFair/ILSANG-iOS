@@ -29,7 +29,9 @@ struct ApprovalItemContentView: View, Equatable {
     let commercialAreaName: String?
     let width: CGFloat
     let height: CGFloat
+    var isImageZoomEnabled: Bool = false
     
+    var onImageTapped: (() -> Void)?
     let onOtherUserTapped: () -> Void
     
     var body: some View {
@@ -40,9 +42,7 @@ struct ApprovalItemContentView: View, Equatable {
                 ProfileView(profileImage: profileImage, nickname: nickname, honor: userTitle)
             }
             
-            Text(title)
-                .styledFont(.title1)
-                .foregroundStyle(.black)
+            MetadataView(displayDate: displayDate, commercialAreaName: commercialAreaName)
             
             if #available(iOS 18.0, *) {
                 Image(uiImage: image ?? .logo)
@@ -54,7 +54,11 @@ struct ApprovalItemContentView: View, Equatable {
                     .clipShape(RoundedRectangle(cornerRadius: 12))
                     .matchedTransitionSource(id: id, in: namespace)
                     .onTapGesture {
-                        showMagView.toggle()
+                        if isImageZoomEnabled {
+                            showMagView.toggle()
+                        } else {
+                            onImageTapped?()
+                        }
                     }
             } else {
                 Image(uiImage: image ?? .logo)
@@ -65,11 +69,13 @@ struct ApprovalItemContentView: View, Equatable {
                     .contentShape(RoundedRectangle(cornerRadius: 12))
                     .clipShape(RoundedRectangle(cornerRadius: 12))
                     .onTapGesture {
-                        showSheetView.toggle()
+                        if isImageZoomEnabled {
+                            showSheetView.toggle()
+                        } else {
+                            onImageTapped?()
+                        }
                     }
             }
-            
-            MetadataView(displayDate: displayDate, commercialAreaName: commercialAreaName)
         }
         .sheet(isPresented: $showSheetView) {
             ImageFullScreenView(image: image ?? .logo) {
@@ -114,41 +120,9 @@ struct ApprovalItemContentShareView: View {
             
             MetadataView(displayDate: item.displayDate, commercialAreaName: item.commercialAreaName)
             
-            ReactionView(likeCount: item.likeCount, hateCount: item.hateCount)
+            // ReactionView(likeCount: item.likeCount)
         }
         .background(.white)
-    }
-}
-
-fileprivate struct ProfileView: View {
-    let profileImage: UIImage?
-    let nickname: String
-    let honor: UserTitle?
-    
-    var body: some View {
-        HStack(spacing: 10) {
-            Image(uiImage: profileImage ?? .profileCircle)
-                .resizable()
-                .frame(width: 35, height: 35)
-                .clipShape(Circle())
-            
-            VStack(alignment: .leading, spacing: 4) {
-                Text(nickname)
-                    .font(.system(size: 14, weight: .semibold))
-                
-                if let honor {
-                    HonorIconView(
-                        honorTitle: honor.name,
-                        grade: honor.grade,
-                        imageSize: 20,
-                        spacing: 4,
-                        font: .badge1,
-                        fgColor: .gray500
-                    )
-                }
-            }
-        }
-        .foregroundStyle(.gray500)
     }
 }
 
@@ -158,11 +132,6 @@ fileprivate struct MetadataView: View {
     
     var body: some View {
         HStack(spacing: 4) {
-            Text(displayDate)
-                .font(.system(size: 12, weight: .regular))
-            
-            Spacer(minLength: 0)
-            
             if let commercialAreaName, !commercialAreaName.isEmpty {
                 Image(.illsangRegion)
                     .resizable()
@@ -172,47 +141,14 @@ fileprivate struct MetadataView: View {
                 Text(commercialAreaName)
                     .styledFont(.badge1)
             }
+            Spacer(minLength: 0)
+            
+            Text(displayDate)
+                .styledFont(.caption2)
         }
         .foregroundStyle(.gray500)
     }
 }
-
-struct ReactionView: View, Equatable {
-    static func == (lhs: ReactionView, rhs: ReactionView) -> Bool {
-        lhs.likeCount == rhs.likeCount &&
-        lhs.hateCount == rhs.hateCount
-    }
-    
-    let likeCount: Int
-    var hateCount: Int? = nil
-    
-    var body: some View {
-        HStack(spacing: 16) {
-            emojiView(imageName: .thumbsUp, count: likeCount, alignment: .top)
-            if let hateCount {
-                emojiView(imageName: .thumbsDown, count: hateCount, alignment: .bottom)
-            }
-        }
-    }
-    
-    private func emojiView(imageName: UIImage, count: Int, alignment: Alignment) -> some View {
-        HStack(spacing: 4) {
-            Image(uiImage: imageName)
-                .resizable()
-                .renderingMode(.template)
-                .scaledToFit()
-                .frame(width: 21, height: 21)
-                .foregroundStyle(.gray200)
-                .frame(width: 24, height: 24, alignment: alignment)
-            Text("\(count)")
-                .monospacedDigit()
-                .styledFont(.heading2)
-                .foregroundStyle(.gray300)
-        }
-        .frame(height: 24)
-    }
-}
-
 
 #Preview {
     let item1 = ApprovalMissionHistoryItem.mockDataList[0]
@@ -228,7 +164,7 @@ struct ReactionView: View, Equatable {
             displayDate: item1.displayDate,
             commercialAreaName: item1.commercialAreaName,
             width: .screenWidth-40,
-            height:  ((.screenWidth-40) / 5) * 4,
+            height:  ((.screenWidth-40) / 11) * 10,
             onOtherUserTapped: { }
         )
         
@@ -242,7 +178,7 @@ struct ReactionView: View, Equatable {
             displayDate: item2.displayDate,
             commercialAreaName: item2.commercialAreaName,
             width: .screenWidth-40,
-            height:  ((.screenWidth-40) / 5) * 4,
+            height:  ((.screenWidth-40) / 11) * 10,
             onOtherUserTapped: { }
         )
     }

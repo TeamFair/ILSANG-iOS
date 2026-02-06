@@ -20,15 +20,22 @@ extension MissionHistoryResponse {
             title: title,
             createdAt: createdAt.toISO8601Date() ?? .now,
             likeCount: likeCount,
-            hateCount: hateCount,
             viewCount: viewCount,
+            shareCount: shareCount,
+            commentCount: commentCount,
             imageId: imageId,
             commercialAreaCode: commercialAreaCode,
             userId: user.userId,
             nickname: user.nickname,
             profileImageId: user.profileImageId,
             userTitle: userTitle,
-            emojis: emojis
+            emojis: emojis,
+            questId: questId,
+            questType: questType.flatMap { QuestType(rawValue: $0) },
+            repeatType: repeatFrequency.flatMap { RepeatType(param: $0) },
+            writer: writerName,
+            expireAt: expireDate?.toISO8601Date(),
+            lastCompleteDate: lastCompleteDate?.toISO8601Date()
         )
     }
 }

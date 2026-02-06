@@ -67,8 +67,12 @@ struct MainTabView: View {
             ApprovalView(
                 approvalSource: .tab,
                 emojiNetwork: dependencies.emojiNetwork,
+                questRepository: dependencies.questRepository,
                 missionHistoryRepository: dependencies.missionHistoryRepository,
-                areaNameService: dependencies.areaNameService
+                favoriteService: dependencies.favoriteService,
+                areaNameService: dependencies.areaNameService,
+                illsangZoneManager: dependencies.illsangZoneManager,
+                questSubmissionNotifier: dependencies.questSubmissionNotifier
             )
             
         case .ranking:
